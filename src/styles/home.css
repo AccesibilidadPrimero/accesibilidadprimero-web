@@ -8,6 +8,13 @@
 
    Por debajo de 1440 esos anchos se vuelven proporciones del contenedor, que
    es lo que hace el propio Figma al pasar a Tablet y Móvil.
+
+   AVISO. Esta hoja solo puede mandar sobre clases que NINGÚN componente
+   declare en su propio <style>. Astro da scope a los estilos de componente
+   —.clase[data-astro-cid-…]— y eso gana por especificidad a la misma clase
+   suelta de aquí, sin importar el orden de carga. Si una regla de este archivo
+   «no hace nada», ese es el motivo: la geometría va en el componente que posee
+   el elemento. `npm run geometria` mide los anchos reales y lo caza.
    --------------------------------------------------------------------------- */
 
 :root {
@@ -18,9 +25,9 @@
 }
 
 /* ---- Hero ---------------------------------------------------------------- */
-.hero__pila      { width: 693px; height: 400px; }   /* ilustración, tamaño fijo */
-.hero__escenario { gap: var(--space-16); }          /* Carousel Stage: gap 16 */
-.hero__banda     { gap: var(--space-24); }          /* Hero Band: gap 24 */
+/* La geometría del Hero vive en HeroCarousel.astro, no aquí: los estilos con
+   scope de Astro llevan un atributo [data-astro-cid-…] y ganan a esta hoja por
+   especificidad. Lo que se escriba aquí para .hero__* no se aplica. */
 
 /* ---- Proyectos destacados ------------------------------------------------ */
 /* Project Intro: fila con el nombre a la izquierda y la meta a la derecha. */
@@ -77,5 +84,4 @@
 .estudio__texto { max-width: 1068px; }
 
 /* ---- Cierre de contacto --------------------------------------------------- */
-.contacto        { gap: var(--space-48); }
-.contacto__titulo { max-width: 962px; }
+/* Igual que el Hero: la geometría de .contacto* está en ContactCTA.astro. */

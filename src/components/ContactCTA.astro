@@ -26,7 +26,11 @@ const ui = t(lang);
     line-height: var(--h3-leading);
     letter-spacing: var(--h3-track);
     font-weight: 400;
-    max-width: 24ch;
+    /* 962 px del Figma, no una medida en ch: el ancho de este párrafo es una
+       decisión de diseño tomada, no una consecuencia del cuerpo de letra.
+       Va aquí y no en home.css por la especificidad del scope de Astro —ver el
+       comentario largo en HeroCarousel.astro. */
+    max-width: 962px;
   }
   @media (min-width: 1024px) {
     .contacto {
@@ -34,6 +38,16 @@ const ui = t(lang);
       align-items: center;
       justify-content: space-between;
       gap: var(--space-48);
+    }
+    /* El Figma da 962 px al titular dentro de una fila de contenido de 1344.
+       Como proporción y no como píxel fijo: a 1440 sale exactamente 962, y por
+       debajo encoge con el contenedor en vez de empujar al CTA fuera.
+       Un max-width solo no bastaba: en una fila flex el titular se quedaba con
+       lo que le dejaba el reparto (661 px), no con su medida. */
+    .contacto__titulo {
+      flex: 0 0 auto;
+      width: calc(962 / 1344 * 100%);
+      max-width: 962px;
     }
   }
 </style>

@@ -230,7 +230,25 @@ const lamina = (id: number) => archivos[`../assets/hero/hero-${n(id)}.png`].defa
       flex-direction: row;
       align-items: baseline;
       justify-content: space-between;
-      gap: var(--space-48);
+      /* Hero Band en el Figma: gap 24. */
+      gap: var(--space-24);
+    }
+  }
+
+  /* Geometría del Figma (Home/Desktop 1440, 145:972): la ilustración es
+     693 × 400 fija.
+
+     Esto vive AQUÍ y no en home.css a propósito. Los estilos de un componente
+     Astro salen con un atributo de scope —.hero__pila[data-astro-cid-…]— que
+     tiene más especificidad que la misma clase suelta en una hoja aparte. Un
+     ancho escrito en home.css para esta clase NO se aplica nunca: se queda ahí
+     pareciendo que manda. Pasó el 07/10/2026 con esta misma regla, y la web
+     salió a producción con 640 px en vez de 693. */
+  @media (min-width: 1024px) {
+    .hero__pila {
+      width: 693px;
+      max-width: none;
+      aspect-ratio: 693 / 400;
     }
   }
 </style>

@@ -115,6 +115,17 @@ disciplina personal a las once de la noche.
   `compartida`.
 - `destacado: true` en un máximo de **3** casos.
 - **Sin `imagenAlt` no compila.** Ninguna imagen entra sin alternativa escrita.
+- **La geometría del Figma va en el componente que posee el elemento, no en
+  `home.css`.** Astro da scope a los estilos de componente —`.clase[data-astro-cid-…]`—
+  y eso gana por especificidad a la misma clase suelta en una hoja aparte, sin
+  importar el orden de carga. Una regla de `home.css` para una clase que el
+  componente también declara se sirve al navegador y no se aplica nunca. Ya
+  pasó: la web salió a producción con la ilustración del hero a 640 px en vez
+  de 693 y el titular de contacto a 479 en vez de 962. `npm run geometria` mide
+  los anchos del render y lo caza.
+- **En una fila flex, `max-width` no fija una medida.** El elemento se queda
+  con lo que le deja el reparto. Si el Figma da un ancho, va como `width` (o
+  como proporción del contenedor), no solo como tope.
 - **Las imágenes que se ven en pantalla van en `src/assets/`, no en `public/`.**
   Astro solo optimiza lo que está dentro de `src/`; lo de `public/` lo copia sin
   tocar. Se usa `<Picture>` de `astro:assets` con `formats={['avif','webp']}`,
