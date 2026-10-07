@@ -1,0 +1,77 @@
+---
+/* ---------------------------------------------------------------------------
+   Nota de accesibilidad del proyecto.
+
+   Decisión tomada el 6/10/2026 (claude/plan-notas-por-encima-de-90.md):
+   arreglar primero, publicar después. La barra solo aparece si se cumplen LAS
+   DOS condiciones:
+
+     · la nota pasa de 90, y
+     · existe la declaración de accesibilidad a la que enlazar.
+
+   Hoy no se cumple en ninguno de los tres: ECI 87, Izaskun 86, y Foc i Cor
+   llega a 91 pero su declaración responde 404. Por eso este componente no
+   pinta nada todavía, y eso es correcto: es el código el que impide publicar
+   una cifra que no se sostiene, no la memoria de nadie.
+
+   Dos cosas que el diseño original hacía mal y aquí no se repiten:
+
+   1. El punto verde era #22c55e sobre Silk: 2,12:1, por debajo del 3:1 de
+      1.4.11. Aquí el indicador usa el token de señal (#157a3d, 5,04:1).
+   2. El punto distinguía bandas solo por color, que es 1.4.1. Aquí el estado
+      va escrito, y el punto solo acompaña.
+
+   Y «WCAG 2.2 AA» a secas no se pinta: las tres declaraciones dicen
+   conformidad PARCIAL, y una puntuación de herramienta propia no es una
+   declaración de conformidad. Son dos cosas distintas y se nombran distinto.
+   --------------------------------------------------------------------------- */
+interface Props {
+  nota?: { valor: number; medidaEl: Date; declaracion?: string };
+  proyecto: string;
+}
+const { nota, proyecto } = Astro.props;
+
+const UMBRAL = 90;
+const publicable = !!nota && nota.valor > UMBRAL && !!nota.declaracion;
+const fecha = nota
+  ? new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(nota.medidaEl)
+  : '';
+---
+
+{
+  publicable && (
+    <p class="nota">
+      <span class="nota__punto" aria-hidden="true" />
+      <a href={nota!.declaracion}>
+        <strong class="nota__valor">{nota!.valor}</strong>
+        <span> sobre 100 en accesibilidad</span>
+        <span class="sr-only"> · {proyecto}. Ver la declaración de accesibilidad</span>
+      </a>
+      <span class="nota__fecha">Medido el {fecha}</span>
+    </p>
+  )
+}
+
+<style>
+  .nota {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    font-size: var(--meta-size);
+    line-height: var(--meta-leading);
+  }
+  .nota__punto {
+    align-self: center;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--signal-ok);
+  }
+  .nota__valor { font-weight: 500; }
+  .nota__fecha { color: var(--text-secondary); }
+
+  @media (forced-colors: active) {
+    .nota__punto { background: CanvasText; }
+  }
+</style>

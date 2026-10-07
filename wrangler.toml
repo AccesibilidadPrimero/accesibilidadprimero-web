@@ -1,0 +1,26 @@
+# Cloudflare Workers, no Pages.
+#
+# Pages sigue soportado y para un sitio estático funciona igual, pero
+# Cloudflare mantiene guía de migración de Pages a Workers y es en Workers
+# donde llega lo nuevo. Empezar aquí evita una migración futura y da, en el
+# mismo sitio, el endpoint del formulario de contacto, que con Astro estático
+# puro no existe.
+
+name = "accesibilidadprimero"
+compatibility_date = "2026-10-01"
+main = "worker/index.ts"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+# El HTML lo sirve el runtime de assets; el Worker solo entra para las rutas
+# que necesitan servidor (hoy, el formulario de contacto).
+not_found_handling = "404-page"
+
+[observability]
+enabled = true
+
+# Analítica sin cookies y sin banner: Cloudflare Web Analytics se activa desde
+# el panel, no desde aquí. Microsoft Clarity queda descartado — exige señal de
+# consentimiento para el EEE desde el 31/10/2025, lo que obliga a un modal de
+# cookies en la web de un estudio de accesibilidad.

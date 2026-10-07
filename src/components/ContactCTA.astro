@@ -1,0 +1,39 @@
+---
+/* Bloque de cierre, igual en todas las páginas. Por eso su título lleva el
+   mismo nivel en todas: h2. */
+import { t } from '../i18n/ui';
+import { path, type Lang } from '../i18n/config';
+import CtaLink from './CtaLink.astro';
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+---
+
+<section class="contacto" aria-labelledby="cta-contacto">
+  <h2 id="cta-contacto" class="contacto__titulo">{ui.ctaHeading}</h2>
+  <CtaLink href={path('contacto', lang)} size="large">{ui.ctaAction}</CtaLink>
+</section>
+
+<style>
+  .contacto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    padding: var(--space-48) var(--gutter-page);
+    background: var(--surface-raised);
+  }
+  .contacto__titulo {
+    font-size: var(--h3-size);
+    line-height: var(--h3-leading);
+    letter-spacing: var(--h3-track);
+    font-weight: 400;
+    max-width: 24ch;
+  }
+  @media (min-width: 1024px) {
+    .contacto {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-48);
+    }
+  }
+</style>

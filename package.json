@@ -1,0 +1,26 @@
+{
+  "name": "accesibilidadprimero-web",
+  "type": "module",
+  "version": "2.0.0",
+  "private": true,
+  "description": "accesibilidadprimero.com v2 — Astro + Cloudflare Workers",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "a11y": "node scripts/a11y.mjs",
+    "serve:dist": "node scripts/serve.mjs",
+    "teclado": "node scripts/teclado.mjs",
+    "contraste": "node scripts/contraste.mjs",
+    "verificar": "npm run build && npm run a11y && npm run teclado && npm run contraste",
+    "capturas": "node scripts/capturas.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.6"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "playwright": "^1.63.0"
+  }
+}

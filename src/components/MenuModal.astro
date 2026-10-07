@@ -1,0 +1,387 @@
+---
+/* ---------------------------------------------------------------------------
+   Menú modal · Tablet y Móvil
+
+   Lo que exige la nota del Figma («MENÚ MODAL — comportamiento obligatorio») y
+   el contrato anotado sobre las pantallas:
+
+     · role="dialog" aria-modal="true". El resto de la página queda inerte.
+     · El foco entra al abrir y queda atrapado dentro.
+     · Esc cierra. «Cerrar» cierra. Al cerrar el foco VUELVE al botón (2.4.3).
+     · El botón lleva aria-expanded y aria-controls.
+     · El fondo no hace scroll mientras está abierto.
+     · Todos los objetivos miden 44 px o más.
+     · El idioma y la página activos se marcan con subrayado y aria-current,
+       no solo con color (1.4.1).
+
+   Dos decisiones que conviene no deshacer:
+
+   1. El botón dice «Menú» / «Cerrar» con palabras, no con un icono. El nombre
+      accesible es el texto visible, así que no hace falta aria-label: nadie
+      tiene que fiarse de un nombre que no puede ver.
+   2. El panel se abre DEBAJO de la cabecera, no encima. El botón no se mueve:
+      quien acaba de pulsar no tiene que volver a buscarlo.
+
+   El menú funciona sin JavaScript hasta donde puede: si el script no carga, el
+   botón queda oculto y la navegación se muestra en bloque. Nunca se queda un
+   botón muerto en pantalla.
+   --------------------------------------------------------------------------- */
+
+import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  current: RouteKey;
+  /** El slug, si la página es una entrada de una colección. Se usa para que el
+   *  selector de idioma apunte a la misma página y no a la portada. */
+  slug?: string;
+}
+
+const { lang, current, slug } = Astro.props;
+const ui = t(lang);
+const langs = alternates(current, slug);
+---
+
+<div class="menu" data-menu>
+  <button
+    type="button"
+    class="menu__trigger"
+    aria-expanded="false"
+    aria-controls="menu-principal"
+    data-menu-trigger
+    data-close-label={ui.menuClose}
+  >
+    <span data-menu-label>{ui.menuOpen}</span>
+  </button>
+
+  <div
+    id="menu-principal"
+    class="menu__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-label={ui.menuLabel}
+    hidden
+    data-menu-panel
+  >
+    <nav aria-label={ui.navLabel} class="menu__nav">
+      <ul class="menu__list">
+        {
+          NAV.map((key) => {
+            const isCurrent = key === current;
+            return (
+              <li>
+                <a
+                  href={path(key, lang)}
+                  class="menu__link"
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  {ui.nav[key]}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+
+    {
+      /* Con un solo idioma activo, alternates() devuelve lista vacía y el
+         grupo no se pinta. Tres códigos de los que dos llevan a un 404 son
+         peores que no tener selector (2.4.4). */
+      langs.length > 0 && (
+      <div class="menu__lang">
+        <h2 class="menu__lang-title" id="menu-idioma">{ui.langGroupLabel}</h2>
+        <ul class="menu__lang-list" aria-labelledby="menu-idioma">
+          {
+            langs.map((l) => {
+              const isCurrent = l.lang === lang;
+              return (
+                <li>
+                  <a
+                    href={l.href}
+                    hreflang={l.hreflang}
+                    lang={l.hreflang}
+                    class="menu__lang-link"
+                    aria-current={isCurrent ? 'true' : undefined}
+                  >
+                    <span aria-hidden="true">{l.code}</span>
+                    <span class="sr-only">{l.name}</span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  /* El menú modal solo existe por debajo de 1440: en escritorio la barra
+     entera cabe. El corte es 1440 y no 768 porque el bloque derecho medía
+     614 px y con el logotipo sumaba 844 sobre 672 disponibles. */
+  .menu {
+    display: contents;
+  }
+
+  @media (min-width: 1440px) {
+    .menu {
+      display: none;
+    }
+  }
+
+  .menu__trigger {
+    /* El sistema de AP es tipográfico: el botón es una palabra, no una caja.
+       Sin este reset el navegador pinta su fondo gris por defecto. */
+    background: none;
+    border: 0;
+    cursor: pointer;
+    /* 72 x 46: por encima de los 24x24 de 2.5.8 y de los 44x44 de AP. */
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    padding: var(--space-12);
+    font-size: var(--nav-size);
+    line-height: var(--nav-leading);
+    color: var(--link);
+    text-decoration: none;
+  }
+
+  .menu__trigger:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+
+  /* Sin JavaScript no hay botón: la navegación se queda visible en bloque.
+     Es preferible una lista larga a un control que no hace nada. */
+  html:not(.js) .menu__trigger {
+    display: none;
+  }
+
+  .menu__panel {
+    position: fixed;
+    inset-block-start: var(--header-height, 94px);
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Opaco a propósito: con transparencia el contraste del texto dependería
+       de lo que hubiera detrás. */
+    background: var(--surface);
+  }
+
+  .menu__panel[hidden] {
+    display: none;
+  }
+
+  html:not(.js) .menu__panel {
+    position: static;
+    display: block;
+  }
+
+  html:not(.js) .menu__panel[hidden] {
+    display: block;
+  }
+
+  .menu__nav {
+    padding-block: var(--space-32) var(--space-48);
+    /* Los enlaces llevan 8 px de padding propio: se descuentan aquí para que
+       el texto quede a plomo con el logotipo de la cabecera. */
+    padding-inline: calc(var(--gutter-page) - var(--space-8));
+  }
+
+  .menu__list,
+  .menu__lang-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .menu__link {
+    display: inline-block;
+    padding: var(--space-12) var(--space-8);
+    font-size: var(--h3-size);
+    line-height: var(--h3-leading);
+    letter-spacing: var(--h3-track);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  /* Los enlaces NO ocupan todo el ancho a propósito: si lo hicieran, la regla
+     de la página actual mediría lo mismo que el panel y se leería como un
+     separador, no como un indicador. */
+  .menu__link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 6px;
+  }
+
+  .menu__link[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 6px;
+  }
+
+  .menu__lang {
+    padding-block-end: var(--space-48);
+    padding-inline: calc(var(--gutter-page) - var(--space-8));
+  }
+
+  .menu__lang-title {
+    margin-inline-start: var(--space-8);
+    margin-block-end: var(--space-8);
+    font-size: var(--label-size);
+    line-height: var(--label-leading);
+    letter-spacing: var(--label-track);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .menu__lang-list {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .menu__lang-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    padding: var(--space-12) var(--space-8);
+    font-size: var(--nav-size);
+    line-height: var(--nav-leading);
+    text-decoration: none;
+  }
+
+  .menu__lang-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+
+  .menu__lang-link[aria-current] {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+</style>
+
+<script>
+  /* -------------------------------------------------------------------------
+     Un solo comportamiento, sin dependencias. Lo que hace y por qué:
+
+     · inert sobre los hermanos del panel en lugar de aria-hidden: inert saca
+       del foco Y del árbol de accesibilidad, y aria-hidden solo lo segundo.
+       Con aria-hidden el teclado se sigue escapando al fondo.
+     · El foco se devuelve SIEMPRE al elemento que abrió, no a un selector
+       fijo: si mañana hay dos botones que abren esto, sigue funcionando.
+     · La trampa de foco se calcula al abrir y no se cachea: el contenido del
+       panel puede cambiar entre aperturas.
+     ------------------------------------------------------------------------- */
+
+  const FOCUSABLE =
+    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  document.documentElement.classList.add('js');
+
+  document.querySelectorAll<HTMLElement>('[data-menu]').forEach((root) => {
+    const trigger = root.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+    const panel = root.querySelector<HTMLElement>('[data-menu-panel]');
+    const label = root.querySelector<HTMLElement>('[data-menu-label]');
+    if (!trigger || !panel || !label) return;
+
+    const openText = label.textContent ?? '';
+    const closeText = trigger.dataset.closeLabel ?? openText;
+    let opener: HTMLElement | null = null;
+
+    function siblingsOfPanel(): HTMLElement[] {
+      // Todo lo que cuelga de <body> menos el propio panel.
+      return Array.from(document.body.children).filter(
+        (el): el is HTMLElement => el instanceof HTMLElement && !el.contains(panel!),
+      );
+    }
+
+    function open(from: HTMLElement) {
+      opener = from;
+      panel!.hidden = false;
+      trigger!.setAttribute('aria-expanded', 'true');
+      label!.textContent = closeText;
+      document.body.setAttribute('data-menu-open', '');
+      siblingsOfPanel().forEach((el) => el.setAttribute('inert', ''));
+      // El panel vive dentro de la cabecera, que acaba de quedar inerte:
+      // se le quita a la rama que contiene el panel.
+      let node: HTMLElement | null = panel!.parentElement;
+      while (node && node !== document.body) {
+        node.removeAttribute('inert');
+        node = node.parentElement;
+      }
+      const first = panel!.querySelector<HTMLElement>(FOCUSABLE);
+      (first ?? panel!).focus();
+      document.addEventListener('keydown', onKeydown, true);
+    }
+
+    function close() {
+      panel!.hidden = true;
+      trigger!.setAttribute('aria-expanded', 'false');
+      label!.textContent = openText;
+      document.body.removeAttribute('data-menu-open');
+      siblingsOfPanel().forEach((el) => el.removeAttribute('inert'));
+      document.removeEventListener('keydown', onKeydown, true);
+      (opener ?? trigger!).focus();
+      opener = null;
+    }
+
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      // El botón forma parte del ciclo: está fuera del panel pero es el
+      // control que lo cierra, y dejarlo fuera obliga a usar el ratón.
+      const items = [trigger!, ...Array.from(panel!.querySelectorAll<HTMLElement>(FOCUSABLE))];
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (event.shiftKey && (active === first || !items.includes(active as HTMLElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    trigger.addEventListener('click', () => {
+      if (trigger.getAttribute('aria-expanded') === 'true') close();
+      else open(trigger);
+    });
+
+    // Si la ventana crece hasta escritorio con el menú abierto, el panel
+    // desaparece por CSS: hay que devolver el foco y desbloquear el scroll o
+    // el usuario de teclado se queda sin salida.
+    const desktop = window.matchMedia('(min-width: 1440px)');
+    desktop.addEventListener('change', (e) => {
+      if (e.matches && trigger.getAttribute('aria-expanded') === 'true') close();
+    });
+  });
+</script>

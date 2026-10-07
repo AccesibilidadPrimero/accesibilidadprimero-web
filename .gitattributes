@@ -1,0 +1,6 @@
+# Finales de línea normalizados: si una máquina es Windows y la otra macOS,
+# sin esto cada commit cambia el archivo entero y los diffs son ilegibles.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.woff2 binary

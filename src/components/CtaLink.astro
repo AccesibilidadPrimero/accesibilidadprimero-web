@@ -1,0 +1,61 @@
+---
+/* El CTA del sistema es tipográfico: texto subrayado + flecha. No es una caja.
+   La flecha es decorativa (aria-hidden): el nombre accesible es el texto. */
+interface Props {
+  href: string;
+  size?: 'small' | 'default' | 'large';
+  external?: boolean;
+  class?: string;
+}
+const { href, size = 'default', external = false, class: className } = Astro.props;
+const esExterno = external || /^https?:\/\//.test(href);
+---
+
+<a
+  href={href}
+  class:list={['cta', `cta--${size}`, className]}
+  {...esExterno ? { rel: 'noopener', target: '_blank' } : {}}
+>
+  <span><slot /></span>
+  {
+    esExterno && (
+      /* «se abre en una ventana nueva» no es decorativo: cambia lo que va a
+         pasar al pulsar, y quien no ve la pestaña necesita saberlo (3.2.5). */
+      <span class="sr-only"> (se abre en una ventana nueva)</span>
+    )
+  }
+  <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14">
+    <path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" />
+  </svg>
+</a>
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-12);
+    min-height: var(--touch-min);
+    font-size: var(--h3-size);
+    line-height: var(--h3-leading);
+    letter-spacing: var(--h3-track);
+    text-decoration-thickness: var(--underline-rest);
+  }
+  .cta--large { font-size: var(--h2-size); line-height: var(--h2-leading); letter-spacing: var(--h2-track); }
+  /* La talla pequeña va al pie del hero, al mismo cuerpo que el titular y que
+     las frases del carrusel. */
+  .cta--small {
+    font-size: var(--body-sm-size);
+    line-height: var(--body-sm-leading);
+    letter-spacing: 0;
+    gap: var(--space-8);
+  }
+  .cta:hover { text-decoration-thickness: var(--underline-hover); }
+
+  /* La flecha avanza al pasar por encima. Es refuerzo del hover, nunca la
+     única señal: el subrayado ya ha engordado. */
+  .cta__arrow {
+    flex: none;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .cta:hover .cta__arrow { transform: translateX(var(--space-4)); }
+</style>

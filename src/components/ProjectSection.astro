@@ -1,0 +1,80 @@
+---
+/* ---------------------------------------------------------------------------
+   Un proyecto destacado en la Home.
+
+   La Home no sabe de qué proyecto se trata: la identidad visual viene del
+   propio proyecto (`paleta` en su ficha). Cambiar de destacado es editar un
+   campo, no rediseñar la portada.
+   --------------------------------------------------------------------------- */
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/config';
+import AccessibilityScore from './AccessibilityScore.astro';
+import Disclosure from './Disclosure.astro';
+import CtaLink from './CtaLink.astro';
+
+interface Props { proyecto: CollectionEntry<'proyectos'>; lang: Lang }
+const { proyecto, lang } = Astro.props;
+const d = proyecto.data;
+const id = `proyecto-${proyecto.id}`;
+---
+
+<section
+  class="proyecto"
+  aria-labelledby={`${id}-titulo`}
+  style={`--acento: ${d.paleta.acento}; --texto-sobre-acento: ${d.paleta.textoSobreAcento}; --anillo: ${d.paleta.anilloFoco};`}
+>
+  <div class="proyecto__intro">
+    <h2 id={`${id}-titulo`} class="proyecto__titulo">{d.titulo}</h2>
+    <AccessibilityScore nota={d.nota} proyecto={d.titulo} />
+  </div>
+
+  <div class="proyecto__cuerpo">
+    <p class="proyecto__resumen measure">{d.resumen}</p>
+
+    <Disclosure id={`${id}-mas`} contexto={d.titulo} lang={lang}>
+      <div class="proyecto__ampliacion measure"><slot /></div>
+    </Disclosure>
+
+    {
+      d.web && (
+        <CtaLink href={d.web} external>
+          {`Ir a ${d.titulo}`}
+        </CtaLink>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .proyecto {
+    padding-block: var(--space-64);
+    padding-inline: var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  .proyecto__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding-block-end: var(--space-16);
+    /* La regla hereda el acento del proyecto. Es DECORATIVA: el nombre está
+       escrito justo encima, así que no comunica nada por sí sola y 1.4.11 no
+       le aplica. Importa decirlo, porque el naranja de Foc i Cor da 2,93:1
+       sobre Silk y no serviría si tuviera que informar. */
+    border-block-end: 2px solid var(--acento);
+  }
+
+  .proyecto__titulo { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
+
+  .proyecto__cuerpo { display: flex; flex-direction: column; gap: var(--space-24); }
+
+  .proyecto__resumen { font-size: var(--body-size); line-height: var(--body-leading); }
+  .proyecto__ampliacion { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
+  .proyecto__ampliacion :global(p + p) { margin-block-start: var(--space-16); }
+
+  @media (min-width: 1024px) {
+    .proyecto__intro { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-32); }
+  }
+</style>

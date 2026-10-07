@@ -1,0 +1,85 @@
+---
+/* ---------------------------------------------------------------------------
+   Divulgación progresiva · «Leer más»
+
+   Es un <button>, no un enlace: no navega, muestra contenido que ya está en la
+   página. El panel se oculta con el atributo `hidden`, no con visibility ni
+   height:0; si sigue en el árbol de accesibilidad, el lector anuncia contenido
+   que el usuario cree cerrado.
+
+   Los tres botones de la Home dicen lo mismo, así que cada uno necesita
+   contexto en su nombre accesible (2.4.4). De ahí `contexto`.
+   --------------------------------------------------------------------------- */
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
+
+interface Props { id: string; contexto: string; lang: Lang }
+const { id, contexto, lang } = Astro.props;
+const ui = t(lang);
+---
+
+<div class="disclosure" data-disclosure>
+  <button
+    type="button"
+    class="disclosure__boton"
+    aria-expanded="false"
+    aria-controls={id}
+    data-disclosure-trigger
+    data-label-abierto={ui.readMore}
+    data-label-cerrado={ui.readLess}
+  >
+    <span data-disclosure-label>{ui.readMore}</span>
+    <span class="sr-only"> sobre {contexto}</span>
+  </button>
+
+  <div id={id} hidden data-disclosure-panel class="disclosure__panel">
+    <slot />
+  </div>
+</div>
+
+<style>
+  /* Sin JavaScript el panel se queda visible y el botón no se pinta: un botón
+     muerto en pantalla es peor que no tener botón (AGENTS.md §5). */
+  html:not(.js) .disclosure__boton { display: none; }
+  html:not(.js) .disclosure__panel,
+  html:not(.js) .disclosure__panel[hidden] { display: block; }
+
+  .disclosure__boton {
+    background: none;
+    border: 0;
+    padding: var(--space-12) var(--space-8);
+    margin-inline-start: calc(var(--space-8) * -1);
+    min-height: var(--touch-min);
+    color: var(--link);
+    font-size: var(--body-sm-size);
+    line-height: var(--body-sm-leading);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+  }
+  .disclosure__boton:hover { text-decoration-thickness: var(--underline-hover); }
+
+  .disclosure__panel { padding-block-start: var(--space-16); }
+</style>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  document.querySelectorAll<HTMLElement>('[data-disclosure]').forEach((root) => {
+    const boton = root.querySelector<HTMLButtonElement>('[data-disclosure-trigger]');
+    const panel = root.querySelector<HTMLElement>('[data-disclosure-panel]');
+    const label = root.querySelector<HTMLElement>('[data-disclosure-label]');
+    if (!boton || !panel || !label) return;
+
+    boton.addEventListener('click', () => {
+      const abierto = boton.getAttribute('aria-expanded') === 'true';
+      boton.setAttribute('aria-expanded', String(!abierto));
+      panel.hidden = abierto;
+      label.textContent = abierto
+        ? (boton.dataset.labelAbierto ?? 'Leer más')
+        : (boton.dataset.labelCerrado ?? 'Leer menos');
+      // El foco se queda en el botón. Moverlo solo se justifica en diálogos.
+    });
+  });
+</script>

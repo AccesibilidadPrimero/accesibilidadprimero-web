@@ -1,0 +1,118 @@
+/* ---------------------------------------------------------------------------
+   Base · accesibilidadprimero.com v2.0
+   Reset mínimo, tipografía, sistema de enlaces y foco. Ver AGENTS.md §4.
+   --------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--body-size);
+  line-height: var(--body-leading);
+  font-weight: 400;              /* El sistema no tiene negritas (decisión de
+                                    Johnny, 23/08): la jerarquía descansa en la
+                                    escala y en el contraste de color. */
+}
+
+/* El fondo no hace scroll mientras el menú modal está abierto. */
+body[data-menu-open] { overflow: hidden; }
+
+h1, h2, h3, h4, p, figure, blockquote, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, svg, video { display: block; max-width: 100%; height: auto; }
+button { font: inherit; }
+
+h1 {
+  font-size: var(--hero-size);
+  line-height: var(--hero-leading);
+  letter-spacing: var(--hero-track);
+  font-weight: 400;
+}
+h2 {
+  font-size: var(--h2-size);
+  line-height: var(--h2-leading);
+  letter-spacing: var(--h2-track);
+  font-weight: 400;
+}
+h3 {
+  font-size: var(--h3-size);
+  line-height: var(--h3-leading);
+  letter-spacing: var(--h3-track);
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ foco -- */
+/* Un solo sitio en todo el repo donde se define el foco. Nunca se desactiva,
+   ni «temporalmente» (AGENTS.md §1). */
+:focus-visible {
+  outline: var(--focus-width) solid var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* --------------------------------------------------------------- enlaces -- */
+/* Subrayado siempre visible: el color no puede ser la única señal (1.4.1).
+   El estado va en el GROSOR del subrayado:
+     reposo 2 px / offset 4  ·  hover 4 px / offset 4  ·  activo 4 px / offset 2
+   La navegación es la excepción: en reposo no va subrayada, y la página
+   actual sí. */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: var(--underline-rest);
+  text-underline-offset: var(--underline-offset);
+  transition: text-decoration-thickness var(--dur-fast) var(--ease-out),
+              text-underline-offset var(--dur-fast) var(--ease-out);
+}
+a:hover { text-decoration-thickness: var(--underline-hover); }
+a:active { text-decoration-thickness: var(--underline-hover); text-underline-offset: 2px; }
+
+/* ------------------------------------------------------------ utilidades -- */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--gutter-page);
+}
+
+.measure { max-width: var(--measure); }
+
+/* ------------------------------------------------- modo de alto contraste -- */
+/* Con forced-colors el navegador sustituye los colores del autor. Lo que se
+   pierde son los límites que dependían de un color de fondo: se devuelven. */
+@media (forced-colors: active) {
+  :focus-visible { outline: var(--focus-width) solid CanvasText; }
+  .card, .menu__panel { border: 1px solid CanvasText; }
+}
+
+/* ------------------------------------------------------------- movimiento -- */
+/* Reducir no es eliminar (AGENTS.md §2.3): las transiciones se resuelven de
+   forma instantánea, pero el cambio de estado sigue ocurriendo y siendo
+   perceptible. Lo que se apaga de verdad —el autoavance del carrusel— se
+   sustituye por un estado fijo, no se deja a medias. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

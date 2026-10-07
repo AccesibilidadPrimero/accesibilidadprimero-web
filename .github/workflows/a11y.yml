@@ -1,0 +1,52 @@
+name: Accesibilidad y build
+
+# El CI es un guardarraíl contra regresiones tontas, NO una auditoría: los
+# tests automáticos cogen alrededor de un tercio de los problemas WCAG. La
+# pasada de teclado y de lector de pantalla la hace Johnny.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # El esquema de contenido rompe aquí si falta un alt, si un caso tiene
+      # seis decisiones o si las tres cifras son de accesibilidad.
+      - name: Build (incluye las reglas de contenido)
+        run: npm run build
+
+      - name: Tipos y plantillas
+        run: npm run check
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: axe-core, objetivos táctiles y reflow a 320 px
+        run: npm run a11y
+
+      - name: Recorrido de teclado del menú y del carrusel
+        run: npm run teclado
+
+      # Medición por píxel, no lectura del CSS: un medidor que lee el
+      # background-color de un ancestro falla en las dos direcciones.
+      - name: Contraste medido por píxel
+        run: npm run contraste
+
+      - name: Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.14.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

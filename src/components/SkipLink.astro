@@ -1,0 +1,35 @@
+---
+/* Primer elemento enfocable del documento (2.4.1).
+   Modo de fallo conocido: destino no focusable. <main id="contenido"> lleva
+   tabindex="-1" en Base.astro, si no el foco salta pero no aterriza. */
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+---
+
+<a class="skip" href="#contenido">{ui.skipLink}</a>
+
+<style>
+  /* Oculto hasta recibir foco. No con display:none: un enlace con display
+     none no es enfocable y el skip link dejaría de existir. */
+  .skip {
+    position: absolute;
+    inset-block-start: var(--space-8);
+    inset-inline-start: var(--space-8);
+    z-index: 200;
+    transform: translateY(calc(-100% - var(--space-16)));
+    padding: var(--space-12) var(--space-16);
+    min-height: var(--touch-min);
+    display: inline-flex;
+    align-items: center;
+    background: var(--surface-raised);
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+
+  .skip:focus-visible { transform: translateY(0); }
+</style>

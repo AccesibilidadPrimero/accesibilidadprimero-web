@@ -1,0 +1,155 @@
+---
+/* ---------------------------------------------------------------------------
+   Cabecera · logotipo + navegación
+
+   La barra completa solo cabe a partir de 1440: el bloque derecho mide 614 px
+   y con el logotipo suma 844 sobre los 672 disponibles en Tablet 768. Por
+   debajo, el menú modal. El corte está en un solo sitio: aquí y en
+   MenuModal.astro, con el mismo valor.
+   --------------------------------------------------------------------------- */
+import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { t } from '../i18n/ui';
+import MenuModal from './MenuModal.astro';
+
+interface Props { lang: Lang; current: RouteKey; slug?: string }
+const { lang, current, slug } = Astro.props;
+const ui = t(lang);
+const langs = alternates(current, slug);
+---
+
+<header class="header">
+  <a href={path('home', lang)} class="header__logo" aria-label="Accesibilidad Primero, ir a la portada">
+    <span aria-hidden="true">Accesibilidad Primero<sup>®</sup></span>
+  </a>
+
+  <div class="header__right">
+    <nav aria-label={ui.navLabel} class="header__nav">
+      <ul class="header__list">
+        {
+          NAV.map((key) => (
+            <li>
+              <a
+                href={path(key, lang)}
+                class="header__link"
+                aria-current={key === current ? 'page' : undefined}
+              >
+                {ui.nav[key]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    {
+      langs.length > 0 && (
+        <div class="header__lang">
+          <h2 class="sr-only" id="cabecera-idioma">{ui.langGroupLabel}</h2>
+          <ul class="header__lang-list" aria-labelledby="cabecera-idioma">
+            {
+              langs.map((l) => (
+                <li>
+                  <a
+                    href={l.href}
+                    hreflang={l.hreflang}
+                    lang={l.hreflang}
+                    class="header__lang-link"
+                    aria-current={l.lang === lang ? 'true' : undefined}
+                  >
+                    <span aria-hidden="true">{l.code}</span>
+                    <span class="sr-only">{l.name}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      )
+    }
+
+    <MenuModal lang={lang} current={current} slug={slug} />
+  </div>
+</header>
+
+<style>
+  .header {
+    /* Transparente y por encima: en la Home el hero se sube por debajo de la
+       cabecera para que el menta llegue hasta arriba, sin banda clara. En el
+       resto de páginas, detrás hay Silk y se comporta igual. */
+    position: relative;
+    z-index: 1;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-24);
+    min-height: var(--header-height);
+    padding-inline: var(--gutter-page);
+    padding-block: var(--space-24);
+  }
+
+  .header__logo {
+    /* El logotipo es un enlace a la portada, así que es un objetivo táctil
+       como cualquier otro. En el Figma mide 17 px de alto porque allí es un
+       dibujo; aquí necesita los 44 px de la regla de AP (2.5.8 pide 24). */
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    font-size: var(--nav-size);
+    line-height: var(--nav-leading);
+    text-decoration: none;
+    flex: none;
+  }
+  .header__logo:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+  .header__logo sup { font-size: 0.5em; vertical-align: super; }
+
+  .header__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-64);
+  }
+
+  /* La navegación en línea y el selector solo existen en escritorio. Por
+     debajo los sustituye el menú modal, que es el mismo contenido. */
+  .header__nav, .header__lang { display: none; }
+
+  @media (min-width: 1440px) {
+    .header__nav, .header__lang { display: block; }
+  }
+
+  .header__list { display: flex; gap: var(--space-32); }
+  .header__lang-list { display: flex; gap: var(--space-4); }
+
+  .header__link, .header__lang-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    padding: var(--space-12);
+    font-size: var(--nav-size);
+    line-height: var(--nav-leading);
+    /* La navegación no va subrayada en reposo. Es la excepción documentada al
+       sistema de enlaces; la página actual sí lo lleva. */
+    text-decoration: none;
+  }
+  .header__lang-link { min-width: var(--touch-min); }
+
+  .header__link:hover,
+  .header__lang-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+
+  /* La página actual: subrayado + aria-current. Nunca solo color (1.4.1). */
+  .header__link[aria-current='page'],
+  .header__lang-link[aria-current] {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
+</style>

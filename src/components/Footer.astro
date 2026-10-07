@@ -1,0 +1,61 @@
+---
+import { NAV_LEGAL, path, type Lang } from '../i18n/config';
+import { t } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+---
+
+<footer class="pie">
+  <p class="pie__copy">{ui.footerCopyright}</p>
+  <p class="pie__lema">{ui.footerTagline}</p>
+  <!-- Dos <nav> en la misma página: los dos con aria-label, y distintos. -->
+  <nav aria-label={ui.footerNavLabel} class="pie__nav">
+    <ul class="pie__lista">
+      {
+        NAV_LEGAL.map((key) => (
+          <li><a href={path(key, lang)} class="pie__enlace">{ui.nav[key]}</a></li>
+        ))
+      }
+    </ul>
+  </nav>
+</footer>
+
+<style>
+  .pie {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: var(--space-32) var(--gutter-page);
+    background: var(--surface-raised);
+    font-size: var(--meta-size);
+    line-height: var(--meta-leading);
+  }
+  .pie__copy, .pie__lema { color: var(--text-secondary); }
+
+  .pie__lista { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-8); }
+
+  /* El separador «·» del Figma es decorativo: se dibuja con CSS en vez de
+     meter un nodo de texto que el lector de pantalla tendría que leer. */
+  .pie__lista li + li::before {
+    content: '·';
+    margin-inline-end: var(--space-8);
+    color: var(--text-secondary);
+  }
+  .pie__lista li { display: flex; align-items: center; }
+
+  .pie__enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    padding-block: var(--space-12);
+  }
+
+  @media (min-width: 1024px) {
+    .pie {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-48);
+    }
+  }
+</style>

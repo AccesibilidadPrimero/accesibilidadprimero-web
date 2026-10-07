@@ -1,0 +1,149 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+import CtaLink from '../components/CtaLink.astro';
+import { path, DEFAULT_LANG } from '../i18n/config';
+
+const lang = DEFAULT_LANG;
+
+/* Tres destacados, siempre tres. El resto, en /proyectos/. */
+const todos = await getCollection('proyectos');
+const destacados = todos.filter((p) => p.data.destacado).sort((a, b) => a.data.orden - b.data.orden);
+
+if (destacados.length !== 3) {
+  throw new Error(
+    `La Home enseña exactamente tres proyectos destacados y hay ${destacados.length}. ` +
+      'Marca o desmarca `destacado` en src/content/proyectos/.',
+  );
+}
+
+/* El cuerpo del markdown es la ampliación del «Leer más». */
+const conCuerpo = await Promise.all(
+  destacados.map(async (p) => {
+    const { Content } = await render(p);
+    return { proyecto: p, Content };
+  }),
+);
+
+const productos = [
+  {
+    nombre: 'Itza',
+    marca: true,
+    descripcion: 'El asistente accesible para organizaciones con impacto social.',
+    cta: 'Conocer Itza',
+    href: 'https://itza.accesibilidadprimero.com/',
+  },
+  {
+    nombre: 'A11y Primero',
+    marca: true,
+    descripcion:
+      'Nuestra extensión propia de Chrome para auditorías express, fácil de ver, entender y corregir.',
+    cta: 'Conocer A11y Primero',
+    href: 'https://www.accesibilidadprimero.com/a11yprimero/',
+  },
+  {
+    nombre: 'Accessible Abstracts',
+    marca: true,
+    descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
+    cta: 'Conocer Accessible Abstracts',
+    href: 'https://aa.accesibilidadprimero.com/',
+  },
+];
+---
+
+<Base
+  lang={lang}
+  current="home"
+  title="Accesibilidad Primero · Diseñamos webs accesibles"
+  description="Estudio de diseño que crea webs y aplicaciones con la accesibilidad digital como punto de partida."
+>
+  <HeroCarousel
+    lang={lang}
+    titular="Diseñamos webs accesibles para organizaciones y proyectos con impacto social."
+  />
+
+  <h2 class="sr-only">Proyectos destacados</h2>
+  {conCuerpo.map(({ proyecto, Content }) => (
+    <ProjectSection proyecto={proyecto} lang={lang}>
+      <Content />
+    </ProjectSection>
+  ))}
+
+  <section class="productos" aria-labelledby="productos-titulo">
+    <h2 id="productos-titulo" class="productos__intro">
+      Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea
+      accesible para más personas.
+    </h2>
+
+    <ul class="productos__lista">
+      {
+        productos.map((p) => (
+          <li class="producto">
+            <h3 class="producto__nombre">
+              {p.nombre}
+              {p.marca && <sup aria-hidden="true">®</sup>}
+            </h3>
+            <p class="producto__desc">{p.descripcion}</p>
+            <CtaLink href={p.href} external>{p.cta}</CtaLink>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="estudio" aria-labelledby="estudio-titulo">
+    <h2 id="estudio-titulo" class="estudio__texto">
+      Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
+      accesibilidad digital como punto de partida.
+    </h2>
+    <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero</CtaLink>
+  </section>
+</Base>
+
+<style>
+  .productos {
+    padding-block: var(--space-96);
+    padding-inline: var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-64);
+  }
+  .productos__intro {
+    font-size: var(--h2-size);
+    line-height: var(--h2-leading);
+    letter-spacing: var(--h2-track);
+    font-weight: 400;
+    max-width: 28ch;
+  }
+
+  .productos__lista {
+    display: grid;
+    gap: var(--space-48);
+  }
+  @media (min-width: 768px)  { .productos__lista { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .productos__lista { grid-template-columns: repeat(3, 1fr); } }
+
+  .producto { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; }
+  .producto__nombre { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
+  .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
+  .producto__desc { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
+
+  .estudio {
+    background: var(--surface-raised);
+    padding-block: var(--space-96);
+    padding-inline: var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    align-items: flex-start;
+  }
+  .estudio__texto {
+    font-size: var(--h2-size);
+    line-height: var(--h2-leading);
+    letter-spacing: var(--h2-track);
+    font-weight: 400;
+    max-width: 30ch;
+  }
+</style>

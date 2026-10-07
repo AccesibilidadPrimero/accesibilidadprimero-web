@@ -1,0 +1,66 @@
+---
+/* ---------------------------------------------------------------------------
+   Carcasa común. Header, footer, CTA y sistema de foco son lo que mantiene
+   como una sola web tres tipos de contenido con reglas distintas.
+   --------------------------------------------------------------------------- */
+import '../styles/tokens.css';
+import '../styles/base.css';
+import SkipLink from '../components/SkipLink.astro';
+import Header from '../components/Header.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import Footer from '../components/Footer.astro';
+import { DEFAULT_LANG, type Lang, type RouteKey } from '../i18n/config';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: Lang;
+  current: RouteKey;
+  slug?: string;
+  /** El bloque de contacto se repite en todas las páginas menos en Contacto. */
+  conCta?: boolean;
+}
+const {
+  title,
+  description,
+  lang = DEFAULT_LANG,
+  current,
+  slug,
+  conCta = true,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Sin user-scalable=no ni maximum-scale: el zoom es un derecho (1.4.4). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light" />
+  </head>
+
+  <body>
+    <SkipLink lang={lang} />
+    <Header lang={lang} current={current} slug={slug} />
+
+    <!-- tabindex="-1": sin él el skip link mueve el foco a un elemento que no
+         puede recibirlo y el salto no ocurre. Modo de fallo conocido n.º 4. -->
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+
+    {conCta && <ContactCTA lang={lang} />}
+    <Footer lang={lang} />
+
+    <style is:global>
+      /* El destino del skip link no debe mostrar anillo de foco: el usuario no
+         ha enfocado un control, solo ha aterrizado en la región. */
+      main:focus { outline: none; }
+    </style>
+  </body>
+</html>
