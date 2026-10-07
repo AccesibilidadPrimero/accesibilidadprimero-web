@@ -1,0 +1,81 @@
+/* ---------------------------------------------------------------------------
+   Geometría de la Home · medida del Figma (frame Home / Desktop 1440, 145:852)
+
+   Los valores son los del documento, literales. Donde el Figma fija un ancho
+   en píxeles (la medida de un párrafo, el ancho de una tarjeta) va ese número
+   y no una aproximación en `ch`: la medida es una decisión de diseño tomada,
+   no un efecto secundario del tamaño de letra.
+
+   Por debajo de 1440 esos anchos se vuelven proporciones del contenedor, que
+   es lo que hace el propio Figma al pasar a Tablet y Móvil.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* El lienzo del Figma y su margen lateral. Todo lo demás cuelga de aquí. */
+  --lienzo: 1440px;
+  --margen: 48px;              /* padding lateral de todas las secciones */
+  --contenido: 1344px;         /* 1440 − 48 − 48 */
+}
+
+/* ---- Hero ---------------------------------------------------------------- */
+.hero__pila      { width: 693px; height: 400px; }   /* ilustración, tamaño fijo */
+.hero__escenario { gap: var(--space-16); }          /* Carousel Stage: gap 16 */
+.hero__banda     { gap: var(--space-24); }          /* Hero Band: gap 24 */
+
+/* ---- Proyectos destacados ------------------------------------------------ */
+/* Project Intro: fila con el nombre a la izquierda y la meta a la derecha. */
+.proyecto__intro   { padding-block: var(--space-64); }
+.proyecto--eci .proyecto__intro { padding-block: var(--space-48); }
+
+/* Project Content: ECI e Izaskun en vertical con gap 48; Foc i Cor en
+   horizontal con gap 24 y la copia a la izquierda. No es el mismo bloque
+   repetido tres veces: cada caso tiene su composición. */
+.proyecto__cuerpo              { gap: var(--space-48); }
+.proyecto--foc .proyecto__cuerpo { gap: var(--space-24); }
+
+.proyecto__resumen { max-width: 689px; }                 /* ECI: Project Copy 689 */
+.proyecto--foc .proyecto__resumen { max-width: 579px; }  /* Foc: Copia 579 */
+.proyecto--izaskun .proyecto__resumen { max-width: 663px; }
+
+/* ---- Productos ----------------------------------------------------------- */
+/* La fila NO es una rejilla de tres columnas iguales: las tres tarjetas miden
+   432, 546 y 318, y se alinean por abajo. 432+546+318 + 24+24 = 1344. */
+.productos__lista {
+  --w-itza: 432;
+  --w-a11y: 546;
+  --w-aa: 318;
+  display: flex;
+  align-items: flex-end;        /* MIN|MAX en el Figma: alineadas abajo */
+  gap: var(--space-24);
+}
+.producto { flex: 0 1 auto; }
+.producto--itza { width: calc(var(--w-itza) / 1344 * 100%); }
+.producto--a11y { width: calc(var(--w-a11y) / 1344 * 100%); }
+.producto--aa   { width: calc(var(--w-aa)   / 1344 * 100%); }
+
+/* El campo de color de cada producto conserva su proporción del Figma. */
+.producto__campo { width: 100%; }
+.producto--itza .producto__campo { aspect-ratio: 432 / 444; }
+.producto--a11y .producto__campo { aspect-ratio: 546 / 561; }
+.producto--aa   .producto__campo { aspect-ratio: 318 / 327; }
+
+/* Por debajo de 1024 la fila se apila: tres anchos distintos no caben. */
+@media (max-width: 1023px) {
+  .productos__lista { flex-direction: column; align-items: stretch; gap: var(--space-48); }
+  .producto--itza, .producto--a11y, .producto--aa { width: 100%; }
+}
+
+/* ---- Estudio -------------------------------------------------------------- */
+/* Centrada, con el icono encima. gap 32, padding 96/48. */
+.estudio {
+  align-items: center;
+  text-align: center;
+  gap: var(--space-32);
+  padding-block: var(--space-96);
+}
+.estudio__icono { width: 60px; height: 60px; flex: none; }
+.estudio__texto { max-width: 1068px; }
+
+/* ---- Cierre de contacto --------------------------------------------------- */
+.contacto        { gap: var(--space-48); }
+.contacto__titulo { max-width: 962px; }

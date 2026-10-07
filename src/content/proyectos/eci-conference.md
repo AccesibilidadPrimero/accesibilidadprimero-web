@@ -11,9 +11,14 @@ paleta:
   acento: '#005fcc'
   textoSobreAcento: '#f7f7f4'
   anilloFoco: '#f7f7f4'
-# Sin bloque `nota`: hoy mide 87 sobre 100 y la declaración publicada en
-# /accessibility/ da cifras que ya no son ciertas. La barra no se publica
-# hasta que las dos cosas estén resueltas.
+  uso: fondo
+# Nota medida con A11y Primero el 6 de octubre de 2026. NO es 97: la cifra que
+# hay hoy en la declaración publicada de ECI está desactualizada y hay diez
+# imágenes sin alternativa. Ver claude/plan-notas-por-encima-de-90.md
+nota:
+  valor: 87
+  medidaEl: 2026-10-06
+  declaracion: https://eciconference2027.com/accessibility/
 casoPublicado: false
 ---
 

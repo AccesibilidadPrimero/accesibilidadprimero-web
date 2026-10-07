@@ -4,3 +4,6 @@ dist/
 capturas/
 .DS_Store
 .wrangler/
+
+# Carpeta de descarte: lo que Claude no puede borrar directamente.
+_to_delete/

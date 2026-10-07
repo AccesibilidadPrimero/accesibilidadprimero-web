@@ -16,10 +16,14 @@ interface Props { proyecto: CollectionEntry<'proyectos'>; lang: Lang }
 const { proyecto, lang } = Astro.props;
 const d = proyecto.data;
 const id = `proyecto-${proyecto.id}`;
+/* Cada caso tiene su composición en el Figma, no es el mismo bloque tres
+   veces: Foc i Cor va en horizontal y los otros dos en vertical. */
+const variante = proyecto.id.includes('foc') ? 'foc'
+  : proyecto.id.includes('izaskun') ? 'izaskun' : 'eci';
 ---
 
 <section
-  class="proyecto"
+  class:list={["proyecto", `proyecto--${variante}`]}
   aria-labelledby={`${id}-titulo`}
   style={`--acento: ${d.paleta.acento}; --texto-sobre-acento: ${d.paleta.textoSobreAcento}; --anillo: ${d.paleta.anilloFoco};`}
 >
@@ -47,34 +51,42 @@ const id = `proyecto-${proyecto.id}`;
 
 <style>
   .proyecto {
-    padding-block: var(--space-64);
     padding-inline: var(--gutter-page);
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
   }
 
   .proyecto__intro {
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
-    padding-block-end: var(--space-16);
-    /* La regla hereda el acento del proyecto. Es DECORATIVA: el nombre está
-       escrito justo encima, así que no comunica nada por sí sola y 1.4.11 no
-       le aplica. Importa decirlo, porque el naranja de Foc i Cor da 2,93:1
-       sobre Silk y no serviría si tuviera que informar. */
-    border-block-end: 2px solid var(--acento);
+    /* Sin regla bajo el título: en el Figma no existe. El nombre va a la
+       izquierda y el bloque de nota a la derecha, en la misma fila. */
   }
 
   .proyecto__titulo { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
 
-  .proyecto__cuerpo { display: flex; flex-direction: column; gap: var(--space-24); }
+  .proyecto__cuerpo { display: flex; flex-direction: column; }
+
+  /* Foc i Cor: copia a la izquierda y el slider a la derecha. */
+  @media (min-width: 1024px) {
+    .proyecto--foc .proyecto__cuerpo {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
 
   .proyecto__resumen { font-size: var(--body-size); line-height: var(--body-leading); }
   .proyecto__ampliacion { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
   .proyecto__ampliacion :global(p + p) { margin-block-start: var(--space-16); }
 
   @media (min-width: 1024px) {
-    .proyecto__intro { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-32); }
+    .proyecto__intro {
+      flex-direction: row;
+      align-items: center;      /* SPACE_BETWEEN | CENTER en el Figma */
+      justify-content: space-between;
+      gap: var(--space-32);
+    }
   }
 </style>

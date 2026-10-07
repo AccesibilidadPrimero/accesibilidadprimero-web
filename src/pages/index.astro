@@ -34,6 +34,7 @@ const productos = [
     descripcion: 'El asistente accesible para organizaciones con impacto social.',
     cta: 'Conocer Itza',
     href: 'https://itza.accesibilidadprimero.com/',
+    clase: 'producto--itza',
   },
   {
     nombre: 'A11y Primero',
@@ -42,6 +43,7 @@ const productos = [
       'Nuestra extensión propia de Chrome para auditorías express, fácil de ver, entender y corregir.',
     cta: 'Conocer A11y Primero',
     href: 'https://www.accesibilidadprimero.com/a11yprimero/',
+    clase: 'producto--a11y',
   },
   {
     nombre: 'Accessible Abstracts',
@@ -49,6 +51,7 @@ const productos = [
     descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
     cta: 'Conocer Accessible Abstracts',
     href: 'https://aa.accesibilidadprimero.com/',
+    clase: 'producto--aa',
   },
 ];
 ---
@@ -80,7 +83,11 @@ const productos = [
     <ul class="productos__lista">
       {
         productos.map((p) => (
-          <li class="producto">
+          <li class:list={['producto', p.clase]}>
+            {/* Campo de color: en el Figma cada producto lleva su imagen o su
+                animación aquí. Mientras no estén, el hueco conserva la
+                proporción exacta para que la composición no mienta. */}
+            <div class="producto__campo" aria-hidden="true" />
             <h3 class="producto__nombre">
               {p.nombre}
               {p.marca && <sup aria-hidden="true">®</sup>}
@@ -94,6 +101,9 @@ const productos = [
   </section>
 
   <section class="estudio" aria-labelledby="estudio-titulo">
+    {/* Icono de 60 x 60 encima del texto, como en el Figma. Es decorativo:
+        lo que dice la sección está escrito debajo. */}
+    <div class="estudio__icono" aria-hidden="true" />
     <h2 id="estudio-titulo" class="estudio__texto">
       Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
       accesibilidad digital como punto de partida.
@@ -104,7 +114,7 @@ const productos = [
 
 <style>
   .productos {
-    padding-block: var(--space-96);
+    padding-block: var(--space-96) var(--space-128);
     padding-inline: var(--gutter-page);
     display: flex;
     flex-direction: column;
@@ -115,35 +125,29 @@ const productos = [
     line-height: var(--h2-leading);
     letter-spacing: var(--h2-track);
     font-weight: 400;
-    max-width: 28ch;
+    max-width: 1002px;   /* medida del Figma */
   }
 
-  .productos__lista {
-    display: grid;
-    gap: var(--space-48);
-  }
-  @media (min-width: 768px)  { .productos__lista { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .productos__lista { grid-template-columns: repeat(3, 1fr); } }
-
-  .producto { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; }
+  /* El reparto de anchos y la alineación inferior viven en home.css, que es
+     donde está la geometría medida del Figma. */
+  .producto { display: flex; flex-direction: column; gap: var(--space-24); align-items: flex-start; }
+  .producto__campo { background: var(--mint); }
   .producto__nombre { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
   .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
   .producto__desc { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
 
   .estudio {
     background: var(--surface-raised);
-    padding-block: var(--space-96);
     padding-inline: var(--gutter-page);
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
-    align-items: flex-start;
   }
   .estudio__texto {
     font-size: var(--h2-size);
     line-height: var(--h2-leading);
     letter-spacing: var(--h2-track);
     font-weight: 400;
-    max-width: 30ch;
   }
+  /* Marcador del icono, con su tamaño real, hasta que llegue el SVG. */
+  .estudio__icono { border-radius: 50%; background: var(--mint); }
 </style>

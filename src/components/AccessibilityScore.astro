@@ -1,77 +1,97 @@
 ---
 /* ---------------------------------------------------------------------------
-   Nota de accesibilidad del proyecto.
+   Barra de nota del proyecto · «Accessibility Meta Content» del Figma.
 
-   Decisión tomada el 6/10/2026 (claude/plan-notas-por-encima-de-90.md):
-   arreglar primero, publicar después. La barra solo aparece si se cumplen LAS
-   DOS condiciones:
+   Dos bloques en una fila, separados 24: la nota con su punto de estado, y la
+   conformidad WCAG con su icono. Anchos del documento: 131 y 169.
 
-     · la nota pasa de 90, y
-     · existe la declaración de accesibilidad a la que enlazar.
+   Tres cosas que el diseño original hacía mal y aquí no se repiten:
 
-   Hoy no se cumple en ninguno de los tres: ECI 87, Izaskun 86, y Foc i Cor
-   llega a 91 pero su declaración responde 404. Por eso este componente no
-   pinta nada todavía, y eso es correcto: es el código el que impide publicar
-   una cifra que no se sostiene, no la memoria de nadie.
+   1. El punto era #22c55e sobre Silk: 2,12:1, por debajo del 3:1 de 1.4.11.
+      Aquí usa el token de señal (#157a3d, 5,04:1).
+   2. El estado iba solo en el color, que es 1.4.1. Aquí el número está
+      escrito y el punto solo acompaña, así que no carga información él solo.
+   3. El icono de accesibilidad es decorativo y va aria-hidden: lo que dice
+      está escrito al lado.
 
-   Dos cosas que el diseño original hacía mal y aquí no se repiten:
-
-   1. El punto verde era #22c55e sobre Silk: 2,12:1, por debajo del 3:1 de
-      1.4.11. Aquí el indicador usa el token de señal (#157a3d, 5,04:1).
-   2. El punto distinguía bandas solo por color, que es 1.4.1. Aquí el estado
-      va escrito, y el punto solo acompaña.
-
-   Y «WCAG 2.2 AA» a secas no se pinta: las tres declaraciones dicen
-   conformidad PARCIAL, y una puntuación de herramienta propia no es una
-   declaración de conformidad. Son dos cosas distintas y se nombran distinto.
+   La nota enlaza a la declaración cuando la hay. Cuando no, se pinta igual
+   pero sin enlace: un enlace que lleva a un 404 es peor que no tenerlo.
    --------------------------------------------------------------------------- */
 interface Props {
-  nota?: { valor: number; medidaEl: Date; declaracion?: string };
+  nota?: { valor: number; medidaEl: Date; declaracion?: string; conformidad?: string };
   proyecto: string;
 }
 const { nota, proyecto } = Astro.props;
-
-const UMBRAL = 90;
-const publicable = !!nota && nota.valor > UMBRAL && !!nota.declaracion;
 const fecha = nota
   ? new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(nota.medidaEl)
   : '';
 ---
 
 {
-  publicable && (
-    <p class="nota">
-      <span class="nota__punto" aria-hidden="true" />
-      <a href={nota!.declaracion}>
-        <strong class="nota__valor">{nota!.valor}</strong>
-        <span> sobre 100 en accesibilidad</span>
-        <span class="sr-only"> · {proyecto}. Ver la declaración de accesibilidad</span>
-      </a>
-      <span class="nota__fecha">Medido el {fecha}</span>
-    </p>
+  nota && (
+    <div class="meta">
+      <p class="meta__nota">
+        {nota.declaracion ? (
+          <a href={nota.declaracion}>
+            <span>{nota.valor} / 100</span>
+            <span class="sr-only">
+              {` en accesibilidad · ${proyecto}. Medido el ${fecha}. Ver la declaración de accesibilidad`}
+            </span>
+          </a>
+        ) : (
+          <span>
+            <span>{nota.valor} / 100</span>
+            <span class="sr-only">{` en accesibilidad · ${proyecto}. Medido el ${fecha}`}</span>
+          </span>
+        )}
+        <span class="meta__punto" aria-hidden="true" />
+      </p>
+
+      <p class="meta__wcag">
+        {/* Decorativo: lo que significa está escrito justo al lado. */}
+        <svg class="meta__icono" aria-hidden="true" focusable="false" viewBox="0 0 20 20" width="20" height="20">
+          <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4" />
+          <circle cx="10" cy="5.1" r="1.5" fill="currentColor" />
+          <path d="M5 8h10M10 8v4M10 12l-2.2 4M10 12l2.2 4" fill="none" stroke="currentColor"
+                stroke-width="1.4" stroke-linecap="round" />
+        </svg>
+        <span>{nota.conformidad ?? 'WCAG 2.2 AA'}</span>
+      </p>
+    </div>
   )
 }
 
 <style>
-  .nota {
+  .meta {
     display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: var(--space-8);
+    align-items: center;
+    gap: var(--space-24);
     font-size: var(--meta-size);
     line-height: var(--meta-leading);
+    flex: none;
   }
-  .nota__punto {
-    align-self: center;
-    width: 10px;
-    height: 10px;
+
+  .meta__nota, .meta__wcag { display: flex; align-items: center; gap: var(--space-8); }
+
+  /* La nota es un enlace a la declaración, así que es un objetivo táctil como
+     cualquier otro: 44 px de alto, la regla de AP. El bloque entero se alinea
+     por su centro, así que crecer no descoloca nada. */
+  .meta__nota a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-min);
+  }
+
+  .meta__punto {
+    width: 10px; height: 10px;
     border-radius: 50%;
     background: var(--signal-ok);
+    flex: none;
   }
-  .nota__valor { font-weight: 500; }
-  .nota__fecha { color: var(--text-secondary); }
+
+  .meta__icono { flex: none; }
 
   @media (forced-colors: active) {
-    .nota__punto { background: CanvasText; }
+    .meta__punto { background: CanvasText; }
   }
 </style>

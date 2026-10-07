@@ -71,6 +71,11 @@ Están aquí porque ya han pasado, no en abstracto:
 
 - Los tokens viven en `src/styles/tokens.css` y salen del Figma. **No se
   inventa un valor nuevo aquí**: se crea primero en Figma y después se trae.
+- **La escala tipográfica va por tramos y tiene que pasar por los valores del
+  Figma en 390, 768 y 1440.** Una sola interpolación entre el valor de móvil y
+  el de escritorio NO vale: las pendientes de los dos tramos son distintas y el
+  valor intermedio sale mal. Ya pasó: el cuerpo se quedaba en 27 px a 1440 en
+  vez de 30. `npm run tipografia` lo comprueba midiendo el render.
 - Sin framework de utilidades. Si una regla sirve para un solo componente, vive
   en el `<style>` de ese componente.
 - **El color nunca va solo** (1.4.1). El estado se lleva en el grosor del
@@ -110,6 +115,14 @@ disciplina personal a las once de la noche.
   `compartida`.
 - `destacado: true` en un máximo de **3** casos.
 - **Sin `imagenAlt` no compila.** Ninguna imagen entra sin alternativa escrita.
+- **Las imágenes que se ven en pantalla van en `src/assets/`, no en `public/`.**
+  Astro solo optimiza lo que está dentro de `src/`; lo de `public/` lo copia sin
+  tocar. Se usa `<Picture>` de `astro:assets` con `formats={['avif','webp']}`,
+  que deja el original como respaldo. `public/` se reserva para lo que necesita
+  URL fija: tipografías, imagen de compartir, vídeo. Ver `src/assets/LEEME.md`.
+- **Los originales se exportan a @2x y en PNG o JPG, nunca en WebP.** Astro
+  reduce pero no amplía, y recomprimir algo ya comprimido suma artefactos sin
+  ahorrar bytes.
 - Titulares **sin antetítulo y sin mayúsculas sostenidas**: regla de lint.
 - La paleta que declara cada proyecto se valida en build contra el fondo de la
   Home.
@@ -135,6 +148,8 @@ npm run build        # build de producción. Las reglas del punto 6 viven en el
                      # esquema de contenido, así que rompen AQUÍ: no hace falta
                      # un lint aparte y no puede saltárselo nadie.
 npm run check        # tipos y plantillas Astro
+npm run tipografia   # mide el tamaño y el interlineado QUE PINTA EL NAVEGADOR
+                     # contra los estilos del Figma en 390, 768 y 1440
 npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS

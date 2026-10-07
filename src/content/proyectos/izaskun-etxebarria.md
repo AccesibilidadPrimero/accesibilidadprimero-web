@@ -11,8 +11,11 @@ paleta:
   acento: '#c2002f'
   textoSobreAcento: '#f7f7f4'
   anilloFoco: '#f7f7f4'
-# La declaración de este sí está bien (/declaracion-de-accesibilidad/), pero
-# la nota hoy es 86 y no llega a 90.
+  uso: fondo
+nota:
+  valor: 86
+  medidaEl: 2026-10-06
+  declaracion: https://izaskunetxebarria.com/declaracion-de-accesibilidad/
 casoPublicado: false
 ---
 

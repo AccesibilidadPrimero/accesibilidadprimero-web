@@ -36,6 +36,11 @@ check('El primer Tab llega al skip link', a?.texto.includes('Saltar al contenido
 
 // 2. Y lleva de verdad al contenido: el destino tiene que recibir el foco.
 await page.keyboard.press('Enter');
+/* El navegador mueve el foco al destino del salto en el tick siguiente a la
+   navegación, no en el mismo. Sin esta espera la comprobación lee el estado
+   anterior y falla de forma intermitente: es un fallo del test, no del salto. */
+await page.waitForFunction(() => location.hash === '#contenido');
+await page.waitForTimeout(100);
 a = await activo();
 check('El skip link aterriza en <main>', a?.id === 'contenido', `foco en <${a?.tag} id="${a?.id}">`);
 

@@ -1,9 +1,16 @@
 /* Servidor estático mínimo para auditar el build. Sin dependencias. */
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { join, extname } from 'node:path';
+import { join, extname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const RAIZ = new URL('../dist/', import.meta.url).pathname;
+/* fileURLToPath y NO .pathname. Un URL.pathname viene percent-encoded: si el
+   proyecto vive en una ruta con espacios —«Mobile Documents» de iCloud, sin ir
+   más lejos— .pathname devuelve «/Mobile%20Documents/» y ese directorio no
+   existe. El servidor devolvía 404 a todo, los scripts auditaban una página
+   que solo contenía la palabra «404», y la auditoría daba por buena una web
+   que ni siquiera estaba mirando. Pasó de verdad, el 07/10/2026. */
+const RAIZ = fileURLToPath(new URL('../dist/', import.meta.url));
 const PUERTO = Number(process.env.PORT ?? 4321);
 const TIPOS = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -29,6 +36,6 @@ export function servir(puerto = PUERTO) {
   return new Promise((ok) => servidor.listen(puerto, () => ok(servidor)));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   servir().then(() => console.log(`http://localhost:${PUERTO}`));
 }

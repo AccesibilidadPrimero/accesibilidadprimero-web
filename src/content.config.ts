@@ -84,6 +84,10 @@ const proyectos = defineCollection({
           valor: z.number().min(0).max(100),
           medidaEl: z.coerce.date(),
           declaracion: z.string().url().optional(),
+          /* La etiqueta de conformidad. Las tres declaraciones dicen
+             «conformidad parcial», que no es lo mismo que «WCAG 2.2 AA» a
+             secas: se declara aquí para poder decir la verdad por proyecto. */
+          conformidad: z.string().optional(),
         })
         .optional(),
 

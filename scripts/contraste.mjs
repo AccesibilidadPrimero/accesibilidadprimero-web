@@ -99,4 +99,16 @@ servidor.close();
 
 console.log(`\n${medidas} cajas de texto medidas por píxel.`);
 if (fallos) { console.error(`${fallos} por debajo del mínimo.`); process.exit(1); }
+/* Un suelo, por el mismo motivo que en tipografia.mjs: si el servidor sirve una
+   página vacía o un 404, aquí no hay cajas que medir y «0 medidas, todas pasan»
+   se lee como un aprobado. La Home tiene decenas de cajas de texto; por debajo
+   de 20 es que estamos auditando otra cosa. */
+const MINIMO_CAJAS = 20;
+if (medidas < MINIMO_CAJAS) {
+  console.error(
+    `Solo ${medidas} cajas (se esperan al menos ${MINIMO_CAJAS}).\n` +
+    'La página auditada no es la web. Revisa que dist/ se haya construido.',
+  );
+  process.exit(1);
+}
 console.log('Todas pasan 1.4.3.');

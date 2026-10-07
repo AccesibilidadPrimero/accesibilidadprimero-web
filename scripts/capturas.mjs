@@ -1,10 +1,12 @@
 /* Capturas de los tres breakpoints para revisar a ojo. */
 import { chromium } from 'playwright';
+import { fileURLToPath } from 'node:url';
 import { existsSync, mkdirSync } from 'node:fs';
 import { servir } from './serve.mjs';
 
 const PUERTO = 4396;
-const salida = new URL('../capturas/', import.meta.url).pathname;
+// fileURLToPath y no .pathname: ver el comentario en serve.mjs.
+const salida = fileURLToPath(new URL('../capturas/', import.meta.url));
 mkdirSync(salida, { recursive: true });
 
 const servidor = await servir(PUERTO);

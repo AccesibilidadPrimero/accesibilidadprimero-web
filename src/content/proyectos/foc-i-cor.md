@@ -11,9 +11,12 @@ paleta:
   acento: '#ed6a12'
   textoSobreAcento: '#171717'
   anilloFoco: '#171717'
-# Hoy mide 91, que pasa de 90, pero el enlace a la declaración
-# (/accessibilitat/) responde 404. Sin declaración no hay barra: la nota
-# enlaza a la declaración, no se publica suelta.
+  uso: fondo
+# Sin `declaracion`: el enlace del pie de focicor.es responde 404. La nota se
+# pinta igual, pero sin enlace — uno que lleva a un 404 es peor que ninguno.
+nota:
+  valor: 91
+  medidaEl: 2026-10-06
 casoPublicado: false
 ---
 

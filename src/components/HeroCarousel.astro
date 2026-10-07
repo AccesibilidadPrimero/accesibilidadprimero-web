@@ -27,6 +27,8 @@
    5. Las ilustraciones son decorativas: alt="". La información la lleva el
       texto, no la imagen.
    --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
 import CtaLink from './CtaLink.astro';
@@ -48,6 +50,16 @@ const ilustraciones = [
   { id: 8, nombre: 'escalada',     frase: 'Amamos las diferencias.' },
 ];
 const n = (i: number) => String(i).padStart(2, '0');
+
+/* Los PNG viven en src/assets/, no en public/: así pasan por el pipeline de
+   Astro y salen en AVIF y WebP con el PNG como respaldo. Un PNG de 185 KB
+   pesa ~18 KB en AVIF. Lo que hay en public/ Astro no lo toca.
+   El glob tiene que ser literal para que Vite lo resuelva en el build. */
+const archivos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/hero/*.png',
+  { eager: true },
+);
+const lamina = (id: number) => archivos[`../assets/hero/hero-${n(id)}.png`].default;
 ---
 
 <section class="hero" aria-labelledby="hero-titular">
@@ -63,7 +75,15 @@ const n = (i: number) => String(i).padStart(2, '0');
             data-frase-lang={il.fraseLang ?? lang}
           >
             {/* Decorativa: alt="". Lo que significa está escrito debajo. */}
-            <img src={`/img/hero/hero-${n(il.id)}.png`} alt="" width="693" height="400" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+            <Picture
+              src={lamina(il.id)}
+              formats={['avif', 'webp']}
+              widths={[693, 1386]}
+              sizes="(min-width: 768px) 693px, 100vw"
+              alt=""
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
           </li>
         ))
       }
@@ -130,7 +150,8 @@ const n = (i: number) => String(i).padStart(2, '0');
     transition: opacity var(--dur-fade) var(--ease-out);
   }
   .hero__lamina[data-activa] { opacity: 1; }
-  .hero__lamina img { width: 100%; height: 100%; object-fit: contain; }
+  .hero__lamina :global(picture),
+  .hero__lamina :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
 
   .hero__frase {
     /* Se reserva una línea para que el control no baile al aparecer la frase
