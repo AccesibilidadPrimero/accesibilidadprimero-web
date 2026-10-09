@@ -52,6 +52,16 @@ const langs = alternates(current, slug);
     data-menu-trigger
     data-close-label={ui.menuClose}
   >
+    {/* Tres trazos que se cruzan en una × al abrir. Decorativo: el nombre
+        accesible es la palabra de al lado, que también cambia («Menú» /
+        «Cerrar»). Icono Y palabra a propósito: el icono solo se entiende peor
+        que la palabra, y la palabra sola era lo que Johnny quería modernizar
+        (09/10). */}
+    <svg class="menu__icono" aria-hidden="true" focusable="false" viewBox="0 0 20 14" width="20" height="14">
+      <path class="menu__trazo menu__trazo--1" d="M0 1h20" />
+      <path class="menu__trazo menu__trazo--2" d="M0 7h20" />
+      <path class="menu__trazo menu__trazo--3" d="M0 13h20" />
+    </svg>
     <span data-menu-label>{ui.menuOpen}</span>
   </button>
 
@@ -120,14 +130,13 @@ const langs = alternates(current, slug);
 </div>
 
 <style>
-  /* El menú modal solo existe por debajo de 1440: en escritorio la barra
-     entera cabe. El corte es 1440 y no 768 porque el bloque derecho medía
-     614 px y con el logotipo sumaba 844 sobre 672 disponibles. */
+  /* El menú modal solo existe por debajo de 1024, en tableta y móvil. En
+     escritorio la navegación va a la vista (Header.astro). */
   .menu {
     display: contents;
   }
 
-  @media (min-width: 1440px) {
+  @media (min-width: 1024px) {
     .menu {
       display: none;
     }
@@ -149,11 +158,33 @@ const langs = alternates(current, slug);
     text-decoration: none;
   }
 
-  .menu__trigger:hover {
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: 5px;
+  /* 8 de hueco y 8 de relleno lateral, no 12: con el icono al lado de la
+     palabra, a 320 px la cabecera se salía 7 px y había scroll horizontal
+     (1.4.10). El margen negativo devuelve esos 8 al borde, así que la palabra
+     sigue a plomo con el margen de la página. La zona táctil sigue en 44. */
+  .menu__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding-inline: var(--space-8);
+    margin-inline-end: calc(var(--space-8) * -1);
   }
+  .menu__icono { flex: none; overflow: visible; }
+  .menu__trazo {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+  }
+  /* Al pasar, el trazo de en medio se acorta: responde sin subrayar nada. */
+  .menu__trigger:is(:hover, :focus-visible) .menu__trazo--2 { transform: scaleX(0.6); }
+  /* Abierto, los trazos de arriba y abajo se cruzan en una × y el de en medio
+     desaparece. El estado también lo dicen la palabra y `aria-expanded`. */
+  .menu__trigger[aria-expanded='true'] .menu__trazo--1 { transform: translateY(6px) rotate(45deg); }
+  .menu__trigger[aria-expanded='true'] .menu__trazo--2 { opacity: 0; }
+  .menu__trigger[aria-expanded='true'] .menu__trazo--3 { transform: translateY(-6px) rotate(-45deg); }
 
   /* Sin JavaScript no hay botón: la navegación se queda visible en bloque.
      Es preferible una lista larga a un control que no hace nada. */
@@ -247,7 +278,6 @@ const langs = alternates(current, slug);
     line-height: var(--label-leading);
     letter-spacing: var(--label-track);
     text-transform: uppercase;
-    color: var(--text-secondary);
     font-weight: 400;
   }
 
@@ -379,7 +409,7 @@ const langs = alternates(current, slug);
     // Si la ventana crece hasta escritorio con el menú abierto, el panel
     // desaparece por CSS: hay que devolver el foco y desbloquear el scroll o
     // el usuario de teclado se queda sin salida.
-    const desktop = window.matchMedia('(min-width: 1440px)');
+    const desktop = window.matchMedia('(min-width: 1024px)');
     desktop.addEventListener('change', (e) => {
       if (e.matches && trigger.getAttribute('aria-expanded') === 'true') close();
     });

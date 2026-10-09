@@ -11,7 +11,7 @@
      · `--meta`    15 · 15 · 16   SOLO los créditos del pie. La norma se rompe
                                   ahí a propósito: no se leen, se consultan.
      · peso 400 en todo.
-     · negro `#171717` por defecto; gris `#767676` SOLO el cuerpo que explica.
+     · negro `#171717` por defecto; gris `#686864` (Ink / Secondary) SOLO la nota de accesibilidad.
 
    OJO: esto YA NO COINCIDE CON EL FIGMA. El documento sigue trayendo siete
    estilos y el Medium en H3; la web va por delante a propósito. Hasta que el
@@ -175,22 +175,20 @@ for (const ancho of [390, 768, 1440]) {
    que pertenece al párrafo. Lo que lo distingue de texto corriente es el
    subrayado, no el color, así que 1.4.1 sigue en pie.
 
-   Y una restricción que no es de gusto: en la menta del hero el gris da 3,53:1
+   Y una restricción que no es de gusto: en la menta del hero el gris da 4,35:1
    y no cumple. Ahí solo entra el negro. */
+/* 09/10, tarde: el gris sale de todo el cuerpo de texto. Queda en UN sitio,
+   la nota de accesibilidad de cada proyecto. */
 const EN_GRIS = [
-  '.proyecto__resumen',
-  '.proyecto__ampliacion',
-  '.producto__desc',
-  '.disclosure__boton',
-  '.menu__lang-title',
+  '.meta__nota',
 ];
-console.log('\n── Dos colores: negro por defecto, gris lo que explica ──\n');
+console.log('\n── Dos colores: negro todo, gris solo la nota de accesibilidad ──\n');
 {
   const page = await nav.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   const mal = await page.evaluate((enGris) => {
-    const NEGRO = 'rgb(23, 23, 23)', GRIS = 'rgb(118, 118, 118)';
+    const NEGRO = 'rgb(23, 23, 23)', GRIS = 'rgb(104, 104, 100)';
     const fuera = [];
     for (const el of document.querySelectorAll('body *')) {
       if (el.closest('.sr-only') || el.classList.contains('sr-only')) continue;
@@ -223,11 +221,11 @@ console.log('\n── Dos colores: negro por defecto, gris lo que explica ──
     console.error(`  ✗ ${mal.length} con el color que no toca:`);
     for (const x of mal.slice(0, 10)) console.error(`      ${x.donde.padEnd(24)} es ${x.color}, toca ${x.toca}  · ${x.texto}`);
   } else {
-    console.log('  ✓ negro todo, menos el cuerpo que explica');
+    console.log('  ✓ negro todo, menos la nota de accesibilidad');
   }
 }
 
-/* El gris no puede caer sobre menta: 3,53:1. Se comprueba aparte porque es una
+/* El gris no puede caer sobre menta: 4,35:1. Se comprueba aparte porque es una
    restricción de contraste, no de estilo. */
 {
   const page = await nav.newPage({ viewport: { width: 1440, height: 900 } });
@@ -238,7 +236,7 @@ console.log('\n── Dos colores: negro por defecto, gris lo que explica ──
       const t = [...el.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim()).length;
       if (!t) continue;
       const c = el.getBoundingClientRect(); if (!c.width || !c.height) continue;
-      if (getComputedStyle(el).color === 'rgb(118, 118, 118)') out.push(el.className || el.tagName);
+      if (getComputedStyle(el).color === 'rgb(104, 104, 100)') out.push(el.className || el.tagName);
     }
     return out;
   });

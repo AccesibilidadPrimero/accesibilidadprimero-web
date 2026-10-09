@@ -130,13 +130,11 @@ const variante = proyecto.id.includes('foc') ? 'foc'
      se sirve al navegador sin aplicarse nunca (AGENTS.md §6). */
   .proyecto__cuerpo > :global(.disclosure) { margin-block-start: calc(var(--hueco-cuerpo) * -1); }
 
-  /* Gris: es lo que explica. El título que tiene encima es negro, y esa
-     diferencia de color es la única jerarquía que hay entre los dos, porque
-     miden exactamente lo mismo. Funciona sin romper 1.4.1 porque la jerarquía
-     la lleva el marcado —uno es <h2> y el otro <p>—, no el color. */
+  /* En negro, como todo (Johnny, 09/10: «los textos en gris no aportan
+     valor»). Lo que separa el título del resumen es el sitio: el título va en
+     su propia fila, con la nota, y el resumen empieza 64 más abajo. */
   .proyecto__resumen,
   .proyecto__ampliacion {
-    color: var(--text-secondary);
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
     /* Evita la palabra sola en el último renglón («obra.»). Donde el

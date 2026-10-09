@@ -14,10 +14,8 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--surface);
-  /* Negro por defecto. El gris quedó para UNA cosa: el cuerpo que explica
-     —el resumen de cada proyecto, la descripción de cada producto, el texto
-     ampliado y su «Leer más»—. Todo lo demás, incluidos los créditos del pie y
-     la nota de accesibilidad, va en negro (Johnny, 08/10, segunda pasada). */
+  /* Negro. El gris quedó para UNA sola cosa: la nota de accesibilidad de
+     cada proyecto (Johnny, 09/10: los textos en gris «no aportan valor»). */
   color: var(--text);
   font-family: var(--font-sans);
   font-size: var(--texto-size);
@@ -25,7 +23,7 @@ body {
   font-weight: 400;              /* El ÚNICO peso del sistema. Sin negritas
                                     (Johnny, 23/08) y, desde el 08/10, sin
                                     Medium tampoco: la jerarquía descansa en la
-                                    escala y en el contraste de color. */
+                                    escala y en el espacio. */
 }
 
 /* El fondo no hace scroll mientras el menú modal está abierto. */
@@ -67,11 +65,13 @@ a { color: var(--link); }
 :focus:not(:focus-visible) { outline: none; }
 
 /* --------------------------------------------------------------- enlaces -- */
-/* Subrayado siempre visible: el color no puede ser la única señal (1.4.1).
-   El estado va en el GROSOR del subrayado:
+/* Esto es para los enlaces DENTRO DE UN PÁRRAFO: ahí el subrayado es
+   obligatorio, porque el color no puede ser la única señal (1.4.1).
      reposo 2 px / offset 4  ·  hover 4 px / offset 4  ·  activo 4 px / offset 2
-   La navegación es la excepción: en reposo no va subrayada, y la página
-   actual sí. */
+
+   Los enlaces sueltos NO van subrayados (Johnny, 09/10): los CTA llevan
+   flecha (CtaLink: → interno, ↗ externo), la nota lleva ↗, y la navegación y
+   el pie se subrayan solo al pasar y en la página actual. */
 a {
   color: var(--link);
   text-decoration: underline;

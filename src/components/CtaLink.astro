@@ -1,6 +1,24 @@
 ---
-/* El CTA del sistema es tipográfico: texto subrayado + flecha. No es una caja.
-   La flecha es decorativa (aria-hidden): el nombre accesible es el texto. */
+/* ---------------------------------------------------------------------------
+   Enlace suelto del sistema · texto + flecha, SIN subrayado.
+
+   Dos tipos, y la flecha dice cuál es (Johnny, 09/10):
+
+     →  va a otra página de esta web
+     ↗  sale de la web (y se abre en otra pestaña)
+
+   La flecha está SIEMPRE visible. Sin subrayado, es lo único que dice «esto se
+   pulsa»; esconderla hasta el hover la quitaría en móvil y tableta, donde no
+   hay hover, y a quien navega con teclado. Al pasar por encima o al recibir el
+   foco, la flecha se desplaza un poco en su dirección: es la respuesta al
+   gesto, nunca la única señal.
+
+   Sin subrayado vale porque son enlaces SUELTOS, en su propia línea. Un
+   enlace dentro de un párrafo sí lleva subrayado (base.css): ahí el color no
+   basta para distinguirlo del texto que lo rodea (1.4.1).
+
+   La flecha es decorativa (aria-hidden): el nombre accesible es el texto.
+   --------------------------------------------------------------------------- */
 interface Props {
   href: string;
   size?: 'small' | 'default' | 'large';
@@ -13,7 +31,7 @@ const esExterno = external || /^https?:\/\//.test(href);
 
 <a
   href={href}
-  class:list={['cta', `cta--${size}`, className]}
+  class:list={['cta', `cta--${size}`, esExterno ? 'cta--externo' : 'cta--interno', className]}
   {...esExterno ? { rel: 'noopener', target: '_blank' } : {}}
 >
   <span><slot /></span>
@@ -24,48 +42,39 @@ const esExterno = external || /^https?:\/\//.test(href);
       <span class="sr-only"> (se abre en una ventana nueva)</span>
     )
   }
-  <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14">
-    <path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" />
-  </svg>
+  {
+    esExterno ? (
+      <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="14" height="14">
+        <path d="M1.5 12.5 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    ) : (
+      <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14">
+        <path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    )
+  }
 </a>
 
 <style>
-  /* `inline`, no `inline-flex`. Con flex la flecha es un hermano del texto en
-     una sola fila: cuando el texto no cabe —«Conocer Accessible Abstracts» en
-     una columna de 318— el texto se parte y la flecha se queda sola, pegada al
-     borde derecho. En flujo normal la flecha viaja con la última palabra, que
-     es lo que hace el documento.
-
-     Al perder el flex se pierde `min-height`, así que el objetivo táctil lo da
-     el relleno: la interlínea más 8 arriba y 8 abajo pasan de 44.
-     `npm run a11y` mide los 44 px en el render y lo caza si deja de cumplirse. */
+  /* `inline-block` y la flecha DENTRO del flujo, no como hermana flex: cuando
+     el texto no cabe en una línea, la flecha viaja con la última palabra en
+     vez de quedarse sola pegada al borde. El objetivo táctil lo da el relleno:
+     interlínea + relleno = 44. `npm run a11y` mide los 44 px en el render. */
   .cta {
-    /* `inline-block`, no `inline`: en flujo inline puro la caja de un enlace la
-       miden las métricas de la fuente y NO la interlínea, así que el relleno no
-       llegaba a los 44 px y `npm run a11y` lo cazó (40 px en móvil). Con
-       `inline-block` la altura sí es interlínea + relleno, y la flecha, que va
-       dentro, sigue viajando con la última palabra. */
     display: inline-block;
     padding-block: calc((var(--touch-min) - var(--texto-leading)) / 2);
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
-    text-decoration-thickness: var(--underline-rest);
+    text-decoration: none;
   }
-  /* Ya no hay talla grande: `--display` existe solo para las dos frases de
-     Productos y Estudio (Johnny, 08/10). Se deja la clase porque sigue
-     marcando el CTA principal de la página, pero pinta igual que los demás. */
-  .cta--large { font-size: var(--texto-size); line-height: var(--texto-leading); letter-spacing: 0; }
-  /* La talla pequeña va al pie del hero, al mismo cuerpo que el titular y que
-     las frases del carrusel. */
-  .cta--small {
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
-    letter-spacing: 0;
-  }
-  .cta:hover { text-decoration-thickness: var(--underline-hover); }
+  /* Sin banda gruesa en hover (Johnny, 09/10): el subrayado ya no existe en
+     reposo y no aparece al pasar. La respuesta es la flecha. */
+  .cta:hover, .cta:active { text-decoration: none; }
 
-  /* La flecha avanza al pasar por encima. Es refuerzo del hover, nunca la
-     única señal: el subrayado ya ha engordado. */
+  /* Ya no hay talla grande ni pequeña: pintan igual. Las clases se quedan
+     porque siguen marcando el papel del enlace en la página. */
+  .cta--large, .cta--small { font-size: var(--texto-size); line-height: var(--texto-leading); letter-spacing: 0; }
+
   .cta__arrow {
     display: inline-block;
     vertical-align: -0.05em;
@@ -74,5 +83,12 @@ const esExterno = external || /^https?:\/\//.test(href);
     margin-inline-start: var(--space-12);
     transition: transform var(--dur-fast) var(--ease-out);
   }
-  .cta:hover .cta__arrow { transform: translateX(var(--space-4)); }
+  .cta--externo .cta__arrow { margin-inline-start: var(--space-8); vertical-align: 0; }
+
+  /* La flecha avanza en su dirección: a la derecha la interna, en diagonal
+     hacia arriba la externa. Con el foco de teclado hace lo mismo que con el
+     ratón. Con movimiento reducido el desplazamiento es instantáneo (base.css):
+     el cambio de estado se sigue viendo, solo que sin el camino. */
+  .cta--interno:is(:hover, :focus-visible) .cta__arrow { transform: translateX(var(--space-4)); }
+  .cta--externo:is(:hover, :focus-visible) .cta__arrow { transform: translate(3px, -3px); }
 </style>

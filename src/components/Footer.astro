@@ -47,11 +47,20 @@ const ui = t(lang);
   }
   .pie__lista li { display: flex; align-items: center; }
 
+  /* Como la navegación de la cabecera: sin subrayado en reposo, fino al
+     pasar. Son una lista de destinos dentro de un <nav>, no enlaces dentro de
+     un párrafo, así que el sitio ya dice lo que son (Johnny, 09/10:
+     «demasiadas líneas en los links»). */
   .pie__enlace {
     display: inline-flex;
     align-items: center;
     min-height: var(--touch-min);
     padding-block: var(--space-12);
+    text-decoration: none;
+  }
+  .pie__enlace:is(:hover, :focus-visible) {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
   }
 
   @media (min-width: 1024px) {

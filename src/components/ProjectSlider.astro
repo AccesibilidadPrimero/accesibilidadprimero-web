@@ -3,9 +3,15 @@
    Slider de capturas de un proyecto destacado.
 
    Del Figma (`Content slider`, uno por caso): un campo del color del proyecto,
-   la captura centrada encima, y debajo un control VISIBLE —icono de pausa más
-   la palabra, subrayada—. Aquí sí se dibuja: a diferencia del hero, el
-   documento lo trae pintado y Johnny no pidió esconderlo.
+   la captura centrada encima, y debajo un control VISIBLE de pausa. Desde el
+   09/10 es solo un icono en un círculo fino, sin palabra a la vista y sin
+   subrayado: más pequeño y más discreto (Johnny). La palabra sigue ahí para
+   el lector de pantalla.
+
+   LAS CAPTURAS ENTRAN DE DERECHA A IZQUIERDA. Así está en el Figma: cada
+   slider es una tira con las tres pantallas en fila, dentro de un marco que
+   recorta, y la tira se desplaza a la izquierda 0,6 s con ease-out. Aquí cada
+   lámina espera a la derecha, entra al centro y sale por la izquierda.
 
    Medidas del documento, por caso:
 
@@ -82,11 +88,12 @@ if (faltan.length) {
     }
   </ul>
 
-  {/* El control del Figma: dos barras y la palabra, subrayada. El icono es
-      decorativo —lo que dice el botón está escrito al lado— y por eso va
-      `aria-hidden`; el nombre accesible lo da el texto visible, que además
-      lleva el nombre del proyecto para distinguir los tres controles de la
-      página entre sí (2.4.4). */}
+  {/* Icono dentro de un círculo fino. El nombre accesible es la palabra
+      —«Pausar» o «Reproducir»— más el nombre del proyecto, para distinguir
+      los tres controles de la página entre sí (2.4.4). Va en `.sr-only`
+      porque a la vista basta el icono: pausa y reproducir son de los pocos
+      símbolos que se entienden sin palabra. El dibujo mide 32, pero el botón
+      mide 44: la zona que se pulsa no encoge con el dibujo (regla de AP). */}
   <button
     type="button"
     class="slider__control"
@@ -94,17 +101,17 @@ if (faltan.length) {
     data-label-pausar={ui.carouselPause}
     data-label-reproducir={ui.carouselPlay}
   >
-    <svg class="slider__icono" aria-hidden="true" focusable="false" viewBox="0 0 14 16" width="14" height="16">
-      <rect x="0" y="0" width="4.5" height="16" />
-      <rect x="9.5" y="0" width="4.5" height="16" />
+    <svg class="slider__icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+      <g class="slider__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+      <path class="slider__play" d="M1 0 10 6 1 12z" />
     </svg>
-    <span data-slider-label>{ui.carouselPause}</span>
-    <span class="sr-only"> · {titulo}</span>
+    <span class="sr-only"><span data-slider-label>{ui.carouselPause}</span> · {titulo}</span>
   </button>
 </div>
 
 <style>
   .slider {
+    --dur-desliza: 600ms;     /* la del Figma: SMART_ANIMATE, 0,6 s, ease-out */
     display: grid;
     justify-items: center;
     background: var(--acento);
@@ -116,58 +123,72 @@ if (faltan.length) {
     gap: var(--hueco);
   }
 
-  /* Las tres capturas comparten celda y se cruzan con opacidad: así el campo
-     no da un salto de alto al cambiar. */
+  /* El marco que recorta. Las tres capturas comparten celda —así el campo no
+     da un salto de alto al cambiar— y se mueven en horizontal dentro de él.
+     `clip` y no `hidden`: no crea un contenedor de scroll. */
   .slider__pila {
     display: grid;
     width: 100%;
     max-width: var(--ancho-captura);
     aspect-ratio: var(--ancho-captura) / var(--alto-captura);
+    overflow: clip;
   }
+  /* Tres posiciones: esperando a la derecha (por defecto), en el centro
+     (`data-activa`) y saliendo por la izquierda (`data-saliente`). Solo hay
+     transición al entrar y al salir; al volver a la espera la lámina salta
+     sin animarse, porque está fuera del marco y nadie la ve. */
   .slider__lamina {
     grid-area: 1 / 1;
-    opacity: 0;
-    transition: opacity var(--dur-fade) ease-in-out;
+    transform: translateX(100%);
   }
-  .slider__lamina[data-activa] { opacity: 1; }
+  .slider__lamina[data-activa],
+  .slider__lamina[data-saliente] {
+    transition: transform var(--dur-desliza) var(--ease-out);
+  }
+  .slider__lamina[data-activa] { transform: none; }
+  .slider__lamina[data-saliente] { transform: translateX(-100%); }
   .slider__lamina img { width: 100%; height: 100%; object-fit: contain; }
 
-  /* Icono + palabra, como en el documento. El subrayado va en la palabra, no
-     en el icono: el icono es decoración. */
+  /* 44 × 44 de zona, 32 de círculo dibujado. El círculo y el icono van en el
+     color de texto que el proyecto declara sobre su acento, que el esquema
+     valida a 4,5:1: de sobra para el 3:1 que pide un control (1.4.11). */
   .slider__control {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-    min-height: var(--touch-min);
-    padding: var(--space-8) var(--space-12);
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    padding: 0;
     background: none;
     border: 0;
     color: inherit;
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
     cursor: pointer;
   }
-  .slider__control [data-slider-label] {
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: var(--underline-offset);
+  .slider__control::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    transition: transform var(--dur-fast) var(--ease-out);
   }
-  .slider__control:hover [data-slider-label] {
-    text-decoration-thickness: var(--underline-hover);
-  }
-  .slider__icono { fill: currentColor; flex: none; }
-  /* Parado, el icono pasa de «pausa» a «reproducir»: el estado no lo lleva
-     solo la palabra, y tampoco solo el color (1.4.1). */
-  [data-parado] .slider__icono rect:last-child { opacity: 0; }
-  [data-parado] .slider__icono rect:first-child { width: 14px; }
+  .slider__control:hover::before { transform: scale(1.1); }
+  .slider__icono { fill: currentColor; }
+  /* Parado, el icono pasa de «pausa» a «reproducir»: el estado lo lleva la
+     forma, no el color (1.4.1), y el nombre accesible cambia con él. */
+  .slider__play { display: none; }
+  [data-parado] .slider__pausa { display: none; }
+  [data-parado] .slider__play { display: inline; }
 
   /* Sin JavaScript no hay rotación: se ve la primera y el control no se pinta,
      porque no haría nada (AGENTS.md §5). */
   html:not(.js) .slider__control { display: none; }
-  html:not(.js) .slider__lamina { opacity: 1; }
+  html:not(.js) .slider__lamina { transform: none; }
   html:not(.js) .slider__pila { display: block; aspect-ratio: auto; }
   html:not(.js) .slider__lamina + .slider__lamina { margin-block-start: var(--hueco); }
 
+  /* Con movimiento reducido no hay avance automático y el cambio, cuando lo
+     pide el control, es instantáneo: la captura nueva aparece en su sitio. */
   @media (prefers-reduced-motion: reduce) {
     .slider__lamina { transition: none; }
   }
@@ -206,8 +227,13 @@ if (faltan.length) {
     const motivos = new Set<string>([PAUSA_POR.fuera]);
     const parado = () => motivos.size > 0;
 
+    /* La que estaba saliendo vuelve a esperar a la derecha (sin animarse: el
+       CSS solo anima la entrada y la salida); la activa sale por la izquierda;
+       la siguiente entra desde la derecha. */
     function mostrar(i: number) {
+      laminas.forEach((l) => l.removeAttribute('data-saliente'));
       laminas[indice]?.removeAttribute('data-activa');
+      laminas[indice]?.setAttribute('data-saliente', '');
       indice = (i + laminas.length) % laminas.length;
       laminas[indice].setAttribute('data-activa', '');
     }

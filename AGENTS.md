@@ -78,24 +78,17 @@ Están aquí porque ya han pasado, no en abstracto:
   vez de 30. `npm run tipografia` lo comprueba midiendo el render.
 - **Un solo peso en toda la web: 400.** Sin negritas (Johnny, 23/08) y sin
   Medium (Johnny, 08/10). El `Display/H3` del Figma viene en Medium y aquí se
-  pinta en Regular a propósito. **Lo que separa lo que nombra de lo que explica
-  es el color, no el grosor**: Ink para el título, `--text-secondary` para el
-  cuerpo que lo desarrolla. Es el recurso que cita el spec de Pentagram, y
-  medido en su propia web: a 19 px emparejan el titular con el subtítulo al
-  mismo cuerpo y los separan con gris. `npm run tipografia` recorre la página
+  pinta en Regular a propósito. `npm run tipografia` recorre la página
   nodo a nodo en los tres anchos y **falla si encuentra cualquier peso distinto
   de 400** —incluido el que se cuele por un `<strong>` en un markdown.
-- **Un título en Ink y su explicación en gris NO incumple 1.4.1.** La jerarquía
-  no la lleva el color: la lleva el marcado, uno es `<h2>` y el otro `<p>`, y
-  quien usa lector de pantalla oye la estructura intacta. El color solo
-  refuerza lo que el HTML ya dice. Esa es la condición: si alguna vez la
-  distinción deja de estar en la estructura y pasa a depender del gris, deja de
-  valer.
-- **El gris se calcula contra NUESTRO papel, no se copia.** `#767676` es el gris
-  más claro que pasa 4,5:1 sobre blanco puro, pero nuestro fondo es Silk
-  `#f7f7f4` y ahí ese mismo valor da 4,23:1 y falla. El token del sistema es
-  `--ink-60` (`#686864`): 5,21:1 sobre Silk, 5,60:1 sobre blanco, 4,35:1 sobre
-  menta. Por debajo de `#717171` no se baja en Silk ni de `#656565` en menta.
+- **Todo el texto en Ink. El gris (`--text-secondary`) solo en la nota de
+  accesibilidad de cada proyecto** (Johnny, 09/10: los textos en gris «no
+  aportan valor»). Hasta ese día el gris separaba el título de su explicación;
+  ahora los separa el sitio y el espacio. La jerarquía la lleva el marcado
+  (`<h2>`, `<p>`), no el color. `npm run tipografia` falla si aparece gris en
+  cualquier otro sitio.
+- **El gris es `Ink / Secondary` del Figma, `#686864`**: 5,60:1 sobre el papel
+  blanco. Sobre menta da 4,35:1 y no cumple, así que en el hero no entra.
 - Sin framework de utilidades. Si una regla sirve para un solo componente, vive
   en el `<style>` de ese componente.
 - **El color nunca va solo** (1.4.1). El estado se lleva en el grosor del

@@ -30,6 +30,14 @@ const ui = t(lang);
   >
     <span data-disclosure-label>{ui.readMore}</span>
     <span class="sr-only"> sobre {contexto}</span>
+    {/* Un + que gira 45° y se vuelve ×. Es el signo de «desplegar», distinto
+        de las flechas de los enlaces: así se distinguen a simple vista los
+        tres gestos de la web —desplegar (+), ir a otra página (→) y salir
+        (↗)—. Decorativo: el estado lo dicen `aria-expanded` y la palabra,
+        que cambia a «Leer menos». */}
+    <svg class="disclosure__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+      <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+    </svg>
   </button>
 
   <div id={id} hidden data-disclosure-panel class="disclosure__panel">
@@ -50,21 +58,26 @@ const ui = t(lang);
     padding: var(--space-12) var(--space-8);
     margin-inline-start: calc(var(--space-8) * -1);
     min-height: var(--touch-min);
-    /* GRIS, y es la excepción a «negro lo que se pulsa» (Johnny, 08/10).
-       La diferencia es qué hace el control: un enlace te lleva a otro sitio y
-       va en negro; esto solo despliega más de lo que ya estás leyendo, así que
-       pertenece al párrafo y se pinta como el párrafo. Quien lo distingue de
-       texto corriente es el subrayado, no el color, así que 1.4.1 sigue en pie,
-       y el gris sobre blanco da 4,54:1. */
-    color: var(--text-secondary);
+    /* En negro y sin subrayado (Johnny, 09/10). Lo que dice que se pulsa es
+       el +, igual que en los enlaces lo dice la flecha. */
+    color: var(--text);
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
     cursor: pointer;
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: var(--underline-offset);
+    text-decoration: none;
   }
-  .disclosure__boton:hover { text-decoration-thickness: var(--underline-hover); }
+  .disclosure__signo {
+    display: inline-block;
+    margin-inline-start: var(--space-8);
+    vertical-align: 0.05em;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  /* Abierto, el + gira 45° y es una ×. Al pasar por encima el signo crece un
+     poco y NO gira: un giro pasa por los 45° a mitad de camino y enseña una ×
+     («cerrar») cuando todavía está cerrado. */
+  .disclosure__boton:is(:hover, :focus-visible) .disclosure__signo { transform: scale(1.2); }
+  .disclosure__boton[aria-expanded='true'] .disclosure__signo { transform: rotate(45deg); }
+  .disclosure__boton[aria-expanded='true']:is(:hover, :focus-visible) .disclosure__signo { transform: rotate(45deg) scale(1.2); }
 
   .disclosure__panel { padding-block-start: var(--space-16); }
 </style>
