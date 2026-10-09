@@ -81,12 +81,11 @@ Están aquí porque ya han pasado, no en abstracto:
   pinta en Regular a propósito. `npm run tipografia` recorre la página
   nodo a nodo en los tres anchos y **falla si encuentra cualquier peso distinto
   de 400** —incluido el que se cuele por un `<strong>` en un markdown.
-- **Todo el texto en Ink. El gris (`--text-secondary`) solo en la nota de
-  accesibilidad de cada proyecto** (Johnny, 09/10: los textos en gris «no
-  aportan valor»). Hasta ese día el gris separaba el título de su explicación;
-  ahora los separa el sitio y el espacio. La jerarquía la lleva el marcado
-  (`<h2>`, `<p>`), no el color. `npm run tipografia` falla si aparece gris en
-  cualquier otro sitio.
+- **Todo el texto en Ink, sin excepciones** (Johnny, 09/10: los textos en gris
+  «no aportan valor»; la nota de accesibilidad también pasó a negro). Hasta ese
+  día el gris separaba el título de su explicación; ahora los separa el sitio
+  y el espacio. La jerarquía la lleva el marcado (`<h2>`, `<p>`), no el color.
+  `npm run tipografia` falla si aparece un texto que no sea negro.
 - **El gris es `Ink / Secondary` del Figma, `#686864`**: 5,60:1 sobre el papel
   blanco. Sobre menta da 4,35:1 y no cumple, así que en el hero no entra.
 - Sin framework de utilidades. Si una regla sirve para un solo componente, vive

@@ -37,11 +37,6 @@ const fecha = nota
             <span class="sr-only">
               {` en accesibilidad · ${proyecto}. Medido el ${fecha}. Ver la declaración de accesibilidad`}
             </span>
-            {/* ↗: la declaración está en la web del cliente, así que sale de
-                la nuestra. Mismo signo que los enlaces externos (CtaLink). */}
-            <svg class="meta__flecha" aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="12" height="12">
-              <path d="M1.5 12.5 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.5" />
-            </svg>
           </a>
         ) : (
           <span>
@@ -78,11 +73,13 @@ const fecha = nota
 
   .meta__nota, .meta__wcag { display: flex; align-items: center; gap: var(--space-8); }
 
-  /* La nota es lo ÚNICO que queda en gris en toda la web (Johnny, 09/10). Es
-     un dato de apoyo al lado del nombre del proyecto, no texto que leer. El
-     gris sobre blanco da 5,60:1. El número sigue escrito, así que el gris no
-     carga información por sí solo (1.4.1). */
-  .meta__nota, .meta__nota a { color: var(--text-secondary); }
+  /* En negro, como «WCAG 2.2 AA» a su lado, y SIN flecha (Johnny, 09/10,
+     tarde): la nota es un dato, y una ↗ más un punto verde eran tres signos
+     seguidos. Sigue siendo un enlace a la declaración, pero no se anuncia en
+     reposo. Al pasar el ratón o con el foco aparece el subrayado fino, como en
+     la navegación: quien explora lo descubre. Para el lector de pantalla es un
+     enlace con nombre completo, así que no pierde nada. */
+  .meta__nota, .meta__nota a { color: var(--text); }
 
   /* La nota es un enlace a la declaración, así que es un objetivo táctil como
      cualquier otro: 44 px de alto, la regla de AP. El bloque entero se alinea
@@ -94,13 +91,18 @@ const fecha = nota
     min-height: var(--touch-min);
     text-decoration: none;
   }
-  .meta__flecha { flex: none; transition: transform var(--dur-fast) var(--ease-out); }
-  .meta__enlace:is(:hover, :focus-visible) .meta__flecha { transform: translate(2px, -2px); }
+  .meta__enlace:is(:hover, :focus-visible) {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+  }
 
   .meta__punto {
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: var(--signal-ok);
+    /* `Green / Signal` del Figma (Johnny: «su punto verde claro»). Es
+       decorativo y va aria-hidden: el estado lo dice el número escrito, así
+       que el punto no tiene que cumplir el 3:1 de 1.4.11 por sí solo. */
+    background: var(--green-signal);
     flex: none;
   }
 

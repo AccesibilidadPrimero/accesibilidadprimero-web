@@ -34,6 +34,7 @@
   /* Semáforo. Son colores de TEXTO: por eso son mucho más oscuros que los
      acentos. Dos familias distintas, y el nombre lo dice. */
   --signal-ok: #157a3d;       /* 5,04:1 sobre Silk */
+  --green-signal: #1a8f47;    /* `Green / Signal` del Figma: el punto de la nota */
   --signal-warn: #c2410c;     /* 4,82:1 sobre Silk. Naranja, no marrón. */
   --signal-bad: #b3261e;      /* 6,09:1 sobre Silk */
 
@@ -51,12 +52,17 @@
   --surface: var(--white);
   --surface-raised: var(--white);
   --surface-accent: var(--mint);
+  /* La banda de Estudio, entre Productos y el cierre de contacto (Johnny,
+     09/10): sin ella se veía demasiado blanco seguido. OJO, Silk contra
+     blanco da 1,07:1: es una diferencia de tono muy leve y en algunas
+     pantallas no se percibe. */
+  --surface-band: var(--silk);
   --text: var(--ink);
-  --text-secondary: var(--grey);    /* SOLO la nota de accesibilidad de cada
-                                       proyecto. Todo el resto del texto va en
-                                       negro (Johnny, 09/10). Sobre blanco da
-                                       5,60:1; sobre menta o cualquier acento
-                                       NO cumple y no se usa. */
+  --text-secondary: var(--grey);    /* SIN USO desde el 09/10, tarde: la nota
+                                       de accesibilidad, que era lo último en
+                                       gris, pasó a negro. Se deja declarado
+                                       por si vuelve; sobre blanco da 5,60:1 y
+                                       sobre menta NO cumple. */
   --link: var(--ink);
   --link-inverse: var(--silk);
   --rule: var(--hairline);

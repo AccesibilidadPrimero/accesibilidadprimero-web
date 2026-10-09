@@ -179,10 +179,10 @@ for (const ancho of [390, 768, 1440]) {
    y no cumple. Ahí solo entra el negro. */
 /* 09/10, tarde: el gris sale de todo el cuerpo de texto. Queda en UN sitio,
    la nota de accesibilidad de cada proyecto. */
-const EN_GRIS = [
-  '.meta__nota',
-];
-console.log('\n── Dos colores: negro todo, gris solo la nota de accesibilidad ──\n');
+/* 09/10, más tarde: la nota también pasa a negro. No queda gris en la web.
+   La lista se queda (vacía) por si algún día vuelve. */
+const EN_GRIS = [];
+console.log('\n── Un color: todo en negro ──\n');
 {
   const page = await nav.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
@@ -206,7 +206,7 @@ console.log('\n── Dos colores: negro todo, gris solo la nota de accesibilida
          que añadir un cuarto proyecto no obliga a tocar esta comprobación. */
       const campo = el.closest('.slider');
       const toca = campo ? getComputedStyle(campo).color
-        : el.closest(enGris.join(',')) ? GRIS : NEGRO;
+        : (enGris.length && el.closest(enGris.join(','))) ? GRIS : NEGRO;
       const color = getComputedStyle(el).color;
       if (color !== toca) fuera.push({ color, toca, texto: propio.slice(0, 36),
         donde: el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim()
@@ -221,7 +221,7 @@ console.log('\n── Dos colores: negro todo, gris solo la nota de accesibilida
     console.error(`  ✗ ${mal.length} con el color que no toca:`);
     for (const x of mal.slice(0, 10)) console.error(`      ${x.donde.padEnd(24)} es ${x.color}, toca ${x.toca}  · ${x.texto}`);
   } else {
-    console.log('  ✓ negro todo, menos la nota de accesibilidad');
+    console.log('  ✓ todo en negro');
   }
 }
 
@@ -257,6 +257,6 @@ if (medidos !== esperados) {
   console.error(`\nSolo se midieron ${medidos} de ${esperados}. No doy por buena una pasada incompleta.`);
   process.exit(1);
 }
-console.log(`\n${medidos} medidas. Dos tamaños (más el pie), un peso, dos colores.`);
+console.log(`\n${medidos} medidas. Dos tamaños (más el pie), un peso, un color.`);
 console.log('Recuerda: la referencia es este archivo, no el Figma. El documento');
 console.log('todavía trae siete estilos y el Medium en H3.');

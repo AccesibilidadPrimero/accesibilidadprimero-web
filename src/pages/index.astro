@@ -263,9 +263,13 @@ const productos = [
   /* En negro, como el nombre (Johnny, 09/10). Lo que los separa es el hueco
      de 24 entre los dos, no el color. */
   .producto__desc { font-size: var(--texto-size); line-height: var(--texto-leading); }
+  /* 32 entre nombre y descripción, no 24 (Johnny, 09/10): sin el gris, a 24
+     los dos se leían como un solo párrafo. El resto de huecos de la columna
+     siguen en 24; lo que se suma aquí es la diferencia. */
+  .producto__nombre + .producto__desc { margin-block-start: calc(var(--space-32) - var(--space-24)); }
 
   .estudio {
-    background: var(--surface-raised);
+    background: var(--surface-band);
     padding-inline: var(--gutter-page);
     display: flex;
     flex-direction: column;
