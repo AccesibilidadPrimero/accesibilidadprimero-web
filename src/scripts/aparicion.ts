@@ -89,6 +89,11 @@ function partir(frase: HTMLElement) {
   const renglones: string[][] = [];
   let arriba = Number.NaN;
   copia.querySelectorAll<HTMLElement>('[data-palabra]').forEach((p) => {
+    /* Una palabra que no se pinta no es un renglón. Pasa con los textos que
+       cambian con el ancho (.solo-movil / .solo-amplio): la versión oculta
+       viaja en la copia y, sin esto, sus palabras darían una «línea» en y = 0
+       que aparecería a la vista al reconstruir los renglones. */
+    if (!p.getClientRects().length) return;
     const y = Math.round(p.getBoundingClientRect().top);
     if (y !== arriba) { renglones.push([]); arriba = y; }
     renglones[renglones.length - 1].push(p.textContent ?? '');

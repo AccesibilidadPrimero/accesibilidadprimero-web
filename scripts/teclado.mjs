@@ -177,11 +177,22 @@ check('El alt describe la imagen y no repite la frase',
   await p.close();
 }
 
-/* 13. El vídeo de Itza: si se mueve solo, se para solo antes de los 5 s.
-   Sin bucle y sin botón de pausa, porque dura 4,94 s y se reproduce una
-   vez (2.2.2). La comprobación lee la duración del ARCHIVO que sirve la web,
-   no la que diga un comentario: si mañana entra un clip de 9 s o alguien
-   vuelve a poner `loop`, esto falla y hay que devolver el botón de pausa. */
+/* 13. El vídeo de Itza y el criterio 2.2.2.
+   Lo que EXIGE la norma es una pareja: si algo se mueve solo más de cinco
+   segundos —o va en bucle, que no acaba nunca—, tiene que haber un mecanismo
+   para pararlo. Un clip corto sin control cumple; uno largo CON control
+   también. Lo que no cumple es largo y sin control.
+
+   Esto estuvo mal escrito hasta el 09/10: la comprobación fallaba por la
+   duración sola. El comentario del componente decía 4,94 s y el archivo que
+   sirve la web dura 9,28, así que la web estuvo incumpliendo 2.2.2 sin que
+   nadie se enterara, y cuando se enteró, la comprobación pedía acortar el
+   vídeo en vez de pedir el control. Ahora se afirma la pareja, que es la
+   norma, y la duración se queda como AVISO: Johnny quiere el clip por debajo
+   de 5 s, pero eso es una preferencia de diseño, no un incumplimiento.
+
+   Se lee la duración del ARCHIVO que sirve la web, nunca la de un comentario:
+   ese fue justamente el fallo. */
 {
   const p = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
@@ -199,10 +210,17 @@ check('El alt describe la imagen y no repite la frase',
   });
   if (v) {
     const corto = Number.isFinite(v.duracion) && v.duracion <= 5;
+    const necesitaControl = !corto || v.loop;
     check('El vídeo de producto no va en bucle', !v.loop);
-    check('El vídeo de producto dura 5 s o menos', corto, `${v.duracion?.toFixed(2)} s`);
-    if (!corto || v.loop) {
-      check('Si dura más o va en bucle, tiene botón de pausa', v.control);
+    check(
+      'El vídeo que se mueve solo más de 5 s tiene mecanismo de pausa (2.2.2)',
+      !necesitaControl || v.control,
+      `${v.duracion?.toFixed(2)} s · control ${v.control ? 'sí' : 'NO'}`,
+    );
+    if (necesitaControl && v.control) {
+      console.log(`  ⚠ aviso · el clip dura ${v.duracion?.toFixed(2)} s. Cumple 2.2.2 porque lleva`);
+      console.log('    botón de pausa, pero Johnny lo quiere por debajo de 5 s: al reexportarlo,');
+      console.log('    el control puede quitarse y esta comprobación seguirá cuadrando.');
     }
   } else {
     check('Hay un vídeo de producto que comprobar', false, 'no se encontró [data-video-producto]');

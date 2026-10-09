@@ -58,6 +58,10 @@ const ESPERADO = {
   'proyectos/eci-1.png': [904, 568], 'proyectos/eci-2.png': [904, 568], 'proyectos/eci-3.png': [904, 568],
   'proyectos/foc-1.png': [400, 564], 'proyectos/foc-2.png': [400, 564], 'proyectos/foc-3.png': [400, 564],
   'proyectos/izaskun-1.png': [656, 412], 'proyectos/izaskun-2.png': [656, 412], 'proyectos/izaskun-3.png': [656, 412],
+  /* Las verticales de móvil: el mismo hueco en los tres proyectos (Figma,
+     Móvil 390). Se piden a 588 × 1280. */
+  ...Object.fromEntries(['eci', 'foc', 'izaskun'].flatMap((p) =>
+    [1, 2, 3].map((n) => [`proyectos/${p}-${n}-movil.png`, [294, 640]]))),
   /* Productos: el hueco es 392 × 403, pero el móvil entra encajado por el
      alto, así que lo que hay que medir es el dibujo: 403 de alto y el ancho
      que le da su proporción (0,486), 196. */

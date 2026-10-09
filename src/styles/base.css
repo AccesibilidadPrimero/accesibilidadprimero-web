@@ -94,6 +94,18 @@ a:active { text-decoration-thickness: var(--underline-hover); text-underline-off
   border: 0;
 }
 
+/* Textos que cambian con el ancho (Johnny, 09/10): el Figma de Móvil 390
+   simplifica tres textos de la Home, y mandan por debajo de 768. Se enseña
+   uno y el otro va en `display: none`, que lo saca también del árbol de
+   accesibilidad: el lector oye el mismo texto que se ve, y una sola vez.
+   AGENTS.md §1 prohíbe `display: none` para texto que DEBE leerse; aquí lo
+   que se oculta es la versión que no toca en ese ancho. */
+.solo-movil { display: none; }
+@media (max-width: 767px) {
+  .solo-movil { display: inline; }
+  .solo-amplio { display: none; }
+}
+
 .page {
   width: 100%;
   margin-inline: auto;

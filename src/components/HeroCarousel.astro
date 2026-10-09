@@ -61,6 +61,10 @@ const ui = t(lang);
    principios, y cada una sustituye al claim mientras el carrusel está parado. */
 const ILUSTRACIONES: { archivo: string; frase?: string; fraseLang?: string; alt: string }[] = [
   { archivo: '00-claim',       alt: 'Una flor enorme vista desde arriba, con dos personas diminutas trabajando sobre sus pétalos.' },
+  /* En catalán A PROPÓSITO, dentro de la versión castellana: decir «amamos las
+     diferencias» en otra lengua es el concepto ejecutándose. No es un
+     descuido de traducción y no se traduce (AGENTS.md §6). El `lang` que sale
+     de aquí es lo que hace que la licencia también funcione al oído. */
   { archivo: '01-diferencies', frase: 'Estimem les diferències.', fraseLang: 'ca',
     alt: 'Una planta en una maceta, cuidada por una figura diminuta encaramada a una de sus hojas.' },
   { archivo: '02-comunicamos', frase: 'La forma en la que comunicamos construye realidades.',
@@ -388,14 +392,36 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       --aire-escenario: 40px;
     }
     /* En columna arriba va la frase (texto puro: 24) y abajo el enlace
-       (control de 44: 24 menos su aire). */
+       (control de 44: 24 menos su aire). Entre los dos, 8: Hero Band de
+       Móvil 390 en el Figma (3094:933). El hero sigue ocupando la pantalla
+       entera, banda incluida, como en escritorio (Johnny, 09/10). */
     .hero__banda {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-16);
+      gap: var(--space-8);
       padding-block: var(--space-24) var(--borde-texto);
     }
     .hero__textos { max-width: 55ch; }
+  }
+
+  /* EL MENTA HASTA EL BORDE FÍSICO DE LA PANTALLA (Johnny, 09/10, en iPhone).
+     `100svh` es la pantalla MENOS la barra del navegador. En Safari de iPhone
+     esa barra flota encima de la página, así que por debajo del hero asomaba
+     una franja blanca: el principio de la sección siguiente. `100lvh` es la
+     pantalla entera, con la barra recogida, y el menta llega al borde.
+
+     Para que la barra no tape la frase ni el enlace al cargar, la banda suma
+     abajo justo lo que mide la barra: `100lvh − 100svh`. Al bajar, la barra
+     se recoge y ese hueco queda en menta, sin que nada salte. En escritorio
+     las dos unidades valen lo mismo y la suma es 0: no cambia nada.
+
+     Dentro de @supports y al final de la hoja, a propósito: un navegador que
+     no conozca `lvh` se queda con el `100svh` de arriba entero, en vez de
+     invalidar el relleno de la banda (y dejarlo en 0); y aquí, al final, gana
+     al relleno de la banda que fijan los tramos de tableta y móvil. */
+  @supports (height: 100lvh) {
+    .hero { min-height: 100lvh; }
+    .hero__banda { padding-block-end: calc(var(--borde-texto) + 100lvh - 100svh); }
   }
 </style>
 

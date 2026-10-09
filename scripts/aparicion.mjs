@@ -62,7 +62,13 @@ for (const ancho of [1440, 390]) {
   })));
   anota(frases.length === 3 && frases.every((f) => f.renglones >= 1 && f.copiaOculta),
     `${ancho} · las tres frases, partidas en renglones (${frases.map((f) => f.renglones).join(' · ')})`);
-  const nombre = await p.getByRole('heading', { name: /Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea accesible para más personas\./ }).count();
+  /* Por debajo de 768 el titular es el del Figma de Móvil (Johnny, 09/10).
+     Nombre EXACTO: así también se caza que el lector oiga las dos versiones
+     seguidas, la de escritorio y la de móvil. */
+  const titular = ancho < 768
+    ? 'Aplicaciones que simplifican y hacen que lo digital sea accesible para más personas.'
+    : 'Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea accesible para más personas.';
+  const nombre = await p.getByRole('heading', { name: titular, exact: true }).count();
   anota(nombre === 1, `${ancho} · en espera, el lector oye la frase entera y una sola vez`);
   await recorrer(p);
   e = await estado(p);

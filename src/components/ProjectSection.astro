@@ -21,6 +21,16 @@ const id = `proyecto-${proyecto.id}`;
    veces: Foc i Cor va en horizontal y los otros dos en vertical. */
 const variante = proyecto.id.includes('foc') ? 'foc'
   : proyecto.id.includes('izaskun') ? 'izaskun' : 'eci';
+/* Dónde va el enlace «Ir a …» en el ORDEN DEL DOCUMENTO. En ECI va antes de
+   las capturas; en Foc i Cor e Izaskun, después. Así lo dibuja el Figma de
+   Móvil 390, y en móvil el orden visual es el del DOM: si se reordenara con
+   CSS, el tabulador iría del enlace a la pausa mientras la vista va de la
+   pausa al enlace (2.4.3). En escritorio cada composición lo coloca con su
+   área de rejilla, y el orden sigue teniendo sentido: en Izaskun el enlace
+   está debajo del slider; en Foc i Cor se lee la columna de texto y luego
+   las capturas. */
+const ctaAlFinal = variante !== 'eci';
+const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
 ---
 
 <section
@@ -49,23 +59,28 @@ const variante = proyecto.id.includes('foc') ? 'foc'
 
   </div>
 
-  {
-    /* El CTA es hijo DIRECTO de la sección, no del cuerpo: en Izaskun el
-       documento lo coloca en la segunda columna, debajo del slider, y desde
-       dentro del cuerpo no hay forma de llevarlo ahí sin romper el orden del
-       DOM. Fuera, cada composición lo coloca con su área de rejilla. */
-    d.web && (
-      <div class="proyecto__cta">
-        <CtaLink href={d.web} external>{`Ir a ${d.nombreCorto ?? d.titulo}`}</CtaLink>
-      </div>
-    )
-  }
+  {/* El CTA es hijo DIRECTO de la sección, no del cuerpo: en Izaskun el
+      documento lo coloca en la segunda columna, debajo del slider, y desde
+      dentro del cuerpo no hay forma de llevarlo ahí sin romper el orden del
+      DOM. Fuera, cada composición lo coloca con su área de rejilla. Va antes
+      o después del slider según `ctaAlFinal` (arriba). */}
+  {!ctaAlFinal && d.web && (
+    <div class="proyecto__cta">
+      <CtaLink href={d.web} external>{textoCta}</CtaLink>
+    </div>
+  )}
 
   {
     d.imagenes && d.imagenes.length > 0 && (
       <ProjectSlider imagenes={d.imagenes} variante={variante} titulo={d.titulo} lang={lang} />
     )
   }
+
+  {ctaAlFinal && d.web && (
+    <div class="proyecto__cta">
+      <CtaLink href={d.web} external>{textoCta}</CtaLink>
+    </div>
+  )}
 </section>
 
 <style>
@@ -154,9 +169,12 @@ const variante = proyecto.id.includes('foc') ? 'foc'
       gap: var(--space-32);
     }
 
+    /* El 128 que separa este bloque del anterior. No hay relleno inferior:
+       el aire de abajo es el 128 del bloque siguiente, declarado una vez. */
+    .proyecto { margin-block-start: var(--ritmo-seccion); }
+
     /* ---- ECI · apilado, ancho completo --------------------------------- */
-    .proyecto--eci { padding-block-end: 64px; }
-    .proyecto--eci .proyecto__cuerpo { padding-block-start: 64px; }
+    /* El hueco hasta el cuerpo lo pone el intro (--ritmo-intro), no el cuerpo. */
     .proyecto--eci .proyecto__cta { margin-block-start: 48px; }
     .proyecto--eci :global(.slider) { margin-block-start: 48px; }
 
@@ -171,21 +189,21 @@ const variante = proyecto.id.includes('foc') ? 'foc'
         "cuerpo slider"
         "cta    slider";
       grid-template-rows: auto auto 1fr;
-      padding-block: 64px;
     }
-    .proyecto--foc .proyecto__intro { grid-area: intro; padding-block-end: 64px; }
+    .proyecto--foc .proyecto__intro { grid-area: intro; }
     .proyecto--foc .proyecto__cuerpo {
       grid-area: cuerpo;
-      /* La copia baja a y=380: en el documento no está arriba, está a media
-         altura del slider que tiene al lado. */
-      padding-block-start: 380px;
+      /* La copia no está arriba: está a media altura del slider que tiene al
+         lado. Eran 380 cuando el slider bajaba 64 por su propio margen; al
+         quitárselo, la copia baja lo mismo para conservar la relación. */
+      padding-block-start: 316px;
       /* El ancho de la copia es 579 de los 680 de la columna. */
       max-width: calc(579 / 680 * 100%);
     }
     /* El CTA se queda abajo del todo, terminando a la misma altura que el
        slider (y=884 en el documento). */
-    .proyecto--foc .proyecto__cta { grid-area: cta; align-self: end; padding-block-end: 64px; }
-    .proyecto--foc :global(.slider) { grid-area: slider; margin-block-start: 64px; }
+    .proyecto--foc .proyecto__cta { grid-area: cta; align-self: end; }
+    .proyecto--foc :global(.slider) { grid-area: slider; }
 
     /* ---- Izaskun · texto a la derecha, slider estrecho, CTA a la derecha - */
     .proyecto--izaskun {
@@ -200,9 +218,8 @@ const variante = proyecto.id.includes('foc') ? 'foc'
       align-items: start;
       /* El margen negativo del «Leer más» es para la composición apilada; aquí
          el botón es un ítem de rejilla y lo descolocaría. */
-      padding-block: 64px;
     }
-    .proyecto--izaskun .proyecto__intro { grid-area: intro; padding-block-end: 64px; }
+    .proyecto--izaskun .proyecto__intro { grid-area: intro; }
     /* Todo el texto en la SEGUNDA columna, de arriba abajo: resumen, «Leer
        más» y ampliación. La primera columna se queda vacía. Así está en el
        Figma (2094:525: el `Copy Inner` de la izquierda está vacío y la copia
@@ -236,5 +253,28 @@ const variante = proyecto.id.includes('foc') ? 'foc'
      debajo en los tres casos. */
   @media (max-width: 1023px) {
     .proyecto { padding-block: var(--space-48); gap: var(--space-32); }
+  }
+
+  /* ---- Móvil 390 · medido en el Figma (2203:497, 2203:517, 2203:537) ----
+     Con los estilos de escritorio (un cuerpo, un peso, un color), no con los
+     de Móvil del documento: lo que se trae del frame es el espacio.
+
+       sección       48 arriba (ECI 0: viene pegada al hero) · 56 abajo
+                     (Izaskun 96: cierra la serie antes de Productos)
+       intro         40 arriba; título y nota apilados, sin hueco
+       entre bloques 48: intro (24 + 24), copia, enlace y campo de color
+
+     El «Leer más» sigue pegado al resumen, como en escritorio (Johnny,
+     08/10): en el Figma de Móvil hay 32 entre los dos, pero es la misma
+     decisión que ya se tomó para la web entera.
+
+     `.proyecto .proyecto__intro` y no la clase sola: home.css le da 64 de
+     relleno con la misma especificidad que tendría aquí, y entonces ganaría
+     el que cargue último. */
+  @media (max-width: 767px) {
+    .proyecto { padding-block: var(--space-48) 56px; gap: var(--space-48); }
+    .proyecto--eci { padding-block-start: 0; }
+    .proyecto--izaskun { padding-block-end: var(--space-96); }
+    .proyecto .proyecto__intro { padding-block: 40px 0; gap: 0; }
   }
 </style>

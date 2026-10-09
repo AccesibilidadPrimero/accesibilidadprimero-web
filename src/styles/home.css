@@ -39,6 +39,16 @@
 .proyecto__intro   { padding-block: var(--space-64); }
 .proyecto--eci .proyecto__intro { padding-block: var(--space-48); }
 
+/* De 1024 para arriba manda el ritmo: el 64 de debajo del intro ES la
+   separación interna del bloque, y arriba no lleva nada, porque lo que separa
+   un proyecto del anterior es `--ritmo-seccion`, declarado una sola vez. Aquí
+   ECI deja de ser la excepción de 48. Por debajo de 1024 sigue vigente el
+   espacio medido contra los frames de Tablet y Móvil. */
+@media (min-width: 1024px) {
+  .proyecto__intro,
+  .proyecto--eci .proyecto__intro { padding-block: 0 var(--ritmo-intro); }
+}
+
 /* Project Content: ECI e Izaskun en vertical con gap 48; Foc i Cor en
    horizontal con gap 24 y la copia a la izquierda. No es el mismo bloque
    repetido tres veces: cada caso tiene su composición. */

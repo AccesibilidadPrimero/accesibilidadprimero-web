@@ -65,6 +65,11 @@ cualquier portátil de los últimos diez años.
 | `eci-1.png` · `eci-2.png` · `eci-3.png` | 904 × 568 | **1808 × 1136** |
 | `foc-1.png` · `foc-2.png` · `foc-3.png` | 400 × 564 | **800 × 1128** |
 | `izaskun-1.png` · `izaskun-2.png` · `izaskun-3.png` | 656 × 412 | **1312 × 824** |
+| `<proyecto>-<n>-movil.png` (las nueve, opcionales) | 294 × 640 | **588 × 1280** |
+
+**Verticales de móvil.** Por debajo de 768 la web sirve `eci-1-movil.png` en
+lugar de `eci-1.png`, y así con las nueve, con el mismo `alt`. Van las tres de
+un proyecto o ninguna: si falta una, ese proyecto sigue con las de escritorio.
 
 **Cada una necesita una frase de alternativa textual.** Son capturas de la web
 de un cliente y cuentan algo: no son decorativas. Una frase por imagen, que

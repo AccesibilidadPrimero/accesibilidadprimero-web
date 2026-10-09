@@ -19,6 +19,17 @@
      Foc i Cor campo  664 × 820   captura 400 × 564   aire  88   hueco 36
      Izaskun   campo 1119 × 640   captura 656 × 412   aire  68   hueco 48
 
+   En Móvil 390 (2203:456) los tres son iguales: campo de 342 (no va a
+   sangre, respeta el margen de 24), captura VERTICAL de 294 × 640, 48 de aire
+   arriba y abajo, 24 a los lados y 32 hasta el control.
+
+   CAPTURAS DE MÓVIL. Por debajo de 768 cada pantalla se sirve en vertical si
+   existe `<archivo>-movil` en arte/proyectos/ (588 × 1280, @2x de 294 × 640).
+   Es la misma imagen para el lector de pantalla: un <picture> con una
+   <source> por ancho y un solo <img> con un solo `alt`. Si falta alguna de
+   las tres, el proyecto entero sigue con las de escritorio: mezclar
+   proporciones dentro de un carrusel haría saltar el marco.
+
    El aire es simétrico arriba y abajo en los tres, y la captura va centrada.
 
    DOS DECISIONES QUE VIENEN DEL HERO Y SE REPITEN AQUÍ A PROPÓSITO
@@ -57,6 +68,8 @@ const buscar = (nombre: string) =>
 /* Una captura que falta rompe el build y lo dice por su nombre. El esquema ya
    exige tres declaradas; esto comprueba que además existen en disco. */
 const faltan = imagenes.filter((i) => !buscar(i.archivo)).map((i) => i.archivo);
+/* Las verticales son opcionales, pero van las tres o ninguna (ver arriba). */
+const conMovil = imagenes.every((i) => buscar(`${i.archivo}-movil`));
 if (faltan.length) {
   throw new Error(
     `Faltan capturas de ${titulo} en src/assets/proyectos/: ${faltan.join(', ')}.\n` +
@@ -65,23 +78,30 @@ if (faltan.length) {
 }
 ---
 
-<div class:list={['slider', `slider--${variante}`]} data-slider>
+<div class:list={['slider', `slider--${variante}`, conMovil && 'slider--con-movil']} data-slider>
   <ul class="slider__pila">
     {
       imagenes.map((im, i) => {
         const meta = buscar(im.archivo)!;
+        const movil = conMovil ? buscar(`${im.archivo}-movil`)! : null;
         return (
           <li class="slider__lamina" data-indice={i} data-activa={i === 0 ? '' : undefined}>
             {/* width/height REALES: son los que le dan al navegador la
-                proporción antes de descargar. */}
-            <img
-              src={meta.src}
-              alt={im.alt}
-              width={meta.width}
-              height={meta.height}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-            />
+                proporción antes de descargar. La <source> lleva los suyos,
+                que son otros: la vertical tiene otra proporción. */}
+            <picture>
+              {movil && (
+                <source media="(max-width: 767px)" srcset={movil.src} width={movil.width} height={movil.height} />
+              )}
+              <img
+                src={meta.src}
+                alt={im.alt}
+                width={meta.width}
+                height={meta.height}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </picture>
           </li>
         );
       })
@@ -147,6 +167,7 @@ if (faltan.length) {
   }
   .slider__lamina[data-activa] { transform: none; }
   .slider__lamina[data-saliente] { transform: translateX(-100%); }
+  .slider__lamina picture { display: contents; }
   .slider__lamina img { width: 100%; height: 100%; object-fit: contain; }
 
   /* 44 × 44 de zona, 32 de círculo dibujado. El círculo y el icono van en el
@@ -203,6 +224,13 @@ if (faltan.length) {
   @media (max-width: 1023px) {
     .slider { padding-block: calc(var(--aire) / 2); }
     .slider__pila { max-width: min(var(--ancho-captura), 100%); }
+  }
+
+  /* Móvil 390, medido en el Figma (2203:514, 2203:533, 2203:555): los tres
+     iguales. El ancho de la captura sale solo: 342 − 24 − 24 = 294. */
+  @media (max-width: 767px) {
+    .slider { padding: var(--space-48) var(--space-24); gap: var(--space-32); }
+    .slider--con-movil { --ancho-captura: 294px; --alto-captura: 640px; }
   }
 </style>
 

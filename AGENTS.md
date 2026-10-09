@@ -182,6 +182,17 @@ disciplina personal a las once de la noche.
 - La paleta que declara cada proyecto se valida en build contra el fondo de la
   Home.
 
+- **«Estimem les diferències» no se traduce: es una licencia creativa.** La
+  frase del hero `01-diferencies` está en catalán *dentro* de la versión
+  castellana a propósito —decisión de Johnny, 9 de octubre de 2026—: decir
+  «amamos las diferencias» en otra lengua es el concepto ejecutándose, no un
+  descuido de traducción. No «arreglarla». Su `lang="ca"` es lo que hace que la
+  licencia también funcione para quien escucha: sin la marca, una voz
+  castellana la pronuncia como un galimatías (3.1.2). `HeroCarousel.astro` ya
+  pone el atributo solo cuando el idioma de la frase difiere del de la página,
+  así que en la versión catalana el atributo desaparece él solo — y ahí la
+  licencia se pierde, lo que es una decisión de contenido pendiente, no un bug.
+
 ## 7. Flujo de trabajo
 
 - **Claude Code construye, Codex revisa.** Dos modelos distintos, uno
@@ -226,7 +237,11 @@ transparente y muestrea el fondo real debajo de cada caja.
 No cerrarlo por iniciativa propia. Preguntar.
 
 - Qué pasa cuando alguien en la versión inglesa llega a un artículo que solo
-  existe en castellano.
+  existe en castellano. Deja de ser teórico el día que se publique el catalán.
+- Qué frase lleva `01-diferencies` en la versión catalana. En castellano y en
+  inglés la licencia funciona porque el catalán es otra lengua; en catalán no.
+  Opciones: dejarla igual y aceptar que ahí se lee como una frase normal, o
+  llevarla a otra lengua para ese idioma. No inventarlo sin preguntar.
 - Si la web enseña todos los casos o una selección.
 - Las fases de las landings de producto.
 - Si el menú de escritorio crece más allá de cinco destinos.

@@ -46,6 +46,10 @@ const lineas = ui.ctaHeading.split('\n');
       align-items: center;
       justify-content: space-between;
       gap: var(--space-48);
+      /* El cierre no lleva fondo visible (`--surface-raised` es blanco), así
+         que se ciñe a su tinta y el aire lo pone el ritmo. */
+      padding-block: 0;
+      margin-block-start: var(--ritmo-seccion);
     }
     /* El Figma da 962 px al titular dentro de una fila de contenido de 1344.
        Como proporción y no como píxel fijo: a 1440 sale exactamente 962, y por

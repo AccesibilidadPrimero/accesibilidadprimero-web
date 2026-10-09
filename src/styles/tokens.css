@@ -139,6 +139,22 @@
   --space-96: 96px;
   --space-128: 128px;
 
+  /* ----- El ritmo vertical (Johnny, 09/10) -------------------------------
+     DOS valores y no catorce. Antes la separación entre secciones no la
+     decidía nadie: salía de sumar el relleno inferior de un bloque (64), el
+     superior del siguiente (64) y el aire del intro (69,5) = 197,5, un número
+     que no eligió nadie. Medido en el render: 14 huecos distintos, 22,3 % de
+     la página en blanco, y la misma relación con cuatro valores diferentes.
+
+     Ahora el 128 se declara UNA vez por sección y el 64 UNA vez por bloque.
+     Una sección con fondo propio (Estudio) conserva su relleno interno: ahí
+     el borde que ve el ojo es la banda, no la tinta.
+
+     Solo rige de 1024 para arriba. Tablet y Móvil tienen su propio espacio,
+     medido contra sus frames el 09/10, y no se tocan hasta su sesión. */
+  --ritmo-seccion: var(--space-128);   /* entre secciones */
+  --ritmo-intro: var(--space-64);      /* fila de intro → contenido del bloque */
+
   /* ===== Medidas ========================================================== */
   --touch-min: 44px;          /* AP pide 44. WCAG 2.5.8 AA se conforma con 24. */
   --gutter-page: var(--space-24);

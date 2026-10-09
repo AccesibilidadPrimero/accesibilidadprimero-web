@@ -1,5 +1,12 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  /* `_to_delete/` es la carpeta de descarte: el shell que Claude alcanza en el
+     Mac no puede borrar dentro de las carpetas conectadas, así que lo que sobra
+     se mueve ahí y lo vacía Johnny. Git ya la ignora, pero `astro check` no
+     miraba .gitignore y sí `include`, así que compilaba los descartes: una
+     copia vieja de un componente dejó `npm run check` en 4 errores, y con él
+     `verificar` y `publicar`. Pasó el 09/10/2026 y bloqueó una publicación.
+     `capturas/` va por lo mismo: es salida, no fuente. */
+  "exclude": ["dist", "_to_delete", "capturas"]
 }

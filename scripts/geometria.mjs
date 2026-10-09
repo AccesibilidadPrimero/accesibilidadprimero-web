@@ -364,6 +364,66 @@ for (const ancho of [390, 768, 1440]) {
   }
 }
 
+/* ---- Móvil 390 · Home / Móvil 390 del Figma (2203:456) -----------------
+   Medido el 09/10. Los estilos de texto son los de escritorio; lo que se
+   comprueba aquí es el espacio, el orden y qué texto se enseña. */
+console.log('\n── Móvil 390 (Figma → medido) ──\n');
+{
+  /* Con movimiento reducido: la aparición al hacer scroll sube los bloques
+     16 px y se mediría a medio camino. Reducido solo funde, no desplaza. */
+  const p = await nav.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  await p.evaluate(() => document.fonts.ready);
+  const m = await p.evaluate(() => {
+    const r = (s) => document.querySelector(s)?.getBoundingClientRect() ?? null;
+    const w = (s) => r(s)?.width ?? -1;
+    const debajo = (a, b) => { const x = r(a), y = r(b); return x && y && y.top >= x.bottom ? 1 : 0; };
+    const visible = (s) => { const e = document.querySelector(s); return e ? e.innerText.trim() : ''; };
+    const sec = (s) => r(`.proyecto--${s}`);
+    return {
+      'ECI · campo de color': [342, w('.proyecto--eci .slider')],
+      'Foc i Cor · campo de color': [342, w('.proyecto--foc .slider')],
+      'Izaskun · campo de color': [342, w('.proyecto--izaskun .slider')],
+      'ECI · captura': [294, w('.proyecto--eci .slider__pila')],
+      'Foc i Cor · captura': [294, w('.proyecto--foc .slider__pila')],
+      'Izaskun · captura': [294, w('.proyecto--izaskun .slider__pila')],
+      'ECI · título a 40 de la sección': [40, document.querySelector('.proyecto--eci .proyecto__titulo').getBoundingClientRect().top - sec('eci').top],
+      'Foc i Cor · título a 88 (48 + 40)': [88, document.querySelector('.proyecto--foc .proyecto__titulo').getBoundingClientRect().top - sec('foc').top],
+      'ECI · enlace ANTES de las capturas': [1, debajo('.proyecto--eci .proyecto__cta', '.proyecto--eci .slider')],
+      'Foc i Cor · enlace DESPUÉS': [1, debajo('.proyecto--foc .slider', '.proyecto--foc .proyecto__cta')],
+      'Izaskun · enlace DESPUÉS': [1, debajo('.proyecto--izaskun .slider', '.proyecto--izaskun .proyecto__cta')],
+      'Productos · columna': [342, w('.producto--itza')],
+      'Estudio · caja de la frase': [274, w('.estudio__texto')],
+      'Productos · texto de móvil': [1, visible('.productos__intro').startsWith('Aplicaciones') ? 1 : 0],
+      'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Somos') ? 1 : 0],
+      'Pie · lema, legales, ©': [1, debajo('.pie__lema', '.pie__nav') && debajo('.pie__nav', '.pie__copy') ? 1 : 0],
+      'Hero · ocupa la pantalla': [844, r('.hero').bottom],
+    };
+  });
+  await p.close();
+  for (const [nombre, [esperado, real]] of Object.entries(m)) {
+    esperadas++; medidos++;
+    const bien = Math.abs(real - esperado) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(36)} ${String(esperado).padStart(3)} → ${Number(real).toFixed(1).padStart(6)}`);
+  }
+}
+{
+  /* Y en escritorio siguen los textos de siempre. */
+  const p = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const t = await p.evaluate(() => [
+    document.querySelector('.productos__intro').innerText.trim().startsWith('Desarrollamos') ? 1 : 0,
+    document.querySelector('.estudio__texto').innerText.trim().startsWith('Accesibilidad Primero es') ? 1 : 0,
+  ]);
+  await p.close();
+  for (const [i, nombre] of ['1440 · Productos · texto de escritorio', '1440 · Estudio · texto de escritorio'].entries()) {
+    esperadas++; medidos++;
+    if (t[i] !== 1) fallos++;
+    console.log(`  ${t[i] === 1 ? '✓' : '✗'} ${nombre}`);
+  }
+}
+
 await nav.close();
 servidor.close();
 

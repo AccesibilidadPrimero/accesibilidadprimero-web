@@ -5,6 +5,7 @@ import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { path, DEFAULT_LANG } from '../i18n/config';
+import { t } from '../i18n/ui';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
    Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
    sirve con caché larga, y si el archivo desaparece el build se para. */
@@ -19,6 +20,7 @@ const medio = (nombre: string) =>
   Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
 
 const lang = DEFAULT_LANG;
+const ui = t(lang);
 
 /* Tres destacados, siempre tres. El resto, en /proyectos/. */
 const todos = await getCollection('proyectos');
@@ -52,6 +54,12 @@ const conCuerpo = await Promise.all(
    El campo de Accessible Abstracts mide 439 en el Figma y no 443. Son cuatro
    píxeles en una fila que el resto del documento trata como igual: se toma
    como descuido y las tres van a 443. Pendiente de corregir en el Figma. */
+/* TEXTOS DE MÓVIL (Johnny, 09/10): en el Figma de Móvil 390 tres textos están
+   simplificados y mandan por debajo de 768; en escritorio se quedan los de
+   siempre. Van los dos en el HTML y se enseña uno según el ancho, con
+   `display: none` en el otro: así lo saca también del árbol de accesibilidad
+   y el lector oye solo el que se ve. Las clases están en base.css porque las
+   usa más de un bloque. */
 const productos = [
   {
     nombre: 'Itza',
@@ -87,6 +95,8 @@ const productos = [
     nombre: 'Accessible Abstracts',
     marca: true,
     descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
+    /* Por debajo de 768, el texto del Figma de Móvil (ver `variantes`). */
+    descripcionMovil: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
     /* El nombre entero y no «AA»: en una web de accesibilidad «AA» se lee
        como el nivel de conformidad de WCAG, y muchos lectores de pantalla lo
        pronuncian «a a» (Johnny, 09/10). */
@@ -122,8 +132,13 @@ const productos = [
 
   <section class="productos" aria-labelledby="productos-titulo">
     <h2 id="productos-titulo" class="productos__intro">
-      Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea
-      accesible para más personas.
+      <span class="solo-amplio">
+        Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea
+        accesible para más personas.
+      </span>
+      <span class="solo-movil">
+        Aplicaciones que simplifican y hacen que lo digital sea accesible para más personas.
+      </span>
     </h2>
 
     <ul class="productos__lista">
@@ -148,11 +163,15 @@ const productos = [
                    (AGENTS.md §1 — ARIA justificada). Describe el final de la
                    conversación, que es lo que queda en pantalla.
 
-                   SIN `loop` y SIN botón de pausa, a propósito. El vídeo dura
-                   4,94 s y se reproduce UNA vez: 2.2.2 solo pide un control
-                   para lo que se mueve solo durante más de cinco segundos, y
-                   un bucle no acaba nunca por corto que sea el clip. Al
-                   terminar se queda quieto en el último fotograma.
+                   SIN `loop`, y CON botón de pausa. Aquí hubo un error: el
+                   comentario decía que el clip duraba 4,94 s y por eso no
+                   hacía falta control, pero el archivo que sirve la web dura
+                   **9,28 s**. 2.2.2 pide un mecanismo para lo que se mueve
+                   solo más de cinco segundos, así que el botón vuelve. Lo
+                   cazó `npm run teclado`, que lee la duración del ARCHIVO y
+                   no la del comentario. Cuando Johnny reexporte el clip por
+                   debajo de 5 s, el control puede volver a quitarse — y la
+                   misma comprobación lo dirá.
 
                    `muted` no es cosmético: es la condición para que el
                    navegador deje reproducir solo. El archivo, además, no
@@ -179,12 +198,35 @@ const productos = [
                   <source src={p.video.mp4} type="video/mp4" />
                 </video>
               )}
+              {p.video && (
+                /* En NEGRO: un mecanismo de 2.2.2 no puede ser lo más
+                   callado de la tarjeta. El nombre accesible lleva el del
+                   producto para distinguirlo de los otros controles de la
+                   página (2.4.4). Sin JS no se pinta: no haría nada. */
+                <button
+                  type="button"
+                  class="producto__pausa"
+                  data-video-control
+                  data-label-pausar={ui.carouselPause}
+                  data-label-reproducir={ui.carouselPlay}
+                >
+                  <span data-video-label>{ui.carouselPause}</span>
+                  <span class="sr-only"> · {p.nombre}</span>
+                </button>
+              )}
             </div>
             <h3 class="producto__nombre">
               {p.nombre}
               {p.marca && <sup aria-hidden="true">®</sup>}
             </h3>
-            <p class="producto__desc">{p.descripcion}</p>
+            {p.descripcionMovil ? (
+              <p class="producto__desc">
+                <span class="solo-amplio">{p.descripcion}</span>
+                <span class="solo-movil">{p.descripcionMovil}</span>
+              </p>
+            ) : (
+              <p class="producto__desc">{p.descripcion}</p>
+            )}
             <CtaLink href={p.href} external>{p.cta}</CtaLink>
           </li>
         ))
@@ -207,8 +249,14 @@ const productos = [
       <img src={iconoEstudio.src} alt="" width={iconoEstudio.width} height={iconoEstudio.height} />
     </div>
     <h2 id="estudio-titulo" class="estudio__texto">
-      Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
-      accesibilidad digital como punto de partida.
+      <span class="solo-amplio">
+        Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
+        accesibilidad digital como punto de partida.
+      </span>
+      <span class="solo-movil">
+        Somos un estudio de diseño digital. Hacemos webs y apps donde la accesibilidad es el
+        punto de partida.
+      </span>
     </h2>
     <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero</CtaLink>
   </section>
@@ -258,6 +306,29 @@ const productos = [
   .producto--itza { --campo: var(--mint); }
   .producto--a11y { --campo: var(--yellow-ap); }
   .producto--aa   { --campo: var(--rose-ap); }
+  /* Abajo a la izquierda del campo, en NEGRO. Un mecanismo de 2.2.2 tiene
+     que verse: si fuera gris sería lo más callado de la tarjeta. */
+  .producto__pausa {
+    position: absolute;
+    inset-block-end: var(--space-8);
+    inset-inline-start: var(--space-8);
+    padding: var(--space-12);
+    min-height: var(--touch-min);
+    background: none;
+    border: 0;
+    color: var(--text);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+    cursor: pointer;
+  }
+  .producto__pausa:hover { text-decoration-thickness: var(--underline-hover); }
+  /* Sin JavaScript el vídeo no arranca solo, así que el control no haría
+     nada y no se pinta (AGENTS.md §5). */
+  html:not(.js) .producto__pausa { display: none; }
+
   .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }
   .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
   /* En negro, como el nombre (Johnny, 09/10). Lo que los separa es el hueco
@@ -295,12 +366,37 @@ const productos = [
   /* El alto sale de la proporción del dibujo —338,4 × 299,43—, no de un
      número escrito a mano: 50 de ancho dan 44,24 de alto. */
   .estudio__icono img { display: block; width: 50px; height: auto; }
+
+  /* ---- Móvil 390 · medido en el Figma (2203:563, 2203:590) ----------------
+     Productos: 64 arriba y 96 abajo, y la frase centrada. Las columnas ya se
+     apilan en home.css con 48 entre ellas, que es lo del documento.
+     Estudio: la frase en una caja de 274, centrada en la página pero con el
+     texto alineado a la izquierda, como en el Figma. El enlace «Conoce
+     Accesibilidad Primero» está oculto en el frame de Móvil y aquí se queda
+     a propósito (Johnny, 09/10): es el camino a Estudio desde la Home. */
+  /* ---- El ritmo vertical, de 1024 para arriba ---------------------------
+     Productos no lleva fondo: se ciñe a su tinta y la separación la pone el
+     128. Estudio SÍ lleva fondo (Silk), así que conserva su relleno de 96: en
+     una banda, el borde que ve el ojo es la banda, no el texto. */
+  @media (min-width: 1024px) {
+    .productos { padding-block: 0; margin-block-start: var(--ritmo-seccion); }
+    .estudio { margin-block-start: var(--ritmo-seccion); }
+  }
+
+  @media (max-width: 767px) {
+    .productos { padding-block: var(--space-64) var(--space-96); }
+    .productos__intro { text-align: center; }
+    .estudio__texto { width: 274px; max-width: 100%; text-align: start; }
+  }
 </style>
 
 <script>
   /* El vídeo de Itza: se reproduce UNA vez, cuando se ve, y se queda en el
-     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver,
-     así que en total nunca se mueve más de 4,94 s (2.2.2).
+     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver.
+     Como el archivo dura 9,28 s —más de los cinco de 2.2.2— lleva además un
+     botón de pausa, con el mismo patrón que los dos carruseles: un CONJUNTO
+     de motivos y no un booleano, para que salir y volver a entrar en pantalla
+     no reanude algo que la persona paró a mano.
 
      Con `prefers-reduced-motion` no arranca: se queda el póster, que es el
      último fotograma. Reducir no es quitar: quien lo tiene activado ve el
@@ -309,9 +405,18 @@ const productos = [
   document.querySelectorAll<HTMLVideoElement>('[data-video-producto]').forEach((video) => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const posterFinal = video.poster;
+    const control = video.parentElement?.querySelector<HTMLButtonElement>('[data-video-control]');
+    const etiqueta = control?.querySelector<HTMLElement>('[data-video-label]');
     let visible = false;
+    const motivos = new Set<string>();
+    const parado = () => motivos.size > 0;
 
     const sincronizar = () => {
+      if (etiqueta && control) {
+        etiqueta.textContent = parado()
+          ? (control.dataset.labelReproducir ?? 'Reproducir')
+          : (control.dataset.labelPausar ?? 'Pausar');
+      }
       if (reduce.matches) {
         video.pause();
         /* Si alguien activa reducir movimiento con el vídeo ya empezado,
@@ -323,9 +428,22 @@ const productos = [
       if (video.currentTime === 0 && video.dataset.posterInicio) {
         video.poster = video.dataset.posterInicio;
       }
-      if (visible && !video.ended) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
+      if (visible && !video.ended && !parado()) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
       else video.pause();
     };
+
+    /* Con movimiento reducido el vídeo no arranca solo: ahí el botón sirve
+       para PONERLO, no para pararlo. Reducir no es prohibir. */
+    control?.addEventListener('click', () => {
+      if (reduce.matches) {
+        if (video.paused) { video.poster = ''; video.play().catch(() => {}); }
+        else video.pause();
+        return;
+      }
+      if (motivos.has('usuario')) motivos.delete('usuario');
+      else motivos.add('usuario');
+      sincronizar();
+    });
 
     new IntersectionObserver(
       (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),

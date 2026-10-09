@@ -64,12 +64,27 @@ const ui = t(lang);
     text-decoration-thickness: var(--underline-rest);
   }
 
+  /* Móvil 390 (Figma 2203:679): lema, legales y © en ese orden, con 12 entre
+     ellos. El orden se cambia SOLO a la vista (Johnny, 09/10); en el HTML
+     sigue ©, lema, legales. No mueve el foco: lo único que lo recibe es la
+     lista de legales, y su orden interno no cambia. */
+  @media (max-width: 767px) {
+    .pie { gap: var(--space-12); }
+    .pie__lema { order: 1; }
+    .pie__nav { order: 2; }
+    .pie__copy { order: 3; }
+  }
   @media (min-width: 1024px) {
     .pie {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
       gap: var(--space-48);
+      /* Los 32 de arriba se van: lo que separa los créditos del cierre es el
+         ritmo, declarado una vez, no un número propio del pie. Abajo se
+         conserva la regla de los 24 al texto. */
+      padding-block-start: 0;
+      margin-block-start: var(--ritmo-seccion);
     }
   }
 </style>
