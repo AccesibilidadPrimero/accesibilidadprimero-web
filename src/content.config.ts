@@ -77,6 +77,10 @@ const proyectos = defineCollection({
       resumen: z.string(),
       cliente: z.string(),
       web: z.string().url().optional(),
+      /* El nombre para el enlace «Ir a …», cuando el título del caso es más
+         largo de lo que pide un enlace: «ECI Conference», no «ECI Conference
+         Mad 2027». Sin él, el enlace usa el título. */
+      nombreCorto: z.string().optional(),
       orden: z.number().int(),
       destacado: z.boolean().default(false),
       paleta,

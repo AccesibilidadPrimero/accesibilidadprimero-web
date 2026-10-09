@@ -19,6 +19,12 @@
  *   npm run publicar -- "mensaje propio"
  */
 import { execFileSync } from 'node:child_process';
+import { statSync } from 'node:fs';
+
+// GitHub rechaza cualquier archivo de más de 100 MB, y lo rechaza en el push,
+// cuando el commit ya está hecho. Aquí se corta a la mitad para tener margen y
+// para que nada pesado llegue a confirmarse. Ya pasó: itza.gif, 214 MB, 9/10/2026.
+const LIMITE_MB = 50;
 
 const git = (...args) =>
   execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
@@ -43,6 +49,29 @@ const propio = process.argv.slice(2).join(' ').trim();
 
 git('add', '-A');
 const tocados = git('diff', '--cached', '--name-only').split('\n').filter(Boolean);
+
+// --- 3b. Tamaño: ningún archivo de más de LIMITE_MB --------------------------
+// Se mide cada archivo que va a entrar en el commit (los borrados no pesan).
+// Si uno pasa del límite se deshace el `git add` —los archivos no se tocan,
+// solo dejan de estar preparados— y se dice cuál es y qué hacer.
+const entran = git('diff', '--cached', '--name-only', '--diff-filter=d').split('\n').filter(Boolean);
+const pesos = entran.map((f) => ({ f, mb: statSync(f).size / 1024 / 1024 }));
+const gordos = pesos.filter((p) => p.mb > LIMITE_MB);
+
+if (gordos.length) {
+  git('reset', '-q');
+  salir(
+    1,
+    `\nNo se confirma nada: ${gordos.length === 1 ? 'hay un archivo' : `hay ${gordos.length} archivos`} de más de ${LIMITE_MB} MB.\n` +
+      gordos.map((p) => `  ${p.f}  (${p.mb.toFixed(1)} MB)`).join('\n') +
+      '\n\nGitHub no admite nada de más de 100 MB. El original se queda en el disco;\n' +
+      'añade su ruta (o su tipo) a .gitignore y vuelve a lanzar npm run publicar.\n',
+  );
+}
+
+// La comprobación dice qué ha medido, para que se vea que ha mirado.
+const mayor = pesos.reduce((a, b) => (b.mb > a.mb ? b : a), { f: '—', mb: 0 });
+console.log(`Tamaños: ${pesos.length} archivo(s) medidos, ninguno pasa de ${LIMITE_MB} MB. El mayor: ${mayor.f} (${mayor.mb.toFixed(1)} MB).`);
 
 function describir(archivos) {
   const zonas = new Set();

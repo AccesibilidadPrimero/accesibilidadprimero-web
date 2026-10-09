@@ -11,3 +11,6 @@ _to_delete/
 # El GIF de Itza pesa 214 MB y GitHub no admite nada de más de 100.
 # El vídeo bueno es el .mp4, que sí va al repositorio.
 arte/**/*.gif
+
+# Los masters de vídeo (itza.mov pesa 1,15 GB). Al repositorio va el .mp4.
+arte/**/*.mov

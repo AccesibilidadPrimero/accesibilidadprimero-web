@@ -54,7 +54,7 @@ export const UI: Record<Lang, Dict> = {
     footerTagline: 'Accesibilidad Primero. Siempre.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'Tu proyecto trabaja por la inclusión. Tu web también.',
+    ctaHeading: 'Tu proyecto trabaja por la inclusión.\nTu web también.',
     ctaAction: 'Cuéntanos tu proyecto',
     nav: {
       home: 'Inicio',
@@ -95,7 +95,7 @@ export const UI: Record<Lang, Dict> = {
     footerTagline: 'Accessibilitat Primer. Sempre.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'El teu projecte treballa per la inclusió. El teu web també.',
+    ctaHeading: 'El teu projecte treballa per la inclusió.\nEl teu web també.',
     ctaAction: 'Explica’ns el teu projecte',
     nav: {
       home: 'Inici',
@@ -136,7 +136,7 @@ export const UI: Record<Lang, Dict> = {
     footerTagline: 'Accessibility First. Always.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'Your project works for inclusion. Your website should too.',
+    ctaHeading: 'Your project works for inclusion.\nYour website should too.',
     ctaAction: 'Tell us about your project',
     nav: {
       home: 'Home',

@@ -39,38 +39,42 @@ const conCuerpo = await Promise.all(
   }),
 );
 
-/* Medidas del campo de color, leídas del Figma (`Productos`, 2181:331) y
-   comprobadas sobre el PDF del documento que mandó Johnny el 09/10:
+/* Medidas leídas del Figma (`Productos`, 2181:331), revisión del 09/10:
 
-     Itza   432 × 444  menta    · el dibujo ocupa el 45 % del ancho, a 23 del borde
-     A11y   546 × 561  amarillo · 55 %, a 48
-     AA     318 × 326  rosa     · 53 %, a 23
+     tres columnas iguales de 432, separadas 24      432 × 3 + 24 × 2 = 1344
+     campo de color 432 × 443 en las tres
+     dentro, un hueco de 392 × 403 a 20 de cada borde
 
-   El campo RECORTA lo que sobra por abajo: en el documento los móviles se
-   salen del campo y se cortan. Por eso `overflow: hidden` y el dibujo anclado
-   arriba, no centrado. */
+   El móvil va ENTERO dentro del hueco, encajado por el alto y centrado: ya no
+   se sale del campo ni se recorta. Las tres maquetas tienen la misma
+   proporción (0,49), así que las tres salen al mismo tamaño.
+
+   El campo de Accessible Abstracts mide 439 en el Figma y no 443. Son cuatro
+   píxeles en una fila que el resto del documento trata como igual: se toma
+   como descuido y las tres van a 443. Pendiente de corregir en el Figma. */
 const productos = [
   {
     nombre: 'Itza',
     marca: true,
     descripcion: 'El asistente accesible para organizaciones con impacto social.',
-    cta: 'Conocer Itza',
+    cta: 'Ver Itza',
     href: 'https://itza.accesibilidadprimero.com/',
     clase: 'producto--itza',
     video: {
       mp4: '/video/itza.mp4',
       webm: '/video/itza.webm',
       descripcion:
-        'Una conversación con el asistente Itza en el móvil: la persona escribe una ' +
-        'pregunta y el asistente responde dentro de la propia web de la organización.',
+        'El asistente Itza en el móvil, dentro de la web de Off Escuela: Ana pregunta ' +
+        'qué cursos hay para adultos y el asistente le responde con los de interpretación ' +
+        'para mayores de 18 años y le pregunta qué día de la semana le viene mejor.',
     },
   },
   {
     nombre: 'A11y Primero',
     marca: true,
     descripcion:
-      'Nuestra extensión propia de Chrome para auditorías express, fácil de ver, entender y corregir.',
-    cta: 'Conocer A11y Primero',
+      'Extensión de Chrome para auditorías express, fácil de ver, entender y corregir.',
+    cta: 'Ver A11y Primero',
     href: 'https://www.accesibilidadprimero.com/a11yprimero/',
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
@@ -83,7 +87,10 @@ const productos = [
     nombre: 'Accessible Abstracts',
     marca: true,
     descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
-    cta: 'Conocer Accessible Abstracts',
+    /* El nombre entero y no «AA»: en una web de accesibilidad «AA» se lee
+       como el nivel de conformidad de WCAG, y muchos lectores de pantalla lo
+       pronuncian «a a» (Johnny, 09/10). */
+    cta: 'Ver Accessible Abstracts',
     href: 'https://aa.accesibilidadprimero.com/',
     clase: 'producto--aa',
     imagen: 'accessible-abstracts',
@@ -138,40 +145,39 @@ const productos = [
                 /* Un <video> no admite `alt`, así que el nombre accesible va
                    en `aria-label`: la animación enseña el producto, no es
                    decoración, y sin alternativa no se entendería qué es
-                   (AGENTS.md §1 — ARIA justificada).
+                   (AGENTS.md §1 — ARIA justificada). Describe el final de la
+                   conversación, que es lo que queda en pantalla.
+
+                   SIN `loop` y SIN botón de pausa, a propósito. El vídeo dura
+                   4,94 s y se reproduce UNA vez: 2.2.2 solo pide un control
+                   para lo que se mueve solo durante más de cinco segundos, y
+                   un bucle no acaba nunca por corto que sea el clip. Al
+                   terminar se queda quieto en el último fotograma.
 
                    `muted` no es cosmético: es la condición para que el
-                   navegador deje reproducir solo, y además el vídeo no debe
-                   sonar (1.4.2). `playsinline` evita que iOS lo abra a
-                   pantalla completa. El `poster` es lo que se ve antes de
-                   cargar y lo único que se ve con movimiento reducido. */
+                   navegador deje reproducir solo. El archivo, además, no
+                   tiene pista de audio. `playsinline` evita que iOS lo abra a
+                   pantalla completa.
+
+                   Dos fotogramas fijos. El `poster` es el ÚLTIMO: la
+                   conversación completa, que es lo que ve quien no tiene JS o
+                   tiene activado reducir movimiento. Si el vídeo va a
+                   moverse, el script cambia el póster por el PRIMERO para
+                   que al arrancar no salte de la conversación entera a la
+                   pantalla vacía. */
                 <video
                   class="producto__video"
                   data-video-producto
+                  data-poster-inicio={medio('itza-inicio')?.src}
                   aria-label={p.video.descripcion}
                   poster={medio('itza-fotograma')?.src}
                   muted
-                  loop
                   playsinline
                   preload="metadata"
                 >
                   <source src={p.video.webm} type="video/webm" />
                   <source src={p.video.mp4} type="video/mp4" />
                 </video>
-              )}
-            {p.video && (
-                /* El vídeo dura 9 s y va en bucle: por encima de cinco segundos,
-                   algo que se mueve solo necesita un mecanismo para pararlo
-                   (2.2.2). No es opcional y no es un extra.
-
-                   Va DENTRO del campo, abajo a la izquierda: fuera empujaba el
-                   nombre hacia abajo y la tarjeta de Itza dejaba de alinearse
-                   con las otras dos. Sobre menta el negro da 13,93:1. */
-                <button type="button" class="producto__pausa" data-video-control
-                        data-label-pausar="Pausar la animación de Itza"
-                        data-label-reproducir="Reproducir la animación de Itza">
-                  Pausar la animación de Itza
-                </button>
               )}
             </div>
             <h3 class="producto__nombre">
@@ -224,64 +230,34 @@ const productos = [
     max-width: 1002px;   /* medida del Figma */
   }
 
-  /* El reparto de anchos y la alineación inferior viven en home.css, que es
-     donde está la geometría medida del Figma. */
+  /* El reparto de columnas vive en home.css. */
   .producto { display: flex; flex-direction: column; gap: var(--space-24); align-items: flex-start; }
-  /* El campo de color. Recorta: en el documento los móviles se salen por
-     abajo y se cortan contra el borde del campo, que es lo que les da ese
-     aire de maqueta asomando. Las tres medidas están leídas del Figma. */
+  /* El campo de color: 432 × 443 en el Figma. */
   .producto__campo {
     position: relative;
+    width: 100%;
+    aspect-ratio: 432 / 443;
     background: var(--campo);
-    overflow: hidden;
-    display: grid;
-    justify-items: center;
-    align-content: start;
-    /* El aire de arriba va en % del ANCHO del campo, no en píxeles: el campo
-       escala con la columna y el dibujo tiene que escalar con él. */
-    padding-block-start: var(--aire);
   }
+  /* El hueco de 392 × 403, a 20 de cada borde. En porcentaje y no en píxeles,
+     para que escale con la columna. Ojo: en `inset`, arriba y abajo se miden
+     contra el ALTO del campo y los lados contra el ANCHO, así que no es el
+     mismo número: 20 / 443 = 4,51 % y 20 / 432 = 4,63 %.
+
+     `object-fit: contain` encaja el móvil entero por el alto y lo centra.
+     Vale igual para la imagen, para el vídeo y para su póster. */
   .producto__campo img,
   .producto__campo video {
-    width: var(--ancho-medio);
-    height: auto;
+    position: absolute;
+    inset: 4.51% 4.63%;
+    width: 90.74%;      /* 392 / 432 */
+    height: 90.97%;     /* 403 / 443 */
+    object-fit: contain;
     display: block;
   }
-
-  .producto--itza { --campo: var(--mint);      --ancho-medio: 45%; --aire: 5.3%; }
-  .producto--a11y { --campo: var(--yellow-ap); --ancho-medio: 55%; --aire: 8.8%; }
-  .producto--aa   { --campo: var(--rose-ap);   --ancho-medio: 53%; --aire: 7.2%; }
-
-  /* El vídeo de Itza no es una maqueta de móvil como los otros dos: es la
-     animación del asistente, cuadrada. Mientras no llegue su mockup se centra
-     en el campo en vez de colgar de arriba, para que el hueco no parezca un
-     error. Pendiente: la maqueta de Itza, como las otras dos. */
-  .producto--itza .producto__campo { align-content: center; padding-block-start: 0; }
-  .producto--itza .producto__campo video { width: 62%; }
-
-  .producto__pausa {
-    position: absolute;
-    inset-block-end: var(--space-8);
-    inset-inline-start: var(--space-8);
-    padding: var(--space-12);
-    min-height: var(--touch-min);
-    background: none;
-    border: 0;
-    /* NEGRO, al contrario que «Leer más». La excepción del gris era para un
-       control que solo despliega más de lo que ya estás leyendo; este existe
-       para que alguien pueda PARAR algo que se mueve solo (2.2.2), y lo
-       último que debe ser es el elemento más silencioso de la tarjeta. */
-    color: var(--text);
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: var(--underline-offset);
-  }
-  .producto__pausa:hover { text-decoration-thickness: var(--underline-hover); }
-  /* Sin JS el vídeo no se reproduce solo, así que el botón no pinta nada. */
-  html:not(.js) .producto__pausa { display: none; }
+  .producto--itza { --campo: var(--mint); }
+  .producto--a11y { --campo: var(--yellow-ap); }
+  .producto--aa   { --campo: var(--rose-ap); }
   .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }
   .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
   /* Misma regla que en los proyectos: el nombre nombra, la descripción
@@ -318,31 +294,35 @@ const productos = [
 </style>
 
 <script>
-  /* El vídeo de Itza: se reproduce solo cuando se ve, se para cuando se sale
-     de pantalla, y el botón lo para del todo. Con `prefers-reduced-motion` no
-     arranca nunca: se queda el `poster`, que es exactamente el mismo primer
-     fotograma, así que no se pierde nada visualmente. */
-  document.documentElement.classList.add('js');
+  /* El vídeo de Itza: se reproduce UNA vez, cuando se ve, y se queda en el
+     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver,
+     así que en total nunca se mueve más de 4,94 s (2.2.2).
 
+     Con `prefers-reduced-motion` no arranca: se queda el póster, que es el
+     último fotograma. Reducir no es quitar: quien lo tiene activado ve el
+     mismo final que los demás, solo que sin el camino (AGENTS.md §2.3). */
+  document.documentElement.classList.add('js');
   document.querySelectorAll<HTMLVideoElement>('[data-video-producto]').forEach((video) => {
-    const control = video.closest('.producto')?.querySelector<HTMLButtonElement>('[data-video-control]');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let paradoPorUsuario = false;
+    const posterFinal = video.poster;
     let visible = false;
 
     const sincronizar = () => {
-      const debe = visible && !paradoPorUsuario && !reduce.matches;
-      if (debe) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
-      else video.pause();
-      if (control) {
-        const t = paradoPorUsuario
-          ? (control.dataset.labelReproducir ?? 'Reproducir')
-          : (control.dataset.labelPausar ?? 'Pausar');
-        control.textContent = t;
+      if (reduce.matches) {
+        video.pause();
+        /* Si alguien activa reducir movimiento con el vídeo ya empezado,
+           salta al final en vez de quedarse a medias. */
+        if (video.currentTime > 0 && video.duration) video.currentTime = video.duration;
+        else video.poster = posterFinal;
+        return;
       }
+      if (video.currentTime === 0 && video.dataset.posterInicio) {
+        video.poster = video.dataset.posterInicio;
+      }
+      if (visible && !video.ended) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
+      else video.pause();
     };
 
-    control?.addEventListener('click', () => { paradoPorUsuario = !paradoPorUsuario; sincronizar(); });
     new IntersectionObserver(
       (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),
       { threshold: 0.3 },

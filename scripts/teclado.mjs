@@ -177,6 +177,39 @@ check('El alt describe la imagen y no repite la frase',
   await p.close();
 }
 
+/* 13. El vídeo de Itza: si se mueve solo, se para solo antes de los 5 s.
+   Sin bucle y sin botón de pausa, porque dura 4,94 s y se reproduce una
+   vez (2.2.2). La comprobación lee la duración del ARCHIVO que sirve la web,
+   no la que diga un comentario: si mañana entra un clip de 9 s o alguien
+   vuelve a poner `loop`, esto falla y hay que devolver el botón de pausa. */
+{
+  const p = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const v = await p.evaluate(async () => {
+    const video = document.querySelector('[data-video-producto]');
+    if (!video) return null;
+    if (video.readyState < 1) {
+      await new Promise((ok) => {
+        video.addEventListener('loadedmetadata', ok, { once: true });
+        video.load();
+        setTimeout(ok, 5000);
+      });
+    }
+    return { loop: video.loop, duracion: video.duration, control: !!document.querySelector('.producto [data-video-control]') };
+  });
+  if (v) {
+    const corto = Number.isFinite(v.duracion) && v.duracion <= 5;
+    check('El vídeo de producto no va en bucle', !v.loop);
+    check('El vídeo de producto dura 5 s o menos', corto, `${v.duracion?.toFixed(2)} s`);
+    if (!corto || v.loop) {
+      check('Si dura más o va en bucle, tiene botón de pausa', v.control);
+    }
+  } else {
+    check('Hay un vídeo de producto que comprobar', false, 'no se encontró [data-video-producto]');
+  }
+  await p.close();
+}
+
 await navegador.close();
 servidor.close();
 

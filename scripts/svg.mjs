@@ -58,9 +58,13 @@ const ESPERADO = {
   'proyectos/eci-1.png': [904, 568], 'proyectos/eci-2.png': [904, 568], 'proyectos/eci-3.png': [904, 568],
   'proyectos/foc-1.png': [400, 564], 'proyectos/foc-2.png': [400, 564], 'proyectos/foc-3.png': [400, 564],
   'proyectos/izaskun-1.png': [656, 412], 'proyectos/izaskun-2.png': [656, 412], 'proyectos/izaskun-3.png': [656, 412],
-  'productos/itza.png': [432, 444],
-  'productos/a11y-primero.png': [546, 561],
-  'productos/accessible-abstracts.png': [318, 327],
+  /* Productos: el hueco es 392 × 403, pero el móvil entra encajado por el
+     alto, así que lo que hay que medir es el dibujo: 403 de alto y el ancho
+     que le da su proporción (0,486), 196. */
+  'productos/itza-fotograma.png': [196, 403],
+  'productos/itza-inicio.png': [196, 403],
+  'productos/a11y-primero.png': [196, 403],
+  'productos/accessible-abstracts.png': [196, 403],
 };
 
 /* Lee el tamaño de un PNG sin dependencias: va en la cabecera IHDR. */
@@ -95,7 +99,15 @@ for (const ruta of archivos(ORIGEN)) {
     if (!existsSync(join(ORIGEN, hermano))) {
       avisos.push(`${rel}: falta ${hermano}. Un solo formato deja fuera a algún navegador.`);
     }
-    avisos.push(`${rel}: el vídeo necesita además un fotograma fijo (.png) para quien tenga activado prefers-reduced-motion, y va sin sonido.`);
+    /* El fotograma fijo se llama `<nombre>-fotograma.png`. Antes este aviso
+       saltaba SIEMPRE, existiera o no, y un aviso que salta siempre enseña a
+       no leerlo. */
+    if (/\.mp4$/i.test(rel)) {
+      const fotograma = rel.replace(/\.mp4$/i, '-fotograma.png');
+      if (!existsSync(join(ORIGEN, fotograma))) {
+        avisos.push(`${rel}: falta ${fotograma}, el fotograma fijo para quien tenga activado prefers-reduced-motion.`);
+      }
+    }
     console.log(`  ${rel.padEnd(40)} ${String(statSync(ruta).size).padStart(7)}    (a public/video/)`);
     continue;
   }

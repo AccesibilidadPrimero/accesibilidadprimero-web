@@ -46,31 +46,20 @@
 .proyecto--izaskun .proyecto__resumen { max-width: 663px; }
 
 /* ---- Productos ----------------------------------------------------------- */
-/* La fila NO es una rejilla de tres columnas iguales: las tres tarjetas miden
-   432, 546 y 318, y se alinean por abajo. 432+546+318 + 24+24 = 1344. */
+/* Tres columnas iguales de 432 con 24 entre ellas: 432 × 3 + 24 × 2 = 1344
+   (Figma, revisión del 09/10). Alineadas arriba. Hasta el 08/10 eran tres
+   anchos distintos alineados abajo; eso ya no está en el documento. */
 .productos__lista {
-  --w-itza: 432;
-  --w-a11y: 546;
-  --w-aa: 318;
-  display: flex;
-  align-items: flex-end;        /* MIN|MAX en el Figma: alineadas abajo */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
   gap: var(--space-24);
 }
-.producto { flex: 0 1 auto; }
-.producto--itza { width: calc(var(--w-itza) / 1344 * 100%); }
-.producto--a11y { width: calc(var(--w-a11y) / 1344 * 100%); }
-.producto--aa   { width: calc(var(--w-aa)   / 1344 * 100%); }
 
-/* El campo de color de cada producto conserva su proporción del Figma. */
-.producto__campo { width: 100%; }
-.producto--itza .producto__campo { aspect-ratio: 432 / 444; }
-.producto--a11y .producto__campo { aspect-ratio: 546 / 561; }
-.producto--aa   .producto__campo { aspect-ratio: 318 / 327; }
-
-/* Por debajo de 1024 la fila se apila: tres anchos distintos no caben. */
+/* Por debajo de 1024 la fila se apila. PROVISIONAL: Tablet 768 y Móvil 390
+   todavía no están medidos contra el Figma. */
 @media (max-width: 1023px) {
-  .productos__lista { flex-direction: column; align-items: stretch; gap: var(--space-48); }
-  .producto--itza, .producto--a11y, .producto--aa { width: 100%; }
+  .productos__lista { grid-template-columns: 1fr; gap: var(--space-48); }
 }
 
 /* ---- Estudio -------------------------------------------------------------- */

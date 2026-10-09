@@ -6,10 +6,18 @@ import { path, type Lang } from '../i18n/config';
 import CtaLink from './CtaLink.astro';
 const { lang } = Astro.props as { lang: Lang };
 const ui = t(lang);
+/* El titular va en dos líneas fijas, cortado después de la primera frase
+   (Figma: la caja mide dos renglones a 962 de ancho, y sin corte cabría en
+   uno). Cada línea es un <span> en bloque y no un <br>: para el lector de
+   pantalla sigue siendo una sola frase seguida, y el espacio entre las dos
+   se conserva si algún día la línea deja de ir en bloque. */
+const lineas = ui.ctaHeading.split('\n');
 ---
 
 <section class="contacto" aria-labelledby="cta-contacto">
-  <h2 id="cta-contacto" class="contacto__titulo">{ui.ctaHeading}</h2>
+  <h2 id="cta-contacto" class="contacto__titulo">
+    {lineas.map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
+  </h2>
   <CtaLink href={path('contacto', lang)} size="large">{ui.ctaAction}</CtaLink>
 </section>
 
@@ -21,6 +29,7 @@ const ui = t(lang);
     padding: var(--space-48) var(--gutter-page);
     background: var(--surface-raised);
   }
+  .contacto__titulo .linea { display: block; }
   .contacto__titulo {
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
