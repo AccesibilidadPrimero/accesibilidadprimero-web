@@ -23,16 +23,21 @@ import { servir } from './serve.mjs';
    El escenario del hero mide 560 y no 693: lo fija el HTML de referencia que
    mandó Johnny el 07/10/2026 —min(90vw, 560px), proporción 338,4 / 299,43—,
    que sustituye a la medida del frame antiguo del Figma. */
+/* 09/10: margen 24 y columna de 1392 (antes 48 y 1344). El Figma todavía no
+   está pasado, así que estos valores son los del Figma ESCALADOS a la columna
+   nueva (× 1392 / 1344) donde la web los calcula en proporción, y los del
+   Figma tal cual donde van en píxeles fijos. Al pasar el Figma, comprobar que
+   coinciden. */
 const CASOS = [
 
-  ['.proyecto--eci .proyecto__resumen', 689,  'ECI · Project Copy'],
-  ['.proyecto--foc .proyecto__resumen', 579,  'Foc i Cor · copia'],
-  ['.proyecto--izaskun .proyecto__resumen', 660, 'Izaskun · copia'],
-  ['.producto--itza',                   432,  'Productos · Itza'],
-  ['.producto--a11y',                   432,  'Productos · A11y Primero'],
-  ['.producto--aa',                     432,  'Productos · Accessible Abstracts'],
-  ['.estudio__texto',                  1068,  'Estudio · texto centrado'],
-  ['.contacto__titulo',                 962,  'Contacto · titular'],
+  ['.proyecto--eci .proyecto__resumen', 689,  'ECI · Project Copy (fijo)'],
+  ['.proyecto--foc .proyecto__resumen', 579,  'Foc i Cor · copia (fijo)'],
+  ['.proyecto--izaskun .proyecto__resumen', 684, 'Izaskun · copia (columna derecha)'],
+  ['.producto--itza',                   448,  'Productos · Itza'],
+  ['.producto--a11y',                   448,  'Productos · A11y Primero'],
+  ['.producto--aa',                     448,  'Productos · Accessible Abstracts'],
+  ['.estudio__texto',                  1068,  'Estudio · texto centrado (fijo)'],
+  ['.contacto__titulo',                 962,  'Contacto · titular (tope fijo)'],
 ];
 const TOLERANCIA = 2;   // px. Por debajo de esto es redondeo del navegador.
 
@@ -161,15 +166,15 @@ console.log('\n── Las tres composiciones de proyecto a 1440 (Figma → medid
   await p4.click('.proyecto--izaskun [data-disclosure-trigger]');
   await p4.waitForTimeout(250);
   const CASOS = [
-    ['ECI · campo a ancho completo', '.proyecto--eci .slider', 1344, 'width'],
-    ['Foc · campo 664 a la derecha', '.proyecto--foc .slider', 664, 'width'],
+    ['ECI · campo a ancho completo', '.proyecto--eci .slider', 1392, 'width'],
+    ['Foc · campo a la derecha', '.proyecto--foc .slider', 688, 'width'],
     ['Foc · campo empieza en 728', '.proyecto--foc .slider', 728, 'left'],
-    ['Foc · copia 579 a la izquierda', '.proyecto--foc .proyecto__resumen', 579, 'width'],
+    ['Foc · copia a la izquierda', '.proyecto--foc .proyecto__resumen', 579, 'width'],
     ['Izaskun · resumen en x 732', '.proyecto--izaskun .proyecto__resumen', 732, 'left'],
-    ['Izaskun · resumen 660', '.proyecto--izaskun .proyecto__resumen', 660, 'width'],
+    ['Izaskun · resumen', '.proyecto--izaskun .proyecto__resumen', 684, 'width'],
     ['Izaskun · ampliación en x 732', '.proyecto--izaskun .disclosure__panel', 732, 'left'],
-    ['Izaskun · ampliación 660', '.proyecto--izaskun .disclosure__panel', 660, 'width'],
-    ['Izaskun · campo 1119, no 1344', '.proyecto--izaskun .slider', 1119, 'width'],
+    ['Izaskun · ampliación', '.proyecto--izaskun .disclosure__panel', 684, 'width'],
+    ['Izaskun · campo estrecho', '.proyecto--izaskun .slider', 1159, 'width'],
     ['Izaskun · CTA alineado a 732', '.proyecto--izaskun .proyecto__cta', 732, 'left'],
   ];
   const medidas = await p4.evaluate((casos) => casos.map(([n, sel, esp, q]) => {
@@ -224,8 +229,8 @@ console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n'
   } }
 }
 
-/* ---- La columna: todo arranca en el margen de 48 -------------------------- */
-console.log('\n── La columna a 1440 (margen 48) ──\n');
+/* ---- La columna: todo arranca en el margen de 24 -------------------------- */
+console.log('\n── La columna a 1440 (margen 24) ──\n');
 {
   const EN_COLUMNA = [
     ['.header__logo', 'Logo'],
@@ -246,9 +251,9 @@ console.log('\n── La columna a 1440 (margen 48) ──\n');
     }, sel);
     medidos++;
     if (x === null) { fallos++; console.error(`  ✗ ${nombre.padEnd(22)} no existe (${sel})`); continue; }
-    const bien = Math.abs(x - 48) <= TOLERANCIA;
+    const bien = Math.abs(x - 24) <= TOLERANCIA;
     if (!bien) fallos++;
-    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(22)} izq 48 → ${x.toFixed(1)}`);
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(22)} izq 24 → ${x.toFixed(1)}`);
   }
   await p3.close();
 }

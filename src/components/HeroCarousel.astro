@@ -201,7 +201,8 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      Del escenario se pinta la ilustración con su aire: 79 + 400 + 79 = 558.
      El hero ocupa la ventana entera y el escenario se centra en lo que sobra.
 
-     Los márgenes laterales son 48 y el contenido 1344, como todo el documento.
+     Los márgenes laterales son 24 y el contenido 1392 desde el 09/10 (el
+     Figma todavía dice 48 y 1344).
      `npm run geometria` mide estas alturas y la columna en el render.
      ------------------------------------------------------------------------ */
   .hero {
@@ -239,7 +240,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     justify-items: center;
     align-content: center;
     width: 100%;
-    max-width: var(--contenido, 1344px);
+    max-width: var(--contenido, 1392px);
     padding-block: var(--aire-escenario);
   }
 
@@ -314,7 +315,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      en 24. Poner 84 a mano y alinear arriba daba 100 y el texto bajaba. */
   .hero__banda {
     width: 100%;
-    max-width: var(--contenido, 1344px);
+    max-width: var(--contenido, 1392px);
     display: flex;
     align-items: center;
     justify-content: space-between;

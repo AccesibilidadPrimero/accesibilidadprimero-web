@@ -20,8 +20,13 @@
 :root {
   /* El lienzo del Figma y su margen lateral. Todo lo demás cuelga de aquí. */
   --lienzo: 1440px;
-  --margen: 48px;              /* padding lateral de todas las secciones */
-  --contenido: 1344px;         /* 1440 − 48 − 48 */
+  /* MARGEN 24 desde el 09/10 (Johnny): el mismo módulo que el hueco entre
+     columnas, así margen y hueco son una sola retícula. La columna pasa de
+     1344 a 1392. PENDIENTE: el Figma sigue con 48 / 1344; se pasa en otra
+     sesión. Mientras, los anchos que aquí van en proporción (`x / 1344`)
+     siguen escritos sobre las medidas del Figma y escalan con la columna. */
+  --margen: 24px;              /* padding lateral de todas las secciones */
+  --contenido: 1392px;         /* 1440 − 24 − 24 */
 }
 
 /* ---- Hero ---------------------------------------------------------------- */
@@ -43,7 +48,9 @@
 
 .proyecto__resumen { max-width: 689px; }                 /* ECI: Project Copy 689 */
 .proyecto--foc .proyecto__resumen { max-width: 579px; }  /* Foc: Copia 579 */
-.proyecto--izaskun .proyecto__resumen { max-width: 663px; }
+/* Izaskun ya no lleva tope: su resumen ocupa la columna derecha entera, igual
+   que la ampliación de debajo. El 663 era de la maquetación anterior, con el
+   resumen en la columna izquierda. */
 
 /* ---- Productos ----------------------------------------------------------- */
 /* Tres columnas iguales de 432 con 24 entre ellas: 432 × 3 + 24 × 2 = 1344

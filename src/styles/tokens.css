@@ -173,7 +173,9 @@
 
 @media (min-width: 768px) {
   :root {
-    --gutter-page: var(--space-48);
+    /* Un solo margen en todos los tamaños desde el 09/10: 24, el mismo que el
+       hueco entre columnas (Johnny). Antes era 48 desde 768. */
+    --gutter-page: var(--space-24);
     --header-height: 94px;
 
     /* Segundo tramo: de Tablet 768 a Desktop 1440. Desde el 09/10 el cuerpo
@@ -196,8 +198,8 @@
 @media (min-width: 1440px) {
   :root {
     --header-height: 96px;
-    /* Por encima de 1440 el contenido NO se estira: se queda en los 1344 del
-       Figma, centrado, y lo que sobra se reparte a los lados. Los fondos de
+    /* Por encima de 1440 el contenido NO se estira: se queda en los 1392 de
+       la columna (1440 − 24 − 24), centrado, y lo que sobra se reparte a los lados. Los fondos de
        color siguen llegando de borde a borde porque el margen es relleno de
        cada sección, no un contenedor aparte.
 
@@ -205,7 +207,7 @@
        todas las secciones que la usan van a ancho completo. Hasta el 09/10 la
        banda del hero tenía su propio tope de 1344 y el resto no: en un monitor
        grande la banda se quedaba en el centro y lo demás se abría (Johnny). */
-    --gutter-page: max(var(--space-48), calc((100% - 1344px) / 2));
+    --gutter-page: max(var(--space-24), calc((100% - 1392px) / 2));
   }
 }
 

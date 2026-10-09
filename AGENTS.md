@@ -79,6 +79,12 @@ Están aquí porque ya han pasado, no en abstracto:
   Con reducir movimiento, fundido de 300 ms. Un elemento que trae su propia
   versión reducida lleva `data-mov-propio` para que la regla global de
   `base.css` no la deje en 0,01 ms. `npm run aparicion` lo comprueba.
+- **Margen de página: 24 en todos los tamaños, igual que el hueco entre
+  columnas** (Johnny, 09/10). Columna de 1392 a 1440 y tope de 1392 centrado
+  por encima. **EXCEPCIÓN TEMPORAL a «nada que no esté en el Figma»:** el Figma
+  sigue con 48 / 1344 hasta que se pase en su propia sesión. Al pasarlo, las
+  medidas escaladas de `npm run geometria` tienen que coincidir con el
+  documento, y esta nota se borra.
 - **La escala tipográfica va por tramos y tiene que pasar por los valores del
   Figma en 390, 768 y 1440.** Una sola interpolación entre el valor de móvil y
   el de escritorio NO vale: las pendientes de los dos tramos son distintas y el
