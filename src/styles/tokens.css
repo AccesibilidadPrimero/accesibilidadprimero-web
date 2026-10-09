@@ -152,9 +152,14 @@
     --gutter-page: var(--space-48);
     --header-height: 94px;
 
-    /* Segundo tramo: de Tablet 768 a Desktop 1440. */
-    --texto-size: clamp(18px, calc(13.43px + 0.5952vw), 22px);
-    --texto-leading: clamp(22px, calc(15.14px + 0.8929vw), 28px);
+    /* Segundo tramo: de Tablet 768 a Desktop 1440. Desde el 09/10 el cuerpo
+       llega a 19/26 en escritorio, no a 22/28: con UN solo tamaño para todo
+       —navegación, nota, enlaces, nombres—, 22 hacía que la página no bajara
+       nunca la voz, y más aún sin el gris (Johnny). 19 es lo que usa Pentagram
+       con el mismo sistema. Las dos frases de `--display` no cambian: con el
+       cuerpo más pequeño, el salto entre los dos tamaños se nota más. */
+    --texto-size: clamp(18px, calc(16.86px + 0.1488vw), 19px);
+    --texto-leading: clamp(22px, calc(17.43px + 0.5952vw), 26px);
 
     --display-size: clamp(40px, calc(30.86px + 1.19vw), 48px);
     --display-leading: clamp(48px, calc(38.86px + 1.19vw), 56px);

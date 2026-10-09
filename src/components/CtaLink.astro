@@ -63,6 +63,9 @@ const esExterno = external || /^https?:\/\//.test(href);
   .cta {
     display: inline-block;
     padding-block: calc((var(--touch-min) - var(--texto-leading)) / 2);
+    /* Y además un mínimo explícito: con el interlineado fluido, el relleno
+       calculado puede dejar el enlace en 43,99 y `npm run a11y` lo caza. */
+    min-block-size: var(--touch-min);
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
     text-decoration: none;

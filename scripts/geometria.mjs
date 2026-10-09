@@ -106,7 +106,10 @@ console.log('\n── Retícula del hero a 1440 (Figma → medido) ──\n');
       'Hero Band · alto': [84, banda.height],
       'Hero Section · ventana': [900, hero.height],
       'Texto de banda · y dentro': [24, txt.top - banda.top],
-      'Texto de banda · ancho': [804, txt.width],
+      /* 804 era el ancho que OCUPABA la frase a 22 px en el Figma, no una
+         medida de diseño. Con el cuerpo a 19 (09/10) ocupa menos. Lo que se
+         comprueba es lo que importa: una sola línea y dentro de los 804. */
+      'Texto de banda · una línea, ≤ 804': [1, (txt.width <= 804 && txt.height < 40) ? 1 : 0],
       'CTA de banda · y dentro': [16, cta.top - banda.top],
       /* El control es transparente y mide lo que la ilustración que esté
          delante (Johnny, 08/10/2026): la zona que responde al cursor es el

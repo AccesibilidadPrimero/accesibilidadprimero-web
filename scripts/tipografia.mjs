@@ -4,7 +4,7 @@
    Desde el 08/10/2026 la escala es radical y cabe en una frase:
    **dos tamaños, un peso, dos colores.**
 
-     · `--texto`   17 · 18 · 22   TODO: titulares de proyecto, resúmenes,
+     · `--texto`   17 · 18 · 19   TODO: titulares de proyecto, resúmenes,
                                   navegación, la nota de accesibilidad.
      · `--display` 34 · 40 · 48   SOLO dos frases: el titular de Productos y
                                   el de Estudio.
@@ -34,7 +34,7 @@ const EXCEPCIONES = [
 ];
 const DISPLAY = { 390: [34, 40], 768: [40, 48], 1440: [48, 56] };
 const META    = { 390: [15, 20], 768: [15, 20], 1440: [16, 20] };
-const TEXTO   = { 390: [17, 24], 768: [18, 22], 1440: [22, 28] };
+const TEXTO   = { 390: [17, 24], 768: [18, 22], 1440: [19, 26] };   // 1440: 22/28 hasta el 09/10
 
 /* Un puñado de sitios que TIENEN que estar en el tamaño único, elegidos porque
    antes eran siete estilos distintos: si alguno se escapa, es que volvió una

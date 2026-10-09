@@ -278,9 +278,17 @@ if (faltan.length) {
     control.addEventListener('focus', () => pausar(PAUSA_POR.puntero));
     control.addEventListener('blur', () => reanudar(PAUSA_POR.puntero));
 
+    /* Las capturas 2 y 3 llevan `loading="lazy"`, y el navegador no las pide
+       mientras están fuera del marco que recorta: entraban en blanco. En
+       cuanto el carrusel se acerca a la pantalla se piden las tres. */
+    const precargar = () => raiz.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
+
     // No arranca al cargar: arranca cuando se ve.
     new IntersectionObserver(
-      (es) => es.forEach((e) => (e.isIntersecting ? reanudar(PAUSA_POR.fuera) : pausar(PAUSA_POR.fuera))),
+      (es) => es.forEach((e) => {
+        if (e.isIntersecting) { precargar(); reanudar(PAUSA_POR.fuera); }
+        else pausar(PAUSA_POR.fuera);
+      }),
       { threshold: 0.3 },
     ).observe(raiz);
 
