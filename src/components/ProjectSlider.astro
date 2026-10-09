@@ -281,7 +281,7 @@ if (faltan.length) {
     /* Las capturas 2 y 3 llevan `loading="lazy"`, y el navegador no las pide
        mientras están fuera del marco que recorta: entraban en blanco. En
        cuanto el carrusel se acerca a la pantalla se piden las tres. */
-    const precargar = () => raiz.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
+    const precargar = () => raiz.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
 
     // No arranca al cargar: arranca cuando se ve.
     new IntersectionObserver(

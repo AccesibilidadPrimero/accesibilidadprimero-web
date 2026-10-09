@@ -98,7 +98,11 @@ if (faltan.length) {
   /* `AP_PREVIEW=1 npm run build` construye igual, saltándose lo que falte. Es
      para enseñar un avance desde otro ordenador, NUNCA para publicar: el build
      de producción sin esa variable sigue parándose y diciendo qué falta. */
-  if (import.meta.env.DEV || process.env.AP_PREVIEW) {
+  /* `process` se lee a través de globalThis porque el proyecto no instala los
+     tipos de Node (@types/node sería una dependencia nueva, AGENTS.md §1) y
+     sin ellos `npm run check` no compila. En el build sí existe. */
+  const entorno = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env;
+  if (import.meta.env.DEV || entorno?.AP_PREVIEW) {
     console.warn(`\n[hero] Faltan ilustraciones y me las salto: ${lista}.\n` +
       '        Déjalas en arte/hero/ y ejecuta `npm run arte`.\n');
   } else {
