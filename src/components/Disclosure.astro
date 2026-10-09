@@ -40,7 +40,9 @@ const ui = t(lang);
     </svg>
   </button>
 
-  <div id={id} hidden data-disclosure-panel class="disclosure__panel">
+  {/* `data-mov-propio`: el panel trae su versión reducida (un fundido) y la
+      regla global de base.css no debe dejarla en 0,01 ms. */}
+  <div id={id} hidden data-disclosure-panel data-mov-propio class="disclosure__panel">
     <slot />
   </div>
 </div>
@@ -80,6 +82,28 @@ const ui = t(lang);
   .disclosure__boton[aria-expanded='true']:is(:hover, :focus-visible) .disclosure__signo { transform: rotate(45deg) scale(1.2); }
 
   .disclosure__panel { padding-block-start: var(--space-16); }
+
+  /* Al abrir, el texto se posa: 8 px y fundido en 600 ms, con la misma curva
+     que la aparición al hacer scroll. Al cerrar desaparece al momento: animar
+     el cierre solo retrasa lo que se ha pedido.
+     Solo con `.js`: sin JS el panel ya está abierto y no hay nada que animar.
+     La animación arranca sola al quitar `hidden`, sin una línea de script. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .disclosure__panel:not([hidden]) {
+      animation: despliega var(--dur-despliegue) var(--ease-asentar);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .disclosure__panel:not([hidden]) {
+      animation: funde var(--dur-fundido-reducido) linear;
+    }
+  }
+  @keyframes despliega {
+    from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); }
+  }
+  @keyframes funde {
+    from { opacity: 0; }
+  }
 </style>
 
 <script>

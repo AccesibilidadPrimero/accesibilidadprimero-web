@@ -15,6 +15,7 @@
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
+import { recorrer } from './recorrer.mjs';
 
 const PUERTO = 4397;
 
@@ -36,6 +37,9 @@ await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
 // El carrusel se para para que el fondo no cambie entre las dos capturas.
 await page.emulateMedia({ reducedMotion: 'reduce' });
 await page.waitForTimeout(300);
+// Con reducir movimiento, lo que aún no ha entrado en pantalla está en
+// opacidad 0 y el medidor lo saltaría. Se recorre la página antes de medir.
+await recorrer(page);
 
 /* Cajas de texto visibles, con su color y su tamaño efectivo. */
 const cajas = await page.evaluate(() => {

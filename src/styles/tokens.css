@@ -151,6 +151,24 @@
   --dur-base: 300ms;
   --dur-fade: 600ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);   /* sin rebote, por decisión */
+
+  /* Aparición al hacer scroll y despliegue de «Leer más».
+     EXCEPCIÓN a §4 de AGENTS.md, decidida por Johnny (09/10): el movimiento
+     vive solo en el código, no en el Figma. Referencia de carácter:
+     acceptandproceed.com (medido: 1,2–1,5 s, 22 px, sin fundido). Aquí algo
+     más contenido. Lo orgánico está en la curva: arranca rápido y tarda en
+     posarse, así que casi todo el recorrido ocurre en el primer tercio. */
+  --ease-asentar: cubic-bezier(0, 0.56, 0.46, 1);
+  --dur-asentar: 1200ms;
+  --desfase-asentar: 120ms;      /* entre piezas hermanas; todas llegan a la vez */
+  --recorrido-asentar: 16px;
+  --dur-despliegue: 600ms;       /* el texto de «Leer más» al abrir */
+  --recorrido-despliegue: 8px;
+  --dur-fundido-reducido: 300ms; /* lo que queda con reducir movimiento */
+  /* Las tres frases que abren bloque entran renglón a renglón: son los
+     acentos de la página sobre el pulso tranquilo de lo demás. */
+  --dur-renglon: 900ms;
+  --desfase-renglon: 90ms;
 }
 
 @media (min-width: 768px) {

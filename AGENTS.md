@@ -71,6 +71,14 @@ Están aquí porque ya han pasado, no en abstracto:
 
 - Los tokens viven en `src/styles/tokens.css` y salen del Figma. **No se
   inventa un valor nuevo aquí**: se crea primero en Figma y después se trae.
+  **Excepción: el movimiento** (duraciones, curvas, recorridos) vive solo en
+  `tokens.css`, no en el Figma (Johnny, 09/10).
+- **Aparición al hacer scroll:** lo que se mueve está listado en
+  `src/scripts/aparicion.ts` y lo marca el JS al arrancar; sin JS no se marca
+  nada. En movimiento normal el bloque no se oculta nunca, solo sube 16 px.
+  Con reducir movimiento, fundido de 300 ms. Un elemento que trae su propia
+  versión reducida lleva `data-mov-propio` para que la regla global de
+  `base.css` no la deje en 0,01 ms. `npm run aparicion` lo comprueba.
 - **La escala tipográfica va por tramos y tiene que pasar por los valores del
   Figma en 390, 768 y 1440.** Una sola interpolación entre el valor de móvil y
   el de escritorio NO vale: las pendientes de los dos tramos son distintas y el
@@ -197,6 +205,7 @@ npm run tipografia   # mide el tamaño y el interlineado QUE PINTA EL NAVEGADOR
 npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
+npm run aparicion    # aparición al hacer scroll y «Leer más»: sin JS, normal y reducido
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
 npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños

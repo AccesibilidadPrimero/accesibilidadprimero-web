@@ -62,6 +62,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     {conCta && <ContactCTA lang={lang} />}
     <Footer lang={lang} />
 
+    <script>
+      import '../scripts/aparicion';
+    </script>
+
     <style is:global>
       /* El destino del skip link no debe mostrar anillo de foco: el usuario no
          ha enfocado un control, solo ha aterrizado en la región. */

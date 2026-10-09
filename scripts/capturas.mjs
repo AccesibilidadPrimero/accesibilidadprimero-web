@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 import { fileURLToPath } from 'node:url';
 import { existsSync, mkdirSync } from 'node:fs';
 import { servir } from './serve.mjs';
+import { recorrer } from './recorrer.mjs';
 
 const PUERTO = 4396;
 // fileURLToPath y no .pathname: ver el comentario en serve.mjs.
@@ -23,6 +24,7 @@ for (const [nombre, viewport] of [
   await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   await page.waitForTimeout(400);
   await page.screenshot({ path: `${salida}${nombre}-inicio.png` });
+  await recorrer(page); // que la captura completa no salga con huecos
   await page.screenshot({ path: `${salida}${nombre}-completa.png`, fullPage: true });
   await page.close();
 }

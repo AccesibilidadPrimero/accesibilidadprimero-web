@@ -116,10 +116,56 @@ a:active { text-decoration-thickness: var(--underline-hover); text-underline-off
    perceptible. Lo que se apaga de verdad —el autoavance del carrusel— se
    sustituye por un estado fijo, no se deja a medias. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  /* Excepto lo que trae su propia versión reducida: la aparición al hacer
+     scroll y el despliegue de «Leer más» cambian el desplazamiento por un
+     fundido de 300 ms. Sin esta excepción el fundido se resolvería en 0,01 ms
+     y quien reduce movimiento se quedaría sin nada, que es justo el modo de
+     fallo n.º 3. */
+  *:not([data-aparece], [data-mov-propio]), *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --------------------------------------------------- aparición al hacer scroll -- */
+/* Lo marca src/scripts/aparicion.ts al arrancar. Sin JS no hay `data-aparece`
+   y todo está en su sitio desde el principio: el contenido nunca depende de la
+   animación para verse.
+   Sin fundido, como la referencia: el bloque está siempre opaco y solo sube.
+   Si algo falla, se queda 16 px más abajo, nunca invisible.
+   Duración y retraso se compensan (1,2 s · 1,08 s · 0,96 s con 0 · 0,12 ·
+   0,24 s de retraso): empiezan escalonadas y se posan a la vez. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-aparece] {
+    transition-property: transform;
+    transition-timing-function: var(--ease-asentar);
+    transition-delay: calc(var(--orden, 0) * var(--desfase-asentar));
+    transition-duration: calc(var(--dur-asentar) - var(--orden, 0) * var(--desfase-asentar));
+  }
+  [data-aparece='espera']:not([data-renglones]) { transform: translateY(var(--recorrido-asentar)); }
+
+  /* Frases de entrada: cada renglón sube desde debajo de su propia máscara.
+     El script parte la frase en renglones medidos y, al terminar, devuelve el
+     marcado original, así que el renglón partido solo existe mientras dura. */
+  [data-renglones] .frase__renglon {
+    display: block;
+    overflow: clip;
+    /* Aire para los descendentes (g, p, q): sin él la máscara los corta. */
+    padding-block-end: 0.12em;
+    margin-block-end: -0.12em;
+  }
+  [data-renglones] .frase__dentro {
+    display: block;
+    white-space: nowrap;   /* el renglón ya está medido: que no vuelva a partir */
+    transition: transform var(--dur-renglon) var(--ease-asentar);
+    transition-delay: calc(var(--i, 0) * var(--desfase-renglon));
+  }
+  [data-renglones][data-aparece='espera'] .frase__dentro { transform: translateY(110%); }
+}
+/* Reducir no es eliminar (§2.3): sin desplazamiento, un fundido corto. */
+@media (prefers-reduced-motion: reduce) {
+  [data-aparece] { transition: opacity var(--dur-fundido-reducido) linear; }
+  [data-aparece='espera'] { opacity: 0; }
 }
