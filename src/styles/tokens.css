@@ -16,8 +16,13 @@
   --ink: #171717;
   --silk: #f7f7f4;
   --white: #ffffff;
-  --ink-60: #686864;          /* Ink / Secondary · 5,21:1 sobre Silk */
-  --hairline: #e3e3dd;        /* Ink al 12 % sobre Silk. Decorativo. */
+  /* El gris del texto. Es el de Pentagram, por decisión de Johnny (08/10), y
+     la razón de que el papel pasara a blanco: sobre blanco da 4,54:1 y cumple
+     1.4.3 por 0,04; sobre Silk daba 4,23:1 y NO cumplía. Es el valor más claro
+     que pasa sobre blanco puro — no hay margen para aclararlo más. Y por eso
+     mismo NO puede ir sobre menta (3,53:1) ni sobre ningún otro acento. */
+  --grey: #767676;
+  --hairline: #e3e3e3;        /* Ink al 12 % sobre blanco. Decorativo. */
 
   /* Acentos de marca. Son FONDOS, no colores de texto. */
   --mint: #c7eae4;
@@ -38,14 +43,18 @@
   --proyecto-izaskun: #c2002f;
 
   /* ===== Papeles ========================================================== */
-  --surface: var(--silk);
-  --surface-raised: var(--white);   /* tarjetas y paneles, no fondo de página:
-                                       contra Silk da 1,07:1 */
+  /* Blanco de página, como Pentagram (Johnny, 08/10). Silk sale del sitio:
+     contra blanco daba 1,07:1 y nadie percibía la diferencia, así que tener
+     los dos era tener uno mal. De paso cierra un hueco que la crítica de la
+     Home dejó abierto en agosto. Silk se queda declarado como color de marca
+     porque sigue existiendo fuera de la web. */
+  --surface: var(--white);
+  --surface-raised: var(--white);
   --surface-accent: var(--mint);
   --text: var(--ink);
-  --text-secondary: var(--ink-60);  /* sin negritas en el sistema, este token
-                                       es la única herramienta que queda para
-                                       separar un término de su explicación */
+  --text-secondary: var(--grey);    /* el color del cuerpo de texto: en esta
+                                       web el gris es la norma y el negro la
+                                       excepción, no al revés */
   --link: var(--ink);
   --link-inverse: var(--silk);
   --rule: var(--hairline);
@@ -74,27 +83,27 @@
 
      Si cambias un valor aquí, cámbialo en el Figma primero. */
 
-  --hero-size: clamp(40px, calc(27.62px + 3.175vw), 52px);
-  --hero-leading: clamp(46px, calc(31.56px + 3.704vw), 60px);
-  --hero-track: -0.015em;
+  /* DOS tamaños en toda la web, y uno de los dos aparece dos veces.
 
-  --h2-size: clamp(34px, calc(27.81px + 1.587vw), 40px);
-  --h2-leading: clamp(40px, calc(31.75px + 2.116vw), 48px);
-  --h2-track: -0.021em;
+     `--texto` es el cuerpo de la web entera: titulares de proyecto, resúmenes,
+     navegación, pie, la nota de accesibilidad, todo. Son los valores que el
+     Figma llama `Text/Body Small`.
 
-  --h3-size: clamp(24px, calc(21.94px + 0.5291vw), 26px);
-  --h3-leading: clamp(32px, calc(36.06px + -0.5291vw), 34px);
-  --h3-track: -0.033em;
+     `--display` existe solo para dos frases —el titular de Productos y el de
+     Estudio— y son los valores de `Display/H2`.
 
-  --body-size: clamp(20px, calc(17.94px + 0.5291vw), 22px);
-  --body-leading: clamp(28px, calc(25.94px + 0.5291vw), 30px);
+     Lo que separa un titular de su explicación NO es el tamaño: es el color.
+     Negro lo que nombra, gris lo que desarrolla. Ver AGENTS.md §4. */
+  --texto-size: clamp(17px, calc(15.97px + 0.2646vw), 18px);
+  --texto-leading: clamp(22px, calc(26.06px + -0.5291vw), 24px);
 
-  --body-sm-size: clamp(17px, calc(15.97px + 0.2646vw), 18px);
-  --body-sm-leading: clamp(22px, calc(26.06px + -0.5291vw), 24px);
+  --display-size: clamp(34px, calc(27.81px + 1.587vw), 40px);
+  --display-leading: clamp(40px, calc(31.75px + 2.116vw), 48px);
+  --display-track: -0.021em;
 
-  --nav-size: 18px;
-  --nav-leading: 22px;
-
+  /* La tercera talla, y la ÚNICA excepción autorizada además de `--display`.
+     Es para los créditos del pie y nada más: «aquí sí rompemos la norma»
+     (Johnny, 08/10). Son los valores que el Figma llama `Meta`. */
   --meta-size: 15px;
   --meta-leading: 20px;
 
@@ -141,23 +150,11 @@
     --header-height: 94px;
 
     /* Segundo tramo: de Tablet 768 a Desktop 1440. */
-    --hero-size: clamp(52px, calc(33.71px + 2.381vw), 68px);
-    --hero-leading: clamp(60px, calc(39.43px + 2.679vw), 78px);
+    --texto-size: clamp(18px, calc(13.43px + 0.5952vw), 22px);
+    --texto-leading: clamp(22px, calc(15.14px + 0.8929vw), 28px);
 
-    --h2-size: clamp(40px, calc(30.86px + 1.19vw), 48px);
-    --h2-leading: clamp(48px, calc(38.86px + 1.19vw), 56px);
-
-    --h3-size: clamp(26px, calc(21.43px + 0.5952vw), 30px);
-    --h3-leading: clamp(32px, calc(26.29px + 0.744vw), 37px);
-
-    --body-size: clamp(22px, calc(12.86px + 1.19vw), 30px);
-    --body-leading: clamp(30px, calc(22px + 1.042vw), 37px);
-
-    --body-sm-size: clamp(18px, calc(13.43px + 0.5952vw), 22px);
-    --body-sm-leading: clamp(22px, calc(15.14px + 0.8929vw), 28px);
-
-    --nav-size: clamp(18px, calc(15.71px + 0.2976vw), 20px);
-    --nav-leading: clamp(22px, calc(19.71px + 0.2976vw), 24px);
+    --display-size: clamp(40px, calc(30.86px + 1.19vw), 48px);
+    --display-leading: clamp(48px, calc(38.86px + 1.19vw), 56px);
 
     --meta-size: clamp(15px, calc(13.86px + 0.1488vw), 16px);
     --meta-leading: 20px;

@@ -10,8 +10,12 @@
    2. Velocidad. Sin conexión a otro dominio, sin DNS, sin TLS de terceros. En
       Cloudflare los dos archivos salen del mismo borde que el HTML.
 
-   Es una tipografía variable: un único archivo cubre los pesos 400 y 500, que
-   son los dos únicos que usa el sistema. 41 KB en total.
+   Es una tipografía variable. El descriptor declara el tramo 400–500 porque
+   es lo que el archivo trae, pero **el sistema usa solo el 400** desde el
+   08/10/2026: ni negritas ni Medium. El tramo se deja declarado para que un
+   `font-weight: 500` escrito por error no acabe en negrita sintética, que es
+   peor; quien lo impide de verdad es `npm run tipografia`, que falla si
+   encuentra cualquier peso distinto de 400 pintado en la página. 41 KB.
 
    Licencia: SIL Open Font License 1.1, que permite servirla así.
    --------------------------------------------------------------------------- */

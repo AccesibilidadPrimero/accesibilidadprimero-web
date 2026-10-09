@@ -25,7 +25,11 @@ export function contraste(a: string, b: string): number {
   return (l1 + 0.05) / (l2 + 0.05);
 }
 
-const SILK = '#f7f7f4';   // fondo de la Home
+/* El fondo de la Home es BLANCO desde el 08/10/2026 (antes era Silk). Esta
+   constante no es decorativa: contra ella se valida en build el acento de cada
+   proyecto, así que si se queda desactualizada el build aprueba paletas que no
+   cumplen. */
+const FONDO = '#ffffff';
 const HEX = /^#[0-9a-fA-F]{6}$/;
 
 const paleta = z.object({
@@ -97,6 +101,13 @@ const proyectos = defineCollection({
       decisiones: z.array(decision).optional(),
       cifras: z.array(cifra).optional(),
       imagenAlt: z.string().optional(),
+
+      /* Las capturas del slider del caso. `alt` NO es opcional: AGENTS.md §6
+         —sin alternativa escrita no compila—. Y describe lo que se ve en la
+         captura, no «captura de la web de X», que no añade nada. */
+      imagenes: z
+        .array(z.object({ archivo: z.string(), alt: z.string().min(20) }))
+        .optional(),
     })
     .superRefine((d, ctx) => {
       const err = (message: string, path: string[]) =>
@@ -107,10 +118,10 @@ const proyectos = defineCollection({
          Cor (#ed6a12) da 2,93:1 sobre Silk, así que NO puede usarse nunca
          como indicador suelto sobre fondo claro. Como superficie va bien:
          lleva Ink encima a 5,70:1. */
-      const ratio = contraste(d.paleta.acento, SILK);
+      const ratio = contraste(d.paleta.acento, FONDO);
       if (d.paleta.uso === 'indicador' && ratio < 3) {
         err(
-          `El acento ${d.paleta.acento} da ${ratio.toFixed(2)}:1 sobre el fondo de la Home (${SILK}). Como indicador hacen falta 3:1 (WCAG 1.4.11). Si solo es superficie, declara uso: fondo.`,
+          `El acento ${d.paleta.acento} da ${ratio.toFixed(2)}:1 sobre el fondo de la Home (${FONDO}). Como indicador hacen falta 3:1 (WCAG 1.4.11). Si solo es superficie, declara uso: fondo.`,
           ['paleta', 'acento'],
         );
       }
@@ -135,6 +146,17 @@ const proyectos = defineCollection({
 
       if (/^[A-ZÁÉÍÓÚÑ\s·—-]{8,}$/.test(d.titulo)) {
         err('Titulares sin mayúsculas sostenidas.', ['titulo']);
+      }
+
+      /* Un destacado enseña su slider, y el slider del Figma tiene TRES. Ni
+         dos ni cuatro: la composición de los tres casos está dibujada con tres
+         y el control dice «1 de 3». */
+      if (d.destacado && (!d.imagenes || d.imagenes.length !== 3)) {
+        err(
+          `Un proyecto destacado lleva exactamente 3 capturas y hay ${d.imagenes?.length ?? 0}. ` +
+          'Déjalas en arte/proyectos/ y decláralas aquí con su alt.',
+          ['imagenes'],
+        );
       }
 
       if (!d.casoPublicado) return;

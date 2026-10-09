@@ -18,9 +18,13 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
 
-/* [selector, ancho del Figma en px a 1440, nota] */
+/* [selector, ancho del Figma en px a 1440, nota]
+
+   El escenario del hero mide 560 y no 693: lo fija el HTML de referencia que
+   mandó Johnny el 07/10/2026 —min(90vw, 560px), proporción 338,4 / 299,43—,
+   que sustituye a la medida del frame antiguo del Figma. */
 const CASOS = [
-  ['.hero__pila',                       693,  'Hero · ilustración'],
+
   ['.proyecto--eci .proyecto__resumen', 689,  'ECI · Project Copy'],
   ['.proyecto--foc .proyecto__resumen', 579,  'Foc i Cor · copia'],
   ['.proyecto--izaskun .proyecto__resumen', 663, 'Izaskun · copia'],
@@ -32,6 +36,12 @@ const CASOS = [
 ];
 const TOLERANCIA = 2;   // px. Por debajo de esto es redondeo del navegador.
 
+/* El hero no entra en la tabla de anchos: su escenario lo manda la ALTURA
+   —las mesas de trabajo de Illustrator miden 400 px de alto y el ancho que
+   cada dibujo necesite—, así que el ancho es el del contenedor y medirlo no
+   dice nada. Se comprueba el alto aparte, abajo. */
+const ALTO_ESCENARIO = { 1440: 558, 768: 412, 390: 305 };
+
 const PUERTO = 4391;
 const servidor = await servir(PUERTO);
 const ejec = '/opt/pw-browsers/chromium';
@@ -41,6 +51,13 @@ await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
 await page.evaluate(() => document.fonts.ready);
 
 let fallos = 0, medidos = 0;
+/* Cuántas comprobaciones DEBERÍA haber hecho esta pasada. Cada bloque suma
+   las suyas al declararse, en vez de un total escrito a mano: ese total se
+   quedó desfasado en cuanto añadí la retícula y la columna, y el script se
+   rompió a sí mismo diciendo «solo se midieron 27 de 11». Un contador que hay
+   que acordarse de actualizar acaba mintiendo. */
+let esperadas = 0;
+esperadas += CASOS.length;
 console.log('\n── Anchos a 1440 px (Figma → medido) ──\n');
 for (const [sel, esperado, nota] of CASOS) {
   const w = await page.evaluate(
@@ -61,6 +78,246 @@ for (const [sel, esperado, nota] of CASOS) {
   );
 }
 
+/* ---- La retícula vertical del hero, frame por frame del Figma -------------
+   Home / Desktop 1440 · 145:852. El escenario pinta la ilustración con su
+   aire —79 + 400 + 79 = 558—; el Slider Control del documento no se dibuja,
+   por decisión de Johnny. El hero ocupa la ventana entera. */
+console.log('\n── Retícula del hero a 1440 (Figma → medido) ──\n');
+{
+  const p2 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p2.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  await p2.evaluate(() => document.fonts.ready);
+  /* El carrusel está rotando, y el control cambia de ancho con cada lámina.
+     Enfocarlo lo para —misma paridad que el puntero— y así se mide una lámina
+     quieta en vez de pillar el fundido a medias. */
+  await p2.focus('.hero__control');
+  await p2.waitForTimeout(800);
+  const m = await p2.evaluate(() => {
+    const r = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect() : null; };
+    const hero = r('.hero'), head = r('header'), esc = r('.hero__escenario'),
+          pila = r('.hero__pila'), ctrl = r('.hero__control'), banda = r('.hero__banda'),
+          txt = r('.hero__frase--base'), cta = r('.hero__banda a'),
+          dibujo = r('.hero__lamina[data-activa] img');
+    if (!hero || !head || !esc || !pila || !ctrl || !banda || !txt || !cta || !dibujo) return null;
+    return {
+      'Header · alto': [96, head.height],
+      'Carousel Stage · alto': [558, esc.height],
+      'Ilustración · alto': [400, pila.height],
+      'Hero Band · alto': [84, banda.height],
+      'Hero Section · ventana': [900, hero.height],
+      'Texto de banda · y dentro': [24, txt.top - banda.top],
+      'Texto de banda · ancho': [804, txt.width],
+      'CTA de banda · y dentro': [16, cta.top - banda.top],
+      /* El control es transparente y mide lo que la ilustración que esté
+         delante (Johnny, 08/10/2026): la zona que responde al cursor es el
+         dibujo, no la franja de 1344 de ancho que llegaba hasta los márgenes.
+
+         No se compara contra un número fijo, sino contra la caja del dibujo
+         que esté activo: el ancho lo manda cada ilustración y un número a
+         mano aquí solo mediría cuál tocó enseñar. Lo que se comprueba es que
+         SIGUE ESTANDO, que calca el dibujo y que está centrado sobre él: el
+         mecanismo de pausa de 2.2.2 no puede desaparecer, encogerse ni
+         descolocarse sin que nadie se entere. */
+      'Control · alto = dibujo': [dibujo.height, ctrl.height],
+      'Control · ancho = dibujo': [dibujo.width, ctrl.width],
+      'Control · centrado en x': [0, (ctrl.left + ctrl.width / 2) - (dibujo.left + dibujo.width / 2)],
+      'Control · centrado en y': [0, (ctrl.top + ctrl.height / 2) - (dibujo.top + dibujo.height / 2)],
+      /* Y que no se ha quedado en un sello: 2.5.8 pide 24 × 24 y aquí el
+         dibujo más estrecho da 287 de ancho. Si alguien rompe el cálculo y el
+         botón se queda en 0, esto lo caza. */
+      'Control · bastante más de 24': [1, ctrl.width >= 24 && ctrl.height >= 24 ? 1 : 0],
+    };
+  });
+  await p2.close();
+  if (!m) { fallos++; console.error('  ✗ no encuentro las piezas del hero'); }
+  else { esperadas += Object.keys(m).length;
+  for (const [nombre, [esperado, real]] of Object.entries(m)) {
+    medidos++;
+    const bien = Math.abs(real - esperado) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(28)} ${String(esperado).padStart(4)} → ${real.toFixed(1).padStart(7)}`);
+  } }
+}
+
+/* ---- Las TRES composiciones de proyecto -----------------------------------
+   Figma `Producción · Home` (2239:573). No es el mismo bloque tres veces, y
+   darlo por hecho fue el error del 09/10: medí los `Content slider` sueltos y
+   monté los tres proyectos iguales. Cada caso tiene su maquetación:
+
+     ECI      apilado, todo a ancho completo
+     Foc      copia a la izquierda a media altura, campo a la derecha (664)
+     Izaskun  texto a dos columnas, campo estrecho (1119) y CTA a la derecha
+
+   Se mide el render con el «Leer más» de Izaskun ABIERTO, porque su ampliación
+   es la segunda columna y cerrada no ocupa nada. */
+console.log('\n── Las tres composiciones de proyecto a 1440 (Figma → medido) ──\n');
+{
+  const p4 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p4.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  await p4.evaluate(() => document.fonts.ready);
+  await p4.click('.proyecto--izaskun [data-disclosure-trigger]');
+  await p4.waitForTimeout(250);
+  const CASOS = [
+    ['ECI · campo a ancho completo', '.proyecto--eci .slider', 1344, 'width'],
+    ['Foc · campo 664 a la derecha', '.proyecto--foc .slider', 664, 'width'],
+    ['Foc · campo empieza en 728', '.proyecto--foc .slider', 728, 'left'],
+    ['Foc · copia 579 a la izquierda', '.proyecto--foc .proyecto__resumen', 579, 'width'],
+    ['Izaskun · resumen en x 69', '.proyecto--izaskun .proyecto__resumen', 69, 'left'],
+    ['Izaskun · resumen 663', '.proyecto--izaskun .proyecto__resumen', 663, 'width'],
+    ['Izaskun · ampliación en x 732', '.proyecto--izaskun .disclosure__panel', 732, 'left'],
+    ['Izaskun · ampliación 660', '.proyecto--izaskun .disclosure__panel', 660, 'width'],
+    ['Izaskun · campo 1119, no 1344', '.proyecto--izaskun .slider', 1119, 'width'],
+    ['Izaskun · CTA alineado a 732', '.proyecto--izaskun .proyecto__cta', 732, 'left'],
+  ];
+  const medidas = await p4.evaluate((casos) => casos.map(([n, sel, esp, q]) => {
+    const e = document.querySelector(sel);
+    if (!e) return { n, esp, real: null };
+    const b = e.getBoundingClientRect();
+    return { n, esp, real: q === 'width' ? b.width : b.left };
+  }), CASOS);
+  await p4.close();
+  esperadas += medidas.length;
+  for (const m of medidas) {
+    medidos++;
+    if (m.real === null) { fallos++; console.error(`  ✗ ${m.n.padEnd(32)} no encuentro el elemento`); continue; }
+    const bien = Math.abs(m.real - m.esp) <= 4;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${m.n.padEnd(32)} ${String(m.esp).padStart(4)} → ${m.real.toFixed(0).padStart(5)}`);
+  }
+}
+
+/* ---- El símbolo de Estudio ------------------------------------------------
+   Figma `2080:531`: un marco de 60 × 60 con el símbolo dentro. Medido sobre el
+   render del documento, el dibujo ocupa 50,25 × 44,5 y está centrado. Se
+   comprueba el marco, el ancho del dibujo y que esté centrado en la página,
+   porque la sección entera va centrada y no a la columna de 48. */
+console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n');
+{
+  const p3 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p3.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const m = await p3.evaluate(() => {
+    const caja = document.querySelector('.estudio__icono');
+    const img = caja?.querySelector('img');
+    if (!caja || !img) return null;
+    const c = caja.getBoundingClientRect(), i = img.getBoundingClientRect();
+    return {
+      'Marco · ancho': [60, c.width],
+      'Marco · alto': [60, c.height],
+      'Símbolo · ancho': [50, i.width],
+      /* El alto no se escribe a mano: sale de la proporción del archivo. */
+      'Símbolo · alto': [50 / (338.4 / 299.43), i.height],
+      'Símbolo · centrado en el marco': [0, (i.left + i.width / 2) - (c.left + c.width / 2)],
+      'Marco · centrado en la página': [0, (c.left + c.width / 2) - 720],
+    };
+  });
+  await p3.close();
+  if (!m) { fallos++; console.error('  ✗ no encuentro el icono de Estudio'); }
+  else { esperadas += Object.keys(m).length;
+  for (const [nombre, [esperado, real]] of Object.entries(m)) {
+    medidos++;
+    const bien = Math.abs(real - esperado) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(32)} ${esperado.toFixed(1).padStart(5)} → ${real.toFixed(1).padStart(6)}`);
+  } }
+}
+
+/* ---- La columna: todo arranca en el margen de 48 -------------------------- */
+console.log('\n── La columna a 1440 (margen 48) ──\n');
+{
+  const EN_COLUMNA = [
+    ['.header__logo', 'Logo'],
+    ['.hero__frase--base', 'Hero · frase'],
+    ['.hero__escenario', 'Hero · escenario'],
+    ['.proyecto__titulo', 'Proyecto · título'],
+    ['.productos__intro', 'Productos · titular'],
+    ['.productos__lista', 'Productos · fila'],
+    ['.contacto__titulo', 'Contacto · titular'],
+  ];
+  esperadas += EN_COLUMNA.length;
+  const p3 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p3.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  for (const [sel, nombre] of EN_COLUMNA) {
+    const x = await p3.evaluate((s) => {
+      const e = document.querySelector(s);
+      return e ? e.getBoundingClientRect().left : null;
+    }, sel);
+    medidos++;
+    if (x === null) { fallos++; console.error(`  ✗ ${nombre.padEnd(22)} no existe (${sel})`); continue; }
+    const bien = Math.abs(x - 48) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(22)} izq 48 → ${x.toFixed(1)}`);
+  }
+  await p3.close();
+}
+
+/* El alto del escenario en los tres anchos. */
+console.log('\n── Alto del Carousel Stage en los tres anchos ──\n');
+esperadas += Object.keys(ALTO_ESCENARIO).length;
+for (const [ancho, esperado] of Object.entries(ALTO_ESCENARIO)) {
+  const p = await nav.newPage({ viewport: { width: Number(ancho), height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const h = await p.evaluate(() => document.querySelector('.hero__escenario')?.getBoundingClientRect().height ?? null);
+  await p.close();
+  if (h === null) { fallos++; console.error(`  ✗ ${ancho} px · no encuentro .hero__pila`); continue; }
+  medidos++;
+  const bien = Math.abs(h - esperado) <= TOLERANCIA;
+  if (!bien) fallos++;
+  console.log(`  ${bien ? '✓' : '✗'} a ${String(ancho).padStart(4)} px de ancho   ${String(esperado).padStart(4)} → ${h.toFixed(1).padStart(6)}`);
+}
+
+/* ---- La zona sensible del hero calca el dibujo, las ocho y a los tres anchos
+   Johnny, 08/10/2026: «el area de "stop" "reproducir" debe ser sobre la imagen,
+   para que sea intuitivo el juego de mover el cursor sobre las imágenes».
+
+   Antes el control ocupaba el escenario entero —1344 × 558— y el carrusel se
+   paraba al entrar el cursor en una franja invisible que llegaba a los
+   márgenes. Ahora mide lo que el dibujo. Lo que se compara es la caja del
+   botón contra la caja PINTADA de la ilustración, que no es la del <img>: con
+   `object-fit: contain`, cuando `max-width` recorta, el dibujo queda
+   apaisado dentro de una caja más alta —la trompeta a 390 px pinta 342 × 178
+   dentro de un <img> de 342 × 225— y el botón tiene que seguir al dibujo, no
+   al hueco. Se recorren las ocho a mano porque el ancho lo manda cada una. */
+console.log('\n── El control calca el dibujo · ocho ilustraciones × tres anchos ──\n');
+for (const ancho of [390, 768, 1440]) {
+  const p = await nav.newPage({ viewport: { width: ancho, height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  /* Enfocar el control lo para: si no, se mide el fundido a medias y el ancho
+     del botón va por detrás del de la lámina. */
+  await p.focus('.hero__control');
+  await p.waitForTimeout(700);
+  const filas = await p.evaluate(async (fade) => {
+    const laminas = [...document.querySelectorAll('.hero__lamina')];
+    const raiz = document.querySelector('[data-carrusel]');
+    const out = [];
+    for (const l of laminas) {
+      laminas.forEach((x) => x.removeAttribute('data-activa'));
+      l.setAttribute('data-activa', '');
+      raiz.style.setProperty('--ratio-activa', l.dataset.ratio);
+      await new Promise((r) => setTimeout(r, fade));
+      const c = document.querySelector('.hero__control').getBoundingClientRect();
+      const caja = l.querySelector('img').getBoundingClientRect();
+      const ratio = Number(l.dataset.ratio);
+      /* La caja pintada: el dibujo encajado por `contain` dentro del <img>. */
+      const esc = Math.min(caja.width / ratio, caja.height);
+      out.push({
+        nombre: l.querySelector('img').src.split('/').pop().split('.')[0],
+        cw: c.width, ch: c.height, dw: esc * ratio, dh: esc,
+      });
+    }
+    return out;
+  }, 750);
+  await p.close();
+  esperadas += filas.length;
+  for (const f of filas) {
+    medidos++;
+    const bien = Math.abs(f.cw - f.dw) <= TOLERANCIA && Math.abs(f.ch - f.dh) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} px · ${f.nombre.padEnd(15)}` +
+      ` control ${f.cw.toFixed(0).padStart(4)}×${f.ch.toFixed(0).padStart(3)}` +
+      `   dibujo ${f.dw.toFixed(0).padStart(4)}×${f.dh.toFixed(0).padStart(3)}`);
+  }
+}
+
 await nav.close();
 servidor.close();
 
@@ -70,8 +327,8 @@ if (fallos) {
   console.error('declara esa misma clase: su estilo con scope gana por especificidad.');
   process.exit(1);
 }
-if (medidos !== CASOS.length) {
-  console.error(`\nSolo se midieron ${medidos} de ${CASOS.length}. Pasada incompleta.`);
+if (medidos !== esperadas) {
+  console.error(`\nSolo se midieron ${medidos} de ${esperadas}. Pasada incompleta.`);
   process.exit(1);
 }
-console.log(`\n${medidos} anchos medidos. Todos cuadran con el Figma.`);
+console.log(`\n${medidos} medidas de geometría. Todo cuadra.`);

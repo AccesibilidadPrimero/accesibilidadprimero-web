@@ -5,6 +5,18 @@ import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { path, DEFAULT_LANG } from '../i18n/config';
+/* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
+   Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
+   sirve con caché larga, y si el archivo desaparece el build se para. */
+import iconoEstudio from '../assets/estudio/icono.svg';
+import type { ImageMetadata } from 'astro';
+/* Las compila `npm run arte`. El glob tiene que ser literal para Vite. */
+const mediosProducto = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/productos/*.{png,jpg,jpeg,webp}',
+  { eager: true },
+);
+const medio = (nombre: string) =>
+  Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
 
 const lang = DEFAULT_LANG;
 
@@ -27,6 +39,16 @@ const conCuerpo = await Promise.all(
   }),
 );
 
+/* Medidas del campo de color, leídas del Figma (`Productos`, 2181:331) y
+   comprobadas sobre el PDF del documento que mandó Johnny el 09/10:
+
+     Itza   432 × 444  menta    · el dibujo ocupa el 45 % del ancho, a 23 del borde
+     A11y   546 × 561  amarillo · 55 %, a 48
+     AA     318 × 326  rosa     · 53 %, a 23
+
+   El campo RECORTA lo que sobra por abajo: en el documento los móviles se
+   salen del campo y se cortan. Por eso `overflow: hidden` y el dibujo anclado
+   arriba, no centrado. */
 const productos = [
   {
     nombre: 'Itza',
@@ -35,6 +57,13 @@ const productos = [
     cta: 'Conocer Itza',
     href: 'https://itza.accesibilidadprimero.com/',
     clase: 'producto--itza',
+    video: {
+      mp4: '/video/itza.mp4',
+      webm: '/video/itza.webm',
+      descripcion:
+        'Una conversación con el asistente Itza en el móvil: la persona escribe una ' +
+        'pregunta y el asistente responde dentro de la propia web de la organización.',
+    },
   },
   {
     nombre: 'A11y Primero',
@@ -44,6 +73,11 @@ const productos = [
     cta: 'Conocer A11y Primero',
     href: 'https://www.accesibilidadprimero.com/a11yprimero/',
     clase: 'producto--a11y',
+    imagen: 'a11y-primero',
+    alt:
+      'La extensión A11y Primero abierta en un móvil: la nota global 72 marcada como ' +
+      '«mejorable», cuatro barras por apartado —imágenes, estructura, formularios y ' +
+      'contraste— y un resumen con los cuatro problemas principales en lenguaje claro.',
   },
   {
     nombre: 'Accessible Abstracts',
@@ -52,6 +86,11 @@ const productos = [
     cta: 'Conocer Accessible Abstracts',
     href: 'https://aa.accesibilidadprimero.com/',
     clase: 'producto--aa',
+    imagen: 'accessible-abstracts',
+    alt:
+      'La plataforma Accessible Abstracts en un móvil: el titular «Abstract management ' +
+      'that everyone can actually use», los botones de demostración y un panel con ' +
+      'cuatro abstracts enviados y su estado de revisión.',
   },
 ];
 ---
@@ -84,10 +123,57 @@ const productos = [
       {
         productos.map((p) => (
           <li class:list={['producto', p.clase]}>
-            {/* Campo de color: en el Figma cada producto lleva su imagen o su
-                animación aquí. Mientras no estén, el hueco conserva la
-                proporción exacta para que la composición no mienta. */}
-            <div class="producto__campo" aria-hidden="true" />
+            <div class="producto__campo">
+              {p.imagen && medio(p.imagen) && (
+                <img
+                  src={medio(p.imagen)!.src}
+                  alt={p.alt}
+                  width={medio(p.imagen)!.width}
+                  height={medio(p.imagen)!.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {p.video && (
+                /* Un <video> no admite `alt`, así que el nombre accesible va
+                   en `aria-label`: la animación enseña el producto, no es
+                   decoración, y sin alternativa no se entendería qué es
+                   (AGENTS.md §1 — ARIA justificada).
+
+                   `muted` no es cosmético: es la condición para que el
+                   navegador deje reproducir solo, y además el vídeo no debe
+                   sonar (1.4.2). `playsinline` evita que iOS lo abra a
+                   pantalla completa. El `poster` es lo que se ve antes de
+                   cargar y lo único que se ve con movimiento reducido. */
+                <video
+                  class="producto__video"
+                  data-video-producto
+                  aria-label={p.video.descripcion}
+                  poster={medio('itza-fotograma')?.src}
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                >
+                  <source src={p.video.webm} type="video/webm" />
+                  <source src={p.video.mp4} type="video/mp4" />
+                </video>
+              )}
+            {p.video && (
+                /* El vídeo dura 9 s y va en bucle: por encima de cinco segundos,
+                   algo que se mueve solo necesita un mecanismo para pararlo
+                   (2.2.2). No es opcional y no es un extra.
+
+                   Va DENTRO del campo, abajo a la izquierda: fuera empujaba el
+                   nombre hacia abajo y la tarjeta de Itza dejaba de alinearse
+                   con las otras dos. Sobre menta el negro da 13,93:1. */
+                <button type="button" class="producto__pausa" data-video-control
+                        data-label-pausar="Pausar la animación de Itza"
+                        data-label-reproducir="Reproducir la animación de Itza">
+                  Pausar la animación de Itza
+                </button>
+              )}
+            </div>
             <h3 class="producto__nombre">
               {p.nombre}
               {p.marca && <sup aria-hidden="true">®</sup>}
@@ -101,9 +187,19 @@ const productos = [
   </section>
 
   <section class="estudio" aria-labelledby="estudio-titulo">
-    {/* Icono de 60 x 60 encima del texto, como en el Figma. Es decorativo:
-        lo que dice la sección está escrito debajo. */}
-    <div class="estudio__icono" aria-hidden="true" />
+    {/* El símbolo de AP, en el hueco de 60 × 60 del Figma (`2080:531`).
+        Medido en el documento: dentro de ese marco el dibujo ocupa
+        50,25 × 44,5 y está centrado —4,75 de aire a la izquierda, 5 a la
+        derecha, 7,75 arriba y abajo—, así que el marco es caja y el símbolo
+        va a 50 de ancho dentro de ella.
+
+        `alt=""` y nada más. Es decorativo de verdad: lo que dice la sección
+        está escrito justo debajo, y un `alt` que lo repitiera se lo haría oír
+        dos veces a quien usa lector de pantalla. Un `alt` vacío ya lo saca del
+        árbol de accesibilidad; `aria-hidden` encima sobraba (AGENTS.md §1). */}
+    <div class="estudio__icono">
+      <img src={iconoEstudio.src} alt="" width={iconoEstudio.width} height={iconoEstudio.height} />
+    </div>
     <h2 id="estudio-titulo" class="estudio__texto">
       Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
       accesibilidad digital como punto de partida.
@@ -121,9 +217,9 @@ const productos = [
     gap: var(--space-64);
   }
   .productos__intro {
-    font-size: var(--h2-size);
-    line-height: var(--h2-leading);
-    letter-spacing: var(--h2-track);
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
     font-weight: 400;
     max-width: 1002px;   /* medida del Figma */
   }
@@ -131,10 +227,66 @@ const productos = [
   /* El reparto de anchos y la alineación inferior viven en home.css, que es
      donde está la geometría medida del Figma. */
   .producto { display: flex; flex-direction: column; gap: var(--space-24); align-items: flex-start; }
-  .producto__campo { background: var(--mint); }
-  .producto__nombre { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
+  /* El campo de color. Recorta: en el documento los móviles se salen por
+     abajo y se cortan contra el borde del campo, que es lo que les da ese
+     aire de maqueta asomando. Las tres medidas están leídas del Figma. */
+  .producto__campo {
+    position: relative;
+    background: var(--campo);
+    overflow: hidden;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    /* El aire de arriba va en % del ANCHO del campo, no en píxeles: el campo
+       escala con la columna y el dibujo tiene que escalar con él. */
+    padding-block-start: var(--aire);
+  }
+  .producto__campo img,
+  .producto__campo video {
+    width: var(--ancho-medio);
+    height: auto;
+    display: block;
+  }
+
+  .producto--itza { --campo: var(--mint);      --ancho-medio: 45%; --aire: 5.3%; }
+  .producto--a11y { --campo: var(--yellow-ap); --ancho-medio: 55%; --aire: 8.8%; }
+  .producto--aa   { --campo: var(--rose-ap);   --ancho-medio: 53%; --aire: 7.2%; }
+
+  /* El vídeo de Itza no es una maqueta de móvil como los otros dos: es la
+     animación del asistente, cuadrada. Mientras no llegue su mockup se centra
+     en el campo en vez de colgar de arriba, para que el hueco no parezca un
+     error. Pendiente: la maqueta de Itza, como las otras dos. */
+  .producto--itza .producto__campo { align-content: center; padding-block-start: 0; }
+  .producto--itza .producto__campo video { width: 62%; }
+
+  .producto__pausa {
+    position: absolute;
+    inset-block-end: var(--space-8);
+    inset-inline-start: var(--space-8);
+    padding: var(--space-12);
+    min-height: var(--touch-min);
+    background: none;
+    border: 0;
+    /* NEGRO, al contrario que «Leer más». La excepción del gris era para un
+       control que solo despliega más de lo que ya estás leyendo; este existe
+       para que alguien pueda PARAR algo que se mueve solo (2.2.2), y lo
+       último que debe ser es el elemento más silencioso de la tarjeta. */
+    color: var(--text);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+  }
+  .producto__pausa:hover { text-decoration-thickness: var(--underline-hover); }
+  /* Sin JS el vídeo no se reproduce solo, así que el botón no pinta nada. */
+  html:not(.js) .producto__pausa { display: none; }
+  .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }
   .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
-  .producto__desc { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
+  /* Misma regla que en los proyectos: el nombre nombra, la descripción
+     explica, y eso es lo que pinta el color. */
+  .producto__desc { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text-secondary); }
 
   .estudio {
     background: var(--surface-raised);
@@ -143,11 +295,59 @@ const productos = [
     flex-direction: column;
   }
   .estudio__texto {
-    font-size: var(--h2-size);
-    line-height: var(--h2-leading);
-    letter-spacing: var(--h2-track);
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
     font-weight: 400;
   }
-  /* Marcador del icono, con su tamaño real, hasta que llegue el SVG. */
-  .estudio__icono { border-radius: 50%; background: var(--mint); }
+  /* El marco de 60 × 60 del Figma, con el símbolo centrado dentro a 50 de
+     ancho. La geometría vive aquí y no en home.css: Astro da scope a los
+     estilos de componente y eso gana por especificidad, así que una regla
+     suelta para esta misma clase en una hoja aparte no se aplicaría nunca
+     (AGENTS.md §6). */
+  .estudio__icono {
+    width: 60px;
+    height: 60px;
+    flex: none;
+    display: grid;
+    place-items: center;
+  }
+  /* El alto sale de la proporción del dibujo —338,4 × 299,43—, no de un
+     número escrito a mano: 50 de ancho dan 44,24 de alto. */
+  .estudio__icono img { display: block; width: 50px; height: auto; }
 </style>
+
+<script>
+  /* El vídeo de Itza: se reproduce solo cuando se ve, se para cuando se sale
+     de pantalla, y el botón lo para del todo. Con `prefers-reduced-motion` no
+     arranca nunca: se queda el `poster`, que es exactamente el mismo primer
+     fotograma, así que no se pierde nada visualmente. */
+  document.documentElement.classList.add('js');
+
+  document.querySelectorAll<HTMLVideoElement>('[data-video-producto]').forEach((video) => {
+    const control = video.closest('.producto')?.querySelector<HTMLButtonElement>('[data-video-control]');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let paradoPorUsuario = false;
+    let visible = false;
+
+    const sincronizar = () => {
+      const debe = visible && !paradoPorUsuario && !reduce.matches;
+      if (debe) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
+      else video.pause();
+      if (control) {
+        const t = paradoPorUsuario
+          ? (control.dataset.labelReproducir ?? 'Reproducir')
+          : (control.dataset.labelPausar ?? 'Pausar');
+        control.textContent = t;
+      }
+    };
+
+    control?.addEventListener('click', () => { paradoPorUsuario = !paradoPorUsuario; sincronizar(); });
+    new IntersectionObserver(
+      (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),
+      { threshold: 0.3 },
+    ).observe(video);
+    reduce.addEventListener('change', sincronizar);
+    sincronizar();
+  });
+</script>

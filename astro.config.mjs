@@ -13,6 +13,11 @@ import { defineConfig } from 'astro/config';
  *   404 son peores que no tener selector.
  * - prefixDefaultLocale: false → el castellano vive en la raíz y no se rompen
  *   las URLs actuales. El catalán y el inglés entrarán en /ca/ y /en/.
+ *
+ * Los SVG NO se limpian aquí. Astro convierte un .svg en componente durante su
+ * propia fase de carga, antes de que pueda entrar un plugin de Vite con
+ * `enforce: 'pre'`: lo comprobé y al plugin le llega ya JavaScript, no el SVG.
+ * La limpieza vive en `npm run svg`, que escribe en disco y se puede leer.
  */
 export default defineConfig({
   site: 'https://www.accesibilidadprimero.com',

@@ -11,6 +11,7 @@ import type { Lang } from '../i18n/config';
 import AccessibilityScore from './AccessibilityScore.astro';
 import Disclosure from './Disclosure.astro';
 import CtaLink from './CtaLink.astro';
+import ProjectSlider from './ProjectSlider.astro';
 
 interface Props { proyecto: CollectionEntry<'proyectos'>; lang: Lang }
 const { proyecto, lang } = Astro.props;
@@ -39,17 +40,48 @@ const variante = proyecto.id.includes('foc') ? 'foc'
       <div class="proyecto__ampliacion measure"><slot /></div>
     </Disclosure>
 
-    {
-      d.web && (
-        <CtaLink href={d.web} external>
-          {`Ir a ${d.titulo}`}
-        </CtaLink>
-      )
-    }
   </div>
+
+  {
+    /* El CTA es hijo DIRECTO de la sección, no del cuerpo: en Izaskun el
+       documento lo coloca en la segunda columna, debajo del slider, y desde
+       dentro del cuerpo no hay forma de llevarlo ahí sin romper el orden del
+       DOM. Fuera, cada composición lo coloca con su área de rejilla. */
+    d.web && (
+      <div class="proyecto__cta">
+        <CtaLink href={d.web} external>{`Ir a ${d.titulo}`}</CtaLink>
+      </div>
+    )
+  }
+
+  {
+    d.imagenes && d.imagenes.length > 0 && (
+      <ProjectSlider imagenes={d.imagenes} variante={variante} titulo={d.titulo} lang={lang} />
+    )
+  }
 </section>
 
 <style>
+  /* ------------------------------------------------------------------------
+     LAS TRES COMPOSICIONES, leídas del Figma `Producción · Home` (2239:573).
+
+     No es el mismo bloque tres veces, y ese fue mi error del 09/10: medí los
+     `Content slider` sueltos y di por hecho que los tres proyectos los
+     colocaban igual. No. Cada caso tiene su maquetación y hay que respetarla.
+
+     Coordenadas del documento a 1440, dentro de la columna de 1344 (márgenes
+     de 48). El eje X va en % de 1344 para que escale con la ventana; el eje Y
+     va en píxeles porque el documento los fija así.
+
+       ECI · 145:976        apilado, todo a ancho completo
+         copia   y 64              CTA y 300        slider y 401, 1344 × 900
+       FOC · 2088:472       dos columnas, 680 | 664
+         izquierda: copia y 380, CTA y 831
+         derecha:   slider y 64, 664 × 820
+       IZASKUN · 2094:510   texto a dos columnas, slider estrecho, CTA a la derecha
+         texto: resumen x 21 w 663 · ampliación x 684 w 660
+         slider y 792, 1119 × 640      CTA alineado con la segunda columna
+     ------------------------------------------------------------------------ */
   .proyecto {
     padding-inline: var(--gutter-page);
     display: flex;
@@ -64,21 +96,43 @@ const variante = proyecto.id.includes('foc') ? 'foc'
        izquierda y el bloque de nota a la derecha, en la misma fila. */
   }
 
-  .proyecto__titulo { font-size: var(--h3-size); line-height: var(--h3-leading); font-weight: 500; }
+  /* Sin `font-weight`: hereda el 400 del sistema. Lo que separa el título del
+     resumen no es el grosor, es el color. */
+  .proyecto__titulo { font-size: var(--texto-size); line-height: var(--texto-leading); }
 
-  .proyecto__cuerpo { display: flex; flex-direction: column; }
-
-  /* Foc i Cor: copia a la izquierda y el slider a la derecha. */
-  @media (min-width: 1024px) {
-    .proyecto--foc .proyecto__cuerpo {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
+  /* El hueco entre las piezas del cuerpo es una variable porque el margen
+     negativo del «Leer más» tiene que valer EXACTAMENTE lo mismo, con signo
+     cambiado. Con un número a mano los dos se desincronizan: en Foc i Cor el
+     hueco era 24 y el margen −48, y la palabra se montaba encima del último
+     renglón del párrafo. */
+  .proyecto__cuerpo {
+    display: flex;
+    flex-direction: column;
+    --hueco-cuerpo: var(--space-48);
+    gap: var(--hueco-cuerpo);
   }
+  .proyecto--foc .proyecto__cuerpo { --hueco-cuerpo: var(--space-24); }
 
-  .proyecto__resumen { font-size: var(--body-size); line-height: var(--body-leading); }
-  .proyecto__ampliacion { font-size: var(--body-sm-size); line-height: var(--body-sm-leading); }
+  /* «Leer más» pegado al párrafo, no flotando a 61 px (Johnny, 08/10). El
+     botón conserva su relleno y sus 44 px de alto —el objetivo táctil no se
+     toca—; lo que se retira es el hueco ÓPTICO.
+
+     `:global` es obligatorio: `.disclosure` la declara OTRO componente, así que
+     lleva el hash de scope de Disclosure.astro y no el de este archivo. Sin
+     `:global`, Astro escribe `.disclosure[data-astro-cid-DE-ESTE]` y la regla
+     se sirve al navegador sin aplicarse nunca (AGENTS.md §6). */
+  .proyecto__cuerpo > :global(.disclosure) { margin-block-start: calc(var(--hueco-cuerpo) * -1); }
+
+  /* Gris: es lo que explica. El título que tiene encima es negro, y esa
+     diferencia de color es la única jerarquía que hay entre los dos, porque
+     miden exactamente lo mismo. Funciona sin romper 1.4.1 porque la jerarquía
+     la lleva el marcado —uno es <h2> y el otro <p>—, no el color. */
+  .proyecto__resumen,
+  .proyecto__ampliacion {
+    color: var(--text-secondary);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
+  }
   .proyecto__ampliacion :global(p + p) { margin-block-start: var(--space-16); }
 
   @media (min-width: 1024px) {
@@ -88,5 +142,127 @@ const variante = proyecto.id.includes('foc') ? 'foc'
       justify-content: space-between;
       gap: var(--space-32);
     }
+
+    /* ---- ECI · apilado, ancho completo --------------------------------- */
+    .proyecto--eci { padding-block-end: 64px; }
+    .proyecto--eci .proyecto__cuerpo { padding-block-start: 64px; }
+    .proyecto--eci .proyecto__cta { margin-block-start: 48px; }
+    .proyecto--eci :global(.slider) { margin-block-start: 48px; }
+
+    /* ---- Foc i Cor · copia a la izquierda, slider a la derecha ---------- */
+    .proyecto--foc {
+      display: grid;
+      /* 680 | 664 sobre 1344. El slider arranca en x=728, o sea a 680 del
+         margen izquierdo. */
+      grid-template-columns: calc(680 / 1344 * 100%) 1fr;
+      grid-template-areas:
+        "intro  intro"
+        "cuerpo slider"
+        "cta    slider";
+      grid-template-rows: auto auto 1fr;
+      padding-block: 64px;
+    }
+    .proyecto--foc .proyecto__intro { grid-area: intro; padding-block-end: 64px; }
+    .proyecto--foc .proyecto__cuerpo {
+      grid-area: cuerpo;
+      /* La copia baja a y=380: en el documento no está arriba, está a media
+         altura del slider que tiene al lado. */
+      padding-block-start: 380px;
+      /* El ancho de la copia es 579 de los 680 de la columna. */
+      max-width: calc(579 / 680 * 100%);
+    }
+    /* El CTA se queda abajo del todo, terminando a la misma altura que el
+       slider (y=884 en el documento). */
+    .proyecto--foc .proyecto__cta { grid-area: cta; align-self: end; padding-block-end: 64px; }
+    .proyecto--foc :global(.slider) { grid-area: slider; margin-block-start: 64px; }
+
+    /* ---- Izaskun · texto a dos columnas, slider estrecho, CTA a la derecha */
+    .proyecto--izaskun {
+      display: grid;
+      /* 684 | 660 sobre 1344. */
+      grid-template-columns: calc(684 / 1344 * 100%) 1fr;
+      grid-template-areas:
+        "intro   intro"
+        "cuerpo  ampliacion"
+        "slider  slider"
+        ".       cta";
+      align-items: start;
+      /* El margen negativo del «Leer más» es para la composición apilada; aquí
+         el botón es un ítem de rejilla y lo descolocaría. */
+      padding-block: 64px;
+    }
+    .proyecto--izaskun .proyecto__intro { grid-area: intro; padding-block-end: 64px; }
+    /* El cuerpo de Izaskun ocupa LAS DOS columnas y vuelve a repartirlas por
+       dentro: el resumen y el «Leer más» a la izquierda, la ampliación a la
+       derecha. Es la única forma de que el panel del disclosure caiga en la
+       segunda columna sin tocar el orden del DOM.
+
+       `display: contents` disuelve el <div> del disclosure para que su botón y
+       su panel sean hijos directos de esta rejilla. Es un div sin rol: no
+       cambia nada del árbol de accesibilidad. */
+    .proyecto--izaskun .proyecto__cuerpo {
+      /* Las dos columnas, por número y no por nombre de área: con nombres el
+         `grid-area` de cuatro valores se interpretaba como fila/columna de
+         inicio y fin y el cuerpo se salía de la columna, con lo que sus tracks
+         internos quedaban 48 px desplazados. Medido. */
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: calc(684 / 1344 * 100%) 1fr;
+      grid-template-rows: auto 1fr;
+      /* `home.css` le pone 48 de `gap` al cuerpo para la composición apilada.
+         Aquí las dos columnas ya traen su separación en las propias medidas del
+         Figma (684 | 660), así que el gap horizontal sobra y se come 48 px de
+         la segunda columna. Lo medí: la ampliación salía a 780 en vez de 732. */
+      column-gap: 0;
+      /* 0: el relleno propio del botón ya deja los ~13 px de aire que lleva
+         el «Leer más» en las otras dos composiciones. Con 8 salían 21. */
+      row-gap: 0;
+      align-items: start;
+    }
+    .proyecto--izaskun .proyecto__resumen {
+      grid-column: 1;
+      grid-row: 1;
+      /* La columna de texto empieza 21 px dentro y mide 663 de los 684. */
+      /* El % de un margen se resuelve contra el ANCHO DEL CONTENEDOR, que aquí
+         es la columna de 684 y no los 1344 de la sección. */
+      margin-inline-start: calc(21 / 684 * 100%);
+      max-width: calc(663 / 684 * 100%);
+    }
+    .proyecto--izaskun .proyecto__cuerpo > :global(.disclosure) {
+      display: contents;
+      margin-block-start: 0;
+    }
+    .proyecto--izaskun :global(.disclosure__boton) {
+      grid-column: 1;
+      grid-row: 2;
+      margin-inline-start: calc(21 / 684 * 100%);
+      align-self: start;
+    }
+    .proyecto--izaskun :global(.disclosure__panel) {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      padding-block-start: 0;
+      max-width: calc(660 / 660 * 100%);
+    }
+    /* El campo de Izaskun NO llega al margen derecho: mide 1119 de los 1344 y
+       se alinea a la izquierda. Es lo que le da el desequilibrio que tiene en
+       el documento. */
+    .proyecto--izaskun :global(.slider) {
+      grid-area: slider;
+      justify-self: start;
+      width: calc(1119 / 1344 * 100%);
+      margin-block-start: 48px;
+    }
+    /* El CTA se alinea con la segunda columna de texto (x=732 en el documento,
+       o sea 684 desde el margen). */
+    .proyecto--izaskun .proyecto__cta { grid-area: cta; margin-block-start: 48px; }
+  }
+
+  /* Por debajo de 1024 los tres se apilan: el documento lo dibuja así en los
+     frames de Tablet 768 y Móvil 390, con la copia encima del slider y el CTA
+     debajo en los tres casos. */
+  @media (max-width: 1023px) {
+    .proyecto { padding-block: var(--space-48); gap: var(--space-32); }
   }
 </style>

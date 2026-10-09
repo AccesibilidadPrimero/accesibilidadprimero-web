@@ -7,3 +7,7 @@ capturas/
 
 # Carpeta de descarte: lo que Claude no puede borrar directamente.
 _to_delete/
+
+# El GIF de Itza pesa 214 MB y GitHub no admite nada de más de 100.
+# El vídeo bueno es el .mp4, que sí va al repositorio.
+arte/**/*.gif

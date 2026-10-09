@@ -50,9 +50,15 @@ const ui = t(lang);
     padding: var(--space-12) var(--space-8);
     margin-inline-start: calc(var(--space-8) * -1);
     min-height: var(--touch-min);
-    color: var(--link);
-    font-size: var(--body-sm-size);
-    line-height: var(--body-sm-leading);
+    /* GRIS, y es la excepción a «negro lo que se pulsa» (Johnny, 08/10).
+       La diferencia es qué hace el control: un enlace te lleva a otro sitio y
+       va en negro; esto solo despliega más de lo que ya estás leyendo, así que
+       pertenece al párrafo y se pinta como el párrafo. Quien lo distingue de
+       texto corriente es el subrayado, no el color, así que 1.4.1 sigue en pie,
+       y el gris sobre blanco da 4,54:1. */
+    color: var(--text-secondary);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     cursor: pointer;
     text-decoration: underline;
     text-decoration-thickness: var(--underline-rest);

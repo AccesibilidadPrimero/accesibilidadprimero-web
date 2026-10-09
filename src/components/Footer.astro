@@ -25,12 +25,17 @@ const ui = t(lang);
     display: flex;
     flex-direction: column;
     gap: var(--space-16);
-    padding: var(--space-32) var(--gutter-page);
+    /* Abajo, la misma distancia que el texto de la banda del hero: los dos
+       cierran su bloque con `--space-24` (Johnny, 08/10). Arriba se queda el
+       32, que es el aire que separa los créditos del cierre de contacto. */
+    padding: var(--space-32) var(--gutter-page) var(--space-24);
     background: var(--surface-raised);
+    /* La tercera talla, y la única fuera de las dos de la escala. Los créditos
+       son lo único de la página que puede ser más pequeño sin pedir permiso:
+       no se leen, se consultan. */
     font-size: var(--meta-size);
     line-height: var(--meta-leading);
   }
-  .pie__copy, .pie__lema { color: var(--text-secondary); }
 
   .pie__lista { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-8); }
 
@@ -39,7 +44,6 @@ const ui = t(lang);
   .pie__lista li + li::before {
     content: '·';
     margin-inline-end: var(--space-8);
-    color: var(--text-secondary);
   }
   .pie__lista li { display: flex; align-items: center; }
 

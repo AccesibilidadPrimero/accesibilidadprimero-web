@@ -14,12 +14,17 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--surface);
+  /* Negro por defecto. El gris quedó para UNA cosa: el cuerpo que explica
+     —el resumen de cada proyecto, la descripción de cada producto, el texto
+     ampliado y su «Leer más»—. Todo lo demás, incluidos los créditos del pie y
+     la nota de accesibilidad, va en negro (Johnny, 08/10, segunda pasada). */
   color: var(--text);
   font-family: var(--font-sans);
-  font-size: var(--body-size);
-  line-height: var(--body-leading);
-  font-weight: 400;              /* El sistema no tiene negritas (decisión de
-                                    Johnny, 23/08): la jerarquía descansa en la
+  font-size: var(--texto-size);
+  line-height: var(--texto-leading);
+  font-weight: 400;              /* El ÚNICO peso del sistema. Sin negritas
+                                    (Johnny, 23/08) y, desde el 08/10, sin
+                                    Medium tampoco: la jerarquía descansa en la
                                     escala y en el contraste de color. */
 }
 
@@ -31,24 +36,26 @@ ul, ol { padding: 0; list-style: none; }
 img, svg, video { display: block; max-width: 100%; height: auto; }
 button { font: inherit; }
 
-h1 {
-  font-size: var(--hero-size);
-  line-height: var(--hero-leading);
-  letter-spacing: var(--hero-track);
+/* Los tres niveles se pintan IGUAL que el cuerpo: mismo tamaño, mismo
+   interlineado, mismo peso. Lo único que los distingue es que son negros.
+   El nivel semántico sigue intacto en el HTML, que es donde tiene que estar
+   (AGENTS.md §3): quien usa lector de pantalla oye la estructura completa
+   aunque en pantalla todo mida lo mismo. */
+h1, h2, h3, h4 {
+  font-size: var(--texto-size);
+  line-height: var(--texto-leading);
+  letter-spacing: 0;
+  color: var(--text);
+  /* 400, como todo lo demás. El Figma trae `Display/H3` en Medium, pero el
+     08/10/2026 Johnny cierra la escala en UN SOLO PESO: la distinción entre lo
+     que nombra y lo que explica la lleva el color, no el grosor. El Medium se
+     va de toda la web. `npm run tipografia` falla si vuelve. */
   font-weight: 400;
 }
-h2 {
-  font-size: var(--h2-size);
-  line-height: var(--h2-leading);
-  letter-spacing: var(--h2-track);
-  font-weight: 400;
-}
-h3 {
-  font-size: var(--h3-size);
-  line-height: var(--h3-leading);
-  letter-spacing: var(--h3-track);
-  font-weight: 500;
-}
+
+/* Los enlaces también son negros: son lo que se puede tocar. El subrayado
+   sigue siendo quien lleva el estado, no el color (AGENTS.md §4). */
+a { color: var(--link); }
 
 /* ------------------------------------------------------------------ foco -- */
 /* Un solo sitio en todo el repo donde se define el foco. Nunca se desactiva,

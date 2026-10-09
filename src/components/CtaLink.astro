@@ -30,31 +30,48 @@ const esExterno = external || /^https?:\/\//.test(href);
 </a>
 
 <style>
+  /* `inline`, no `inline-flex`. Con flex la flecha es un hermano del texto en
+     una sola fila: cuando el texto no cabe —«Conocer Accessible Abstracts» en
+     una columna de 318— el texto se parte y la flecha se queda sola, pegada al
+     borde derecho. En flujo normal la flecha viaja con la última palabra, que
+     es lo que hace el documento.
+
+     Al perder el flex se pierde `min-height`, así que el objetivo táctil lo da
+     el relleno: la interlínea más 8 arriba y 8 abajo pasan de 44.
+     `npm run a11y` mide los 44 px en el render y lo caza si deja de cumplirse. */
   .cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-12);
-    min-height: var(--touch-min);
-    font-size: var(--h3-size);
-    line-height: var(--h3-leading);
-    letter-spacing: var(--h3-track);
+    /* `inline-block`, no `inline`: en flujo inline puro la caja de un enlace la
+       miden las métricas de la fuente y NO la interlínea, así que el relleno no
+       llegaba a los 44 px y `npm run a11y` lo cazó (40 px en móvil). Con
+       `inline-block` la altura sí es interlínea + relleno, y la flecha, que va
+       dentro, sigue viajando con la última palabra. */
+    display: inline-block;
+    padding-block: calc((var(--touch-min) - var(--texto-leading)) / 2);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     text-decoration-thickness: var(--underline-rest);
   }
-  .cta--large { font-size: var(--h2-size); line-height: var(--h2-leading); letter-spacing: var(--h2-track); }
+  /* Ya no hay talla grande: `--display` existe solo para las dos frases de
+     Productos y Estudio (Johnny, 08/10). Se deja la clase porque sigue
+     marcando el CTA principal de la página, pero pinta igual que los demás. */
+  .cta--large { font-size: var(--texto-size); line-height: var(--texto-leading); letter-spacing: 0; }
   /* La talla pequeña va al pie del hero, al mismo cuerpo que el titular y que
      las frases del carrusel. */
   .cta--small {
-    font-size: var(--body-sm-size);
-    line-height: var(--body-sm-leading);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     letter-spacing: 0;
-    gap: var(--space-8);
   }
   .cta:hover { text-decoration-thickness: var(--underline-hover); }
 
   /* La flecha avanza al pasar por encima. Es refuerzo del hover, nunca la
      única señal: el subrayado ya ha engordado. */
   .cta__arrow {
-    flex: none;
+    display: inline-block;
+    vertical-align: -0.05em;
+    /* El espacio va aquí y es INSEPARABLE: la flecha no debe quedarse sola al
+       principio de una línea. Por eso el margen y no un `gap`. */
+    margin-inline-start: var(--space-12);
     transition: transform var(--dur-fast) var(--ease-out);
   }
   .cta:hover .cta__arrow { transform: translateX(var(--space-4)); }

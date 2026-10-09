@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "arte": "node scripts/svg.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "a11y": "node scripts/a11y.mjs",
@@ -26,6 +27,7 @@
     "@astrojs/check": "^0.9.10",
     "axe-core": "^4.14.0",
     "playwright": "^1.63.0",
+    "svgo": "^4.1.0",
     "typescript": "^6.0.3"
   }
 }

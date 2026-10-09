@@ -18,6 +18,22 @@ nota:
   valor: 91
   medidaEl: 2026-10-06
 casoPublicado: false
+imagenes:
+  - archivo: foc-1
+    alt: >-
+      Portada en móvil sobre una fotografía del embarcadero de la Albufera al
+      atardecer, con el claim «Cuina feta amb foc i Cor», el botón de reserva,
+      el enlace a la carta y, abajo, el horario y la dirección.
+  - archivo: foc-2
+    alt: >-
+      Página del proyecto: «CESAL i la cuina com a eina de canvi», tres
+      párrafos sobre la escuela-restaurante y, debajo, fichas de color con las
+      cifras del programa.
+  - archivo: foc-3
+    alt: >-
+      La carta: una fotografía de un plato de arroz y, debajo, el menú por
+      categorías con el precio de cada plato y sus alérgenos etiquetados a la
+      vista.
 ---
 
 Diseñamos su web con el mismo propósito: que nadie se quede fuera de la mesa.

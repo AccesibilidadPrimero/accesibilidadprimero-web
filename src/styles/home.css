@@ -37,8 +37,9 @@
 /* Project Content: ECI e Izaskun en vertical con gap 48; Foc i Cor en
    horizontal con gap 24 y la copia a la izquierda. No es el mismo bloque
    repetido tres veces: cada caso tiene su composición. */
-.proyecto__cuerpo              { gap: var(--space-48); }
-.proyecto--foc .proyecto__cuerpo { gap: var(--space-24); }
+/* Los huecos del cuerpo ya no están aquí: viven en ProjectSection.astro, que
+   es quien declara la clase, atados al margen negativo del «Leer más» por una
+   variable. Ver AGENTS.md §6. */
 
 .proyecto__resumen { max-width: 689px; }                 /* ECI: Project Copy 689 */
 .proyecto--foc .proyecto__resumen { max-width: 579px; }  /* Foc: Copia 579 */
@@ -80,7 +81,8 @@
   gap: var(--space-32);
   padding-block: var(--space-96);
 }
-.estudio__icono { width: 60px; height: 60px; flex: none; }
+/* El icono de Estudio ya no está aquí: su geometría vive en index.astro,
+   que es quien declara la clase. Ver AGENTS.md §6. */
 .estudio__texto { max-width: 1068px; }
 
 /* ---- Cierre de contacto --------------------------------------------------- */

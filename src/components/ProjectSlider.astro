@@ -1,0 +1,265 @@
+---
+/* ---------------------------------------------------------------------------
+   Slider de capturas de un proyecto destacado.
+
+   Del Figma (`Content slider`, uno por caso): un campo del color del proyecto,
+   la captura centrada encima, y debajo un control VISIBLE —icono de pausa más
+   la palabra, subrayada—. Aquí sí se dibuja: a diferencia del hero, el
+   documento lo trae pintado y Johnny no pidió esconderlo.
+
+   Medidas del documento, por caso:
+
+     ECI       campo 1368 × 900   captura 904 × 568   aire 126   hueco 36
+     Foc i Cor campo  664 × 820   captura 400 × 564   aire  88   hueco 36
+     Izaskun   campo 1119 × 640   captura 656 × 412   aire  68   hueco 48
+
+   El aire es simétrico arriba y abajo en los tres, y la captura va centrada.
+
+   DOS DECISIONES QUE VIENEN DEL HERO Y SE REPITEN AQUÍ A PROPÓSITO
+
+   1. Las tres capturas están SIEMPRE en el árbol de accesibilidad, con su
+      `alt`. La rotación es puramente visual. Quien usa lector de pantalla oye
+      las tres descripciones seguidas sin tener que pausar nada ni descubrir
+      que hay un control: el contenido no depende de la interacción.
+
+   2. `prefers-reduced-motion` no deja el control inservible: se quita el
+      avance automático y el fundido, pero cada pulsación sigue pasando a la
+      siguiente. Reducir no es eliminar (AGENTS.md §2.3).
+   --------------------------------------------------------------------------- */
+import type { ImageMetadata } from 'astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
+
+interface Props {
+  imagenes: { archivo: string; alt: string }[];
+  variante: 'eci' | 'foc' | 'izaskun';
+  titulo: string;
+  lang: Lang;
+}
+const { imagenes, variante, titulo, lang } = Astro.props;
+const ui = t(lang);
+
+/* Las compila `npm run arte` desde arte/proyectos/. El glob tiene que ser
+   literal para que Vite lo resuelva en el build. */
+const archivos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/proyectos/*.{png,jpg,jpeg,webp}',
+  { eager: true },
+);
+const buscar = (nombre: string) =>
+  Object.entries(archivos).find(([ruta]) => ruta.includes(`/${nombre}.`))?.[1]?.default;
+
+/* Una captura que falta rompe el build y lo dice por su nombre. El esquema ya
+   exige tres declaradas; esto comprueba que además existen en disco. */
+const faltan = imagenes.filter((i) => !buscar(i.archivo)).map((i) => i.archivo);
+if (faltan.length) {
+  throw new Error(
+    `Faltan capturas de ${titulo} en src/assets/proyectos/: ${faltan.join(', ')}.\n` +
+    'Déjalas en arte/proyectos/ y ejecuta `npm run arte`.',
+  );
+}
+---
+
+<div class:list={['slider', `slider--${variante}`]} data-slider>
+  <ul class="slider__pila">
+    {
+      imagenes.map((im, i) => {
+        const meta = buscar(im.archivo)!;
+        return (
+          <li class="slider__lamina" data-indice={i} data-activa={i === 0 ? '' : undefined}>
+            {/* width/height REALES: son los que le dan al navegador la
+                proporción antes de descargar. */}
+            <img
+              src={meta.src}
+              alt={im.alt}
+              width={meta.width}
+              height={meta.height}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  {/* El control del Figma: dos barras y la palabra, subrayada. El icono es
+      decorativo —lo que dice el botón está escrito al lado— y por eso va
+      `aria-hidden`; el nombre accesible lo da el texto visible, que además
+      lleva el nombre del proyecto para distinguir los tres controles de la
+      página entre sí (2.4.4). */}
+  <button
+    type="button"
+    class="slider__control"
+    data-slider-control
+    data-label-pausar={ui.carouselPause}
+    data-label-reproducir={ui.carouselPlay}
+  >
+    <svg class="slider__icono" aria-hidden="true" focusable="false" viewBox="0 0 14 16" width="14" height="16">
+      <rect x="0" y="0" width="4.5" height="16" />
+      <rect x="9.5" y="0" width="4.5" height="16" />
+    </svg>
+    <span data-slider-label>{ui.carouselPause}</span>
+    <span class="sr-only"> · {titulo}</span>
+  </button>
+</div>
+
+<style>
+  .slider {
+    display: grid;
+    justify-items: center;
+    background: var(--acento);
+    color: var(--texto-sobre-acento);
+    /* El anillo de foco de este proyecto, declarado en su ficha y validado en
+       build contra el acento. */
+    --focus-ring: var(--anillo);
+    padding-block: var(--aire);
+    gap: var(--hueco);
+  }
+
+  /* Las tres capturas comparten celda y se cruzan con opacidad: así el campo
+     no da un salto de alto al cambiar. */
+  .slider__pila {
+    display: grid;
+    width: 100%;
+    max-width: var(--ancho-captura);
+    aspect-ratio: var(--ancho-captura) / var(--alto-captura);
+  }
+  .slider__lamina {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity var(--dur-fade) ease-in-out;
+  }
+  .slider__lamina[data-activa] { opacity: 1; }
+  .slider__lamina img { width: 100%; height: 100%; object-fit: contain; }
+
+  /* Icono + palabra, como en el documento. El subrayado va en la palabra, no
+     en el icono: el icono es decoración. */
+  .slider__control {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--touch-min);
+    padding: var(--space-8) var(--space-12);
+    background: none;
+    border: 0;
+    color: inherit;
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
+    cursor: pointer;
+  }
+  .slider__control [data-slider-label] {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+  }
+  .slider__control:hover [data-slider-label] {
+    text-decoration-thickness: var(--underline-hover);
+  }
+  .slider__icono { fill: currentColor; flex: none; }
+  /* Parado, el icono pasa de «pausa» a «reproducir»: el estado no lo lleva
+     solo la palabra, y tampoco solo el color (1.4.1). */
+  [data-parado] .slider__icono rect:last-child { opacity: 0; }
+  [data-parado] .slider__icono rect:first-child { width: 14px; }
+
+  /* Sin JavaScript no hay rotación: se ve la primera y el control no se pinta,
+     porque no haría nada (AGENTS.md §5). */
+  html:not(.js) .slider__control { display: none; }
+  html:not(.js) .slider__lamina { opacity: 1; }
+  html:not(.js) .slider__pila { display: block; aspect-ratio: auto; }
+  html:not(.js) .slider__lamina + .slider__lamina { margin-block-start: var(--hueco); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slider__lamina { transition: none; }
+  }
+
+  /* Las medidas del Figma, caso por caso. */
+  .slider--eci     { --aire: 126px; --hueco: 36px; --ancho-captura: 904px; --alto-captura: 568px; }
+  .slider--foc     { --aire:  88px; --hueco: 36px; --ancho-captura: 400px; --alto-captura: 564px; }
+  .slider--izaskun { --aire:  68px; --hueco: 48px; --ancho-captura: 656px; --alto-captura: 412px; }
+
+  /* Por debajo de 1024 el aire se reduce a la mitad: el documento no tiene
+     estos frames medidos todavía y esto es proporcional, no verificado. */
+  @media (max-width: 1023px) {
+    .slider { padding-block: calc(var(--aire) / 2); }
+    .slider__pila { max-width: min(var(--ancho-captura), 100%); }
+  }
+</style>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  const INTERVALO = 4000;   // 4 s por captura: son páginas, hay que leerlas
+
+  const PAUSA_POR = { usuario: 'usuario', puntero: 'puntero', fuera: 'fuera' } as const;
+
+  document.querySelectorAll<HTMLElement>('[data-slider]').forEach((raiz) => {
+    const laminas = Array.from(raiz.querySelectorAll<HTMLElement>('.slider__lamina'));
+    const control = raiz.querySelector<HTMLButtonElement>('[data-slider-control]');
+    const etiqueta = raiz.querySelector<HTMLElement>('[data-slider-label]');
+    if (laminas.length < 2 || !control || !etiqueta) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let indice = 0;
+    let temporizador: number | null = null;
+    /* Un conjunto de motivos, no un booleano: el puntero no puede reanudar
+       algo que se paró con el teclado. Mismo patrón que el hero. */
+    const motivos = new Set<string>([PAUSA_POR.fuera]);
+    const parado = () => motivos.size > 0;
+
+    function mostrar(i: number) {
+      laminas[indice]?.removeAttribute('data-activa');
+      indice = (i + laminas.length) % laminas.length;
+      laminas[indice].setAttribute('data-activa', '');
+    }
+
+    function arrancar() {
+      if (temporizador !== null || reduce.matches) return;
+      temporizador = window.setInterval(() => mostrar(indice + 1), INTERVALO);
+    }
+    function detener() {
+      if (temporizador === null) return;
+      // Pausar para el TEMPORIZADOR, no solo la animación.
+      window.clearInterval(temporizador);
+      temporizador = null;
+    }
+
+    function sincronizar() {
+      if (parado()) { detener(); raiz.setAttribute('data-parado', ''); }
+      else { raiz.removeAttribute('data-parado'); arrancar(); }
+      etiqueta!.textContent = parado()
+        ? (control!.dataset.labelReproducir ?? 'Reproducir')
+        : (control!.dataset.labelPausar ?? 'Pausar');
+    }
+
+    const pausar = (m: string) => { motivos.add(m); sincronizar(); };
+    const reanudar = (m: string) => { motivos.delete(m); sincronizar(); };
+
+    control.addEventListener('click', () => {
+      /* Con movimiento reducido no hay nada que pausar: cada pulsación pasa a
+         la siguiente captura. El contenido sigue siendo alcanzable entero. */
+      if (reduce.matches) { mostrar(indice + 1); return; }
+      if (motivos.has(PAUSA_POR.usuario)) reanudar(PAUSA_POR.usuario);
+      else pausar(PAUSA_POR.usuario);
+    });
+
+    /* El puntero escucha sobre las capturas, que es lo que se está mirando, y
+       no sobre el campo entero: el campo llega de margen a margen y pararlo
+       desde ahí no se entiende (misma regla que el hero, AGENTS.md §4). */
+    const pila = raiz.querySelector<HTMLElement>('.slider__pila')!;
+    pila.addEventListener('pointerenter', () => pausar(PAUSA_POR.puntero));
+    pila.addEventListener('pointerleave', () => reanudar(PAUSA_POR.puntero));
+    // Paridad de teclado: enfocar el control hace lo mismo que el puntero.
+    control.addEventListener('focus', () => pausar(PAUSA_POR.puntero));
+    control.addEventListener('blur', () => reanudar(PAUSA_POR.puntero));
+
+    // No arranca al cargar: arranca cuando se ve.
+    new IntersectionObserver(
+      (es) => es.forEach((e) => (e.isIntersecting ? reanudar(PAUSA_POR.fuera) : pausar(PAUSA_POR.fuera))),
+      { threshold: 0.3 },
+    ).observe(raiz);
+
+    const aplicarReduce = () => { if (reduce.matches) { detener(); raiz.setAttribute('data-parado', ''); } sincronizar(); };
+    reduce.addEventListener('change', aplicarReduce);
+    aplicarReduce();
+  });
+</script>

@@ -78,6 +78,7 @@ check('Esc cierra el panel', cerrado === 'false', `aria-expanded="${cerrado}"`);
 check('Al cerrar, el foco vuelve al botón', vuelve);
 
 // 7. El carrusel: pausar detiene de verdad, y la etiqueta pasa a Reproducir.
+const titularInicial = (await page.textContent('h1'))?.trim();
 await page.evaluate(() => document.querySelector('[data-carrusel-control]')?.scrollIntoView());
 await page.waitForTimeout(400);
 await page.click('[data-carrusel-control]');
@@ -89,11 +90,92 @@ await page.waitForTimeout(3200);   // más de dos ciclos de 1,5 s
 const despues = await page.getAttribute('.hero__lamina[data-activa]', 'data-indice');
 check('Pausar detiene el temporizador, no solo la animación', antes === despues, `${antes} → ${despues}`);
 
-// 8. Al pausar aparece la frase, y lleva su idioma marcado.
+// 8. Al pausar aparece la frase, y lleva el idioma de ESA ilustración.
+//    Se compara contra la lámina activa y no contra un idioma fijo: cuál está
+//    delante al pausar depende de los milisegundos, y un test que depende de
+//    eso falla solo de vez en cuando, que es la peor clase de test.
 const frase = (await page.textContent('[data-carrusel-frase]'))?.trim();
+const esperadoLang = await page.getAttribute('.hero__lamina[data-activa]', 'data-frase-lang');
 const idioma = await page.getAttribute('[data-carrusel-frase]', 'lang');
+const marcado = esperadoLang === 'es' ? idioma === null : idioma === esperadoLang;
+const visible = await page.evaluate(() => {
+  const e = document.querySelector('[data-carrusel-frase]');
+  const b = document.querySelector('.hero__frase--base');
+  return e && b
+    ? { principio: parseFloat(getComputedStyle(e).opacity), base: parseFloat(getComputedStyle(b).opacity) }
+    : null;
+});
 check('Al pausar aparece la frase de la ilustración', !!frase, frase?.slice(0, 40));
-check('La frase en catalán va marcada con lang="ca" (3.1.2)', idioma === 'ca', `lang="${idioma}"`);
+// Que el texto esté en el DOM no significa que se vea.
+check('…y se VE: la frase del principio sustituye a la frase base',
+  !!visible && visible.principio === 1 && visible.base === 0,
+  `principio=${visible?.principio} base=${visible?.base}`);
+check('El fragmento en otro idioma va marcado con lang (3.1.2)', marcado, `lámina=${esperadoLang} · lang=${idioma}`);
+
+// 9. El control es un <button> de verdad, no un div con role.
+const etiquetaControl = await page.evaluate(() => {
+  const c = document.querySelector('[data-carrusel-control]');
+  return { tag: c?.tagName, rol: c?.getAttribute('role') };
+});
+check('El control del carrusel es un <button>, no un div con role',
+  etiquetaControl.tag === 'BUTTON' && !etiquetaControl.rol,
+  `<${etiquetaControl.tag?.toLowerCase()}> role=${etiquetaControl.rol}`);
+
+// 10. El h1 NO cambia de texto al pausar.
+const h1 = (await page.textContent('h1'))?.trim();
+check('El h1 no se reescribe al pausar', h1 === titularInicial, h1?.slice(0, 40));
+
+// 11. Toda ilustración del hero lleva alternativa textual escrita. No es el
+//     mismo texto que la frase del principio: el alt describe lo que SE VE,
+//     la frase dice lo que el estudio PIENSA. Un lector de pantalla necesita
+//     las dos cosas, y repetir una en la otra no informa de nada.
+const laminas = await page.$$eval('.hero__lamina', (n) => n.map((l) => ({
+  alt: l.querySelector('img')?.getAttribute('alt') ?? '',
+  frase: l.getAttribute('data-frase') ?? '',
+})));
+const utiles = laminas.filter((l) => l.alt.trim().length > 20);
+const repetidos = laminas.filter((l) => l.frase && l.alt.trim() === l.frase.trim());
+check('Todas las ilustraciones llevan alternativa textual con contenido',
+  utiles.length === laminas.length,
+  `${laminas.length} imágenes, ${utiles.length} con alt útil`);
+check('El alt describe la imagen y no repite la frase',
+  repetidos.length === 0,
+  repetidos.length ? `${repetidos.length} repite(n) la frase` : 'ninguno repite');
+
+/* 12. El puntero: lo que para el carrusel es el DIBUJO, no el escenario.
+   Johnny, 08/10/2026: «el area de "stop" "reproducir" debe ser sobre la
+   imagen, para que sea intuitivo el juego de mover el cursor sobre las
+   imágenes». Antes el escucha estaba en el escenario, que llega hasta los
+   márgenes de la página: el carrusel se paraba al pasar el cursor por zonas
+   vacías, lejos de cualquier dibujo. Esto se comprueba moviendo el ratón de
+   verdad a dos sitios: el centro del dibujo y el hueco que queda a su lado.
+   A 1440 ese hueco es de 287 px como mínimo —la ilustración más ancha es la
+   trompeta, 770 dentro de un escenario de 1344—, así que el punto de prueba
+   está holgadamente fuera del control. */
+{
+  const p = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  await p.waitForTimeout(400);
+  const pts = await p.evaluate(() => {
+    const c = document.querySelector('.hero__control').getBoundingClientRect();
+    const e = document.querySelector('.hero__escenario').getBoundingClientRect();
+    return { dx: c.left + c.width / 2, dy: c.top + c.height / 2,
+             vx: e.left + 8, vy: c.top + c.height / 2, hueco: c.left - e.left };
+  });
+  const parado = () => p.evaluate(() => document.querySelector('.hero').hasAttribute('data-parado'));
+
+  await p.mouse.move(pts.vx, pts.vy);
+  await p.waitForTimeout(250);
+  const alLado = await parado();
+  await p.mouse.move(pts.dx, pts.dy);
+  await p.waitForTimeout(250);
+  const encima = await parado();
+
+  check('El cursor sobre el dibujo para el carrusel', encima);
+  check('El cursor en el hueco de al lado NO lo para', !alLado,
+    `hueco de ${pts.hueco.toFixed(0)} px al borde del dibujo`);
+  await p.close();
+}
 
 await navegador.close();
 servidor.close();

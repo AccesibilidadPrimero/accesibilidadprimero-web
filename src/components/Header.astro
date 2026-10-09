@@ -95,8 +95,8 @@ const langs = alternates(current, slug);
     display: inline-flex;
     align-items: center;
     min-height: var(--touch-min);
-    font-size: var(--nav-size);
-    line-height: var(--nav-leading);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     text-decoration: none;
     flex: none;
   }
@@ -129,9 +129,13 @@ const langs = alternates(current, slug);
     align-items: center;
     justify-content: center;
     min-height: var(--touch-min);
-    padding: var(--space-12);
-    font-size: var(--nav-size);
-    line-height: var(--nav-leading);
+    /* 10 arriba y abajo, no 12: con el tamaño único la interlínea pasó de 24 a
+       28 y la cabecera se iba a 100 px cuando el Figma dice 96. Con 10 el
+       enlace mide 48 de alto —por encima de los 44 de la regla de AP— y la
+       cabecera vuelve a 96. `npm run geometria` lo vigila. */
+    padding: 10px var(--space-12);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     /* La navegación no va subrayada en reposo. Es la excepción documentada al
        sistema de enlaces; la página actual sí lo lleva. */
     text-decoration: none;

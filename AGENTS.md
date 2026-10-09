@@ -76,6 +76,26 @@ Están aquí porque ya han pasado, no en abstracto:
   el de escritorio NO vale: las pendientes de los dos tramos son distintas y el
   valor intermedio sale mal. Ya pasó: el cuerpo se quedaba en 27 px a 1440 en
   vez de 30. `npm run tipografia` lo comprueba midiendo el render.
+- **Un solo peso en toda la web: 400.** Sin negritas (Johnny, 23/08) y sin
+  Medium (Johnny, 08/10). El `Display/H3` del Figma viene en Medium y aquí se
+  pinta en Regular a propósito. **Lo que separa lo que nombra de lo que explica
+  es el color, no el grosor**: Ink para el título, `--text-secondary` para el
+  cuerpo que lo desarrolla. Es el recurso que cita el spec de Pentagram, y
+  medido en su propia web: a 19 px emparejan el titular con el subtítulo al
+  mismo cuerpo y los separan con gris. `npm run tipografia` recorre la página
+  nodo a nodo en los tres anchos y **falla si encuentra cualquier peso distinto
+  de 400** —incluido el que se cuele por un `<strong>` en un markdown.
+- **Un título en Ink y su explicación en gris NO incumple 1.4.1.** La jerarquía
+  no la lleva el color: la lleva el marcado, uno es `<h2>` y el otro `<p>`, y
+  quien usa lector de pantalla oye la estructura intacta. El color solo
+  refuerza lo que el HTML ya dice. Esa es la condición: si alguna vez la
+  distinción deja de estar en la estructura y pasa a depender del gris, deja de
+  valer.
+- **El gris se calcula contra NUESTRO papel, no se copia.** `#767676` es el gris
+  más claro que pasa 4,5:1 sobre blanco puro, pero nuestro fondo es Silk
+  `#f7f7f4` y ahí ese mismo valor da 4,23:1 y falla. El token del sistema es
+  `--ink-60` (`#686864`): 5,21:1 sobre Silk, 5,60:1 sobre blanco, 4,35:1 sobre
+  menta. Por debajo de `#717171` no se baja en Silk ni de `#656565` en menta.
 - Sin framework de utilidades. Si una regla sirve para un solo componente, vive
   en el `<style>` de ese componente.
 - **El color nunca va solo** (1.4.1). El estado se lleva en el grosor del
@@ -87,6 +107,18 @@ Están aquí porque ya han pasado, no en abstracto:
 - Todo tiene que funcionar con `forced-colors: active`.
 - La página tiene que ser usable al 200 % de zoom y con 400 % de aumento de
   texto sin scroll horizontal (1.4.4, 1.4.10).
+- **La zona que responde tiene que coincidir con lo que se ve.** Un control
+  transparente estirado a `inset: 0` sobre un contenedor ancho reacciona en
+  sitios donde no hay nada dibujado, y quien lo usa no entiende por qué pasan
+  cosas. En el hero el botón mide exactamente el dibujo, no el escenario
+  (Johnny, 08/10/2026). La caja pintada de un `<img>` con alto fijo, `width:
+  auto` y `max-width: 100%` se reproduce en CSS sin medir nada:
+  `width: min(calc(var(--alto) * var(--ratio)), 100%)` más
+  `aspect-ratio: var(--ratio)`. Ojo: cuando `max-width` recorta, `object-fit:
+  contain` deja el dibujo apaisado dentro de una caja más alta, así que la
+  referencia es el dibujo encajado, no el rectángulo del `<img>`.
+  `npm run geometria` lo comprueba con las ocho ilustraciones a los tres
+  anchos, y `npm run teclado` mueve el ratón al dibujo y al hueco de al lado.
 
 ## 5. JavaScript
 
@@ -131,6 +163,15 @@ disciplina personal a las once de la noche.
   tocar. Se usa `<Picture>` de `astro:assets` con `formats={['avif','webp']}`,
   que deja el original como respaldo. `public/` se reserva para lo que necesita
   URL fija: tipografías, imagen de compartir, vídeo. Ver `src/assets/LEEME.md`.
+- **Todas las imágenes van en `arte/` y se compilan con `npm run arte`.**
+  `arte/` es el original y no lo toca nadie; `src/assets/` es lo generado y no
+  se edita a mano. Los SVG se limpian; los PNG y JPG se copian, porque de esos
+  ya se encarga Astro en el build. El comando avisa si un raster viene por
+  debajo de @2x o con otra proporción, y falla si un SVG trae texto sin
+  trazar, un mapa de bits dentro o sin `viewBox`. Inventario en `arte/LEEME.md`. No se limpia en el build: Astro convierte un
+  .svg en componente en su fase de carga, antes de que entre un plugin de Vite
+  con `enforce: 'pre'` (comprobado: al plugin le llega JavaScript). Precisión 1
+  y no 0 — está medido comparando el render píxel a píxel.
 - **Los originales se exportan a @2x y en PNG o JPG, nunca en WebP.** Astro
   reduce pero no amplía, y recomprimir algo ya comprimido suma artefactos sin
   ahorrar bytes.
@@ -165,6 +206,9 @@ npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
+npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
+                     # resto y comprueba tamaños
+npm run geometria    # mide los ANCHOS del render contra los del Figma
 npm run capturas     # capturas de los tres breakpoints para revisar a ojo
 ```
 

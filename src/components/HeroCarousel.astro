@@ -2,35 +2,49 @@
 /* ---------------------------------------------------------------------------
    Hero · carrusel de ilustraciones
 
-   Especificación: claude/hero-carrusel-home-figma.md (30/09/2026).
-     · 8 ilustraciones. La 1 (girasol) es el estado base y el de
-       prefers-reduced-motion.
-     · 1,5 s por imagen, fundido de 0,6 s, en bucle.
-     · Cursor o dedo encima: se para la rotación y aparece la frase de esa
-       imagen. Al salir, vuelve a rotar.
-     · La frase aparece palabra a palabra: sube 6 px y funde, 40 ms entre
-       palabras, 500 ms por palabra, sin rebote.
+   Geometría, tiempos y comportamiento tomados de `hero-carousel-final_6.html`
+   (Johnny, 07/10/2026). Lo que viene de ahí, literal:
 
-   Decisiones de accesibilidad que conviene no deshacer:
+     · Escenario de min(90vw, 560px), proporción 338.4 / 299.43.
+     · 7 ilustraciones, 1,5 s cada una, fundido de 0,6 s en bucle.
+     · Banda de texto pegada abajo, a todo el ancho, sobre menta al 95 %.
+     · El CTA abajo a la derecha, dentro de la banda.
+     · Cursor encima (o clic en táctil): se para y la frase del principio
+       sustituye a la frase base, revelada carácter a carácter —0,05 s por
+       carácter, 0,02 s de retardo entre uno y el siguiente.
+     · En el principio 7 la frase se parte: lo que va después de
+       «Accesibilidad Primero. » espera un segundo más. Es el remate.
 
-   1. El h1 de la página es el mensaje base y NO lo sustituye la frase de la
-      ilustración. La frase vive en una región aparte.
-   2. Esa región solo anuncia cuando el carrusel está PARADO. Un aria-live
-      que dispare cada 1,5 s convierte el lector de pantalla en una
-      ametralladora y hace la página inutilizable. Mientras rota, la región
-      está vacía a propósito.
-   3. El hover revela la frase, pero el teclado tiene la misma puerta: el
-      botón Pausar hace exactamente lo mismo, y enfocar dentro del escenario
-      también para. Ninguna información depende del puntero.
-   4. «Pausar» detiene el TEMPORIZADOR, no solo la animación. Mientras esté
-      parado por el motivo que sea, la etiqueta es «Reproducir».
-   5. Las ilustraciones son decorativas: alt="". La información la lleva el
-      texto, no la imagen.
+   TRES COSAS QUE NO SE COPIARON DEL HTML, Y POR QUÉ
+   -------------------------------------------------
+
+   1. El h1 NO cambia de texto. En el HTML la frase base y la frase del
+      principio son el mismo <p>, que se reescribe. Aquí la frase base es el
+      h1 de la página: si se le cambia el texto al pasar el cursor, el título
+      del documento cambia bajo los pies de quien usa un lector de pantalla.
+      Las dos frases viven apiladas en la misma celda y se cruzan con opacidad.
+      Visualmente es idéntico; en el árbol de accesibilidad están las dos.
+
+   2. `prefers-reduced-motion` NO deja el carrusel inservible. El HTML le pone
+      `cursor: not-allowed` y `opacity: 0.7` y lo congela en la primera
+      ilustración: parece roto y esconde seis de los siete mensajes. Aquí se
+      quita el avance automático y los fundidos, pero el carrusel sigue siendo
+      un control: cada pulsación pasa a la siguiente y enseña su frase.
+      Reducir no es eliminar (AGENTS.md §2.3).
+
+   3. El control es un <button> de verdad, no un <div role="button">
+      (AGENTS.md §1). Es transparente y mide EXACTAMENTE lo que la ilustración
+      que esté delante: lo que se ve es el dibujo, y el dibujo es la zona que
+      responde. Tiene nombre accesible propio y anillo de foco visible.
+
+   Decisión de Johnny sobre el lector de pantalla: las ilustraciones llevan
+   `alt` con su frase y las siete están siempre en el árbol de accesibilidad.
+   Quien use lector oye los siete principios seguidos, como una lista, sin
+   tener que pausar nada. No depende del puntero ni del hover.
    --------------------------------------------------------------------------- */
-import { Picture } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
+import type { ImageMetadata } from 'astro';
 import CtaLink from './CtaLink.astro';
 import { path } from '../i18n/config';
 
@@ -38,272 +52,416 @@ interface Props { lang: Lang; titular: string }
 const { lang, titular } = Astro.props;
 const ui = t(lang);
 
-/* El orden es el de `Documentación · Hero carrusel` (3095:901). */
-const ilustraciones = [
-  { id: 1, nombre: 'girasol',      frase: 'Estimen les diferències.', fraseLang: 'ca' },
-  { id: 2, nombre: 'globos',       frase: 'La forma en la que comunicamos construye realidades.' },
-  { id: 3, nombre: 'megáfono',     frase: 'Construimos narrativas que ayuden a romper estereotipos.' },
-  { id: 4, nombre: 'construcción', frase: 'La comunicación debe representar, respetar y dar espacio a la diversidad.' },
-  { id: 5, nombre: 'planta',       frase: 'Hacia el diseño universal y la tecnología semántica.' },
-  { id: 6, nombre: 'diálogo',      frase: 'Proyectos con propósito.' },
-  { id: 7, nombre: 'lápiz',        frase: 'Accesibilidad primero. Siempre.' },
-  { id: 8, nombre: 'escalada',     frase: 'Amamos las diferencias.' },
-];
-const n = (i: number) => String(i).padStart(2, '0');
+/* El orden y las frases. El `alt` ES la frase: la ilustración dice eso, no es
+   decorativa.
 
-/* Los PNG viven en src/assets/, no en public/: así pasan por el pipeline de
-   Astro y salen en AVIF y WebP con el PNG como respaldo. Un PNG de 185 KB
-   pesa ~18 KB en AVIF. Lo que hay en public/ Astro no lo toca.
+   La primera no lleva frase de principio a propósito: es la imagen por
+   defecto, la que se ve al cargar la página acompañando al claim. Mientras
+   esté delante, la banda muestra el claim y nada más. Las otras siete son los
+   principios, y cada una sustituye al claim mientras el carrusel está parado. */
+const ILUSTRACIONES: { archivo: string; frase?: string; fraseLang?: string; alt: string }[] = [
+  { archivo: '00-claim',       alt: 'Una flor enorme vista desde arriba, con dos personas diminutas trabajando sobre sus pétalos.' },
+  { archivo: '01-diferencies', frase: 'Estimem les diferències.', fraseLang: 'ca',
+    alt: 'Una planta en una maceta, cuidada por una figura diminuta encaramada a una de sus hojas.' },
+  { archivo: '02-comunicamos', frase: 'La forma en la que comunicamos construye realidades.',
+    alt: 'Una trompeta gigantesca sostenida por varias personas, apuntando hacia un grupo que escucha.' },
+  { archivo: '03-narrativas',  frase: 'Construimos narrativas que ayuden a romper estereotipos.',
+    alt: 'Dos personas conversan a través de una maraña de bocadillos que se cruzan: unos con signos de interrogación, otros con garabatos ilegibles.' },
+  { archivo: '04-diversidad',  frase: 'La comunicación debe representar, respetar y dar espacio a la diversidad.',
+    alt: 'Una persona emite una maraña enredada de líneas que, al llegar a la otra, se ha ordenado en una espiral regular.' },
+  { archivo: '05-semantica',   frase: 'Hacia el diseño universal y la tecnología semántica.',
+    alt: 'Una estructura de módulos triangulares amarillos y negros que dos personas terminan de montar.' },
+  { archivo: '06-proposito',   frase: 'Sólo proyectos con propósito.',
+    alt: 'Una regadera rosa de la que salen dos chorros: uno riega un brote, el otro cae al vacío.' },
+  { archivo: '07-siempre',     frase: 'Accesibilidad primero. Siempre.',
+    alt: 'Una rampa curva que se desdibuja en su extremo, como si aún estuviera construyéndose.' },
+];
+
+/* Los compila `npm run arte` desde arte/; no se editan aquí. Las ocho son
+   vectoriales desde el 08/10/2026 —la primera era un WebP provisional—, pero
+   el glob sigue admitiendo mapas de bits por si alguna vuelve a serlo.
    El glob tiene que ser literal para que Vite lo resuelva en el build. */
-const archivos = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/hero/*.png',
-  { eager: true },
-);
-const lamina = (id: number) => archivos[`../assets/hero/hero-${n(id)}.png`].default;
+const svgs = import.meta.glob<{ default: ImageMetadata }>('../assets/hero/*.svg', { eager: true });
+const rasters = import.meta.glob<{ default: ImageMetadata }>('../assets/hero/*.{webp,png,jpg,jpeg}', { eager: true });
+const todas: Record<string, { default: ImageMetadata }> = { ...svgs, ...rasters };
+
+const buscar = (nombre: string) =>
+  Object.entries(todas).find(([ruta]) => ruta.includes(`/${nombre}.`))?.[1];
+
+/* En producción, una ilustración que falta rompe el build y lo dice por su
+   nombre: una web publicada con un hueco silencioso no es aceptable.
+   En `npm run dev` solo avisa y se salta la que falte, para poder seguir
+   trabajando mientras Johnny termina de dibujar. */
+const faltan = ILUSTRACIONES.filter((i) => !buscar(i.archivo));
+if (faltan.length) {
+  const lista = faltan.map((f) => f.archivo).join(', ');
+  /* `AP_PREVIEW=1 npm run build` construye igual, saltándose lo que falte. Es
+     para enseñar un avance desde otro ordenador, NUNCA para publicar: el build
+     de producción sin esa variable sigue parándose y diciendo qué falta. */
+  if (import.meta.env.DEV || process.env.AP_PREVIEW) {
+    console.warn(`\n[hero] Faltan ilustraciones y me las salto: ${lista}.\n` +
+      '        Déjalas en arte/hero/ y ejecuta `npm run arte`.\n');
+  } else {
+    throw new Error(
+      `Faltan ilustraciones del hero en src/assets/hero/: ${lista}.\n` +
+      'Déjalas en arte/hero/ y ejecuta `npm run arte`.',
+    );
+  }
+}
+const ACTIVAS = ILUSTRACIONES.filter((i) => buscar(i.archivo));
+
+const meta = (nombre: string) => buscar(nombre)!.default;
 ---
 
 <section class="hero" aria-labelledby="hero-titular">
-  <div class="hero__escenario" data-carrusel>
+  {/* `--ratio-activa` sale ya puesta del servidor con la proporción de la
+      primera ilustración, para que el control nazca con su tamaño y no dé un
+      salto en cuanto arranca el script. Luego la actualiza `mostrar()`. */}
+  <div class="hero__escenario" data-carrusel
+       style={`--ratio-activa:${(meta(ACTIVAS[0].archivo).width / meta(ACTIVAS[0].archivo).height).toFixed(4)}`}>
     <ul class="hero__pila">
       {
-        ilustraciones.map((il, i) => (
-          <li
-            class="hero__lamina"
-            data-indice={i}
-            data-activa={i === 0 ? '' : undefined}
-            data-frase={il.frase}
-            data-frase-lang={il.fraseLang ?? lang}
-          >
-            {/* Decorativa: alt="". Lo que significa está escrito debajo. */}
-            <Picture
-              src={lamina(il.id)}
-              formats={['avif', 'webp']}
-              widths={[693, 1386]}
-              sizes="(min-width: 768px) 693px, 100vw"
-              alt=""
-              loading={i === 0 ? 'eager' : 'lazy'}
-              decoding="async"
-            />
+        ACTIVAS.map((il, i) => (
+          <li class="hero__lamina" data-indice={i} data-activa={i === 0 ? '' : undefined}
+              data-frase={il.frase} data-frase-lang={il.fraseLang ?? lang}
+              data-ratio={(meta(il.archivo).width / meta(il.archivo).height).toFixed(4)}>
+            {/* width/height REALES de cada ilustración, no un par de números
+                fijos: son los que le dan al navegador la proporción antes de
+                descargarla, y con unos inventados reserva el hueco
+                equivocado. Cada mesa de trabajo tiene su ancho. */}
+            <img src={meta(il.archivo).src} alt={il.alt}
+                 width={meta(il.archivo).width} height={meta(il.archivo).height}
+                 loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
           </li>
         ))
       }
     </ul>
 
-    <p class="hero__frase" data-carrusel-frase aria-live="polite" aria-atomic="true"></p>
+    {/* El control es transparente, por decisión de Johnny (07/10/2026): el
+        Figma trae un Slider Control visible de 103×44, pero en el hero lo
+        quiere limpio. Lo que se ve es la ilustración.
 
+        Y mide lo que la ilustración, no el escenario (Johnny, 08/10/2026).
+        Antes ocupaba los 1344 × 558 enteros, así que el carrusel se paraba al
+        entrar el cursor en una franja invisible que llegaba hasta los
+        márgenes de la página: pasaba sin querer y no se entendía por qué. Ahora
+        la zona que responde coincide con el dibujo, el puntero cambia justo
+        encima de él y mover el cursor por las ilustraciones es el juego que
+        Johnny quería. El tamaño lo da `--ratio-activa` y cambia con cada
+        lámina.
+
+        Sigue siendo un <button> de verdad: entra en el orden de tabulación,
+        responde a Espacio y Enter sin código extra, pinta su anillo de foco al
+        llegar con teclado y tiene nombre accesible propio. Y sigue siendo un
+        blanco enorme —460 × 400 en la primera, 287 × 400 en la más estrecha—,
+        muy por encima de los 24 × 24 de 2.5.8. */}
     <button type="button" class="hero__control" data-carrusel-control
             data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
-      <span class="hero__icono" aria-hidden="true" data-carrusel-icono>&#9612;&#9612;</span>
-      <span data-carrusel-control-label>{ui.carouselPause}</span>
+      <span class="sr-only" data-carrusel-control-label>{ui.carouselPause}</span>
     </button>
   </div>
 
   <div class="hero__banda">
-    {/* El h1 va al pie del hero y en el mismo cuerpo que las frases del
-        carrusel, por decisión de Johnny: no es un display gigante, es la
-        frase que explica el estudio puesta al nivel de las demás. */}
-    <h1 id="hero-titular" class="hero__titular">{titular}</h1>
+    <div class="hero__textos">
+      {/* El h1 de la página. NO se reescribe nunca: en el HTML de referencia
+          esta frase y la del principio son el mismo <p> y se sustituyen, pero
+          cambiarle el texto al h1 es cambiar el título del documento mientras
+          alguien lo está leyendo. El nivel semántico y el tamaño visual son
+          independientes (AGENTS.md §3): esto es un h1 aunque no sea el texto
+          más grande de la página. */}
+      <h1 id="hero-titular" class="hero__frase hero__frase--base">{titular}</h1>
+      {/* La frase del principio se apila encima. Vacía mientras rota: un
+          aria-live disparando cada 1,5 s hace la página inutilizable con
+          lector de pantalla. Solo habla cuando lo ha pedido quien navega. */}
+      <p class="hero__frase hero__frase--principio" data-carrusel-frase
+         aria-live="polite" aria-atomic="true"></p>
+    </div>
     <CtaLink href={path('contacto', lang)} size="small">{ui.ctaAction}</CtaLink>
   </div>
 </section>
 
 <style>
+  /* ------------------------------------------------------------------------
+     Retícula del Figma · Home / Desktop 1440 (145:852)
+
+       Hero Section  145:853   800 de alto
+         Header      145:854    96
+         Hero        145:972   702
+           Carousel Stage 3094:900  618
+             Ilustración  3094:886  693 × 400, centrada, a 79 del borde
+             Slider Control 3094:894  103 × 44  — NO se pinta, por decisión
+           Hero Band      3094:901   84
+             Texto   x 48, y 24, 804 × 28
+             CTA     44 de alto, y 16, pegado al margen derecho
+
+     Del escenario se pinta la ilustración con su aire: 79 + 400 + 79 = 558.
+     El hero ocupa la ventana entera y el escenario se centra en lo que sobra.
+
+     Los márgenes laterales son 48 y el contenido 1344, como todo el documento.
+     `npm run geometria` mide estas alturas y la columna en el render.
+     ------------------------------------------------------------------------ */
   .hero {
-    display: flex;
-    flex-direction: column;
-    /* La ilustración ocupa el centro y la banda se queda pegada abajo. */
-    justify-content: space-between;
-    gap: var(--space-32);
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    justify-items: center;
+
+    --ilustracion: 400px;     /* alto de la ilustración */
+    --aire-escenario: 79px;   /* arriba y abajo del escenario */
+    --banda: 84px;
+
+    /* El hero ocupa la ventana entera. svh y no vh porque en móvil la barra
+       del navegador falsea vh. */
     min-height: 100svh;
     /* La cabecera va DENTRO del menta: no hay banda clara arriba. El hero se
-       sube por debajo de ella y le devuelve el hueco como padding. svh y no
-       vh porque en móvil la barra del navegador falsea vh. */
+       sube por debajo de ella y le devuelve el hueco como padding. */
     margin-block-start: calc(var(--header-height) * -1);
-    padding-block: calc(var(--header-height) + var(--space-24)) var(--space-32);
+    padding-block-start: var(--header-height);
     padding-inline: var(--gutter-page);
+    overflow: hidden;
     background: var(--surface-accent);
     /* Menta se comporta como papel claro: Blue AP rinde 4,65:1 encima. */
     --focus-ring: var(--blue-ap);
   }
 
+  /* Carousel Stage: la ilustración con su aire del Figma arriba y abajo.
+     79 + 400 + 79 = 558. En el documento el escenario mide 618 porque incluye
+     el Slider Control; aquí no se pinta, así que el escenario es lo que ocupa
+     la ilustración. */
   .hero__escenario {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-16);
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    width: 100%;
+    max-width: var(--contenido, 1344px);
+    padding-block: var(--aire-escenario);
   }
 
+  /* El ancho lo manda cada dibujo, el alto es común.
+
+     Las mesas de trabajo de Illustrator miden todas 400 de alto y el ancho que
+     cada ilustración necesite: la trompeta es larguísima, los globos
+     estrechos. Fijar el alto y dejar el ancho libre es lo que respeta ese
+     sistema; meterlas todas en una caja común hacía que `contain` encajara
+     cada una por el lado que le sobra y salieran con pesos distintos. */
   .hero__pila {
     position: relative;
-    width: min(100%, 640px);
-    aspect-ratio: 13 / 10;
-    /* En móvil la ilustración se queda con parte de la ventana para que la
-       banda de abajo entre entera en el primer viewport. */
-    max-height: 42svh;
+    width: 100%;
+    height: var(--ilustracion);
   }
   .hero__lamina {
     position: absolute;
     inset: 0;
+    display: grid;
+    place-items: center;
     opacity: 0;
-    transition: opacity var(--dur-fade) var(--ease-out);
+    transition: opacity var(--dur-fade) ease-in-out;
   }
-  .hero__lamina[data-activa] { opacity: 1; }
-  .hero__lamina :global(picture),
-  .hero__lamina :global(img) { display: block; width: 100%; height: 100%; object-fit: contain; }
-
-  .hero__frase {
-    /* Se reserva una línea para que el control no baile al aparecer la frase
-       corta, que son casi todas. Las dos largas sí desplazan el control, y es
-       aceptable: ocurre como respuesta a una acción del propio usuario. */
-    min-height: 1lh;
-    max-width: 44ch;
-    text-align: center;
-    font-size: var(--body-sm-size);
-    line-height: var(--body-sm-leading);
+  .hero__lamina[data-activa] { opacity: 1; z-index: 10; }
+  /* El alto va con la MISMA variable que el escenario, no con un 100 %.
+     Un porcentaje necesita que el padre tenga altura definida, y aquí el padre
+     es un ítem de rejilla en posición absoluta: el navegador lo resolvía como
+     `auto` y la ilustración se iba a 1344 × 1553 px, desbordando el hero. */
+  .hero__lamina img {
+    display: block;
+    width: auto;
+    height: var(--ilustracion);
+    max-width: 100%;
+    object-fit: contain;
   }
 
-  /* Cada palabra entra subiendo 6 px. El retardo lo pone el script en --i;
-     aquí solo vive la forma. Sin rebote, por decisión. */
-  .hero__frase :global(.palabra) {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(6px);
-    animation: entrada 500ms var(--ease-out) forwards;
-    animation-delay: calc(var(--i) * 40ms);
-  }
-  @keyframes entrada { to { opacity: 1; transform: none; } }
+  /* Transparente y del tamaño EXACTO de la ilustración que esté delante.
 
-  /* Reducir no es eliminar: la frase sigue apareciendo, pero de golpe. */
-  @media (prefers-reduced-motion: reduce) {
-    .hero__frase :global(.palabra) { animation: none; opacity: 1; transform: none; }
-    .hero__lamina { transition: none; }
-  }
-
+     La caja pintada de un <img> con `height: 400`, `width: auto` y
+     `max-width: 100%` es `min(400 × proporción, ancho del escenario)` de ancho
+     y su proporción de alto. Eso es literalmente lo que se escribe aquí: así el
+     botón queda calcado al dibujo también cuando el escenario es más estrecho
+     que la ilustración y `max-width` recorta —la trompeta mide 770 y por debajo
+     de ese ancho se achica—, sin tener que medir nada con JavaScript. */
   .hero__control {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-    min-height: var(--touch-min);
-    padding: var(--space-12) var(--space-16);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: 20;
+    width: min(calc(var(--ilustracion) * var(--ratio-activa, 1)), 100%);
+    aspect-ratio: var(--ratio-activa, 1);
+    padding: 0;
     background: none;
     border: 0;
-    color: var(--link);
-    font-size: var(--body-sm-size);
-    line-height: var(--body-sm-leading);
     cursor: pointer;
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: var(--underline-offset);
+    /* Acompaña al fundido entre láminas en vez de dar el salto de golpe. */
+    transition: width var(--dur-fade) ease-in-out;
   }
-  .hero__control:hover { text-decoration-thickness: var(--underline-hover); }
-  /* El icono acompaña a la palabra, nunca va solo. */
-  .hero__icono { font-size: 0.7em; }
-
-  /* Sin JavaScript no hay rotación: queda la ilustración 1 y su frase, y el
-     control no se pinta. */
+  .hero__control:focus-visible {
+    outline: var(--focus-width) solid var(--focus-ring);
+    outline-offset: 4px;
+  }
+  /* Sin JavaScript no hay rotación: se ve la primera ilustración y el control
+     no se pinta, porque no haría nada. */
   html:not(.js) .hero__control { display: none; }
 
+  /* Hero Band: 84 de alto. En el Figma el CTA empieza en y=16 y el texto en
+     y=24 — no están alineados por arriba, están CENTRADOS entre sí: los dos
+     tienen su centro en y=38. Con 16 arriba, 24 abajo y centrado vertical sale
+     solo: 16 + 44 (el CTA, que es el alto) + 24 = 84, y el texto de 28 queda
+     en 24. Poner 84 a mano y alinear arriba daba 100 y el texto bajaba. */
   .hero__banda {
+    width: 100%;
+    max-width: var(--contenido, 1344px);
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-16);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-48);
+    padding-block: var(--space-16) var(--space-24);
   }
 
-  /* El titular NO es un display: va en el mismo cuerpo que las frases del
-     carrusel. El nivel semántico y el tamaño visual son independientes —es
-     un h1 aunque no sea el texto más grande de la página. */
-  .hero__titular {
-    font-size: var(--body-sm-size);
-    line-height: var(--body-sm-leading);
+  /* Las dos frases comparten celda: la base y la del principio se cruzan con
+     opacidad en el mismo sitio, sin que la banda dé un salto. */
+  /* 804 px del Figma (texto de Hero Band), no una medida en ch. */
+  .hero__textos {
+    display: grid;
+    max-width: 804px;
+  }
+  /* OJO si algún día se pone gris aquí: el hero es menta y sobre menta el
+     gris da 3,53:1, que no cumple 1.4.3. En menta solo entra el negro. */
+  .hero__frase {
+    grid-area: 1 / 1;
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
     letter-spacing: 0;
     font-weight: 400;
-    max-width: 70ch;
+    transition: opacity 0.4s ease-in-out;
+  }
+  .hero__frase--principio { opacity: 0; }
+  /* Solo se cruzan cuando hay frase que enseñar. La imagen por defecto no
+     tiene principio: ahí se queda el claim, que es lo que toca. */
+  [data-parado][data-con-frase] .hero__frase--base { opacity: 0; }
+  [data-parado][data-con-frase] .hero__frase--principio { opacity: 1; }
+
+  /* Cada carácter entra subiendo 4 px. El retardo lo pone el script en --i.
+     El rebote del cubic-bezier es el del HTML de referencia. */
+  .hero__frase--principio :global(.c) {
+    display: inline-block;
+    white-space: pre;
+    opacity: 0;
+    animation: entrada 0.05s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--i) * 20ms + var(--extra, 0ms));
+  }
+  @keyframes entrada {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: none; }
   }
 
-  @media (min-width: 768px) {
-    .hero { padding-block-end: var(--space-48); }
-    .hero__pila { max-height: none; }
+  @media (prefers-reduced-motion: reduce) {
+    /* Reducir no es eliminar: la frase sigue apareciendo y el carrusel sigue
+       funcionando pulsándolo, pero sin movimiento ni avance automático. */
+    .hero__lamina,
+    .hero__control,
+    .hero__frase { transition: none; }
+    .hero__frase--principio :global(.c) { animation: none; opacity: 1; transform: none; }
+  }
+
+  /* Tablet y móvil escalan la misma retícula. Los frames de Tablet 768 y
+     Móvil 390 del Figma todavía no están medidos uno a uno: estos valores son
+     proporcionales y hay que contrastarlos contra el documento. */
+  @media (max-width: 1023px) {
+    .hero {
+      --ilustracion: 300px;
+      --aire-escenario: 56px;
+      --banda: 76px;
+    }
+    .hero__banda { padding-block: var(--space-16) var(--space-24); }
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      --ilustracion: 225px;
+      --aire-escenario: 40px;
+    }
     .hero__banda {
-      flex-direction: row;
-      align-items: baseline;
-      justify-content: space-between;
-      /* Hero Band en el Figma: gap 24. */
-      gap: var(--space-24);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-16);
     }
-  }
-
-  /* Geometría del Figma (Home/Desktop 1440, 145:972): la ilustración es
-     693 × 400 fija.
-
-     Esto vive AQUÍ y no en home.css a propósito. Los estilos de un componente
-     Astro salen con un atributo de scope —.hero__pila[data-astro-cid-…]— que
-     tiene más especificidad que la misma clase suelta en una hoja aparte. Un
-     ancho escrito en home.css para esta clase NO se aplica nunca: se queda ahí
-     pareciendo que manda. Pasó el 07/10/2026 con esta misma regla, y la web
-     salió a producción con 640 px en vez de 693. */
-  @media (min-width: 1024px) {
-    .hero__pila {
-      width: 693px;
-      max-width: none;
-      aspect-ratio: 693 / 400;
-    }
+    .hero__textos { max-width: 55ch; }
   }
 </style>
 
 <script>
   document.documentElement.classList.add('js');
 
-  const INTERVALO = 1500;   // 1,5 s por imagen
-  const PAUSA_POR = { usuario: 'usuario', puntero: 'puntero', foco: 'foco', fuera: 'fuera' } as const;
+  const INTERVALO = 1500;   // 1,5 s por ilustración
+  const RETARDO_CARACTER = 20;    // ms entre un carácter y el siguiente
+  /* El remate del principio 7: lo que va detrás de esta frase espera un
+     segundo más, para que «Siempre.» caiga solo. */
+  const REMATE = 'Accesibilidad primero. ';
+  const PAUSA_REMATE = 1000;
+
+  const PAUSA_POR = { usuario: 'usuario', puntero: 'puntero', fuera: 'fuera' } as const;
 
   document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((raiz) => {
     const laminas = Array.from(raiz.querySelectorAll<HTMLElement>('.hero__lamina'));
-    const frase = raiz.querySelector<HTMLElement>('[data-carrusel-frase]');
+    /* La banda de texto es hermana del escenario, no descendiente: el estado
+       «parado» tiene que colgar de la sección o el CSS que cruza las dos
+       frases no encuentra a quién aplicarse. Pasó: el texto se pintaba en el
+       DOM pero no se veía, y el test de teclado lo daba por bueno porque solo
+       miraba textContent. Por eso el test ahora mide opacidad. */
+    const seccion = raiz.closest('.hero')!;
+    const frase = seccion.querySelector<HTMLElement>('[data-carrusel-frase]');
     const control = raiz.querySelector<HTMLButtonElement>('[data-carrusel-control]');
     const etiqueta = raiz.querySelector<HTMLElement>('[data-carrusel-control-label]');
-    const icono = raiz.querySelector<HTMLElement>('[data-carrusel-icono]');
-    if (!laminas.length || !frase || !control || !etiqueta || !icono) return;
+    if (!laminas.length || !frase || !control || !etiqueta) return;
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     let indice = 0;
     let temporizador: number | null = null;
     /* Un conjunto de motivos, no un booleano: el puntero no puede reanudar
-       algo que el usuario paró con el botón. */
+       algo que se paró con el teclado. */
     const motivos = new Set<string>([PAUSA_POR.fuera]);
-
     const parado = () => motivos.size > 0;
 
     function pintarFrase() {
       const activa = laminas[indice];
       const texto = activa.dataset.frase ?? '';
+      /* Sin frase no hay nada que cruzar: la banda se queda con el claim. */
+      if (!texto) { limpiarFrase(); seccion.removeAttribute('data-con-frase'); return; }
+      seccion.setAttribute('data-con-frase', '');
       const idioma = activa.dataset.fraseLang ?? document.documentElement.lang;
       frase!.textContent = '';
       // Fragmento en otro idioma: lang explícito o el lector lo pronuncia mal (3.1.2).
       if (idioma !== document.documentElement.lang) frase!.setAttribute('lang', idioma);
       else frase!.removeAttribute('lang');
-      texto.split(' ').forEach((palabra, i) => {
+
+      const corte = texto.toLowerCase().startsWith(REMATE.toLowerCase()) ? REMATE.length : -1;
+      [...texto].forEach((caracter, i) => {
         const span = document.createElement('span');
-        span.className = 'palabra';
+        span.className = 'c';
         span.style.setProperty('--i', String(i));
-        span.textContent = palabra;
-        frase!.append(span, document.createTextNode(' '));
+        if (corte >= 0 && i >= corte) span.style.setProperty('--extra', `${PAUSA_REMATE}ms`);
+        span.textContent = caracter;
+        frase!.append(span);
       });
     }
 
     function limpiarFrase() {
-      /* Vacía mientras rota: un aria-live disparando cada 1,5 s hace la
-         página inutilizable con lector de pantalla. */
+      /* Vacía mientras rota: un aria-live disparando cada 1,5 s convierte el
+         lector de pantalla en una ametralladora. */
       frase!.textContent = '';
       frase!.removeAttribute('lang');
+      seccion.removeAttribute('data-con-frase');
     }
 
     function mostrar(i: number) {
       laminas[indice]?.removeAttribute('data-activa');
       indice = (i + laminas.length) % laminas.length;
       laminas[indice].setAttribute('data-activa', '');
+      /* El control se redimensiona con la lámina: su zona sensible es el
+         dibujo, y cada dibujo tiene su ancho. */
+      const ratio = laminas[indice].dataset.ratio;
+      if (ratio) raiz.style.setProperty('--ratio-activa', ratio);
     }
 
     function arrancar() {
@@ -322,32 +480,45 @@ const lamina = (id: number) => archivos[`../assets/hero/hero-${n(id)}.png`].defa
       if (parado()) {
         detener();
         pintarFrase();
+        seccion.setAttribute('data-parado', '');
       } else {
+        seccion.removeAttribute('data-parado');
         limpiarFrase();
         arrancar();
       }
       // Mientras esté parado por cualquier motivo, la etiqueta es «Reproducir».
-      const pausarTxt = control!.dataset.labelPausar ?? 'Pausar';
-      const reproducirTxt = control!.dataset.labelReproducir ?? 'Reproducir';
-      etiqueta!.textContent = parado() ? reproducirTxt : pausarTxt;
-      icono!.textContent = parado() ? '▶' : '▌▌';
+      const pausar = control!.dataset.labelPausar ?? 'Pausar';
+      const reproducir = control!.dataset.labelReproducir ?? 'Reproducir';
+      etiqueta!.textContent = parado() ? reproducir : pausar;
     }
 
     function pausar(motivo: string) { motivos.add(motivo); sincronizar(); }
-    function reanudar(motivo: string) { motivos.delete(motivo); sincronizar(); }
+    function reanudar(motivo: string) {
+      motivos.delete(motivo);
+      /* Al soltar, se pasa a la siguiente: es lo que hace el HTML de
+         referencia y evita que la ilustración que acabas de mirar se quede
+         otro ciclo entero delante. */
+      if (!parado() && !reduce.matches) mostrar(indice + 1);
+      sincronizar();
+    }
 
     control.addEventListener('click', () => {
+      /* Con movimiento reducido no hay nada que pausar: cada pulsación pasa a
+         la siguiente ilustración y enseña su frase. El contenido sigue siendo
+         alcanzable entero, que es de lo que se trata. */
+      if (reduce.matches) { mostrar(indice + 1); pintarFrase(); return; }
       if (motivos.has(PAUSA_POR.usuario)) reanudar(PAUSA_POR.usuario);
       else pausar(PAUSA_POR.usuario);
     });
 
-    raiz.addEventListener('pointerenter', () => pausar(PAUSA_POR.puntero));
-    raiz.addEventListener('pointerleave', () => reanudar(PAUSA_POR.puntero));
-    // Paridad de teclado: enfocar dentro hace lo mismo que el puntero.
-    raiz.addEventListener('focusin', () => pausar(PAUSA_POR.foco));
-    raiz.addEventListener('focusout', (e) => {
-      if (!raiz.contains(e.relatedTarget as Node)) reanudar(PAUSA_POR.foco);
-    });
+    /* En el CONTROL, no en el escenario: el escenario llega hasta los
+       márgenes de la página y el carrusel se paraba al pasar por zonas vacías
+       donde no hay nada que mirar. El control mide lo que el dibujo. */
+    control.addEventListener('pointerenter', () => pausar(PAUSA_POR.puntero));
+    control.addEventListener('pointerleave', () => reanudar(PAUSA_POR.puntero));
+    // Paridad de teclado: enfocar el control hace lo mismo que el puntero.
+    control.addEventListener('focus', () => pausar(PAUSA_POR.puntero));
+    control.addEventListener('blur', () => reanudar(PAUSA_POR.puntero));
 
     // No arranca al cargar: arranca cuando se ve.
     const observador = new IntersectionObserver(
@@ -356,10 +527,8 @@ const lamina = (id: number) => archivos[`../assets/hero/hero-${n(id)}.png`].defa
     );
     observador.observe(raiz);
 
-    /* prefers-reduced-motion: ilustración 1 fija y sin autoavance. No basta
-       con apagar la transición. */
     const aplicarReduce = () => {
-      if (reduce.matches) { detener(); mostrar(0); pintarFrase(); }
+      if (reduce.matches) { detener(); mostrar(0); pintarFrase(); seccion.setAttribute('data-parado', ''); }
       sincronizar();
     };
     reduce.addEventListener('change', aplicarReduce);

@@ -17,6 +17,11 @@ const TIPOS = {
   '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp',
   '.woff2': 'font/woff2', '.json': 'application/json',
+  /* El vídeo también: servido como octet-stream, Safari no lo reproduce y
+     aquí no se notaba porque la vista previa no se miraba en Safari. */
+  '.mp4': 'video/mp4', '.webm': 'video/webm', '.avif': 'image/avif',
+  '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml',
 };
 
 export function servir(puerto = PUERTO) {

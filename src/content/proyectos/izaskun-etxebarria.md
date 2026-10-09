@@ -17,6 +17,21 @@ nota:
   medidaEl: 2026-10-06
   declaracion: https://izaskunetxebarria.com/declaracion-de-accesibilidad/
 casoPublicado: false
+imagenes:
+  - archivo: izaskun-1
+    alt: >-
+      Sala de exposición con una pieza de líneas amarillas dibujada sobre la
+      pared, una retícula de obra pequeña enmarcada y cuatro cuadros grandes
+      de paisajes construidos.
+  - archivo: izaskun-2
+    alt: >-
+      Página de la serie «Agujeros de Tiempo», con una banda roja de título,
+      el texto de la artista a tres columnas y una fotografía de cielo
+      asomando debajo.
+  - archivo: izaskun-3
+    alt: >-
+      Una pieza circular de metal apoyada en un prado junto al mar, con tres
+      fotografías más de la misma pieza en otros encuadres debajo.
 ---
 
 Diseñamos su web con el mismo propósito: dejar espacio a la obra.
