@@ -201,8 +201,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      Del escenario se pinta la ilustración con su aire: 79 + 400 + 79 = 558.
      El hero ocupa la ventana entera y el escenario se centra en lo que sobra.
 
-     Los márgenes laterales son 24 y el contenido 1392 desde el 09/10 (el
-     Figma todavía dice 48 y 1344).
+     Los márgenes laterales son 24 y el contenido 1392 desde el 09/10.
      `npm run geometria` mide estas alturas y la columna en el render.
      ------------------------------------------------------------------------ */
   .hero {
@@ -320,7 +319,9 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-48);
-    padding-block: var(--space-16) var(--space-24);
+    /* La frase y el enlace con el texto a 24 de arriba y de abajo: el relleno
+       descuenta el aire del enlace de 44 (tokens.css). */
+    padding-block: var(--borde-texto);
   }
 
   /* Las dos frases comparten celda: la base y la del principio se cruzan con
@@ -378,7 +379,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       --aire-escenario: 56px;
       --banda: 76px;
     }
-    .hero__banda { padding-block: var(--space-16) var(--space-24); }
+    .hero__banda { padding-block: var(--borde-texto); }
   }
 
   @media (max-width: 767px) {
@@ -386,10 +387,13 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       --ilustracion: 225px;
       --aire-escenario: 40px;
     }
+    /* En columna arriba va la frase (texto puro: 24) y abajo el enlace
+       (control de 44: 24 menos su aire). */
     .hero__banda {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-16);
+      padding-block: var(--space-24) var(--borde-texto);
     }
     .hero__textos { max-width: 55ch; }
   }

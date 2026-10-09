@@ -22,9 +22,9 @@
   --lienzo: 1440px;
   /* MARGEN 24 desde el 09/10 (Johnny): el mismo módulo que el hueco entre
      columnas, así margen y hueco son una sola retícula. La columna pasa de
-     1344 a 1392. PENDIENTE: el Figma sigue con 48 / 1344; se pasa en otra
-     sesión. Mientras, los anchos que aquí van en proporción (`x / 1344`)
-     siguen escritos sobre las medidas del Figma y escalan con la columna. */
+     1344 a 1392, también en el Figma. Los anchos que van en proporción
+     (`x / 1344`) siguen escritos sobre las medidas antiguas y escalan con la
+     columna: el resultado es el del documento nuevo. */
   --margen: 24px;              /* padding lateral de todas las secciones */
   --contenido: 1392px;         /* 1440 − 24 − 24 */
 }

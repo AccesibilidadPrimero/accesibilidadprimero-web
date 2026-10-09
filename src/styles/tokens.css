@@ -143,7 +143,14 @@
   --touch-min: 44px;          /* AP pide 44. WCAG 2.5.8 AA se conforma con 24. */
   --gutter-page: var(--space-24);
   --measure: 62ch;            /* medida de lectura */
-  --header-height: 94px;
+  /* TEXTO A 24 DEL BORDE (Johnny, 09/10): en la cabecera, la banda del hero y
+     el pie, lo que queda a 24 del borde es el TEXTO, no la caja del control.
+     Un control mide 44 de alto y su texto va centrado dentro, así que tiene
+     este aire por arriba y por abajo; los rellenos se lo restan a 24. */
+  --aire-control: calc((var(--touch-min) - var(--texto-leading)) / 2);
+  --borde-texto: calc(var(--space-24) - var(--aire-control));
+  /* La cabecera: 24 + una línea de texto + 24. */
+  --header-height: calc(var(--texto-leading) + 2 * var(--space-24));
   --hero-band: 133px;         /* la banda de proyecto tiene que verse entera */
 
   /* ===== Movimiento ======================================================= */
@@ -176,7 +183,6 @@
     /* Un solo margen en todos los tamaños desde el 09/10: 24, el mismo que el
        hueco entre columnas (Johnny). Antes era 48 desde 768. */
     --gutter-page: var(--space-24);
-    --header-height: 94px;
 
     /* Segundo tramo: de Tablet 768 a Desktop 1440. Desde el 09/10 el cuerpo
        llega a 19/26 en escritorio, no a 22/28: con UN solo tamaño para todo
@@ -197,7 +203,6 @@
 
 @media (min-width: 1440px) {
   :root {
-    --header-height: 96px;
     /* Por encima de 1440 el contenido NO se estira: se queda en los 1392 de
        la columna (1440 − 24 − 24), centrado, y lo que sobra se reparte a los lados. Los fondos de
        color siguen llegando de borde a borde porque el margen es relleno de

@@ -151,7 +151,9 @@ const langs = alternates(current, slug);
     /* 72 x 46: por encima de los 24x24 de 2.5.8 y de los 44x44 de AP. */
     min-width: var(--touch-min);
     min-height: var(--touch-min);
-    padding: var(--space-12);
+    /* Sin relleno vertical: el alto lo da el mínimo de 44 y el texto queda
+       centrado, a la misma distancia del borde que el logotipo. */
+    padding: 0 var(--space-12);
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
     color: var(--link);

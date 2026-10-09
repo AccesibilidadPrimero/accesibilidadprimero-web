@@ -23,11 +23,10 @@ import { servir } from './serve.mjs';
    El escenario del hero mide 560 y no 693: lo fija el HTML de referencia que
    mandó Johnny el 07/10/2026 —min(90vw, 560px), proporción 338,4 / 299,43—,
    que sustituye a la medida del frame antiguo del Figma. */
-/* 09/10: margen 24 y columna de 1392 (antes 48 y 1344). El Figma todavía no
-   está pasado, así que estos valores son los del Figma ESCALADOS a la columna
-   nueva (× 1392 / 1344) donde la web los calcula en proporción, y los del
-   Figma tal cual donde van en píxeles fijos. Al pasar el Figma, comprobar que
-   coinciden. */
+/* 09/10: margen 24 y columna de 1392 (antes 48 y 1344), en la web y en el
+   Figma. Comprobado contra el documento el mismo día: productos 448, campo de
+   ECI 1392, Foc 688 desde 728, Izaskun 684 desde 732 y campo de 1159. Las
+   medidas de lectura (copias, Estudio, contacto) siguen en píxeles fijos. */
 const CASOS = [
 
   ['.proyecto--eci .proyecto__resumen', 689,  'ECI · Project Copy (fijo)'],
@@ -105,17 +104,19 @@ console.log('\n── Retícula del hero a 1440 (Figma → medido) ──\n');
           dibujo = r('.hero__lamina[data-activa] img');
     if (!hero || !head || !esc || !pila || !ctrl || !banda || !txt || !cta || !dibujo) return null;
     return {
-      'Header · alto': [96, head.height],
+      /* Texto a 24 del borde (09/10): 24 + 26 + 24. Antes 96. */
+      'Header · alto': [74, head.height],
       'Carousel Stage · alto': [558, esc.height],
       'Ilustración · alto': [400, pila.height],
-      'Hero Band · alto': [84, banda.height],
+      /* 15 + 44 + 15: el texto queda a 24 arriba y abajo. Antes 84. */
+      'Hero Band · alto': [74, banda.height],
       'Hero Section · ventana': [900, hero.height],
       'Texto de banda · y dentro': [24, txt.top - banda.top],
       /* 804 era el ancho que OCUPABA la frase a 22 px en el Figma, no una
          medida de diseño. Con el cuerpo a 19 (09/10) ocupa menos. Lo que se
          comprueba es lo que importa: una sola línea y dentro de los 804. */
       'Texto de banda · una línea, ≤ 804': [1, (txt.width <= 804 && txt.height < 40) ? 1 : 0],
-      'CTA de banda · y dentro': [16, cta.top - banda.top],
+      'CTA de banda · y dentro': [15, cta.top - banda.top],
       /* El control es transparente y mide lo que la ilustración que esté
          delante (Johnny, 08/10/2026): la zona que responde al cursor es el
          dibujo, no la franja de 1344 de ancho que llegaba hasta los márgenes.
@@ -256,6 +257,43 @@ console.log('\n── La columna a 1440 (margen 24) ──\n');
     console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(22)} izq 24 → ${x.toFixed(1)}`);
   }
   await p3.close();
+}
+
+/* ---- Texto a 24 del borde (Johnny, 09/10) ---------------------------------
+   En la cabecera, la banda del hero y el pie, lo que queda a 24 del borde es
+   el TEXTO, no la caja del control de 44. Para un control se mide el centro de
+   su caja menos media línea: es donde empieza y acaba la línea de texto. */
+console.log('\n── Texto a 24 del borde, a 1440 ──\n');
+{
+  const p5 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
+  await p5.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  await p5.evaluate(() => document.fonts.ready);
+  const m = await p5.evaluate(() => {
+    const r = (s) => document.querySelector(s)?.getBoundingClientRect();
+    const lh = (s) => parseFloat(getComputedStyle(document.querySelector(s)).lineHeight);
+    const head = r('.header'), link = r('.header__link'), logo = r('.header__logo');
+    const banda = r('.hero__banda'), frase = r('.hero__frase--base'), cta = r('.hero__banda a');
+    const pie = r('.pie'), enl = r('.pie__enlace');
+    if (!head || !link || !logo || !banda || !frase || !cta || !pie || !enl) return null;
+    const arribaTexto = (b, l) => b.top + (b.height - l) / 2;
+    const abajoTexto = (b, l) => b.top + (b.height + l) / 2;
+    return {
+      'Cabecera · logotipo a 24 de arriba': [24, arribaTexto(logo, lh('.header__logo')) - head.top],
+      'Cabecera · menú a 24 de arriba': [24, arribaTexto(link, lh('.header__link')) - head.top],
+      'Banda · frase a 24 de abajo': [24, banda.bottom - frase.bottom],
+      'Banda · enlace a 24 de abajo': [24, banda.bottom - abajoTexto(cta, lh('.hero__banda a'))],
+      'Pie · texto a 24 de abajo': [24, pie.bottom - abajoTexto(enl, lh('.pie__enlace'))],
+    };
+  });
+  await p5.close();
+  if (!m) { fallos++; console.error('  ✗ no encuentro cabecera, banda o pie'); }
+  else { esperadas += Object.keys(m).length;
+  for (const [nombre, [esperado, real]] of Object.entries(m)) {
+    medidos++;
+    const bien = Math.abs(real - esperado) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${nombre.padEnd(36)} ${String(esperado).padStart(3)} → ${real.toFixed(1).padStart(6)}`);
+  } }
 }
 
 /* El alto del escenario en los tres anchos. */

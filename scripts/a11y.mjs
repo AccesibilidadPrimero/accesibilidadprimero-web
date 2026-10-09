@@ -71,7 +71,12 @@ for (const ruta of RUTAS) {
         .filter((el) => {
           const r = el.getBoundingClientRect();
           const visible = r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
-          return visible && (r.height < 44 || r.width < 24);
+          /* Medio píxel de margen: el navegador a veces devuelve 43,99 por
+             redondeo de subpíxel según el momento de la medida (pasó el
+             09/10 con la nota de ECI en móvil, 1 de cada 4 pasadas). Un
+             objetivo de 43,99 no es un objetivo pequeño; uno de 40 sí, y
+             sigue fallando. */
+          return visible && (r.height < 43.5 || r.width < 24);
         })
         .map((el) => `${el.tagName.toLowerCase()} «${(el.textContent ?? '').trim().slice(0, 30)}» ${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`);
     });
