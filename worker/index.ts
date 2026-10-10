@@ -124,12 +124,21 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
         remoteip: request.headers.get('cf-connecting-ip') ?? '',
       }),
     });
-    if (!r.ok) throw new Error(`siteverify ${r.status}`);
+    if (!r.ok) throw new Error(`siteverify respondió ${r.status}`);
     resultado = await r.json();
-  } catch {
+  } catch (e) {
+    console.error('[contacto] siteverify no responde:', String(e));
     return fallo('verificacion', 403);
   }
   if (resultado.success !== true || resultado.action !== ACCION || !permitidos.has(resultado.hostname ?? '')) {
+    /* Al registro va el porqué (los códigos de error de Cloudflare, la acción
+       y el dominio), nunca la ficha ni nada de lo que escribió la persona. */
+    console.error('[contacto] Turnstile rechaza:', JSON.stringify({
+      success: resultado.success,
+      codigos: (resultado as { 'error-codes'?: string[] })['error-codes'],
+      accion: resultado.action,
+      dominio: resultado.hostname,
+    }));
     return fallo('verificacion', 403);
   }
 
@@ -160,8 +169,17 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
         textContent: cuerpo,
       }),
     });
-    if (!r.ok) throw new Error(`brevo ${r.status}`);
-  } catch {
+    if (!r.ok) {
+      /* Brevo explica el fallo en su respuesta ({ code, message }): clave no
+         válida, cuenta sin activar, IP no autorizada, remitente sin
+         verificar… Se apunta en el registro del Worker (Observability) para
+         no tener que adivinarlo. Brevo no devuelve la clave ni el mensaje, así
+         que en el registro no queda nada privado. */
+      const detalle = await r.text().catch(() => '');
+      throw new Error(`Brevo respondió ${r.status}: ${detalle.slice(0, 300)}`);
+    }
+  } catch (e) {
+    console.error('[contacto] el envío falla:', String(e));
     return fallo('envio', 502);
   }
 
