@@ -14,7 +14,6 @@
    recolocan solas. Así «ahora» es verdad por construcción y no puede caducar.
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
-import CtaLink from './CtaLink.astro';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
 import datos from '../data/mesa.json';
@@ -65,14 +64,16 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
               {/* `lang` solo cuando el post está en otro idioma que la página:
                   marcarlo siempre sería ruido (3.1.2). */}
               <p class="mesa__texto" lang={n.idioma === lang ? undefined : n.idioma}>{n.titular}</p>
+              {/* Lo que la vista no dice: que la tarjeta lleva a Mastodon. Desde
+                  el 10/10 ya no hay enlace «Ir a Mastodon» debajo de la tira
+                  (Johnny: la sección es para quedarse en la web, no para salir
+                  de ella), así que esta es la única pista del destino. */}
               <span class="sr-only"> · {ui.mesaCta}</span>
             </a>
           </li>
         );
       })}
     </ul>
-
-    <div class="mesa__cta"><CtaLink href="https://mastodon.social/@accesibilidadprimero">{ui.mesaCta}</CtaLink></div>
   </section>
 )}
 
@@ -130,7 +131,6 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
      quien mira son dos contenidos distintos para dos personas. */
   .mesa__texto { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text); }
   .mesa__enlace:hover .mesa__texto { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
-  .mesa__cta { padding-block-start: var(--ritmo-intro); }
 
   @media (min-width: 1024px) {
     .mesa { margin-block-start: var(--ritmo-seccion); }
