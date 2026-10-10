@@ -246,6 +246,61 @@ console.log('\n── Un color: todo en negro ──\n');
   else console.log('  ✓ ni un gris sobre la menta del hero');
 }
 
+/* ---- Contacto (10/10/2026) ------------------------------------------------
+   Las mismas tres reglas sobre /contacto/: dos tamaños (el display SOLO en el
+   titular), un peso, todo en negro. La única excepción de color es el texto
+   del botón, blanco sobre Ink. Se mide también con los errores abiertos,
+   porque los mensajes de error no existen hasta que alguien envía mal. */
+console.log('\n── Contacto ──\n');
+for (const ancho of [390, 768, 1440]) {
+  for (const conErrores of [false, true]) {
+    const page = await nav.newPage({ viewport: { width: ancho, height: 900 } });
+    await page.goto(`http://localhost:${PUERTO}/contacto/`, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts.ready);
+    if (conErrores) await page.click('.boton');
+    const r = await page.evaluate(({ texto, display, meta }) => {
+      const NEGRO = 'rgb(23, 23, 23)', BLANCO = 'rgb(255, 255, 255)';
+      const mal = [];
+      let titular = null;
+      for (const el of document.querySelectorAll('body *')) {
+        if (el.tagName === 'SUP' || el.closest('sup')) continue;
+        if (el.closest('.sr-only') || el.classList.contains('sr-only')) continue;
+        const propio = [...el.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim())
+          .map((n) => n.textContent.trim()).join(' ');
+        if (!propio) continue;
+        const caja = el.getBoundingClientRect();
+        if (!caja.width || !caja.height) continue;
+        const cs = getComputedStyle(el);
+        const px = parseFloat(cs.fontSize);
+        const esTitular = el.matches('.apertura__titulo');
+        if (esTitular) titular = [px, parseFloat(cs.lineHeight)];
+        const permitidos = esTitular ? [display] : el.closest('footer') ? [texto, meta] : [texto];
+        const donde = el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim()
+          ? '.' + el.className.trim().split(/\s+/)[0] : '');
+        if (!permitidos.some((v) => Math.abs(px - v) <= 0.5)) mal.push(`${px} px · ${donde} · ${propio.slice(0, 30)}`);
+        if (cs.fontWeight !== '400') mal.push(`peso ${cs.fontWeight} · ${donde}`);
+        const toca = el.closest('.boton') ? BLANCO : NEGRO;
+        if (cs.color !== toca) mal.push(`color ${cs.color} · ${donde} · ${propio.slice(0, 30)}`);
+      }
+      return { mal, titular, errores: document.querySelectorAll('.campo__error:not([hidden])').length };
+    }, { texto: TEXTO[ancho][0], display: DISPLAY[ancho][0], meta: META[ancho][0] }).catch((e) => ({ mal: [String(e)], titular: null, errores: 0 }));
+    await page.close();
+    medidos++; esperados_extra++;
+    const etiqueta = `${String(ancho).padStart(4)} px${conErrores ? ' · con errores' : ''}`;
+    const faltanErrores = conErrores && r.errores !== 4;
+    const titularMal = !r.titular || Math.abs(r.titular[0] - DISPLAY[ancho][0]) > 0.5 || Math.abs(r.titular[1] - DISPLAY[ancho][1]) > 1;
+    if (r.mal.length || faltanErrores || titularMal) {
+      fallos++;
+      console.error(`  ✗ ${etiqueta}`);
+      if (titularMal) console.error(`      titular ${r.titular ? r.titular.join('/') : 'NO MEDIDO'} (toca ${DISPLAY[ancho].join('/')})`);
+      if (faltanErrores) console.error(`      ${r.errores} mensajes de error visibles (tocan 4)`);
+      for (const x of r.mal.slice(0, 8)) console.error(`      ${x}`);
+    } else {
+      console.log(`  ✓ ${etiqueta} · titular ${r.titular.map((v) => Math.round(v)).join("/")}, el resto a ${TEXTO[ancho][0]}, 400 y negro${conErrores ? `, ${r.errores} errores` : ''}`);
+    }
+  }
+}
+
 await nav.close();
 servidor.close();
 const esperados = esperados_extra;

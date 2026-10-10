@@ -32,69 +32,91 @@ const parse = (css) => (css.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map(Number)
 const servidor = await servir(PUERTO);
 const ejecutable = '/opt/pw-browsers/chromium';
 const navegador = await chromium.launch(existsSync(ejecutable) ? { executablePath: ejecutable } : {});
-const page = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
-await page.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
-// El carrusel se para para que el fondo no cambie entre las dos capturas.
-await page.emulateMedia({ reducedMotion: 'reduce' });
-await page.waitForTimeout(300);
-// Con reducir movimiento, lo que aún no ha entrado en pantalla está en
-// opacidad 0 y el medidor lo saltaría. Se recorre la página antes de medir.
-await recorrer(page);
-
-/* Cajas de texto visibles, con su color y su tamaño efectivo. */
-const cajas = await page.evaluate(() => {
-  const salida = [];
-  const andar = (nodo) => {
-    for (const hijo of nodo.childNodes) {
-      if (hijo.nodeType === Node.TEXT_NODE && hijo.textContent.trim().length > 1) {
-        const el = hijo.parentElement;
-        if (!el) continue;
-        const cs = getComputedStyle(el);
-        if (cs.visibility === 'hidden' || cs.display === 'none' || Number(cs.opacity) === 0) continue;
-        // sr-only: está en el árbol pero no se ve. Medirlo es el falso
-        // positivo clásico (ya nos pasó con los títulos de Izaskun).
-        const r = el.getBoundingClientRect();
-        if (r.width <= 1 || r.height <= 1) continue;
-        const px = parseFloat(cs.fontSize);
-        const peso = parseInt(cs.fontWeight, 10) || 400;
-        salida.push({
-          texto: hijo.textContent.trim().slice(0, 48),
-          color: cs.color,
-          px, peso,
-          grande: px >= 24 || (px >= 18.66 && peso >= 700),
-          rect: { x: r.x + window.scrollX, y: r.y + window.scrollY, w: r.width, h: r.height },
-        });
-      } else if (hijo.nodeType === Node.ELEMENT_NODE) andar(hijo);
-    }
-  };
-  andar(document.body);
-  return salida;
-});
-
-/* Segunda pasada: todo el texto transparente. Lo que queda es el fondo real. */
-await page.addStyleTag({ content: '*, *::before, *::after { color: transparent !important; text-shadow: none !important; }' });
-await page.waitForTimeout(120);
-const fondo = await page.screenshot({ fullPage: true });
-
-const { createCanvas, loadImage } = await import('./png.mjs');
-const img = await loadImage(fondo);
+/* Páginas que se miden. Contacto entra el 10/10/2026, en reposo y con los
+   errores abiertos: los mensajes de error no existen hasta que alguien envía
+   mal, y son justo el texto que más tiene que leerse. `minimo` es el suelo de
+   cajas por página, por el mismo motivo que el de abajo. */
+const RUTAS = [
+  { nombre: 'Home', url: '/', minimo: 20 },
+  { nombre: 'Contacto', url: '/contacto/', minimo: 15 },
+  { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
+    preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
+];
 
 let fallos = 0, medidas = 0;
-for (const caja of cajas) {
-  const muestras = img.muestrear(caja.rect);
-  if (!muestras.length) continue;
-  const color = parse(caja.color);
-  const peores = muestras
-    .map((p) => ({ p, r: ratio(color, p) }))
-    .sort((a, b) => a.r - b.r);
-  const peor = peores[0];
-  const minimo = caja.grande ? 3 : 4.5;
-  medidas++;
-  if (peor.r < minimo) {
-    fallos++;
-    console.error(
-      `✗ ${peor.r.toFixed(2)}:1 (mínimo ${minimo}) · ${caja.px}px · «${caja.texto}» · texto rgb(${color}) sobre rgb(${peor.p})`,
-    );
+for (const ruta of RUTAS) {
+  let medidasRuta = 0;
+  const page = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(`http://localhost:${PUERTO}${ruta.url}`, { waitUntil: 'load' });
+  // El carrusel se para para que el fondo no cambie entre las dos capturas.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.waitForTimeout(300);
+  // Con reducir movimiento, lo que aún no ha entrado en pantalla está en
+  // opacidad 0 y el medidor lo saltaría. Se recorre la página antes de medir.
+  await recorrer(page);
+  // Estados que solo existen tras una acción (los errores de Contacto).
+  if (ruta.preparar) await ruta.preparar(page);
+
+  /* Cajas de texto visibles, con su color y su tamaño efectivo. */
+  const cajas = await page.evaluate(() => {
+    const salida = [];
+    const andar = (nodo) => {
+      for (const hijo of nodo.childNodes) {
+        if (hijo.nodeType === Node.TEXT_NODE && hijo.textContent.trim().length > 1) {
+          const el = hijo.parentElement;
+          if (!el) continue;
+          const cs = getComputedStyle(el);
+          if (cs.visibility === 'hidden' || cs.display === 'none' || Number(cs.opacity) === 0) continue;
+          // sr-only: está en el árbol pero no se ve. Medirlo es el falso
+          // positivo clásico (ya nos pasó con los títulos de Izaskun).
+          const r = el.getBoundingClientRect();
+          if (r.width <= 1 || r.height <= 1) continue;
+          const px = parseFloat(cs.fontSize);
+          const peso = parseInt(cs.fontWeight, 10) || 400;
+          salida.push({
+            texto: hijo.textContent.trim().slice(0, 48),
+            color: cs.color,
+            px, peso,
+            grande: px >= 24 || (px >= 18.66 && peso >= 700),
+            rect: { x: r.x + window.scrollX, y: r.y + window.scrollY, w: r.width, h: r.height },
+          });
+        } else if (hijo.nodeType === Node.ELEMENT_NODE) andar(hijo);
+      }
+    };
+    andar(document.body);
+    return salida;
+  });
+
+  /* Segunda pasada: todo el texto transparente. Lo que queda es el fondo real. */
+  await page.addStyleTag({ content: '*, *::before, *::after { color: transparent !important; text-shadow: none !important; }' });
+  await page.waitForTimeout(120);
+  const fondo = await page.screenshot({ fullPage: true });
+
+  const { createCanvas, loadImage } = await import('./png.mjs');
+  const img = await loadImage(fondo);
+
+  for (const caja of cajas) {
+    const muestras = img.muestrear(caja.rect);
+    if (!muestras.length) continue;
+    const color = parse(caja.color);
+    const peores = muestras
+      .map((p) => ({ p, r: ratio(color, p) }))
+      .sort((a, b) => a.r - b.r);
+    const peor = peores[0];
+    const minimo = caja.grande ? 3 : 4.5;
+    medidas++; medidasRuta++;
+    if (peor.r < minimo) {
+      fallos++;
+      console.error(
+        `✗ ${ruta.nombre} · ${peor.r.toFixed(2)}:1 (mínimo ${minimo}) · ${caja.px}px · «${caja.texto}» · texto rgb(${color}) sobre rgb(${peor.p})`,
+      );
+    }
+  }
+  await page.close();
+  console.log(`${ruta.nombre}: ${medidasRuta} cajas.`);
+  if (medidasRuta < ruta.minimo) {
+    console.error(`✗ ${ruta.nombre}: solo ${medidasRuta} cajas (se esperan al menos ${ruta.minimo}). ¿Se construyó la página?`);
+    process.exit(1);
   }
 }
 

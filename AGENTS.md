@@ -145,6 +145,13 @@ Están aquí porque ya han pasado, no en abstracto:
   bordes de foco (1.4.3, 1.4.11). Medido, no estimado.
 - Objetivos táctiles de **44 px** como mínimo. WCAG 2.5.8 AA pide 24; AP pide
   44 y esa es la regla del repo.
+  **Una casilla cuenta con su `<label for>`** cuando la etiqueta está en la
+  misma fila: pulsarla la marca igual. La casilla de Contacto mide 24, como en
+  el Figma, y su fila con la etiqueta 44 o más; `npm run a11y` mide así las
+  casillas y los botones de opción, y solo así (10/10/2026).
+- **Un enlace sin espacios no se parte** (`CtaLink` junta la última palabra
+  con la flecha). Una dirección de correo desborda a 320: se escribe con un
+  `<wbr>` donde puede cortarse (`proyectos@<wbr>accesibilidadprimero.com`).
 - Todo tiene que funcionar con `forced-colors: active`.
 - La página tiene que ser usable al 200 % de zoom y con 400 % de aumento de
   texto sin scroll horizontal (1.4.4, 1.4.10).
@@ -280,6 +287,32 @@ npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
 npm run geometria    # mide los ANCHOS del render contra los del Figma
 npm run capturas     # capturas de los tres breakpoints para revisar a ojo
 ```
+
+`a11y`, `tipografia` y `contraste` recorren la Home y **Contacto** (esta, en
+reposo y con los errores abiertos). Cada página nueva se añade a las tres.
+
+`npm run formulario` prueba el Worker (`worker/index.ts`) y el formulario de
+Contacto con Brevo y Turnstile SIMULADOS: no envía correos. Necesita Node 22.6
+o posterior (importa el Worker en TypeScript). Avisa mientras la clave de sitio
+de Turnstile sea la de prueba.
+
+## 10. Formulario de contacto (10/10/2026)
+
+- Va a `/api/contacto`, en el Worker: comprueba los campos, canjea la ficha de
+  **Turnstile invisible** (acción `contacto`, solo nuestros dominios) y manda
+  el correo con **Brevo** a proyectos@, con «Responder a» en quien escribe.
+  Falla cerrado: sin un secreto, 503 y no envía nada.
+- **Los secretos no entran nunca en el repositorio.** `BREVO_API_KEY` y
+  `TURNSTILE_SECRET` viven en el panel de Cloudflare. La clave de SITIO de
+  Turnstile es pública y está en `src/data/contacto.ts`.
+- Sin JS el formulario no se pinta (§5): Turnstile necesita JS. Queda el
+  correo de «Directamente» y un aviso en `<noscript>`.
+- El script de Turnstile se carga al tocar el formulario, no al abrir la
+  página. Es la única llamada a un tercero de la web y hay que nombrarla en
+  la política de privacidad.
+- Un error se QUITA mientras se escribe y se PONE al salir del campo. Al
+  revés, el renglón que desaparece desplaza lo de debajo justo cuando se está
+  pulsando lo siguiente, y el clic cae en otro sitio (pasó con la casilla).
 
 `npm run contraste` existe porque un medidor que lee el `background-color` de
 un ancestro «falla en las dos direcciones: marca fallos que no existen y se

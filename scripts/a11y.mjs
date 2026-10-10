@@ -22,7 +22,8 @@ const axePath = require.resolve('axe-core/axe.min.js');
 const { readFileSync } = await import('node:fs');
 const axeSource = readFileSync(axePath, 'utf8');
 
-const RUTAS = ['/'];
+/* Contacto entra el 10/10/2026. Cada página nueva se añade aquí. */
+const RUTAS = ['/', '/contacto/'];
 const PUERTO = 4399;
 const BASE = `http://localhost:${PUERTO}`;
 
@@ -69,7 +70,23 @@ for (const ruta of RUTAS) {
       const sel = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
       return Array.from(document.querySelectorAll(sel))
         .filter((el) => {
-          const r = el.getBoundingClientRect();
+          let r = el.getBoundingClientRect();
+          /* Casillas y botones de opción: el objetivo es la casilla MÁS su
+             <label for>, porque pulsar la etiqueta la marca igual (es el
+             «control equivalente» de 2.5.8). Solo si la etiqueta está en la
+             misma fila, pegada a la casilla: una etiqueta lejos no cuenta. La
+             casilla de Contacto mide 24 como en el Figma (2284:45) y su fila
+             con la etiqueta, 44 o más. Sin esta regla, la única forma de
+             aprobar sería una casilla de 44 que no está en el diseño. */
+          if (el.matches('input[type="checkbox"], input[type="radio"]') && el.id) {
+            const l = document.querySelector(`label[for="${el.id}"]`);
+            const lr = l?.getBoundingClientRect();
+            const mismaFila = lr && lr.top < r.bottom && lr.bottom > r.top && lr.left - r.right <= 16;
+            if (mismaFila) {
+              const top = Math.min(r.top, lr.top), bottom = Math.max(r.bottom, lr.bottom);
+              r = { width: lr.right - r.left, height: bottom - top };
+            }
+          }
           const visible = r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
           /* Medio píxel de margen: el navegador a veces devuelve 43,99 por
              redondeo de subpíxel según el momento de la medida (pasó el

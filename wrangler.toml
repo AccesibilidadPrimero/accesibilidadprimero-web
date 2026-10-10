@@ -16,6 +16,22 @@ binding = "ASSETS"
 # El HTML lo sirve el runtime de assets; el Worker solo entra para las rutas
 # que necesitan servidor (hoy, el formulario de contacto).
 not_found_handling = "404-page"
+# El Worker entra ANTES que los archivos solo en /api/*: así un POST al
+# formulario nunca acaba en la página 404 y el resto de la web no paga ni un
+# milisegundo de Worker.
+run_worker_first = ["/api/*"]
+
+# Formulario de contacto (Johnny, 10/10/2026: Worker + Brevo + Turnstile).
+# Estos valores no son secretos. Los dos secretos, BREVO_API_KEY y
+# TURNSTILE_SECRET, se guardan en el panel de Cloudflare (Worker → Settings →
+# Variables and Secrets) y no se escriben nunca en el repositorio.
+[vars]
+CORREO_DESTINO = "proyectos@accesibilidadprimero.com"
+# El remitente tiene que ser un remitente verificado en Brevo.
+CORREO_REMITENTE = "proyectos@accesibilidadprimero.com"
+# Dominios desde los que se acepta el formulario. Sin localhost: en producción
+# no debe valer una ficha conseguida en local.
+TURNSTILE_HOSTNAMES = "accesibilidadprimero.com,www.accesibilidadprimero.com,accesibilidadprimero.proyectos-44e.workers.dev"
 
 [observability]
 enabled = true

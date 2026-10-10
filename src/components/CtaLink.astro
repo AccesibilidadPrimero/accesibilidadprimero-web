@@ -46,6 +46,18 @@ for (let i = 0, dentro = false; i < html.length; i++) {
   else if (html[i] === '>') dentro = false;
   else if (html[i] === ' ' && !dentro) corte = i;
 }
+/* Un texto sin espacios —una dirección de correo— no tiene por dónde
+   partirse y a 320 desborda (1.4.10). Para eso, un <wbr> en el texto marca el
+   corte: se parte DESPUÉS de él, igual que después de un espacio, y la flecha
+   sigue viajando con el último trozo (10/10, «proyectos@<wbr>…»). */
+/* Astro le añade su atributo de ámbito (<wbr data-astro-cid-…>), así que se
+   busca la etiqueta entera y no el literal «<wbr>». */
+const wbrs = [...html.matchAll(/<wbr\b[^>]*>/g)];
+const ultimoWbr = wbrs.at(-1);
+if (ultimoWbr) {
+  const fin = (ultimoWbr.index ?? 0) + ultimoWbr[0].length - 1;
+  if (fin > corte) corte = fin;
+}
 const inicio = corte >= 0 ? html.slice(0, corte + 1) : '';
 const final = corte >= 0 ? html.slice(corte + 1) : html;
 ---

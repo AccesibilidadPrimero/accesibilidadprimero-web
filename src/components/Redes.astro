@@ -1,0 +1,89 @@
+---
+/* ---------------------------------------------------------------------------
+   Redes sociales del estudio · Contacto y Estudio (Figma 2647:31 y nota
+   2648:31).
+
+   LinkedIn, Instagram y Mastodon. Discord salió el 10/10/2026 (Johnny): era
+   el perfil personal de Johnny, no del estudio.
+
+   Icono Y palabra, nunca icono suelto: el símbolo de Mastodon no lo reconoce
+   todo el mundo, y la palabra visible es lo que ayuda a quien tiene
+   dificultades de comprensión. Por eso el icono va `aria-hidden` y el nombre
+   accesible lo da la palabra. La ↗ y el aviso de pestaña nueva los pone
+   CtaLink, como en cualquier enlace que sale de la web.
+
+   LinkedIn e Instagram salen del Figma tal cual (exportados en SVG);
+   Mastodon es el de Simple Icons (CC0). Los tres en una caja de 24.
+   --------------------------------------------------------------------------- */
+import CtaLink from './CtaLink.astro';
+
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+
+const REDES = [
+  {
+    nombre: 'LinkedIn',
+    href: 'https://www.linkedin.com/company/aprimero',
+    dibujo: '<path fill="currentColor" d="M20.45 20.45H16.89V14.88C16.89 13.55 16.87 11.84 15.04 11.84C13.19 11.84 12.9 13.29 12.9 14.78V20.45H9.35V9H12.76V10.56H12.81C13.29 9.66 14.44 8.71 16.17 8.71C19.77 8.71 20.44 11.08 20.44 14.16V20.45H20.45ZM5.34 7.43C5.06882 7.43 4.8003 7.37659 4.54976 7.27281C4.29922 7.16904 4.07158 7.01693 3.87982 6.82518C3.68807 6.63342 3.53596 6.40578 3.43219 6.15524C3.32841 5.9047 3.275 5.63618 3.275 5.365C3.275 5.09382 3.32841 4.8253 3.43219 4.57476C3.53596 4.32422 3.68807 4.09658 3.87982 3.90482C4.07158 3.71307 4.29922 3.56096 4.54976 3.45719C4.8003 3.35341 5.06882 3.3 5.34 3.3C5.88767 3.3 6.41291 3.51756 6.80018 3.90482C7.18744 4.29209 7.405 4.81733 7.405 5.365C7.405 5.91267 7.18744 6.43791 6.80018 6.82518C6.41291 7.21244 5.88767 7.43 5.34 7.43ZM7.12 20.45H3.56V9H7.12V20.45ZM22.22 0H1.77C0.79 0 0 0.77 0 1.72V22.28C0 23.23 0.79 24 1.77 24H22.22C23.2 24 24 23.23 24 22.28V1.72C24 0.77 23.2 0 22.22 0Z"/>',
+  },
+  {
+    nombre: 'Instagram',
+    href: 'https://www.instagram.com/accesibilidadprimero/',
+    /* Dibujado a trazo en el Figma, no relleno: va con stroke. */
+    dibujo:
+      '<rect x="2.2" y="2.2" width="19.6" height="19.6" rx="5.5" fill="none" stroke="currentColor" stroke-width="2.1"/>' +
+      '<circle cx="12" cy="12" r="4.6" fill="none" stroke="currentColor" stroke-width="2.1"/>' +
+      '<circle cx="17.6" cy="6.4" r="1.5" fill="currentColor"/>',
+  },
+  {
+    nombre: 'Mastodon',
+    href: 'https://mastodon.social/@accesibilidadprimero',
+    dibujo: '<path fill="currentColor" d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057 0 0 0 .023-.043v-1.809a.052.052 0 0 0-.02-.041.053.053 0 0 0-.046-.01 20.282 20.282 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.593 5.593 0 0 1-.319-1.433.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546.376 0 .75 0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311 0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13 0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/>',
+  },
+];
+---
+
+<!-- Una lista: son tres destinos del mismo tipo (AGENTS.md §3). -->
+<ul class:list={['redes', className]}>
+  {
+    REDES.map((r) => (
+      <li>
+        {/* Sin espacio entre el icono y la palabra: CtaLink parte por el
+            último espacio para que la flecha no se quede sola, y aquí la
+            palabra, el icono y la flecha tienen que ir juntos. El aire lo
+            pone el margen del icono. */}
+        <CtaLink href={r.href} class="redes__enlace">
+          <svg class="redes__icono" aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24" set:html={r.dibujo} />{r.nombre}
+        </CtaLink>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  /* En fila con 32 entre enlaces (Figma de Escritorio y Tableta); en móvil,
+     apiladas con 8 (Figma 2657:545). */
+  .redes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 768px) {
+    .redes { flex-direction: row; flex-wrap: wrap; column-gap: var(--space-32); }
+  }
+
+  /* 24 en el Figma con letra de 19. Va en em para que crezca con el texto
+     (1.4.4) y no quede un icono de 24 junto a una letra al 200 %. */
+  .redes__icono {
+    display: inline-block;
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    vertical-align: -0.25em;
+    margin-inline-end: var(--space-8);
+  }
+</style>

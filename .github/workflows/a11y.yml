@@ -44,6 +44,11 @@ jobs:
       - name: Contraste medido por píxel
         run: npm run contraste
 
+      # El Worker y el formulario de contacto, con Brevo y Turnstile simulados:
+      # no envía correos ni gasta fichas.
+      - name: Formulario de contacto
+        run: npm run formulario
+
       - name: Lighthouse CI
         run: |
           npm install -g @lhci/cli@0.14.x
