@@ -141,6 +141,9 @@ if (faltan.length) {
     --focus-ring: var(--anillo);
     padding-block: var(--aire);
     gap: var(--hueco);
+    /* Johnny, 10/10: «curvar levemente los ángulos». El campo y la captura
+       que lleva dentro comparten canto, porque son una pieza. */
+    border-radius: var(--radio);
   }
 
   /* El marco que recorta. Las tres capturas comparten celda —así el campo no
@@ -168,7 +171,12 @@ if (faltan.length) {
   .slider__lamina[data-activa] { transform: none; }
   .slider__lamina[data-saliente] { transform: translateX(-100%); }
   .slider__lamina picture { display: contents; }
-  .slider__lamina img { width: 100%; height: 100%; object-fit: contain; }
+  .slider__lamina img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radio);
+  }
 
   /* 44 × 44 de zona, 32 de círculo dibujado. El círculo y el icono van en el
      color de texto que el proyecto declara sobre su acento, que el esquema

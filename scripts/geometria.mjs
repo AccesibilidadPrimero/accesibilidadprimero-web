@@ -424,6 +424,42 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
   }
 }
 
+/* ── El radio (Johnny, 10/10) ─────────────────────────────────────────────
+   Un solo valor, `--radio`, en los campos de color de proyecto y en las
+   capturas que llevan dentro. Se mide el RENDER y no el CSS: una regla que el
+   scope de Astro deja sin aplicar se sirve igual al navegador, y esa es la
+   trampa que ya costó dos anchos en producción (ver la cabecera). Se lee el
+   token en vivo, así que cambiar el 8 por otro valor no rompe esto: lo que
+   falla es que una de las cuatro piezas se quede a escuadra. */
+{
+  const p = await nav.newPage({ viewport: { width: 1440, height: 1000 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const r = await p.evaluate(() => {
+    const token = getComputedStyle(document.documentElement).getPropertyValue('--radio').trim();
+    const sel = [
+      ['.proyecto--eci .slider', 'ECI · campo'],
+      ['.proyecto--eci .slider__lamina img', 'ECI · captura'],
+      ['.proyecto--foc .slider', 'Foc i Cor · campo'],
+      ['.proyecto--foc .slider__lamina img', 'Foc i Cor · captura'],
+      ['.proyecto--izaskun .slider', 'Izaskun · campo'],
+      ['.proyecto--izaskun .slider__lamina img', 'Izaskun · captura'],
+    ];
+    return { token, filas: sel.map(([s, n]) => {
+      const e = document.querySelector(s);
+      return { n, radio: e ? getComputedStyle(e).borderTopLeftRadius : null };
+    }) };
+  });
+  await p.close();
+  console.log('\n── Radio del canto (token `--radio`) ──\n');
+  esperadas += r.filas.length;
+  for (const f of r.filas) {
+    medidos++;
+    const bien = f.radio === r.token;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${f.n.padEnd(34)} ${r.token} → ${f.radio ?? 'NO EXISTE'}`);
+  }
+}
+
 await nav.close();
 servidor.close();
 

@@ -26,6 +26,13 @@
 
   /* Acentos de marca. Son FONDOS, no colores de texto. */
   --mint: #c7eae4;
+  /* El mismo menta TAL COMO LO DECODIFICA EL VÍDEO. El clip de Itza trae su
+     fondo dentro, y h264/VP9 lo entregan como #c6e7e3 en vez de #c7eae4: un
+     punto por canal, de la conversión YUV→RGB, no del archivo. Existe para
+     que el campo de esa tarjeta no deje ver el rectángulo del vídeo. Medido
+     en los dos códecs, que coinciden. Si algún día el clip se exporta con
+     alfa o a todo el campo, este token sobra. */
+  --mint-video: #c6e7e3;
   --yellow-ap: #e8e78b;
   --rose-ap: #ffc9fb;
   --green-ap: #d7eab2;
@@ -138,6 +145,13 @@
   --space-64: 64px;
   --space-96: 96px;
   --space-128: 128px;
+
+  /* ----- Radio (Johnny, 10/10) -------------------------------------------
+     La web era todo ángulo recto. «Levemente» es esto: se nota que no hay
+     filo y no se lee como tarjeta. Un valor, no una escala: en cuanto haya
+     dos radios distintos hay que justificar por qué. Va en los campos de
+     color de proyecto y en las capturas que llevan dentro. */
+  --radio: 8px;
 
   /* ----- El ritmo vertical (Johnny, 09/10) -------------------------------
      DOS valores y no catorce. Antes la separación entre secciones no la

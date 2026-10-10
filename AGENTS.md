@@ -48,6 +48,31 @@ Están aquí porque ya han pasado, no en abstracto:
    o ser un elemento que reciba foco de por sí.
 5. **Alternativas textuales genéricas.** «Imagen», «logo», «foto de». Un `alt`
    que no añade nada es peor que `alt=""`.
+6. **`_to_delete/` compilando.** El shell que Claude alcanza en el Mac no puede
+   borrar dentro de las carpetas conectadas, así que lo que sobra se MUEVE a
+   `_to_delete/` y lo vacía Johnny. Git la ignora; `astro check` no miraba
+   .gitignore sino `include`, así que compilaba los descartes. Una copia vieja
+   de `HeroCarousel.astro` ahí dentro dejó `npm run check` en 4 errores y con
+   él `verificar` y `publicar`: la publicación se quedó bloqueada por un
+   archivo que ya nadie usaba. Está excluida en `tsconfig.json` desde el
+   09/10/2026. **Regla: nada que se mueva a `_to_delete/` puede seguir
+   participando en el build**, y conviene vaciarla de vez en cuando — llegó a
+   tener 160 MB de tarballs.
+7. **El puente de archivos inyecta credenciales de contenido (C2PA).** Todo
+   lo que Claude escribe en el Mac a través del puente y admita metadatos sale
+   con un manifiesto `c2pa` dentro: **SVG** (bloque `<metadata>` + el
+   `xmlns:c2pa` del elemento raíz), **PNG** (un trozo auxiliar) y **MP4** (una
+   caja `uuid` detrás del `ftyp`). El 10/10 fueron 50 KB repartidos en ocho
+   archivos. No rompe nada —el vídeo decodifica fotograma a fotograma igual,
+   comprobado con `framemd5`— pero son metadatos de procedencia ajenos pegados
+   a obra de Johnny, y eso no se publica. **Regla: después de pasar material
+   binario por el puente, comparar md5 con la copia de origen y limpiar si no
+   cuadra.** El webm se libra: VP9/Matroska no lleva donde meterlo.
+8. **Un comentario no es un dato.** El `<video>` de Itza decía en prosa que
+   duraba 4,94 s y que por eso no necesitaba botón de pausa; el archivo que
+   sirve la web dura 9,28 s, así que la Home incumplía 2.2.2 sin que nadie lo
+   viera. Donde una justificación de accesibilidad se apoye en un número, ese
+   número se mide en el build, no se escribe al lado.
 
 ## 3. HTML
 

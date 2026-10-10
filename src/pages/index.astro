@@ -5,7 +5,6 @@ import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { path, DEFAULT_LANG } from '../i18n/config';
-import { t } from '../i18n/ui';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
    Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
    sirve con caché larga, y si el archivo desaparece el build se para. */
@@ -13,14 +12,13 @@ import iconoEstudio from '../assets/estudio/icono.svg';
 import type { ImageMetadata } from 'astro';
 /* Las compila `npm run arte`. El glob tiene que ser literal para Vite. */
 const mediosProducto = import.meta.glob<{ default: ImageMetadata }>(
-  '../assets/productos/*.{png,jpg,jpeg,webp}',
+  '../assets/productos/*.{png,jpg,jpeg,webp,svg}',
   { eager: true },
 );
 const medio = (nombre: string) =>
   Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
 
 const lang = DEFAULT_LANG;
-const ui = t(lang);
 
 /* Tres destacados, siempre tres. El resto, en /proyectos/. */
 const todos = await getCollection('proyectos');
@@ -87,9 +85,10 @@ const productos = [
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
     alt:
-      'La extensión A11y Primero abierta en un móvil: la nota global 72 marcada como ' +
-      '«mejorable», cuatro barras por apartado —imágenes, estructura, formularios y ' +
-      'contraste— y un resumen con los cuatro problemas principales en lenguaje claro.',
+      'El panel de la extensión A11y Primero: la nota 72 marcada como «mejorable» sobre ' +
+      'accesibilidadprimero.com, cuatro barras por apartado —imágenes 85, estructura 60, ' +
+      'formularios 50 y contraste 45—, el recuento de encabezados y un resumen para el ' +
+      'cliente con los cuatro problemas principales en lenguaje claro.',
   },
   {
     nombre: 'Accessible Abstracts',
@@ -163,15 +162,15 @@ const productos = [
                    (AGENTS.md §1 — ARIA justificada). Describe el final de la
                    conversación, que es lo que queda en pantalla.
 
-                   SIN `loop`, y CON botón de pausa. Aquí hubo un error: el
-                   comentario decía que el clip duraba 4,94 s y por eso no
-                   hacía falta control, pero el archivo que sirve la web dura
-                   **9,28 s**. 2.2.2 pide un mecanismo para lo que se mueve
-                   solo más de cinco segundos, así que el botón vuelve. Lo
-                   cazó `npm run teclado`, que lee la duración del ARCHIVO y
-                   no la del comentario. Cuando Johnny reexporte el clip por
-                   debajo de 5 s, el control puede volver a quitarse — y la
-                   misma comprobación lo dirá.
+                   SIN `loop` y SIN botón de pausa. El clip dura 4,93 s y se
+                   reproduce UNA vez: 2.2.2 solo pide un mecanismo para lo que
+                   se mueve solo más de cinco segundos.
+
+                   Esto NO se sostiene en este comentario, que ya mintió una
+                   vez: el 09/10 decía 4,94 s mientras el archivo duraba 9,28
+                   y la web incumplía 2.2.2 sin que nadie lo viera. Quien lo
+                   sostiene es `npm run teclado`, que mide la duración del
+                   ARCHIVO servido y exige el botón en cuanto pase de 5 s.
 
                    `muted` no es cosmético: es la condición para que el
                    navegador deje reproducir solo. El archivo, además, no
@@ -197,22 +196,6 @@ const productos = [
                   <source src={p.video.webm} type="video/webm" />
                   <source src={p.video.mp4} type="video/mp4" />
                 </video>
-              )}
-              {p.video && (
-                /* En NEGRO: un mecanismo de 2.2.2 no puede ser lo más
-                   callado de la tarjeta. El nombre accesible lleva el del
-                   producto para distinguirlo de los otros controles de la
-                   página (2.4.4). Sin JS no se pinta: no haría nada. */
-                <button
-                  type="button"
-                  class="producto__pausa"
-                  data-video-control
-                  data-label-pausar={ui.carouselPause}
-                  data-label-reproducir={ui.carouselPlay}
-                >
-                  <span data-video-label>{ui.carouselPause}</span>
-                  <span class="sr-only"> · {p.nombre}</span>
-                </button>
               )}
             </div>
             <h3 class="producto__nombre">
@@ -303,32 +286,15 @@ const productos = [
     object-fit: contain;
     display: block;
   }
-  .producto--itza { --campo: var(--mint); }
+  /* El menta del vídeo, no el de la paleta. El clip trae su propio fondo
+     dentro, y h264 lo decodifica como #c6e7e3 en vez de #c7eae4 —un punto por
+     canal, cosa de la conversión YUV→RGB, no del archivo de Johnny—. Con el
+     token puesto se intuía el rectángulo del vídeo sobre el campo; con el
+     color del vídeo la junta desaparece. Medido en los dos códecs: mp4 y webm
+     decodifican exactamente el mismo valor. */
+  .producto--itza { --campo: var(--mint-video); }
   .producto--a11y { --campo: var(--yellow-ap); }
   .producto--aa   { --campo: var(--rose-ap); }
-  /* Abajo a la izquierda del campo, en NEGRO. Un mecanismo de 2.2.2 tiene
-     que verse: si fuera gris sería lo más callado de la tarjeta. */
-  .producto__pausa {
-    position: absolute;
-    inset-block-end: var(--space-8);
-    inset-inline-start: var(--space-8);
-    padding: var(--space-12);
-    min-height: var(--touch-min);
-    background: none;
-    border: 0;
-    color: var(--text);
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
-    text-decoration: underline;
-    text-decoration-thickness: var(--underline-rest);
-    text-underline-offset: var(--underline-offset);
-    cursor: pointer;
-  }
-  .producto__pausa:hover { text-decoration-thickness: var(--underline-hover); }
-  /* Sin JavaScript el vídeo no arranca solo, así que el control no haría
-     nada y no se pinta (AGENTS.md §5). */
-  html:not(.js) .producto__pausa { display: none; }
-
   .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }
   .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
   /* En negro, como el nombre (Johnny, 09/10). Lo que los separa es el hueco
@@ -392,11 +358,10 @@ const productos = [
 
 <script>
   /* El vídeo de Itza: se reproduce UNA vez, cuando se ve, y se queda en el
-     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver.
-     Como el archivo dura 9,28 s —más de los cinco de 2.2.2— lleva además un
-     botón de pausa, con el mismo patrón que los dos carruseles: un CONJUNTO
-     de motivos y no un booleano, para que salir y volver a entrar en pantalla
-     no reanude algo que la persona paró a mano.
+     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver,
+     así que en total nunca se mueve más de 4,93 s y no necesita control
+     (2.2.2). Quien sostiene ese «4,93» no es esta frase, es `npm run teclado`:
+     mide el archivo servido y exige el botón en cuanto pase de 5 s.
 
      Con `prefers-reduced-motion` no arranca: se queda el póster, que es el
      último fotograma. Reducir no es quitar: quien lo tiene activado ve el
@@ -405,18 +370,9 @@ const productos = [
   document.querySelectorAll<HTMLVideoElement>('[data-video-producto]').forEach((video) => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const posterFinal = video.poster;
-    const control = video.parentElement?.querySelector<HTMLButtonElement>('[data-video-control]');
-    const etiqueta = control?.querySelector<HTMLElement>('[data-video-label]');
     let visible = false;
-    const motivos = new Set<string>();
-    const parado = () => motivos.size > 0;
 
     const sincronizar = () => {
-      if (etiqueta && control) {
-        etiqueta.textContent = parado()
-          ? (control.dataset.labelReproducir ?? 'Reproducir')
-          : (control.dataset.labelPausar ?? 'Pausar');
-      }
       if (reduce.matches) {
         video.pause();
         /* Si alguien activa reducir movimiento con el vídeo ya empezado,
@@ -428,22 +384,9 @@ const productos = [
       if (video.currentTime === 0 && video.dataset.posterInicio) {
         video.poster = video.dataset.posterInicio;
       }
-      if (visible && !video.ended && !parado()) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
+      if (visible && !video.ended) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
       else video.pause();
     };
-
-    /* Con movimiento reducido el vídeo no arranca solo: ahí el botón sirve
-       para PONERLO, no para pararlo. Reducir no es prohibir. */
-    control?.addEventListener('click', () => {
-      if (reduce.matches) {
-        if (video.paused) { video.poster = ''; video.play().catch(() => {}); }
-        else video.pause();
-        return;
-      }
-      if (motivos.has('usuario')) motivos.delete('usuario');
-      else motivos.add('usuario');
-      sincronizar();
-    });
 
     new IntersectionObserver(
       (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),
