@@ -68,7 +68,20 @@ Están aquí porque ya han pasado, no en abstracto:
    a obra de Johnny, y eso no se publica. **Regla: después de pasar material
    binario por el puente, comparar md5 con la copia de origen y limpiar si no
    cuadra.** El webm se libra: VP9/Matroska no lleva donde meterlo.
-8. **Un comentario no es un dato.** El `<video>` de Itza decía en prosa que
+8. **Una tira con scroll horizontal tiene DOS trampas, y las dos salen solo
+   con contenido de verdad.** Pasó el 10/10 con «Sobre la mesa»: con una nota
+   todo bien, con tres, 176 px de scroll horizontal a 320 (1.4.10).
+   (a) El contenedor con `overflow-x: auto` necesita **`min-width: 0`** si es
+   hijo de un flex: con `min-width: auto` se niega a encoger por debajo de su
+   contenido y empuja la página en vez de desplazarse por dentro.
+   (b) Cualquier `.sr-only` dentro de las tarjetas necesita que la tarjeta sea
+   **`position: relative`**: `.sr-only` es `position: absolute`, y sin
+   ancestro posicionado se coloca respecto a la PÁGINA, así que no lo recorta
+   el contenedor con scroll y su posición estática —dentro del carril
+   desplazado— ensancha el documento.
+   Moraleja: una sección que depende del número de elementos hay que probarla
+   con uno, con tres y con cinco. Con uno siempre cabe.
+9. **Un comentario no es un dato.** El `<video>` de Itza decía en prosa que
    duraba 4,94 s y que por eso no necesitaba botón de pausa; el archivo que
    sirve la web dura 9,28 s, así que la Home incumplía 2.2.2 sin que nadie lo
    viera. Donde una justificación de accesibilidad se apoye en un número, ese
@@ -217,6 +230,22 @@ disciplina personal a las once de la noche.
   pone el atributo solo cuando el idioma de la frase difiere del de la página,
   así que en la versión catalana el atributo desaparece él solo — y ahí la
   licencia se pierde, lo que es una decisión de contenido pendiente, no un bug.
+
+- **«Sobre la mesa» no pide nada en el build.** El contenido lo congela
+  `npm run mesa` en `src/data/mesa.json` y las imágenes las baja a
+  `src/assets/mesa/`. Excepción consciente a la regla de que `src/assets/`
+  solo lo escribe `npm run arte`: esa carpeta la gobierna `npm run mesa`, que
+  además borra lo que ya no sale. Dos motivos: un build no debe caerse porque
+  Mastodon esté caído, y la sección tiene que acabar en `dist/` para que la
+  midan geometria, a11y y teclado como a todo lo demás. Una sección inyectada
+  en vivo por el Worker sería la única de la página que nadie comprueba.
+- **Las imágenes de Mastodon se descargan, no se enlazan.** Enlazarlas haría
+  que el navegador de cada visitante llamase a `files.mastodon.social` solo
+  por abrir la portada. En una web sin banner de cookies ni analítica de
+  terceros, eso sería incoherente.
+- **Un post con imagen sin `description` no se publica.** El campo es
+  *nullable* en la API. El filtro detecta AUSENCIA, no mediocridad: que la
+  alternativa sea buena sigue siendo trabajo humano, al publicar.
 
 ## 7. Flujo de trabajo
 

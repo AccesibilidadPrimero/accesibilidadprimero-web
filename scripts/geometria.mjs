@@ -434,6 +434,21 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
 {
   const p = await nav.newPage({ viewport: { width: 1440, height: 1000 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  /* Tres esperas y no una, porque con menos la medida es INESTABLE: la misma
+     comprobación daba 64 o 58,1 según la pasada, que es peor que fallar
+     siempre. `fonts.ready` sola no basta —`font-display: swap` deja que el
+     texto se pinte con la de respaldo y rehaga la maqueta después—, así que
+     se pide la fuente por su nombre, se espera a que el navegador la dé por
+     cargada y se deja pasar un fotograma para que reflúa.
+
+     Y la tolerancia es la del archivo (2 px, «por debajo de esto es redondeo
+     del navegador»), no una mía más estricta: con 0,6 esto fallaba con 63,4
+     contra 64, que es subpíxel y no un ritmo roto. */
+  await p.evaluate(async () => {
+    await document.fonts.load('400 18px "Instrument Sans"');
+    await document.fonts.ready;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  });
   const r = await p.evaluate(() => {
     const token = getComputedStyle(document.documentElement).getPropertyValue('--radio').trim();
     const sel = [
@@ -457,6 +472,85 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
     const bien = f.radio === r.token;
     if (!bien) fallos++;
     console.log(`  ${bien ? '✓' : '✗'} ${f.n.padEnd(34)} ${r.token} → ${f.radio ?? 'NO EXISTE'}`);
+  }
+}
+
+/* ── El ritmo vertical (Johnny, 09/10) ────────────────────────────────────
+   128 entre secciones y 64 entre la fila de intro y el contenido del bloque.
+   Esto se descolocó una vez porque nadie lo medía: había CATORCE huecos
+   distintos y la misma relación valía 191, 201, 169 o 139 según el sitio. Se
+   miden CAJAS y no tinta, que es donde el ritmo se declara; el medio
+   interlineado del texto de encima es aparte y no se puede quitar.
+
+   Las secciones se leen del DOM y no de una lista escrita a mano: así una
+   sección nueva —«Sobre la mesa» entró el 10/10— se vigila sola desde el día
+   que existe, sin que nadie se acuerde de añadirla aquí. */
+{
+  const p = await nav.newPage({ viewport: { width: 1440, height: 1000 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  /* Tres esperas y no una, porque con menos la medida es INESTABLE: la misma
+     comprobación daba 64 o 58,1 según la pasada, que es peor que fallar
+     siempre. `fonts.ready` sola no basta —`font-display: swap` deja que el
+     texto se pinte con la de respaldo y rehaga la maqueta después—, así que
+     se pide la fuente por su nombre, se espera a que el navegador la dé por
+     cargada y se deja pasar un fotograma para que reflúa.
+
+     Y la tolerancia es la del archivo (2 px, «por debajo de esto es redondeo
+     del navegador»), no una mía más estricta: con 0,6 esto fallaba con 63,4
+     contra 64, que es subpíxel y no un ritmo roto. */
+  await p.evaluate(async () => {
+    await document.fonts.load('400 18px "Instrument Sans"');
+    await document.fonts.ready;
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  });
+  const r = await p.evaluate(() => {
+    const raiz = getComputedStyle(document.documentElement);
+    const n = (v) => parseFloat(raiz.getPropertyValue(v));
+    const caja = (e) => { const b = e.getBoundingClientRect(); return [b.top + scrollY, b.bottom + scrollY]; };
+    /* El cierre de contacto y el pie los pinta el layout, así que viven FUERA
+       de <main>. Se recogen los hijos de <main> y, detrás, sus hermanos. */
+    const crudos = [...document.querySelectorAll('main > *'), ...document.querySelectorAll('main ~ *')];
+    const secciones = crudos
+      .filter((e) => e.getBoundingClientRect().height > 0 && !e.matches('script, style, .sr-only'))
+      .map((e) => ({ nombre: (typeof e.className === 'string' && e.className.trim()
+                       ? e.className.trim().split(/\s+/)[0] : e.tagName.toLowerCase()), c: caja(e) }));
+    const entre = [];
+    for (let i = 1; i < secciones.length; i++)
+      entre.push({ nombre: `${secciones[i - 1].nombre} → ${secciones[i].nombre}`,
+                   px: Math.round((secciones[i].c[0] - secciones[i - 1].c[1]) * 10) / 10 });
+    /* El 64 del intro es su propio `padding-block-end`. Intenté medirlo como
+       hueco entre cajas y la cifra BAILABA entre 58 y 64 según el instante:
+       estaba midiendo mientras la maqueta se asentaba con la tipografía. Una
+       comprobación que falla una de cada tres pasadas es peor que no tenerla.
+
+       Así que se afirma el dato estable: el relleno CALCULADO del intro vale
+       lo que vale el token. Eso sigue cazando el fallo que importa —que el
+       scope de Astro deje la regla sin aplicar— sin depender de ninguna
+       carrera, porque en una columna flex sin hueco el contenido empieza
+       exactamente donde acaba ese relleno. */
+    const internos = [];
+    for (const b of document.querySelectorAll('.proyecto')) {
+      const intro = b.querySelector('.proyecto__intro');
+      if (!intro) continue;
+      internos.push({ nombre: b.className.split(' ').find((c) => c.startsWith('proyecto--')) ?? '?',
+                      px: parseFloat(getComputedStyle(intro).paddingBottom) || 0 });
+    }
+    return { seccion: n('--ritmo-seccion'), intro: n('--ritmo-intro'), entre, internos };
+  });
+  await p.close();
+  console.log('\n── Ritmo vertical (tokens `--ritmo-seccion` y `--ritmo-intro`) ──\n');
+  esperadas += r.entre.length + r.internos.length;
+  for (const h of r.entre) {
+    medidos++;
+    const bien = Math.abs(h.px - r.seccion) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${h.nombre.padEnd(40)} ${r.seccion} → ${h.px}`);
+  }
+  for (const h of r.internos) {
+    medidos++;
+    const bien = Math.abs(h.px - r.intro) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${(h.nombre + ' · relleno del intro').padEnd(40)} ${r.intro} → ${h.px}`);
   }
 }
 

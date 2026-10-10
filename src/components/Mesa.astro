@@ -1,0 +1,143 @@
+---
+/* ---------------------------------------------------------------------------
+   «Sobre la mesa» · lo que el estudio tiene entre manos ahora mismo.
+
+   El contenido NO se pide aquí: lo congela `npm run mesa` en
+   `src/data/mesa.json`. Así el build es determinista y no se cae porque
+   Mastodon esté caído, y —lo que más importa— la sección acaba en `dist/`,
+   que es lo que miden geometria, a11y, teclado, tipografia y contraste. Una
+   sección inyectada en vivo sería la única de la página que nadie comprueba.
+
+   SI NO HAY NADA RECIENTE, ESTE COMPONENTE NO DEVUELVE NADA. Ni hueco, ni
+   «no hay novedades», ni rastro: la Home vuelve a ser la de siempre, porque
+   el ritmo de 128 lo declara el contenedor una vez y las secciones se
+   recolocan solas. Así «ahora» es verdad por construcción y no puede caducar.
+   --------------------------------------------------------------------------- */
+import type { ImageMetadata } from 'astro';
+import CtaLink from './CtaLink.astro';
+import { t } from '../i18n/ui';
+import type { Lang } from '../i18n/config';
+import datos from '../data/mesa.json';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ui = t(lang);
+
+/* Las baja `npm run mesa`. El glob tiene que ser literal para Vite. */
+const archivos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/mesa/*.{png,jpg,jpeg,webp,avif}', { eager: true },
+);
+const medio = (n: string) => Object.entries(archivos).find(([r]) => r.endsWith(`/${n}`))?.[1]?.default;
+
+const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo)) : [];
+---
+
+{notas.length > 0 && (
+  <section class="mesa" aria-labelledby="mesa-titulo">
+    <div class="mesa__intro">
+      <h2 id="mesa-titulo" class="mesa__titulo">{ui.mesaTitulo}</h2>
+    </div>
+
+    {/* `tabindex="0"` explícito y no confiado al navegador: Chromium da foco a
+        los contenedores con scroll, pero eso es reciente y no es universal, y
+        aquí el teclado no puede depender de a qué versión haya llegado cada
+        cual. Con `role="list"` la lista conserva su semántica pese al
+        tabindex. `npm run teclado` lo comprueba. */}
+    <ul class="mesa__lista" tabindex="0" role="list" aria-label={ui.mesaRegion}>
+      {notas.map((n) => {
+        const img = medio(n.imagen.archivo)!;
+        return (
+          <li class="mesa__nota">
+            {/* La tarjeta ENTERA es un enlace, y su nombre accesible es el
+                titular: distinto en cada una, así que no hay cuatro enlaces
+                llamados igual (2.4.4). La imagen va `alt=""` porque su
+                descripción se anuncia aparte, debajo: si la llevara el enlace
+                se oiría el titular y la alternativa pegados en una sola
+                parrafada. */}
+            {/* La alternativa de la imagen va ANTES del enlace y fuera de él: antes,
+                porque visualmente la imagen es lo primero de la tarjeta y así el
+                orden de lectura coincide con el de la vista; y fuera, porque
+                dentro haría que el nombre accesible del enlace fuesen 400
+                caracteres de descripción más el titular, en una sola parrafada. */}
+            <p class="sr-only" data-alt lang={n.idioma === lang ? undefined : n.idioma}>{n.imagen.alt}</p>
+            <a class="mesa__enlace" href={n.url} rel="noopener" target="_blank">
+              <img src={img.src} alt="" width={img.width} height={img.height} loading="lazy" decoding="async" />
+              {/* `lang` solo cuando el post está en otro idioma que la página:
+                  marcarlo siempre sería ruido (3.1.2). */}
+              <p class="mesa__texto" lang={n.idioma === lang ? undefined : n.idioma}>{n.titular}</p>
+              <span class="sr-only"> · {ui.mesaCta}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="mesa__cta"><CtaLink href="https://mastodon.social/@accesibilidadprimero">{ui.mesaCta}</CtaLink></div>
+  </section>
+)}
+
+<style>
+  .mesa { padding-inline: var(--gutter-page); display: flex; flex-direction: column; }
+  .mesa__intro { display: flex; flex-direction: column; gap: var(--space-8); padding-block: 0 var(--ritmo-intro); }
+  /* El rótulo NO crece: va a cuerpo de texto, como el título de un proyecto.
+     Lo que destaca es el contenido, y aquí eso lo hacen las imágenes. */
+  .mesa__titulo { font-size: var(--texto-size); line-height: var(--texto-leading); }
+
+  .mesa__lista {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    gap: var(--space-24);
+    align-items: start;
+    overflow-x: auto;
+    /* `min-width: 0` NO es decorativo. `.mesa` es una columna flex y sus
+       hijos llevan `min-width: auto`, o sea que se niegan a encoger por
+       debajo de su contenido mínimo: con tres notas la tira dejaba de
+       desplazarse por dentro y empujaba la PÁGINA, 176 px de scroll
+       horizontal a 320 (1.4.10). Con una sola nota no se veía, porque cabía.
+       Lo cazó `npm run a11y` en el Mac de Johnny en cuanto publicó la
+       segunda. */
+    min-width: 0;
+    scroll-snap-type: x proximity;
+    /* Sangra hasta el borde para que la siguiente nota ASOME: es lo que dice
+       «hay más» sin flechas ni puntos. El desbordamiento se queda dentro del
+       carril y no arrastra la página (1.4.10, medido a 320). */
+    margin-inline: calc(var(--gutter-page) * -1);
+    padding-inline: var(--gutter-page);
+    padding-block-end: var(--space-16);
+  }
+  /* `position: relative` NO es decorativo. La alternativa de cada imagen va en
+     un `.sr-only`, que es `position: absolute`; sin un ancestro posicionado se
+     coloca respecto a la PÁGINA, no respecto a la tarjeta, así que no la
+     recorta el contenedor con scroll y su posición estática —dentro del carril
+     desplazado— ensancha el documento. Con una nota no se veía porque caía
+     dentro de la ventana; con tres, la tercera aterrizaba en x=508 y provocaba
+     176 px de scroll horizontal a 320 (1.4.10). */
+  .mesa__nota { scroll-snap-align: start; position: relative; }
+  .mesa__enlace { display: flex; flex-direction: column; gap: var(--space-16); text-decoration: none; }
+  /* 16:9 porque es lo que se sube: el material real llega a 1920 × 1080. */
+  .mesa__enlace img {
+    width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+    border-radius: var(--radio); background: var(--silk);
+  }
+  /* En negro, como todo. Sin fecha a la vista (Johnny, 10/10): la tarjeta es
+     imagen y frase, nada más.
+
+     OJO con lo que eso implica: el argumento para subir la puerta de 30 a 60
+     días fue que la fecha de cada tarjeta dejaba juzgar al lector. Sin fecha,
+     la puerta es lo ÚNICO que impide que algo viejo parezca de hoy. Y la
+     fecha tampoco se esconde con `sr-only`: dársela a quien escucha y no a
+     quien mira son dos contenidos distintos para dos personas. */
+  .mesa__texto { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text); }
+  .mesa__enlace:hover .mesa__texto { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  .mesa__cta { padding-block-start: var(--ritmo-intro); }
+
+  @media (min-width: 1024px) {
+    .mesa { margin-block-start: var(--ritmo-seccion); }
+    /* Tres y pico: la cuarta asoma. */
+    .mesa__lista { grid-auto-columns: calc((100% - var(--space-24) * 3) / 3.4); }
+  }
+  @media (max-width: 1023px) {
+    .mesa { padding-block: var(--space-48); }
+  }
+</style>

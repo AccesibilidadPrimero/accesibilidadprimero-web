@@ -228,6 +228,60 @@ check('El alt describe la imagen y no repite la frase',
   await p.close();
 }
 
+/* 14. «Sobre la mesa»: la tira horizontal tiene que recorrerse sin ratón.
+   Es el fallo clásico de los feeds horizontales — se arrastran con el dedo y
+   con nada más—. Y el desbordamiento tiene que quedarse DENTRO del carril: si
+   arrastra la página entera, se rompe 1.4.10 a 320. Las dos cosas se afirman
+   aquí porque las dos las di por buenas una vez sin medirlas. */
+{
+  const p = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const hay = await p.evaluate(() => !!document.querySelector('.mesa__lista'));
+  if (hay) {
+    await p.evaluate(() => document.querySelector('.mesa__lista').focus());
+    const enfocada = await p.evaluate(() => document.activeElement?.classList.contains('mesa__lista'));
+    check('La tira de «Sobre la mesa» recibe el foco', !!enfocada);
+
+    /* Si todo cabe no hay nada que desplazar, y eso no es un fallo: a 1440
+       caben tres notas sin scroll. La condición mira si HAY scroll, no
+       cuántas notas hay — con el recuento, la comprobación fallaba sola en
+       cuanto cabían justas. */
+    const hayScroll = await p.evaluate(() => {
+      const e = document.querySelector('.mesa__lista');
+      return e.scrollWidth > e.clientWidth + 1;
+    });
+    const antes = await p.evaluate(() => document.querySelector('.mesa__lista').scrollLeft);
+    if (hayScroll) await p.keyboard.press('ArrowRight');
+    await p.waitForTimeout(300);
+    const despues = await p.evaluate(() => document.querySelector('.mesa__lista').scrollLeft);
+    check('…y se recorre con las flechas', !hayScroll || despues > antes,
+      hayScroll ? `${antes} → ${despues}` : 'todo cabe: no hay a dónde ir');
+
+    /* Cada tarjeta enlaza a SU post: cuatro enlaces llamados igual serían
+       cuatro destinos indistinguibles en la lista de enlaces (2.4.4). */
+    const nombres = await p.evaluate(() =>
+      [...document.querySelectorAll('.mesa__enlace')].map((a) => (a.textContent ?? '').replace(/\s+/g, ' ').trim()));
+    check('Cada nota tiene un nombre de enlace distinto',
+      new Set(nombres).size === nombres.length, `${nombres.length} enlace(s)`);
+
+    const alt = await p.evaluate(() =>
+      [...document.querySelectorAll('.mesa__nota')].every((li) => (li.querySelector('[data-alt]')?.textContent ?? '').trim().length > 20));
+    check('La alternativa de cada imagen se anuncia', alt);
+  } else {
+    check('«Sobre la mesa» no está: nada que comprobar', true, 'no hay notas recientes');
+  }
+  for (const w of [320, 390]) {
+    const q = await navegador.newPage({ viewport: { width: w, height: 800 } });
+    await q.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+    const r = await q.evaluate(() => ({
+      doc: document.documentElement.scrollWidth, win: window.innerWidth,
+    }));
+    check(`${w} px · el desbordamiento no arrastra la página (1.4.10)`, r.doc <= r.win, `${r.doc} vs ${r.win}`);
+    await q.close();
+  }
+  await p.close();
+}
+
 await navegador.close();
 servidor.close();
 

@@ -31,6 +31,12 @@ type Dict = {
   carouselPause: string;
   carouselPlay: string;
   carouselRegion: string;
+  /* «Sobre la mesa» · el bloque vivo. El rótulo se traduce de forma
+     IDIOMÁTICA, no literal: en inglés «On the table» significa «pendiente de
+     decidir», que no es lo que quiere decir. (Johnny, 10/10.) */
+  mesaTitulo: string;
+  mesaCta: string;
+  mesaRegion: string;
   publishedOn: string;
   updatedOn: string;
   backToBlog: string;
@@ -72,6 +78,9 @@ export const UI: Record<Lang, Dict> = {
     carouselPause: 'Pausar',
     carouselPlay: 'Reproducir',
     carouselRegion: 'Ilustraciones del estudio',
+    mesaTitulo: 'Sobre la mesa',
+    mesaCta: 'Ir a Mastodon',
+    mesaRegion: 'Sobre la mesa: en qué estamos ahora',
     publishedOn: 'Publicado el',
     updatedOn: 'Actualizado el',
     backToBlog: 'Volver al blog',
@@ -113,6 +122,9 @@ export const UI: Record<Lang, Dict> = {
     carouselPause: 'Pausa',
     carouselPlay: 'Reprodueix',
     carouselRegion: 'Il·lustracions de l’estudi',
+    mesaTitulo: 'Sobre la taula',
+    mesaCta: 'Anar a Mastodon',
+    mesaRegion: 'Sobre la taula: en què estem ara',
     publishedOn: 'Publicat el',
     updatedOn: 'Actualitzat el',
     backToBlog: 'Torna al blog',
@@ -154,6 +166,9 @@ export const UI: Record<Lang, Dict> = {
     carouselPause: 'Pause',
     carouselPlay: 'Play',
     carouselRegion: 'Studio illustrations',
+    mesaTitulo: 'Work in progress',
+    mesaCta: 'Go to Mastodon',
+    mesaRegion: 'Work in progress: what we are on right now',
     publishedOn: 'Published on',
     updatedOn: 'Updated on',
     backToBlog: 'Back to the blog',

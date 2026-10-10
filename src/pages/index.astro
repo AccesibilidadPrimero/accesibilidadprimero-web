@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
+import Mesa from '../components/Mesa.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { path, DEFAULT_LANG } from '../i18n/config';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
@@ -128,6 +129,12 @@ const productos = [
       <Content />
     </ProjectSection>
   ))}
+
+  {/* Después de los tres proyectos y antes de Productos (Johnny, 10/10). Los
+      casos acreditan primero; luego esta sección convierte un portfolio, que
+      habla en pasado, en un estudio que habla en presente. Si no hay nada
+      reciente no devuelve nada y la Home queda como estaba. */}
+  <Mesa lang={lang} />
 
   <section class="productos" aria-labelledby="productos-titulo">
     <h2 id="productos-titulo" class="productos__intro">
