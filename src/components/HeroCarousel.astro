@@ -379,11 +379,22 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      proporcionales y hay que contrastarlos contra el documento. */
   @media (max-width: 1023px) {
     .hero {
-      --ilustracion: 300px;
+      /* 388: la ilustración del Figma de Tablet (3094:902, 672 × 388). Con
+         300 el dibujo quedaba perdido en el menta a pantalla completa. */
+      --ilustracion: 388px;
       --aire-escenario: 56px;
       --banda: 76px;
     }
-    .hero__banda { padding-block: var(--borde-texto); }
+    /* En columna desde tableta (Figma, Tablet 768, 3094:917): en fila, a 768
+       «Cuéntanos tu proyecto» se partía en dos renglones. Arriba la frase
+       (texto puro: 24) y abajo el enlace (control de 44: 24 menos su aire),
+       con 8 entre los dos. */
+    .hero__banda {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-8);
+      padding-block: var(--space-24) var(--borde-texto);
+    }
   }
 
   @media (max-width: 767px) {

@@ -227,18 +227,25 @@ if (faltan.length) {
   .slider--foc     { --aire:  88px; --hueco: 36px; --ancho-captura: 400px; --alto-captura: 564px; }
   .slider--izaskun { --aire:  68px; --hueco: 48px; --ancho-captura: 656px; --alto-captura: 412px; }
 
-  /* Por debajo de 1024 el aire se reduce a la mitad: el documento no tiene
-     estos frames medidos todavía y esto es proporcional, no verificado. */
+  /* Tableta, medido en el Figma (Home / Tablet 768: 2201:398, 2201:417,
+     2201:439): campo de 720, aire de 92 · 80 · 68 y 36 hasta el control. La
+     captura de ECI baja a 540 (la misma proporción); Foc i Cor e Izaskun
+     caben a su tamaño. Hasta el 10/10 era «la mitad del aire de escritorio»,
+     sin medir. */
   @media (max-width: 1023px) {
-    .slider { padding-block: calc(var(--aire) / 2); }
+    .slider { padding-block: var(--aire-tableta); gap: 36px; }
     .slider__pila { max-width: min(var(--ancho-captura), 100%); }
+    .slider--eci     { --aire-tableta: 92px; --ancho-captura: 540px; --alto-captura: 339.3px; }
+    .slider--foc     { --aire-tableta: 80px; }
+    .slider--izaskun { --aire-tableta: 68px; }
   }
 
   /* Móvil 390, medido en el Figma (2203:514, 2203:533, 2203:555): los tres
      iguales. El ancho de la captura sale solo: 342 − 24 − 24 = 294. */
   @media (max-width: 767px) {
     .slider { padding: var(--space-48) var(--space-24); gap: var(--space-32); }
-    .slider--con-movil { --ancho-captura: 294px; --alto-captura: 640px; }
+    .slider--con-movil,
+    .slider--eci.slider--con-movil { --ancho-captura: 294px; --alto-captura: 640px; }
   }
 </style>
 

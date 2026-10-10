@@ -160,23 +160,27 @@ const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
      número aparte, así que crece y encoge con el cuerpo de letra. */
   .proyecto__ampliacion :global(p + p) { margin-block-start: var(--texto-leading); }
 
-  @media (min-width: 1024px) {
-    .proyecto__resumen .linea { display: block; }
+  /* El 128 que separa este bloque del anterior, en todos los anchos. No hay
+     relleno inferior: el aire de abajo es el 128 del bloque siguiente,
+     declarado una vez. El hueco hasta el cuerpo lo pone el intro
+     (--ritmo-intro, home.css); entre las piezas apiladas, 48. */
+  .proyecto { margin-block-start: var(--ritmo-seccion); }
+  .proyecto--eci .proyecto__cta,
+  .proyecto--eci > :global(.slider) { margin-block-start: 48px; }
+
+  /* Título a la izquierda y nota a la derecha desde tableta, como en
+     escritorio: a 768 caben de sobra (308 + 298 en el Figma de Tablet). */
+  @media (min-width: 768px) {
     .proyecto__intro {
       flex-direction: row;
       align-items: center;      /* SPACE_BETWEEN | CENTER en el Figma */
       justify-content: space-between;
       gap: var(--space-32);
     }
+  }
 
-    /* El 128 que separa este bloque del anterior. No hay relleno inferior:
-       el aire de abajo es el 128 del bloque siguiente, declarado una vez. */
-    .proyecto { margin-block-start: var(--ritmo-seccion); }
-
-    /* ---- ECI · apilado, ancho completo --------------------------------- */
-    /* El hueco hasta el cuerpo lo pone el intro (--ritmo-intro), no el cuerpo. */
-    .proyecto--eci .proyecto__cta { margin-block-start: 48px; }
-    .proyecto--eci :global(.slider) { margin-block-start: 48px; }
+  @media (min-width: 1024px) {
+    .proyecto__resumen .linea { display: block; }
 
     /* ---- Foc i Cor · copia a la izquierda, slider a la derecha ---------- */
     .proyecto--foc {
@@ -248,33 +252,18 @@ const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
     .proyecto--izaskun .proyecto__cta { grid-area: cta; margin-block-start: 48px; }
   }
 
-  /* Por debajo de 1024 los tres se apilan: el documento lo dibuja así en los
-     frames de Tablet 768 y Móvil 390, con la copia encima del slider y el CTA
-     debajo en los tres casos. */
+  /* Por debajo de 1024 los tres se apilan, con la copia encima del slider:
+     el mismo ritmo que escritorio (10/10). Entre el intro y la copia, 64 (el
+     relleno del intro); entre copia, enlace y campo de color, 48, igual que
+     ECI e Izaskun en escritorio. El «Leer más» sigue pegado al resumen.
+
+     En móvil el título y la nota van apilados, sin hueco: en una fila no
+     caben. */
   @media (max-width: 1023px) {
-    .proyecto { padding-block: var(--space-48); gap: var(--space-32); }
+    .proyecto__cta,
+    .proyecto > :global(.slider) { margin-block-start: 48px; }
   }
-
-  /* ---- Móvil 390 · medido en el Figma (2203:497, 2203:517, 2203:537) ----
-     Con los estilos de escritorio (un cuerpo, un peso, un color), no con los
-     de Móvil del documento: lo que se trae del frame es el espacio.
-
-       sección       48 arriba (ECI 0: viene pegada al hero) · 56 abajo
-                     (Izaskun 96: cierra la serie antes de Productos)
-       intro         40 arriba; título y nota apilados, sin hueco
-       entre bloques 48: intro (24 + 24), copia, enlace y campo de color
-
-     El «Leer más» sigue pegado al resumen, como en escritorio (Johnny,
-     08/10): en el Figma de Móvil hay 32 entre los dos, pero es la misma
-     decisión que ya se tomó para la web entera.
-
-     `.proyecto .proyecto__intro` y no la clase sola: home.css le da 64 de
-     relleno con la misma especificidad que tendría aquí, y entonces ganaría
-     el que cargue último. */
   @media (max-width: 767px) {
-    .proyecto { padding-block: var(--space-48) 56px; gap: var(--space-48); }
-    .proyecto--eci { padding-block-start: 0; }
-    .proyecto--izaskun { padding-block-end: var(--space-96); }
-    .proyecto .proyecto__intro { padding-block: 40px 0; gap: 0; }
+    .proyecto__intro { gap: 0; }
   }
 </style>

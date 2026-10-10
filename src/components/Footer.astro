@@ -1,13 +1,14 @@
 ---
 import { NAV_LEGAL, path, type Lang } from '../i18n/config';
 import { t } from '../i18n/ui';
+import { conMarca } from '../i18n/marca';
 const { lang } = Astro.props as { lang: Lang };
 const ui = t(lang);
 ---
 
 <footer class="pie">
-  <p class="pie__copy">{ui.footerCopyright}</p>
-  <p class="pie__lema">{ui.footerTagline}</p>
+  <p class="pie__copy" set:html={conMarca(ui.footerCopyright)} />
+  <p class="pie__lema" set:html={conMarca(ui.footerTagline)} />
   <!-- Dos <nav> en la misma página: los dos con aria-label, y distintos. -->
   <nav aria-label={ui.footerNavLabel} class="pie__nav">
     <ul class="pie__lista">
@@ -68,8 +69,25 @@ const ui = t(lang);
      ellos. El orden se cambia SOLO a la vista (Johnny, 09/10); en el HTML
      sigue ©, lema, legales. No mueve el foco: lo único que lo recibe es la
      lista de legales, y su orden interno no cambia. */
+  /* El ritmo separa los créditos del cierre en todos los anchos (10/10): los
+     32 de arriba se van. Abajo se conserva la regla de los 24 al texto. */
+  .pie { padding-block-start: 0; margin-block-start: var(--ritmo-seccion); }
+
+  /* Tableta (Figma 2201:563): el lema en su fila, y debajo el © a la
+     izquierda y los legales a la derecha. Mismo criterio que en móvil: el
+     orden cambia solo a la vista y no mueve el foco. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .pie { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: var(--space-48); row-gap: var(--space-16); }
+    .pie__lema { order: 1; flex-basis: 100%; }
+    .pie__copy { order: 2; }
+    .pie__nav { order: 3; }
+  }
+  /* Centrado en móvil (Johnny, 10/10): las tres filas al eje de la pantalla,
+     como la frase de Estudio. Los legales se centran como fila, sin cambiar
+     su orden. */
   @media (max-width: 767px) {
-    .pie { gap: var(--space-12); }
+    .pie { gap: var(--space-12); align-items: center; text-align: center; }
+    .pie__lista { justify-content: center; }
     .pie__lema { order: 1; }
     .pie__nav { order: 2; }
     .pie__copy { order: 3; }
@@ -80,11 +98,6 @@ const ui = t(lang);
       align-items: center;
       justify-content: space-between;
       gap: var(--space-48);
-      /* Los 32 de arriba se van: lo que separa los créditos del cierre es el
-         ritmo, declarado una vez, no un número propio del pie. Abajo se
-         conserva la regla de los 24 al texto. */
-      padding-block-start: 0;
-      margin-block-start: var(--ritmo-seccion);
     }
   }
 </style>

@@ -5,6 +5,7 @@ import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
 import Mesa from '../components/Mesa.astro';
 import CtaLink from '../components/CtaLink.astro';
+import { REGISTRADA } from '../i18n/marca';
 import { path, DEFAULT_LANG } from '../i18n/config';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
    Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
@@ -234,15 +235,14 @@ const productos = [
     </div>
     <h2 id="estudio-titulo" class="estudio__texto">
       <span class="solo-amplio">
-        Accesibilidad Primero es un estudio de diseño. Creamos webs y aplicaciones con la
+        Accesibilidad Primero<Fragment set:html={REGISTRADA} /> es un estudio de diseño. Creamos webs y aplicaciones con la
         accesibilidad digital como punto de partida.
       </span>
       <span class="solo-movil">
-        Somos un estudio de diseño digital. Hacemos webs y apps donde la accesibilidad es el
-        punto de partida.
+        Hacemos webs y productos digitales donde la accesibilidad es el punto de partida.
       </span>
     </h2>
-    <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero</CtaLink>
+    <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero<Fragment set:html={REGISTRADA} /></CtaLink>
   </section>
 
   {/* Al FINAL, justo antes del cierre de contacto (Johnny, 10/10, tarde). Hasta
@@ -353,13 +353,17 @@ const productos = [
      Productos no lleva fondo: se ciñe a su tinta y la separación la pone el
      128. Estudio SÍ lleva fondo (Silk), así que conserva su relleno de 96: en
      una banda, el borde que ve el ojo es la banda, no el texto. */
-  @media (min-width: 1024px) {
-    .productos { padding-block: 0; margin-block-start: var(--ritmo-seccion); }
-    .estudio { margin-block-start: var(--ritmo-seccion); }
+  /* En todos los anchos desde el 10/10. */
+  .productos { padding-block: 0; margin-block-start: var(--ritmo-seccion); }
+  .estudio { margin-block-start: var(--ritmo-seccion); }
+
+  /* Tableta: la frase de Estudio en la caja de 572 del Figma de Tablet
+     (2201:558), centrada como en escritorio. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .estudio__texto { max-width: 572px; }
   }
 
   @media (max-width: 767px) {
-    .productos { padding-block: var(--space-64) var(--space-96); }
     .productos__intro { text-align: center; }
     .estudio__texto { width: 274px; max-width: 100%; text-align: start; }
   }

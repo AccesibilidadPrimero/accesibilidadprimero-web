@@ -164,8 +164,11 @@
      Una sección con fondo propio (Estudio) conserva su relleno interno: ahí
      el borde que ve el ojo es la banda, no la tinta.
 
-     Solo rige de 1024 para arriba. Tablet y Móvil tienen su propio espacio,
-     medido contra sus frames el 09/10, y no se tocan hasta su sesión. */
+     Rige en TODOS los anchos desde el 10/10 (Johnny: «que sea como el
+     escritorio»). Hasta ese día solo valía de 1024 para arriba y por debajo
+     cada hueco salía de sumar rellenos sueltos: de 48 a 144 para la misma
+     relación. El 128 en un móvil de 844 de alto es la misma proporción de
+     pantalla que en un escritorio de 900. */
   --ritmo-seccion: var(--space-128);   /* entre secciones */
   --ritmo-intro: var(--space-64);      /* fila de intro → contenido del bloque */
 

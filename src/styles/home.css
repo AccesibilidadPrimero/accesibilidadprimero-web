@@ -35,19 +35,12 @@
    especificidad. Lo que se escriba aquí para .hero__* no se aplica. */
 
 /* ---- Proyectos destacados ------------------------------------------------ */
-/* Project Intro: fila con el nombre a la izquierda y la meta a la derecha. */
-.proyecto__intro   { padding-block: var(--space-64); }
-.proyecto--eci .proyecto__intro { padding-block: var(--space-48); }
-
-/* De 1024 para arriba manda el ritmo: el 64 de debajo del intro ES la
-   separación interna del bloque, y arriba no lleva nada, porque lo que separa
-   un proyecto del anterior es `--ritmo-seccion`, declarado una sola vez. Aquí
-   ECI deja de ser la excepción de 48. Por debajo de 1024 sigue vigente el
-   espacio medido contra los frames de Tablet y Móvil. */
-@media (min-width: 1024px) {
-  .proyecto__intro,
-  .proyecto--eci .proyecto__intro { padding-block: 0 var(--ritmo-intro); }
-}
+/* Manda el ritmo, en todos los anchos (10/10): el 64 de debajo del intro ES
+   la separación interna del bloque, y arriba no lleva nada, porque lo que
+   separa un proyecto del anterior es `--ritmo-seccion`, declarado una sola
+   vez. */
+.proyecto__intro,
+.proyecto--eci .proyecto__intro { padding-block: 0 var(--ritmo-intro); }
 
 /* Project Content: ECI e Izaskun en vertical con gap 48; Foc i Cor en
    horizontal con gap 24 y la copia a la izquierda. No es el mismo bloque
@@ -57,6 +50,10 @@
    variable. Ver AGENTS.md §6. */
 
 .proyecto__resumen { max-width: 689px; }                 /* ECI: Project Copy 689 */
+/* Y lo que abre «Leer más» en ECI, a la misma medida que el resumen (Johnny,
+   10/10: «que el párrafo quede un bloque más compacto»). Antes ocupaba los
+   1392 de la columna: renglones de 120 caracteres justo debajo de otros de 60. */
+.proyecto--eci .proyecto__ampliacion { max-width: 689px; }
 .proyecto--foc .proyecto__resumen { max-width: 579px; }  /* Foc: Copia 579 */
 /* Izaskun ya no lleva tope: su resumen ocupa la columna derecha entera, igual
    que la ampliación de debajo. El 663 era de la maquetación anterior, con el
@@ -73,9 +70,10 @@
   gap: var(--space-24);
 }
 
-/* Por debajo de 1024 la fila se apila. PROVISIONAL: Tablet 768 y Móvil 390
-   todavía no están medidos contra el Figma. */
-@media (max-width: 1023px) {
+/* En tableta siguen las tres columnas, como en escritorio (10/10): apiladas a
+   720 de ancho cada campo medía 720 × 738 y la sección ocupaba tres pantallas.
+   Solo el móvil apila, con 48 entre productos (Figma, Móvil 390). */
+@media (max-width: 767px) {
   .productos__lista { grid-template-columns: 1fr; gap: var(--space-48); }
 }
 

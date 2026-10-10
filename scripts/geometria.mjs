@@ -44,7 +44,7 @@ const TOLERANCIA = 2;   // px. Por debajo de esto es redondeo del navegador.
    —las mesas de trabajo de Illustrator miden 400 px de alto y el ancho que
    cada dibujo necesite—, así que el ancho es el del contenedor y medirlo no
    dice nada. Se comprueba el alto aparte, abajo. */
-const ALTO_ESCENARIO = { 1440: 558, 768: 412, 390: 305 };
+const ALTO_ESCENARIO = { 1440: 558, 768: 500, 390: 305 };   // 768: 56 + 388 + 56 (10/10)
 
 const PUERTO = 4391;
 const servidor = await servir(PUERTO);
@@ -387,8 +387,10 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
       'ECI · captura': [294, w('.proyecto--eci .slider__pila')],
       'Foc i Cor · captura': [294, w('.proyecto--foc .slider__pila')],
       'Izaskun · captura': [294, w('.proyecto--izaskun .slider__pila')],
-      'ECI · título a 40 de la sección': [40, document.querySelector('.proyecto--eci .proyecto__titulo').getBoundingClientRect().top - sec('eci').top],
-      'Foc i Cor · título a 88 (48 + 40)': [88, document.querySelector('.proyecto--foc .proyecto__titulo').getBoundingClientRect().top - sec('foc').top],
+      /* El título va pegado al borde de su sección: el aire de encima es el
+         ritmo (128), que se mide abajo como hueco entre secciones. */
+      'ECI · título al borde de la sección': [0, document.querySelector('.proyecto--eci .proyecto__titulo').getBoundingClientRect().top - sec('eci').top],
+      'Foc i Cor · título al borde': [0, document.querySelector('.proyecto--foc .proyecto__titulo').getBoundingClientRect().top - sec('foc').top],
       'ECI · enlace ANTES de las capturas': [1, debajo('.proyecto--eci .proyecto__cta', '.proyecto--eci .slider')],
       'Foc i Cor · enlace DESPUÉS': [1, debajo('.proyecto--foc .slider', '.proyecto--foc .proyecto__cta')],
       'Izaskun · enlace DESPUÉS': [1, debajo('.proyecto--izaskun .slider', '.proyecto--izaskun .proyecto__cta')],
@@ -414,7 +416,7 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   const t = await p.evaluate(() => [
     document.querySelector('.productos__intro').innerText.trim().startsWith('Desarrollamos') ? 1 : 0,
-    document.querySelector('.estudio__texto').innerText.trim().startsWith('Accesibilidad Primero es') ? 1 : 0,
+    document.querySelector('.estudio__texto').innerText.trim().replace('®', '').startsWith('Accesibilidad Primero es') ? 1 : 0,
   ]);
   await p.close();
   for (const [i, nombre] of ['1440 · Productos · texto de escritorio', '1440 · Estudio · texto de escritorio'].entries()) {
@@ -484,9 +486,11 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
 
    Las secciones se leen del DOM y no de una lista escrita a mano: así una
    sección nueva —«Sobre la mesa» entró el 10/10— se vigila sola desde el día
-   que existe, sin que nadie se acuerde de añadirla aquí. */
-{
-  const p = await nav.newPage({ viewport: { width: 1440, height: 1000 } });
+   que existe, sin que nadie se acuerde de añadirla aquí.
+
+   En los TRES anchos desde el 10/10: el ritmo dejó de ser solo de escritorio. */
+for (const ancho of [1440, 768, 390]) {
+  const p = await nav.newPage({ viewport: { width: ancho, height: 1000 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   /* Tres esperas y no una, porque con menos la medida es INESTABLE: la misma
      comprobación daba 64 o 58,1 según la pasada, que es peor que fallar
@@ -538,7 +542,7 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
     return { seccion: n('--ritmo-seccion'), intro: n('--ritmo-intro'), entre, internos };
   });
   await p.close();
-  console.log('\n── Ritmo vertical (tokens `--ritmo-seccion` y `--ritmo-intro`) ──\n');
+  console.log(`\n── Ritmo vertical a ${ancho} px (tokens --ritmo-seccion y --ritmo-intro) ──\n`);
   esperadas += r.entre.length + r.internos.length;
   for (const h of r.entre) {
     medidos++;

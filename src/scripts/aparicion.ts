@@ -72,7 +72,13 @@ function partir(frase: HTMLElement) {
   lector.childNodes.forEach((n) => copia.append(n.cloneNode(true)));
   // Cada palabra en su <span> para poder medir dónde cae.
   const textos: Text[] = [];
-  const andar = document.createTreeWalker(copia, NodeFilter.SHOW_TEXT);
+  /* El texto de un <sup> (la ® de la marca) no es una palabra: se queda
+     pegado a la anterior. Sin esto, «Primero» y «®» salían como dos palabras
+     y la ® se pintaba a tamaño de texto, con un espacio delante, durante toda
+     la animación. */
+  const andar = document.createTreeWalker(copia, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => (n.parentElement?.closest('sup') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT),
+  });
   while (andar.nextNode()) textos.push(andar.currentNode as Text);
   for (const t of textos) {
     const trozos = (t.textContent ?? '').split(/(\s+)/);
@@ -84,6 +90,10 @@ function partir(frase: HTMLElement) {
       return s;
     }));
   }
+  copia.querySelectorAll('sup').forEach((sup) => {
+    const antes = sup.previousSibling;
+    if (antes instanceof HTMLElement && antes.dataset.palabra !== undefined) antes.append(sup);
+  });
   frase.append(lector, copia);
 
   const renglones: string[][] = [];
@@ -96,7 +106,9 @@ function partir(frase: HTMLElement) {
     if (!p.getClientRects().length) return;
     const y = Math.round(p.getBoundingClientRect().top);
     if (y !== arriba) { renglones.push([]); arriba = y; }
-    renglones[renglones.length - 1].push(p.textContent ?? '');
+    /* innerHTML y no textContent: así viaja el <sup> de la ® con su
+       palabra. Es marcado de la propia página, no texto de fuera. */
+    renglones[renglones.length - 1].push(p.innerHTML);
   });
 
   copia.replaceChildren(...renglones.map((palabras, i) => {
@@ -105,7 +117,7 @@ function partir(frase: HTMLElement) {
     const dentro = document.createElement('span');
     dentro.className = 'frase__dentro';
     dentro.style.setProperty('--i', String(i));
-    dentro.textContent = palabras.join(' ');
+    dentro.innerHTML = palabras.join(' ');
     renglon.append(dentro);
     return renglon;
   }));
@@ -137,8 +149,27 @@ function arrancar() {
   /* -8 % abajo: el bloque empieza a moverse cuando ya ha asomado un poco, y
      como la curva hace casi todo el recorrido en el primer tercio, termina
      antes de llegar a la zona de lectura. */
+  /* EL ESCALONADO, SOLO ENTRE LO QUE ENTRA A LA VEZ (Johnny, 10/10: «el
+     ritmo de navegación, que sea como el escritorio»). En escritorio el
+     título, la copia y las capturas de un proyecto asoman juntos y el orden
+     fijo de PIEZAS los escalona: empiezan uno tras otro y se posan a la vez.
+     Por debajo de 1024 todo va apilado y cada pieza entra SOLA, así que ese
+     mismo orden fijo no escalonaba nada: solo añadía retraso. Las capturas
+     esperaban 240 ms sin nadie delante, y los productos (orden por columna)
+     entraban cada uno con un retraso distinto sin motivo.
+
+     Así que en tableta y móvil el orden se reparte en el momento: lo que
+     entra en la misma tanda se escalona por su sitio en la página, y lo que
+     entra solo, sale ya. Es la misma sensación que en escritorio. */
+  const estrecho = window.matchMedia('(max-width: 1023px)');
   const observador = new IntersectionObserver(
     (entradas) => {
+      if (estrecho.matches) {
+        entradas
+          .filter((e) => e.isIntersecting && !(e.target as HTMLElement).dataset.renglones)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+          .forEach((e, i) => (e.target as HTMLElement).style.setProperty('--orden', String(Math.min(i, 2))));
+      }
       for (const e of entradas) {
         if (!e.isIntersecting) continue;
         const el = e.target as HTMLElement;

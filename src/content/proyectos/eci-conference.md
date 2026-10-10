@@ -41,11 +41,16 @@ imagenes:
       marcado y dos columnas que explican qué supone asistir al congreso.
 ---
 
-Un congreso sobre inclusión necesita una web inclusiva. Diseñamos su web con el
-mismo propósito: hacer comprensible lo complejo.
+Un congreso sobre inclusión necesita una web inclusiva.
 
-Un congreso internacional mueve mucha información: programa, ponentes,
-inscripción, envío de abstracts. Casi siempre se reparte en PDF y en
-formularios que dejan gente fuera. Aquí el programa se recorre y se filtra sin
-descargar nada. Y el envío de abstracts ocurre en la propia plataforma, con
-cada paso explicado.
+Diseñamos su web con el mismo propósito: hacer comprensible lo complejo.
+
+Un congreso europeo mueve mucha información: programa, ponentes, inscripción,
+envío de abstracts, etc. Casi siempre se reparte en PDFs y formularios poco
+accesibles.
+
+En la web de ECI el programa se recorre y se filtra de manera intuitiva, sin
+descargar nada.
+
+Y para la gestión de abstracts creamos nuestra propia plataforma. Accessible
+Abstracts.

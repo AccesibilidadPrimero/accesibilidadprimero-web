@@ -27,6 +27,27 @@ interface Props {
 }
 const { href, size = 'default', external = false, class: className } = Astro.props;
 const esExterno = external || /^https?:\/\//.test(href);
+
+/* LA FLECHA NUNCA SE QUEDA SOLA EN UN RENGLÓN (10/10). Con «Ver Accessible
+   Abstracts» a 768 la flecha bajaba sola al renglón de abajo, y ni el margen
+   ni un U+2060 (word joiner) lo evitaban: Chrome trata un <svg> en línea como
+   un punto de corte pase lo que pase. Lo único fiable es no dejarle dónde
+   partir: la ÚLTIMA palabra y la flecha van juntas en un <span> que no se
+   parte (`white-space: nowrap`). Si el texto no cabe, baja la última palabra
+   con su flecha.
+
+   El texto llega como HTML. Se parte por el último espacio que quede FUERA de
+   una etiqueta: «Conoce Accesibilidad Primero®» lleva un <sup> con espacios
+   dentro de sus atributos, y cortar ahí rompería el marcado. */
+const html = ((await Astro.slots.render('default')) ?? '').trim();
+let corte = -1;
+for (let i = 0, dentro = false; i < html.length; i++) {
+  if (html[i] === '<') dentro = true;
+  else if (html[i] === '>') dentro = false;
+  else if (html[i] === ' ' && !dentro) corte = i;
+}
+const inicio = corte >= 0 ? html.slice(0, corte + 1) : '';
+const final = corte >= 0 ? html.slice(corte + 1) : html;
 ---
 
 <a
@@ -34,23 +55,12 @@ const esExterno = external || /^https?:\/\//.test(href);
   class:list={['cta', `cta--${size}`, esExterno ? 'cta--externo' : 'cta--interno', className]}
   {...esExterno ? { rel: 'noopener', target: '_blank' } : {}}
 >
-  <span><slot /></span>
+  <span><Fragment set:html={inicio} /><span class="cta__fin"><Fragment set:html={final} />{esExterno ? (<svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="14" height="14"><path d="M1.5 12.5 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>) : (<svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14"><path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>)}</span></span>
   {
     esExterno && (
       /* «se abre en una ventana nueva» no es decorativo: cambia lo que va a
          pasar al pulsar, y quien no ve la pestaña necesita saberlo (3.2.5). */
       <span class="sr-only"> (se abre en una ventana nueva)</span>
-    )
-  }
-  {
-    esExterno ? (
-      <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="14" height="14">
-        <path d="M1.5 12.5 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.5" />
-      </svg>
-    ) : (
-      <svg class="cta__arrow" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14">
-        <path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" />
-      </svg>
     )
   }
 </a>
@@ -78,6 +88,7 @@ const esExterno = external || /^https?:\/\//.test(href);
      porque siguen marcando el papel del enlace en la página. */
   .cta--large, .cta--small { font-size: var(--texto-size); line-height: var(--texto-leading); letter-spacing: 0; }
 
+  .cta__fin { white-space: nowrap; }
   .cta__arrow {
     display: inline-block;
     vertical-align: -0.05em;

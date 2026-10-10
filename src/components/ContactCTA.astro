@@ -26,8 +26,18 @@ const lineas = ui.ctaHeading.split('\n');
     display: flex;
     flex-direction: column;
     gap: var(--space-32);
-    padding: var(--space-48) var(--gutter-page);
+    /* Sin fondo visible (`--surface-raised` es blanco): se ciñe a su tinta y
+       el aire lo pone el ritmo, en todos los anchos desde el 10/10. */
+    padding: 0 var(--gutter-page);
+    margin-block-start: var(--ritmo-seccion);
     background: var(--surface-raised);
+  }
+  /* En fila desde tableta, como en escritorio y como el Figma de Tablet
+     (2201:560). Aquí el titular toma lo que le deja el enlace: la medida de
+     962 es de escritorio. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .contacto { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-48); }
+    .contacto__titulo { flex: 1 1 auto; }
   }
   .contacto__titulo .linea { display: block; }
   .contacto__titulo {
@@ -46,10 +56,6 @@ const lineas = ui.ctaHeading.split('\n');
       align-items: center;
       justify-content: space-between;
       gap: var(--space-48);
-      /* El cierre no lleva fondo visible (`--surface-raised` es blanco), así
-         que se ciñe a su tinta y el aire lo pone el ritmo. */
-      padding-block: 0;
-      margin-block-start: var(--ritmo-seccion);
     }
     /* El Figma da 962 px al titular dentro de una fila de contenido de 1344.
        Como proporción y no como píxel fijo: a 1440 sale exactamente 962, y por

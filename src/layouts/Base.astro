@@ -44,6 +44,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="color-scheme" content="light" />
+    <!-- Favicon: el símbolo de AP SIN la marca CC del corazón, que a 16 px
+         sería un punto (Johnny, 10/10). Sale de arte/estudio/icono.svg con el
+         lienzo cuadrado. Tres archivos en public/ porque necesitan URL fija:
+         el SVG para los navegadores actuales (en negro, y en Silk cuando la
+         pestaña es oscura: con negro sobre una barra oscura no se veía); el
+         .ico de 16/32/48 para los que no leen SVG y para quien pide
+         /favicon.ico a ciegas; y el de iPhone, de 180 sobre blanco, porque
+         iOS no admite transparencia en el icono de la pantalla de inicio.
+         `sizes="32x32"` en el .ico para que Chrome prefiera el SVG. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <!-- La tipografía latina se precarga: es la que pinta el primer texto que
          se ve, así que esperar a que el CSS la descubra cuesta un parpadeo. -->
     <link rel="preload" href="/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin />

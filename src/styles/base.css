@@ -101,6 +101,11 @@ a:active { text-decoration-thickness: var(--underline-hover); text-underline-off
    AGENTS.md §1 prohíbe `display: none` para texto que DEBE leerse; aquí lo
    que se oculta es la versión que no toca en ese ancho. */
 .solo-movil { display: none; }
+
+/* La ® de «Accesibilidad Primero» (src/i18n/marca.ts). En `em`, así sigue al
+   cuerpo de cada texto, y con interlineado 0 para que no empuje el renglón
+   hacia abajo. `npm run tipografia` excluye los <sup> del barrido de tamaños. */
+.registrada { font-size: 0.4em; line-height: 0; vertical-align: super; }
 @media (max-width: 767px) {
   .solo-movil { display: inline; }
   .solo-amplio { display: none; }

@@ -100,6 +100,11 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
        segunda. */
     min-width: 0;
     scroll-snap-type: x proximity;
+    /* Sin esto, el imán colocaba la primera tarjeta contra el BORDE de la
+       ventana y no en el margen de 24: «start» se mide desde el borde del
+       carril, y el carril sangra hasta el borde a propósito (abajo). Lo vio
+       Claude en las capturas de tableta y móvil del 10/10. */
+    scroll-padding-inline: var(--gutter-page);
     /* Sangra hasta el borde para que la siguiente nota ASOME: es lo que dice
        «hay más» sin flechas ni puntos. El desbordamiento se queda dentro del
        carril y no arrastra la página (1.4.10, medido a 320). */
@@ -132,12 +137,14 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
   .mesa__texto { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text); }
   .mesa__enlace:hover .mesa__texto { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
 
+  /* El ritmo, en todos los anchos (10/10). */
+  .mesa { margin-block-start: var(--ritmo-seccion); }
   @media (min-width: 1024px) {
-    .mesa { margin-block-start: var(--ritmo-seccion); }
     /* Tres y pico: la cuarta asoma. */
     .mesa__lista { grid-auto-columns: calc((100% - var(--space-24) * 3) / 3.4); }
   }
-  @media (max-width: 1023px) {
-    .mesa { padding-block: var(--space-48); }
+  /* Tableta: dos y pico, con la misma idea. */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .mesa__lista { grid-auto-columns: calc((100% - var(--space-24) * 2) / 2.4); }
   }
 </style>
