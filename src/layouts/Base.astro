@@ -61,6 +61,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
          /favicon.ico a ciegas; y el de iPhone, de 180 sobre blanco, porque
          iOS no admite transparencia en el icono de la pantalla de inicio.
          `sizes="32x32"` en el .ico para que Chrome prefiera el SVG. -->
+    <!-- La clase `js` antes de pintar: lo que solo se anima con JavaScript
+         (la entrada del titular de Estudio) no puede pintarse quieto y
+         saltar después. Los scripts de los componentes la siguen poniendo
+         también; repetirla no hace nada. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

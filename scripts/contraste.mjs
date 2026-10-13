@@ -75,6 +75,12 @@ for (const ruta of RUTAS) {
      ENTRE medir y capturar. Midiendo ya con ese alto, las dos pasadas ven la
      misma página. Lo destaparon los artículos largos del blog el 11/10:
      «fallos» de 2,3:1 que eran texto medido encima de una portada. */
+  /* Los heros a pantalla entera (100svh) crecerían con la ventana y la
+     página no dejaría de alargarse: se congelan al alto que tienen con la
+     ventana normal antes de estirarla (13/10/2026). */
+  await page.evaluate(() => {
+    for (const h of document.querySelectorAll('.apertura, .hero')) h.style.minHeight = `${h.getBoundingClientRect().height}px`;
+  });
   for (let i = 0; i < 3; i++) {
     const alto = await page.evaluate(() => document.documentElement.scrollHeight);
     await page.setViewportSize({ width: 1440, height: alto });

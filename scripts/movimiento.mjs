@@ -2,17 +2,16 @@
    Movimiento que empieza solo · 2.2.2 (Pausar, detener, ocultar), medido.
 
    Lo que se mueve sin que nadie lo pida y dura más de 5 s junto a otro
-   contenido necesita un mecanismo para pararlo. El símbolo de Estudio
-   chispea en bucle y lleva un botón de pausa (Johnny, 13/10/2026). Esto lo
-   MIDE en el navegador, con las animaciones reales de la página y no con el
-   CSS escrito (AGENTS.md §2.9):
+   contenido necesita un control para pararlo. El símbolo de Estudio no lleva
+   control (Johnny, 13/10/2026), así que tiene que acabar antes de 5 s. Esto
+   lo MIDE en el navegador, con las animaciones reales de la página y no con
+   el CSS escrito (AGENTS.md §2.9):
 
-   · Sin JS: no hay botón, así que no puede haber bucle. Todo acaba antes de
-     5 s y el símbolo queda completo.
-   · Con JS: hay bucle y hay botón, de 44 × 44, con nombre; al pulsarlo se
-     paran TODAS las animaciones y el nombre pasa a «Reproducir…»; al
-     pulsarlo otra vez vuelven.
-   · Con «reducir movimiento»: ninguna animación y ningún botón.
+   · Con y sin JS: ninguna animación infinita, todo acaba antes de 5 s y el
+     símbolo queda completo. Y no hay ningún botón de pausa (no hace falta).
+   · Al pasar el puntero, vuelve a chispear (lo pide quien mira) y también
+     acaba antes de 5 s.
+   · Con «reducir movimiento»: ninguna animación.
    --------------------------------------------------------------------------- */
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
@@ -32,7 +31,7 @@ const medir = (page) => page.evaluate(() => {
   const svg = document.querySelector('[data-simbolo-animado]');
   const anims = svg ? svg.getAnimations({ subtree: true }) : [];
   const fin = anims.map((a) => a.effect.getComputedTiming().endTime);
-  const boton = document.querySelector('[data-simbolo-control]');
+  const boton = document.querySelector('.simbolo button');
   const r = boton?.getBoundingClientRect();
   return {
     cuadrados: svg ? svg.querySelectorAll('rect').length : 0,
@@ -47,39 +46,28 @@ const medir = (page) => page.evaluate(() => {
   };
 });
 
-/* 1 · Sin JavaScript. */
-{
-  const ctx = await navegador.newContext({ javaScriptEnabled: false, viewport: { width: 1440, height: 900 } });
+for (const js of [false, true]) {
+  const ctx = await navegador.newContext({ javaScriptEnabled: js, viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
-  await p.goto(PAGINA, { waitUntil: 'load' });
-  const m = await medir(p);
-  anota(m.cuadrados === CUADRADOS, `sin JS · el símbolo está en el hero (${m.cuadrados} cuadrados)`);
-  // Un suelo: si no hay animaciones, esta comprobación no está mirando nada.
-  anota(m.animaciones === CUADRADOS, `sin JS · cada cuadrado lleva su animación (${m.animaciones})`);
-  anota(m.infinitas === 0 && m.finMax <= LIMITE_MS, `sin JS · sin bucle: todo acaba antes de 5 s (a los ${(m.finMax / 1000).toFixed(2)} s)`);
-  anota(!m.boton, 'sin JS · no se pinta un botón que no haría nada');
-  await p.waitForTimeout(m.finMax + 300);
-  const opacos = await p.evaluate(() => [...document.querySelectorAll('[data-simbolo-animado] rect')].every((r) => getComputedStyle(r).opacity === '1'));
-  anota(opacos, 'sin JS · al terminar, el símbolo queda completo');
-  await ctx.close();
-}
-
-/* 2 · Con JavaScript, en los tres anchos. */
-for (const [ancho, alto] of [[1440, 900], [768, 1024], [390, 844]]) {
-  const p = await navegador.newPage({ viewport: { width: ancho, height: alto } });
+  const n = js ? 'con JS' : 'sin JS';
   await p.goto(PAGINA, { waitUntil: 'load' });
   let m = await medir(p);
-  anota(m.infinitas === CUADRADOS && m.enMarcha === CUADRADOS, `${ancho} · en bucle (${m.infinitas} de ${CUADRADOS})`);
-  anota(m.boton && m.medida[0] >= 44 && m.medida[1] >= 44, `${ancho} · hay botón de pausa de ${m.medida.join(' × ')}`);
-  anota(m.nombre === 'Pausar la animación del símbolo', `${ancho} · se llama «${m.nombre}»`);
-  await p.click('[data-simbolo-control]');
-  m = await medir(p);
-  anota(m.pausadas === CUADRADOS && m.enMarcha === 0, `${ancho} · al pulsar, se paran todas (${m.pausadas})`);
-  anota(m.nombre === 'Reproducir la animación del símbolo', `${ancho} · y pasa a llamarse «${m.nombre}»`);
-  await p.click('[data-simbolo-control]');
-  m = await medir(p);
-  anota(m.enMarcha === CUADRADOS, `${ancho} · al pulsar otra vez, vuelven (${m.enMarcha})`);
-  await p.close();
+  anota(m.cuadrados === CUADRADOS, `${n} · el símbolo está en el hero (${m.cuadrados} cuadrados)`);
+  // Un suelo: si no hay animaciones, esta comprobación no está mirando nada.
+  anota(m.animaciones === CUADRADOS, `${n} · cada cuadrado lleva su animación (${m.animaciones})`);
+  anota(m.infinitas === 0 && m.finMax <= LIMITE_MS, `${n} · sin bucle: todo acaba antes de 5 s (a los ${(m.finMax / 1000).toFixed(2)} s)`);
+  anota(!m.boton, `${n} · sin botón de pausa: no hace falta`);
+  await p.waitForTimeout(m.finMax + 300);
+  const opacos = () => p.evaluate(() => [...document.querySelectorAll('[data-simbolo-animado] rect')].every((r) => getComputedStyle(r).opacity === '1'));
+  anota(await opacos(), `${n} · al terminar, el símbolo queda completo`);
+  if (js) {
+    await p.hover('[data-simbolo]');
+    m = await medir(p);
+    anota(m.enMarcha === CUADRADOS && m.infinitas === 0, `${n} · al pasar el puntero vuelve a chispear, sin bucle (${m.enMarcha})`);
+    const fin = await p.evaluate(() => Math.max(...document.querySelector('[data-simbolo-animado]').getAnimations({ subtree: true }).map((a) => a.effect.getComputedTiming().endTime - a.currentTime)));
+    anota(fin <= LIMITE_MS, `${n} · y acaba antes de 5 s (le quedan ${(fin / 1000).toFixed(2)} s)`);
+  }
+  await ctx.close();
 }
 
 /* 3 · Reducir movimiento. */
@@ -92,7 +80,39 @@ for (const [ancho, alto] of [[1440, 900], [768, 1024], [390, 844]]) {
   await ctx.close();
 }
 
+/* 4 · La entrada del titular de Estudio, en golpes. El <h1> tiene que estar
+   entero en el HTML, sin JS no se anima nada, y con JS todo acaba antes de
+   2 s: tres golpes y después el texto. */
+{
+  const TITULAR = 'Código, diseño y palabra.';
+  const golpes = (page) => page.evaluate(() => {
+    const h1 = document.querySelector('.apertura__titulo');
+    const piezas = [...document.querySelectorAll('.apertura--golpes .golpe__dentro, .apertura--golpes .apertura__texto')];
+    const anims = piezas.flatMap((e) => e.getAnimations());
+    return {
+      texto: h1.textContent.replace(/\s+/g, ' ').trim(),
+      golpes: document.querySelectorAll('.golpe__dentro').length,
+      animaciones: anims.length,
+      fin: anims.reduce((m, a) => Math.max(m, a.effect.getComputedTiming().endTime), 0),
+      quietos: piezas.every((e) => ['none', 'matrix(1, 0, 0, 1, 0, 0)'].includes(getComputedStyle(e).transform) && getComputedStyle(e).opacity === '1'),
+    };
+  });
+  for (const [n, opciones] of [['sin JS', { javaScriptEnabled: false }], ['con JS', {}], ['reducido', { reducedMotion: 'reduce' }]]) {
+    const ctx = await navegador.newContext({ ...opciones, viewport: { width: 1440, height: 900 } });
+    const p = await ctx.newPage();
+    await p.goto(PAGINA, { waitUntil: 'load' });
+    let g = await golpes(p);
+    anota(g.texto === TITULAR && g.golpes === 3, `titular · ${n} · el h1 dice «${g.texto}» entero, en ${g.golpes} golpes`);
+    if (n === 'sin JS') anota(g.animaciones === 0 && g.quietos, `titular · ${n} · no se anima: se ve quieto desde el principio`);
+    else anota(g.animaciones === 4 && g.fin <= 2000, `titular · ${n} · tres golpes y el texto, todo acaba a los ${(g.fin / 1000).toFixed(2)} s`);
+    await p.waitForTimeout(2100);
+    g = await golpes(p);
+    anota(g.quietos, `titular · ${n} · al terminar, todo en su sitio y opaco`);
+    await ctx.close();
+  }
+}
+
 await navegador.close();
 servidor.close();
 if (fallos) { console.error(`\n${fallos} comprobaciones fallan.`); process.exit(1); }
-console.log('\nEl movimiento que empieza solo se puede parar, y sin JS acaba antes de 5 s.');
+console.log('\nEl movimiento que empieza solo acaba antes de 5 s.');

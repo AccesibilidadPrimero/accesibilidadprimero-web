@@ -290,7 +290,9 @@ for (const ancho of [390, 768, 1440]) {
         if (!caja.width || !caja.height) continue;
         const cs = getComputedStyle(el);
         const px = parseFloat(cs.fontSize);
-        const esTitular = el.matches('.apertura__titulo');
+        // El titular puede venir partido en golpes (Estudio): el texto vive en
+        // sus <span>, pero sigue siendo el titular.
+        const esTitular = el.matches('.apertura__titulo') || Boolean(el.closest('.apertura__titulo'));
         if (esTitular) titular = [px, parseFloat(cs.lineHeight)];
         const permitidos = esTitular ? [display] : el.closest('footer') ? [texto, meta] : [texto];
         const donde = el.tagName.toLowerCase() + (typeof el.className === 'string' && el.className.trim()

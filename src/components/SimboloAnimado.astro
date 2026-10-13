@@ -7,30 +7,21 @@
    escribía `&gt;` dentro de <style>, que en HTML rompe el selector) y
    `npm run movimiento` puede medirlo.
 
-   En bucle, con un control de pausa discreto (Johnny, 13/10/2026). 2.2.2: lo
-   que se mueve solo más de 5 s junto a otro contenido necesita un mecanismo
-   para pararlo. Por eso el bucle lo enciende el JavaScript, el mismo que
-   enseña el botón: sin JS, los cuadrados chispean UNA vez (el último acaba a
-   los 4,19 s) y no hay nada que pausar ni un botón que no haría nada
-   (AGENTS.md §5). Con «reducir movimiento», quieto y sin botón.
+   SIN BOTÓN DE PAUSA (Johnny, 13/10/2026: «la animación es muy leve»). Por
+   eso NO va en bucle: 2.2.2 no tiene excepción por levedad, y lo que se mueve
+   solo más de 5 s junto a otro contenido necesita un control para pararlo.
+   Sin control, la única salida que cumple es que termine antes de 5 s:
+   · al cargar, cada cuadrado chispea una vez a su ritmo; el último acaba a
+     los 4,19 s y el símbolo se queda completo y quieto;
+   · al pasar el puntero por encima, vuelve a chispear una vez. Eso no
+     incumple: lo ha pedido quien mira, y también acaba solo.
+   `npm run movimiento` lo mide en cada build (AGENTS.md §2.9).
 
-   El control es como el del carrusel de proyectos de la Home
-   (ProjectSlider): icono de pausa / reproducir, que se entiende sin palabra;
-   la palabra va en `.sr-only` con lo que se pausa. Más discreto que aquel:
-   sin círculo, solo el icono en Ink, a la izquierda del dibujo y alineado
-   con su borde de arriba. La zona que se pulsa mide 44 × 44 (regla de AP) y el
-   anillo de foco es el de toda la web.
-
-   El dibujo es decorativo (`aria-hidden`): el titular dice de qué va la
-   página y el logotipo de la cabecera ya nombra el estudio.
+   Con «reducir movimiento», quieto. Decorativo (`aria-hidden`): el titular
+   dice de qué va la página y el logotipo de la cabecera nombra el estudio.
    --------------------------------------------------------------------------- */
-import { t } from '../i18n/ui';
-import { DEFAULT_LANG, type Lang } from '../i18n/config';
-
-interface Props { class?: string; lang?: Lang }
-const { class: clase, lang = DEFAULT_LANG } = Astro.props;
-const ui = t(lang);
-const que = ' la animación del símbolo';
+interface Props { class?: string }
+const { class: clase } = Astro.props;
 ---
 
 <div class:list={['simbolo', clase]}>
@@ -285,20 +276,6 @@ const que = ' la animación del símbolo';
   </g>
   <path d="M338.4,297.31C184.54,297.31,59.8,164.34,59.8.31c0-.69,71.67,0,71.67,0,0,121.83,92.65,220.6,206.93,220.6v76.4Z" />
   </svg>
-  <button
-    type="button"
-    class="simbolo__control"
-    data-simbolo-control
-    data-label-pausar={ui.carouselPause + que}
-    data-label-reproducir={ui.carouselPlay + que}
-    hidden
-  >
-    <svg class="simbolo__icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
-      <g class="simbolo__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
-      <path class="simbolo__play" d="M1 0 10 6 1 12z" />
-    </svg>
-    <span class="sr-only" data-simbolo-label>{ui.carouselPause + que}</span>
-  </button>
   </div>
 </div>
 
@@ -309,7 +286,6 @@ const que = ' la animación del símbolo';
      lo que cualquier ilustración (400 · 320 · 240, la pone HeroPagina) y el
      símbolo, centrado dentro, mide 180 · 144 · 108 (el 45 %). */
   .simbolo.apertura__ilustracion {
-    align-self: stretch;
     inline-size: auto;
     display: grid;
     place-items: center;
@@ -328,59 +304,26 @@ const que = ' la animación del símbolo';
     stroke-width: 0.6;
     animation: simbolo-chispa var(--c) var(--d) ease-in-out 1 both;
   }
-  [data-bucle] .simbolo__trama rect { animation-iteration-count: infinite; }
-  [data-parado] .simbolo__trama rect { animation-play-state: paused; }
   @keyframes simbolo-chispa {
     0%, 30%, 70%, 100% { opacity: 1; }
     48%, 52% { opacity: 0.08; }
   }
 
-  .simbolo__control {
-    /* A la izquierda del dibujo, alineado arriba, a 8 del cuadrado más a
-       la izquierda: fuera del símbolo, pero pegado a lo que para. */
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-end: calc(100% + var(--space-8));
-    display: grid;
-    place-items: center;
-    inline-size: var(--touch-min);
-    block-size: var(--touch-min);
-    padding: 0;
-    background: none;
-    border: 0;
-    color: var(--text);
-    cursor: pointer;
-  }
-  .simbolo__control[hidden] { display: none; }
-  .simbolo__icono { fill: currentColor; }
-  /* Parado, el icono pasa de pausa a reproducir: el estado lo lleva la
-     forma, no el color (1.4.1), y el nombre accesible cambia con él. */
-  .simbolo__play { display: none; }
-  [data-parado] .simbolo__pausa { display: none; }
-  [data-parado] .simbolo__play { display: inline; }
 
   @media (prefers-reduced-motion: reduce) {
     .simbolo__trama rect { animation: none; }
-    .simbolo__control { display: none; }
   }
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-simbolo]').forEach((raiz) => {
-    const control = raiz.querySelector<HTMLButtonElement>('[data-simbolo-control]');
-    const etiqueta = raiz.querySelector<HTMLElement>('[data-simbolo-label]');
-    if (!control || !etiqueta) return;
-    // Con «reducir movimiento» no hay animación: ni bucle ni botón.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    raiz.setAttribute('data-bucle', '');
-    control.hidden = false;
-    control.addEventListener('click', () => {
-      const parar = !raiz.hasAttribute('data-parado');
-      raiz.toggleAttribute('data-parado', parar);
-      etiqueta.textContent = parar
-        ? (control.dataset.labelReproducir ?? 'Reproducir')
-        : (control.dataset.labelPausar ?? 'Pausar');
+  /* Al pasar el puntero, otra vuelta: solo a las animaciones que ya han
+     terminado, para que pasar y repasar no las corte a medias. Con «reducir
+     movimiento» no hay animaciones y esto no hace nada. */
+  document.querySelectorAll<HTMLElement>('[data-simbolo]').forEach((marco) => {
+    marco.addEventListener('pointerenter', () => {
+      marco.getAnimations({ subtree: true }).forEach((a) => {
+        if (a.playState === 'finished') { a.currentTime = 0; a.play(); }
+      });
     });
   });
 </script>

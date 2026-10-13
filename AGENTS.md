@@ -312,7 +312,7 @@ npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
 npm run aparicion    # aparición al hacer scroll y «Leer más»: sin JS, normal y reducido
-npm run movimiento   # 2.2.2: el símbolo de Estudio en bucle se para con su botón; sin JS acaba antes de 5 s; reducido, quieto
+npm run movimiento   # 2.2.2: el símbolo de Estudio acaba antes de 5 s; el titular en golpes, entero en el h1 y quieto en 2 s
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
 npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños
@@ -333,6 +333,12 @@ tres.
 `HeroPagina.astro` y la fila «nombre del bloque | contenido» en `Bloque.astro`.
 Contacto y Estudio los usan, y las legales también; las páginas que vengan
 (Proyectos…), igual, para que la geometría esté en un solo sitio (§6).
+**Todos los heros, los mismos márgenes (Johnny, 13/10/2026):** pantalla
+entera (100svh/100lvh, como la Home) y el texto abajo a 24 del borde; la
+ilustración, si la hay, centrada en lo que sobra. Sin excepciones por página:
+`npm run geometria` lo mide en todas las que usan `HeroPagina`. Un titular
+puede entrar en golpes (`golpes`, Estudio): el `<h1>` va entero en el HTML,
+sin JS no se anima y `npm run movimiento` comprueba las dos cosas.
 
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla

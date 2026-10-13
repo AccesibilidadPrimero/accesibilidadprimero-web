@@ -558,6 +558,37 @@ for (const ancho of [1440, 768, 390]) {
   }
 }
 
+/* ---- Los heros de página: todos iguales (Johnny, 13/10/2026) ----
+   Pantalla entera y el texto a 24 del borde de abajo, como la Home. Se mide
+   en todas las páginas que usan HeroPagina, a los tres anchos. */
+{
+  const PAGINAS = ['/estudio/', '/contacto/', '/proyectos/', '/proyectos/foc-i-cor/', '/blog/',
+    '/blog/categoria/diseno/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/'];
+  const art = (await (await fetch(`http://localhost:${PUERTO}/blog/`)).text()).match(/href="(\/blog\/(?!categoria)[^"]+\/)"/);
+  if (art) PAGINAS.push(art[1]);
+  console.log('\n── Heros de página: pantalla entera, texto a 24 del borde ──\n');
+  for (const [ancho, alto] of [[1440, 900], [768, 1024], [390, 844]]) {
+    const ph = await nav.newPage({ viewport: { width: ancho, height: alto } });
+    for (const url of PAGINAS) {
+      await ph.goto(`http://localhost:${PUERTO}${url}`, { waitUntil: 'load' });
+      const r = await ph.evaluate(() => {
+        const a = document.querySelector('.apertura');
+        if (!a) return null;
+        const ca = a.getBoundingClientRect();
+        const t = a.querySelector('.apertura__texto-grupo').getBoundingClientRect();
+        return { arriba: Math.round(ca.top + scrollY), alto: Math.round(ca.height), abajo: Math.round(ca.bottom - t.bottom) };
+      });
+      esperadas++;
+      if (!r) { fallos++; console.log(`  ✗ ${ancho} ${url} · sin hero`); continue; }
+      medidos++;
+      const bien = r.arriba === 0 && r.alto >= alto - TOLERANCIA && Math.abs(r.abajo - 24) <= 1;
+      if (!bien) fallos++;
+      console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} ${url.padEnd(34)} alto ${r.alto} (ventana ${alto}) · texto a ${r.abajo} del borde`);
+    }
+    await ph.close();
+  }
+}
+
 await nav.close();
 servidor.close();
 
