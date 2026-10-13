@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { SITIO } from './src/data/sitio.ts';
 
 /**
  * accesibilidadprimero.com v2.
@@ -20,7 +21,8 @@ import { defineConfig } from 'astro/config';
  * La limpieza vive en `npm run svg`, que escribe en disco y se puede leer.
  */
 export default defineConfig({
-  site: 'https://www.accesibilidadprimero.com',
+  // Sale de src/data/sitio.ts: .eu sin indexar hasta el 20/01/2027, después el .com.
+  site: SITIO,
   trailingSlash: 'always',
   i18n: {
     locales: ['es', 'ca', 'en'],

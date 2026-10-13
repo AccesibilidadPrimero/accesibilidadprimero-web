@@ -1,0 +1,18 @@
+---
+/* /blog/categoria/<nombre>/ · los filtros del listado son páginas, no un
+   script (ver ListadoBlog.astro). */
+import { getCollection } from 'astro:content';
+import ListadoBlog from '../../../components/ListadoBlog.astro';
+import { CATEGORIAS } from '../../../data/blog';
+
+export async function getStaticPaths() {
+  const todos = (await getCollection('blog')).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+  return (Object.keys(CATEGORIAS) as (keyof typeof CATEGORIAS)[]).map((categoria) => ({
+    params: { categoria },
+    props: { categoria, articulos: todos.filter((a) => a.data.categorias.includes(categoria)) },
+  }));
+}
+const { categoria, articulos } = Astro.props;
+---
+
+<ListadoBlog articulos={articulos} categoria={categoria} />

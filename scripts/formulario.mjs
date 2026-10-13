@@ -140,6 +140,12 @@ console.log('\n── Worker ──\n');
   const worker = (await import('../worker/index.ts')).default;
   const get = await worker.fetch(new Request('http://localhost/api/contacto'), ENV);
   ok(get.status === 405, 'GET a /api/contacto: 405');
+  /* La web de pruebas no se indexa (public/_headers y worker/index.ts); el
+     dominio final, sí. */
+  const enPruebas = await worker.fetch(new Request('https://accesibilidadprimero.proyectos-44e.workers.dev/api/contacto', { method: 'POST', body: new FormData() }), ENV);
+  const enFinal = await worker.fetch(new Request('https://accesibilidadprimero.com/api/contacto', { method: 'POST', body: new FormData() }), ENV);
+  const enEu = await worker.fetch(new Request('https://accesibilidadprimero.eu/api/contacto', { method: 'POST', body: new FormData() }), ENV);
+  ok(enPruebas.headers.get('x-robots-tag') === 'noindex' && enEu.headers.get('x-robots-tag') === 'noindex' && enFinal.headers.get('x-robots-tag') === null, 'noindex en la web de pruebas y en el .eu provisional, no en el .com');
 }
 
 /* ---- 2. El formulario en el navegador ---------------------------------- */

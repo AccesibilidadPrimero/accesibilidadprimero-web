@@ -4,14 +4,16 @@
 import { t } from '../i18n/ui';
 import { path, type Lang } from '../i18n/config';
 import CtaLink from './CtaLink.astro';
-const { lang } = Astro.props as { lang: Lang };
+/* `titulo`: cada caso puede cerrar con su propia frase (Figma de Foc i Cor).
+   Sin él, la de siempre. */
+const { lang, titulo } = Astro.props as { lang: Lang; titulo?: string };
 const ui = t(lang);
 /* El titular va en dos líneas fijas, cortado después de la primera frase
    (Figma: la caja mide dos renglones a 962 de ancho, y sin corte cabría en
    uno). Cada línea es un <span> en bloque y no un <br>: para el lector de
    pantalla sigue siendo una sola frase seguida, y el espacio entre las dos
    se conserva si algún día la línea deja de ir en bloque. */
-const lineas = ui.ctaHeading.split('\n');
+const lineas = (titulo ?? ui.ctaHeading).split('\n');
 ---
 
 <section class="contacto" aria-labelledby="cta-contacto">

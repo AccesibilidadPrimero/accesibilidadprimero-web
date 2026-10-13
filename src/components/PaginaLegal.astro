@@ -1,0 +1,107 @@
+---
+/* ---------------------------------------------------------------------------
+   Plantilla de las tres páginas legales · Figma `Producción · Legales`
+   (2674:1082), 11/10/2026.
+
+   El texto vive en src/data/legal.ts, que es también la fuente del Figma.
+   Aquí solo se decide cómo se pinta cada pieza:
+
+   · `p`      un párrafo, con la ® detrás de «Accesibilidad Primero».
+   · `lista`  una <ul> con filete fino entre filas, como las listas de Estudio.
+   · `datos`  una <dl>: cada dato y su valor, en dos columnas desde tableta.
+   · `enlace` un CtaLink en su propia línea. NUNCA dentro de un párrafo: un
+              enlace en un renglón mide 23 px y la regla del repo son 44.
+
+   Sin el cierre de contacto al final (`conCta={false}`): en Privacidad o en
+   la declaración de accesibilidad, «Tu proyecto trabaja por la inclusión»
+   sería un anuncio, y no está en el Figma.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import HeroPagina from './HeroPagina.astro';
+import Bloque from './Bloque.astro';
+import CtaLink from './CtaLink.astro';
+import { conMarca } from '../i18n/marca';
+import { DEFAULT_LANG, type RouteKey } from '../i18n/config';
+import type { PaginaLegal } from '../data/legal';
+
+interface Props {
+  pagina: PaginaLegal;
+  ruta: RouteKey;
+}
+const { pagina, ruta } = Astro.props;
+
+const escapar = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* Una dirección de correo no tiene espacios y a 320 no cabe: se le deja
+   partir después de la arroba (1.4.10), como en Contacto. */
+const textoEnlace = (s: string) => escapar(s).replace('@', '@<wbr>');
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current={ruta}
+  conCta={false}
+  title={`${pagina.titulo} · Accesibilidad Primero`}
+  description={pagina.descripcion}
+>
+  <HeroPagina titulo={pagina.titulo} texto={pagina.entrada} nota={pagina.fecha} />
+
+  {
+    pagina.bloques.map((b) => (
+      <Bloque id={b.id} titulo={b.titulo}>
+        <div class="pila">
+          {b.piezas.map((pz) => {
+            if ('p' in pz) return <p set:html={conMarca(pz.p)} />;
+            if ('lista' in pz)
+              return (
+                <ul class="filas">
+                  {pz.lista.map((t) => (
+                    <li class="fila" set:html={conMarca(t)} />
+                  ))}
+                </ul>
+              );
+            if ('datos' in pz)
+              return (
+                <dl class="filas">
+                  {pz.datos.map(([k, v]) => (
+                    <div class="fila fila--dato">
+                      <dt>{k}</dt>
+                      <dd>{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              );
+            return (
+              <CtaLink href={pz.enlace.href}>
+                <Fragment set:html={textoEnlace(pz.enlace.texto)} />
+              </CtaLink>
+            );
+          })}
+        </div>
+      </Bloque>
+    ))
+  }
+</Base>
+
+<style>
+  p, ul, dl, dd { margin: 0; }
+  ul { padding: 0; list-style: none; }
+
+  /* Piezas de un bloque: 24 entre ellas y el contenido a 888, como en Estudio. */
+  .pila { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 888px; }
+  .pila > :not(a) { align-self: stretch; }
+
+  /* Filete fino (decorativo: la lista ya la anuncia el marcado) encima de cada
+     fila y debajo de la última. */
+  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
+  .fila:last-child { border-block-end: 1px solid var(--rule); }
+
+  /* Datos: el nombre y el valor apilados en móvil; en dos columnas desde
+     tableta (240) y en escritorio (296), como las organizaciones de Estudio. */
+  .fila--dato { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-4); }
+  @media (min-width: 768px) {
+    .fila--dato { grid-template-columns: 240px minmax(0, 1fr); column-gap: var(--space-24); }
+  }
+  @media (min-width: 1024px) {
+    .fila--dato { grid-template-columns: 296px minmax(0, 1fr); }
+  }
+</style>

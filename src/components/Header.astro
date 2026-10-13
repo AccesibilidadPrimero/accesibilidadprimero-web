@@ -115,10 +115,15 @@ const langs = alternates(current, slug);
   }
   .header__logo sup { font-size: 0.5em; vertical-align: super; }
 
+  /* Entre «Contacto» y «ES» se ven 96: cuatro veces los 24 que hay entre
+     palabra y palabra del menú (Johnny, 11/10/2026). Medido de letra a letra.
+     El hueco es 84 porque los otros 12 son el relleno de «ES»; el de
+     «Contacto» ya lo devuelve el margen negativo de la lista. En el Figma
+     `Header Right` va a 72: allí sí cuentan los 12 de «Contacto». */
   .header__right {
     display: flex;
     align-items: center;
-    gap: var(--space-64);
+    gap: calc(var(--space-96) - var(--space-12));
   }
 
   /* La navegación en línea y el selector solo existen en escritorio. Por
@@ -133,7 +138,11 @@ const langs = alternates(current, slug);
      TEXTO de «Contacto» acaba en el margen derecho, igual que el logotipo
      empieza en el izquierdo. La zona táctil no cambia. Con margen 24 la
      asimetría se notaba (09/10). */
-  .header__list { display: flex; gap: var(--space-32); margin-inline-end: calc(var(--space-12) * -1); }
+  /* Sin separación entre enlaces (Johnny, 11/10/2026: «las veo muy
+     separadas, deben ser múltiplo de 12»). Lo que se ve entre palabra y
+     palabra son los 12 + 12 de relleno de los dos enlaces: 24. Las zonas
+     pulsables se tocan, pero cada una sigue midiendo 44 de alto. */
+  .header__list { display: flex; gap: 0; margin-inline-end: calc(var(--space-12) * -1); }
   .header__lang-list { display: flex; gap: var(--space-4); }
 
   .header__link, .header__lang-link {

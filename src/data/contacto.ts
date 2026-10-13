@@ -6,7 +6,7 @@
    repositorio: vive en el panel de Cloudflare (ver worker/index.ts).
 
    Widget «Formulario de contacto», modo Invisible, creado el 10/10/2026.
-   Dominios: accesibilidadprimero.com, www, la dirección de pruebas
+   Dominios: accesibilidadprimero.com y .eu (con y sin www), la dirección de pruebas
    (…proyectos-44e.workers.dev) y localhost.
 
    La de PRUEBA de Cloudflare (siempre aprueba) se queda nombrada abajo para

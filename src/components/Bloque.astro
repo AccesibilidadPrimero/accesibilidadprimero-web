@@ -1,0 +1,51 @@
+---
+/* ---------------------------------------------------------------------------
+   Bloque de página interior · Contacto y Estudio.
+
+   Estructura copiada de madebyaran.com/about (la estructura, no el estilo):
+   el nombre del bloque a la izquierda y el contenido a la derecha. Aquí el
+   nombre es un <h2> de verdad, no un div: es lo que permite saltar de bloque
+   en bloque con un lector de pantalla.
+
+   · Escritorio (≥ 1024): nombre en 204 y contenido desde 456 del borde de la
+     columna (204 + 252 de hueco, sobre 1392). Como proporción, para que a
+     1024 el contenido no se quede sin sitio.
+   · Tableta y móvil: el nombre arriba y el contenido 64 más abajo
+     (`--ritmo-intro`).
+   · Entre bloques, 128 (`--ritmo-seccion`), como entre las secciones de la
+     Home.
+   --------------------------------------------------------------------------- */
+interface Props {
+  id: string;
+  titulo: string;
+}
+const { id, titulo } = Astro.props;
+---
+
+<section class="bloque" aria-labelledby={id}>
+  <h2 id={id} class="bloque__titulo">{titulo}</h2>
+  <div class="bloque__contenido"><slot /></div>
+</section>
+
+<style>
+  .bloque {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ritmo-intro);
+    padding: 0 var(--gutter-page);
+    margin-block-start: var(--ritmo-seccion);
+  }
+  .bloque__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .bloque__contenido { min-width: 0; }
+
+  @media (min-width: 1024px) {
+    .bloque {
+      display: grid;
+      grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr);
+      gap: 0;
+    }
+    /* El nombre en su columna de 204, aunque sea largo («Organizaciones y
+       proyectos» parte en dos renglones, como en el Figma). */
+    .bloque__titulo { max-width: 204px; }
+  }
+</style>

@@ -31,7 +31,7 @@ CORREO_DESTINO = "proyectos@accesibilidadprimero.com"
 CORREO_REMITENTE = "proyectos@accesibilidadprimero.com"
 # Dominios desde los que se acepta el formulario. Sin localhost: en producción
 # no debe valer una ficha conseguida en local.
-TURNSTILE_HOSTNAMES = "accesibilidadprimero.com,www.accesibilidadprimero.com,accesibilidadprimero.proyectos-44e.workers.dev"
+TURNSTILE_HOSTNAMES = "accesibilidadprimero.com,www.accesibilidadprimero.com,accesibilidadprimero.eu,www.accesibilidadprimero.eu,accesibilidadprimero.proyectos-44e.workers.dev"
 
 [observability]
 enabled = true

@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { CATEGORIAS } from './data/blog';
 
 /* ---------------------------------------------------------------------------
    Esquemas de contenido.
@@ -68,9 +69,12 @@ const decision = z.object({
   autoria: z.enum(['propia', 'cliente', 'compartida']),
 });
 
+/* La página del caso (/proyectos/<slug>/), desde el 11/10/2026. Lo que no
+   cabe en la ficha de la Home: titular, ficha, el reto, las fotos y el bloque
+   corto de accesibilidad. Las fotos se compilan desde arte/proyectos/<slug>/. */
 const proyectos = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/proyectos' }),
-  schema: z
+  schema: ({ image }) => z
     .object({
       titulo: z.string(),
       /* Titulares sin antetítulo y sin mayúsculas sostenidas. */
@@ -111,6 +115,39 @@ const proyectos = defineCollection({
          captura, no «captura de la web de X», que no añade nada. */
       imagenes: z
         .array(z.object({ archivo: z.string(), alt: z.string().min(20) }))
+        .optional(),
+
+      /* Lo que dice la tarjeta del listado de Proyectos debajo del nombre. */
+      linea: z.string().optional(),
+
+      caso: z
+        .object({
+          /* El <h1>: un titular de resultado, no el nombre del cliente a secas. */
+          titular: z.string(),
+          entradilla: z.string(),
+          anio: z.number().int(),
+          queHicimos: z.string(),
+          /* Lo que dice la declaración del cliente, no lo que nos gustaría. */
+          conformidad: z.string(),
+          reto: z.object({
+            intro: z.string(),
+            tensiones: z.array(z.object({ titulo: z.string(), cuerpo: z.string() })).length(2),
+          }),
+          fotos: z.object({
+            portada: z.object({ archivo: image(), alt: z.string().min(20) }),
+            par: z.array(z.object({ archivo: image(), alt: z.string().min(20) })).length(2),
+            cierre: z.object({ archivo: image(), alt: z.string().min(20) }).optional(),
+          }),
+          /* Medido sobre la web publicada, con fecha. Si cambia la web, se
+             vuelve a medir antes de tocar el texto (decisión del 30/08). */
+          accesibilidad: z.object({
+            medidoEl: z.coerce.date(),
+            puntos: z.array(z.string()).min(3).max(5),
+            declaracion: z.string().url().optional(),
+          }),
+          /* El titular del cierre de Contacto en esta página. */
+          cierre: z.string().optional(),
+        })
         .optional(),
     })
     .superRefine((d, ctx) => {
@@ -165,9 +202,12 @@ const proyectos = defineCollection({
 
       if (!d.casoPublicado) return;
 
-      if (!d.decisiones || d.decisiones.length < 4 || d.decisiones.length > 5) {
+      if (!d.caso) err('Un caso publicado necesita su bloque `caso` (titular, ficha, reto, fotos y accesibilidad).', ['caso']);
+      /* De 3 a 5 desde el 11/10/2026 (Johnny): el caso de Foc i Cor se sostiene
+         con tres y la cuarta habría sido relleno. La sexta sigue sin compilar. */
+      if (!d.decisiones || d.decisiones.length < 3 || d.decisiones.length > 5) {
         err(
-          'Un caso publicado lleva entre 4 y 5 decisiones. Una sexta no compila: un hueco no es un problema que resolver, es el resultado.',
+          'Un caso publicado lleva entre 3 y 5 decisiones. Una sexta no compila: un hueco no es un problema que resolver, es el resultado.',
           ['decisiones'],
         );
       }
@@ -182,4 +222,39 @@ const proyectos = defineCollection({
     }),
 });
 
-export const collections = { proyectos };
+/* ---------------------------------------------------------------------------
+   Blog (11/10/2026). Los 8 artículos vienen de WordPress, convertidos a mano
+   a Markdown (ver blog-borradores/LEEME.md, que cuenta qué se tocó).
+
+   · Solo en castellano por ahora (Johnny, 11/10/2026). La regla del 30/09
+     —cada artículo en los tres idiomas o no compila— entra el día que se
+     activen catalán e inglés.
+   · `urlAntigua` es la dirección de WordPress: tiene que existir una 301 en
+     public/_redirects hacia /blog/<slug>/. `npm run redirecciones` lo mira.
+   · Sin `imagenAlt` no compila, como en Proyectos. Y no vale cualquier cosa:
+     menos de 20 caracteres suele ser «WCAG» o «nothing», que no dicen nada.
+   --------------------------------------------------------------------------- */
+
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: ({ image }) =>
+    z
+      .object({
+        titulo: z.string(),
+        /* El <title> cuando el titular es demasiado largo para Google. */
+        tituloSeo: z.string().optional(),
+        descripcion: z.string().min(50, 'La descripción es lo que enseña Google: al menos 50 caracteres.'),
+        fecha: z.coerce.date(),
+        categorias: z.array(z.enum(Object.keys(CATEGORIAS) as [keyof typeof CATEGORIAS, ...(keyof typeof CATEGORIAS)[]])).min(1),
+        imagen: image(),
+        imagenAlt: z.string().min(20, 'Una alternativa de menos de 20 caracteres no describe la portada.'),
+        urlAntigua: z.string().regex(/^\/[a-z0-9-]+\/$/).optional(),
+      })
+      .superRefine((d, ctx) => {
+        if (/^[A-ZÁÉÍÓÚÑ\s·—-]{8,}$/.test(d.titulo)) {
+          ctx.addIssue({ code: 'custom', message: 'Titulares sin mayúsculas sostenidas.', path: ['titulo'] });
+        }
+      }),
+});
+
+export const collections = { proyectos, blog };

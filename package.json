@@ -14,13 +14,14 @@
     "serve:dist": "node scripts/serve.mjs",
     "teclado": "node scripts/teclado.mjs",
     "contraste": "node scripts/contraste.mjs",
-    "verificar": "npm run build && npm run check && npm run tipografia && npm run geometria && npm run a11y && node scripts/mesa.mjs --prueba && npm run teclado && npm run aparicion && npm run formulario && npm run contraste",
+    "verificar": "npm run build && npm run check && npm run tipografia && npm run geometria && npm run a11y && node scripts/mesa.mjs --prueba && npm run teclado && npm run aparicion && npm run formulario && npm run redirecciones && npm run contraste",
     "capturas": "node scripts/capturas.mjs",
     "tipografia": "node scripts/tipografia.mjs",
     "publicar": "npm run verificar && node scripts/publicar.mjs",
     "geometria": "node scripts/geometria.mjs",
     "aparicion": "node scripts/aparicion.mjs",
     "mesa": "node scripts/mesa.mjs",
+    "redirecciones": "node scripts/redirecciones.mjs",
     "formulario": "node --experimental-strip-types --no-warnings scripts/formulario.mjs"
   },
   "dependencies": {

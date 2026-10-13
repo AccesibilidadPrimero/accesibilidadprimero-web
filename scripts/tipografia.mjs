@@ -246,16 +246,30 @@ console.log('\n── Un color: todo en negro ──\n');
   else console.log('  ✓ ni un gris sobre la menta del hero');
 }
 
-/* ---- Contacto (10/10/2026) ------------------------------------------------
-   Las mismas tres reglas sobre /contacto/: dos tamaños (el display SOLO en el
-   titular), un peso, todo en negro. La única excepción de color es el texto
-   del botón, blanco sobre Ink. Se mide también con los errores abiertos,
-   porque los mensajes de error no existen hasta que alguien envía mal. */
-console.log('\n── Contacto ──\n');
+/* ---- Páginas interiores: Contacto, Estudio y legales (10–11/10/2026) ------
+   Las mismas tres reglas: dos tamaños (el display SOLO en el titular del
+   hero), un peso, todo en negro. La única excepción de color es el texto del
+   botón de Contacto, blanco sobre Ink. Contacto se mide también con los
+   errores abiertos, porque los mensajes de error no existen hasta que
+   alguien envía mal. */
+const INTERIORES = [
+  { nombre: 'Contacto', url: '/contacto/', conErrores: true },
+  { nombre: 'Estudio', url: '/estudio/', conErrores: false },
+  { nombre: 'Privacidad', url: '/privacidad/', conErrores: false },
+  { nombre: 'Cookies', url: '/cookies/', conErrores: false },
+  { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', conErrores: false },
+  { nombre: 'Proyectos', url: '/proyectos/', conErrores: false },
+  { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', conErrores: false },
+  { nombre: 'Blog', url: '/blog/', conErrores: false },
+  { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
+  { nombre: 'Blog · artículo con tablas', url: '/blog/pero-que-es-la-wcag/', conErrores: false },
+];
+for (const pagina of INTERIORES) {
+console.log(`\n── ${pagina.nombre} ──\n`);
 for (const ancho of [390, 768, 1440]) {
-  for (const conErrores of [false, true]) {
+  for (const conErrores of pagina.conErrores ? [false, true] : [false]) {
     const page = await nav.newPage({ viewport: { width: ancho, height: 900 } });
-    await page.goto(`http://localhost:${PUERTO}/contacto/`, { waitUntil: 'load' });
+    await page.goto(`http://localhost:${PUERTO}${pagina.url}`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
     if (conErrores) await page.click('.boton');
     const r = await page.evaluate(({ texto, display, meta }) => {
@@ -265,6 +279,10 @@ for (const ancho of [390, 768, 1440]) {
       for (const el of document.querySelectorAll('body *')) {
         if (el.tagName === 'SUP' || el.closest('sup')) continue;
         if (el.closest('.sr-only') || el.classList.contains('sr-only')) continue;
+        /* Las muestras de las demostraciones del blog se pintan A PROPÓSITO a
+           otro tamaño o en otro gris: son el ejemplo. Lo que las explica, al
+           lado, sí se mide. */
+        if (el.closest('[data-ejemplo]')) continue;
         const propio = [...el.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim())
           .map((n) => n.textContent.trim()).join(' ');
         if (!propio) continue;
@@ -299,6 +317,7 @@ for (const ancho of [390, 768, 1440]) {
       console.log(`  ✓ ${etiqueta} · titular ${r.titular.map((v) => Math.round(v)).join("/")}, el resto a ${TEXTO[ancho][0]}, 400 y negro${conErrores ? `, ${r.errores} errores` : ''}`);
     }
   }
+}
 }
 
 await nav.close();

@@ -12,6 +12,8 @@ import Header from '../components/Header.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import Footer from '../components/Footer.astro';
 import { DEFAULT_LANG, type Lang, type RouteKey } from '../i18n/config';
+import { CF_WEB_ANALYTICS_TOKEN } from '../data/analitica';
+import { INDEXABLE } from '../data/sitio';
 
 interface Props {
   title: string;
@@ -21,6 +23,8 @@ interface Props {
   slug?: string;
   /** El bloque de contacto se repite en todas las páginas menos en Contacto. */
   conCta?: boolean;
+  /** Titular propio del cierre de Contacto (los casos). */
+  ctaTitulo?: string;
 }
 const {
   title,
@@ -29,6 +33,7 @@ const {
   current,
   slug,
   conCta = true,
+  ctaTitulo,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -42,7 +47,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {/* Mientras la web viva en el .eu provisional (src/data/sitio.ts): noindex
+        y SIN canonical. Juntos mandan señales contrarias a Google, y el
+        canonical apuntaría a páginas del .com que hoy son el WordPress. */}
+    {INDEXABLE ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="light" />
     <!-- Favicon: el símbolo de AP SIN la marca CC del corazón, que a 16 px
          sería un punto (Johnny, 10/10). Sale de arte/estudio/icono.svg con el
@@ -59,6 +67,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <!-- La tipografía latina se precarga: es la que pinta el primer texto que
          se ve, así que esperar a que el CSS la descubra cuesta un parpadeo. -->
     <link rel="preload" href="/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Cloudflare Web Analytics (Johnny, 11/10/2026): sin cookies, sin
+         almacenamiento local y sin huella, así que no necesita banner. Solo
+         se pinta si hay token (src/data/analitica.ts). Lo nombran
+         Privacidad y Cookies. -->
+    {
+      CF_WEB_ANALYTICS_TOKEN && (
+        <script
+          is:inline
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: CF_WEB_ANALYTICS_TOKEN })}
+        />
+      )
+    }
   </head>
 
   <body>
@@ -71,7 +93,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
 
-    {conCta && <ContactCTA lang={lang} />}
+    {conCta && <ContactCTA lang={lang} titulo={ctaTitulo} />}
     <Footer lang={lang} />
 
     <script>

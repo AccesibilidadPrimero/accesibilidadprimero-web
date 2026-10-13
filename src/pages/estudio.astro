@@ -1,0 +1,217 @@
+---
+/* ---------------------------------------------------------------------------
+   Estudio · Figma `Producción · Estudio` (2674:1080):
+   Desktop 2277:2 · Tablet 2657:36 · Móvil 2657:208.
+
+   Mismo sistema que la Home y que Contacto: un cuerpo, un peso, todo en Ink,
+   ritmo 128/64, la ® detrás de «Accesibilidad Primero». La única frase en
+   `--display` es el titular del hero.
+
+   Los textos son los de escritorio (Johnny, 10/10/2026), con sus
+   correcciones de esa noche: «definimos un plan», comillas españolas, y
+   Agaya Play fuera de la lista de la Cátedra.
+
+   Lo que NO se ha copiado de la referencia (madebyaran.com/about): allí los
+   nombres de bloque son divs; aquí son <h2>, y los servicios, <h3>. Es lo que
+   permite recorrer la página por encabezados.
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import CtaLink from '../components/CtaLink.astro';
+import Redes from '../components/Redes.astro';
+import { DEFAULT_LANG } from '../i18n/config';
+import { conMarca } from '../i18n/marca';
+import { CORREO_ESTUDIO } from '../data/contacto';
+/* Las dos las compila `npm run arte` desde arte/estudio/. */
+import casa from '../assets/estudio/casa.svg';
+import retrato from '../assets/estudio/johnny-vigas.jpg';
+
+const lang = DEFAULT_LANG;
+
+const SERVICIOS = [
+  {
+    nombre: 'Diseño y desarrollo web accesible.',
+    texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como estándar mínimo. Nuestro día a día.',
+  },
+  {
+    nombre: 'Auditorías de accesibilidad.',
+    texto: 'Analizamos tu web, identificamos las barreras, te las explicamos y definimos un plan para aplicar las mejoras. Es el primer paso si quieres que tu web actual sea accesible sin diseñarla desde cero.',
+  },
+  {
+    nombre: 'Formación y consultoría.',
+    texto: 'Ayudamos a tu equipo a crear y mantener contenidos y servicios digitales accesibles. Creamos un protocolo para que cada contenido nuevo de tu web sea accesible.',
+  },
+  {
+    nombre: 'Documentos y comunicación inclusiva.',
+    texto: 'Creamos y adaptamos presentaciones y documentos PDF accesibles. Ayudamos a cumplir los requisitos de accesibilidad aplicables a administraciones y proyectos con financiación pública.',
+  },
+];
+
+/* La barra y el año van pegados a la última palabra con espacios que no se
+   parten (U+00A0): en móvil el año bajaba solo al renglón siguiente y la
+   barra se quedaba colgando al final del anterior. */
+const CATEDRA = [
+  ['Exposición «Arte y Metaverso»', 2024],
+  ['Aplicación MUCAES UPV', 2025],
+  ['Protocolo de actuación ante una emergencia para personas con discapacidad', 2025],
+  ['MOOC «Introducción a la IA en la creación artística para personas con discapacidad»', 2026],
+  ['Hackathon accesible UPV', 2026],
+].map(([t, a]) => `${t}\u00a0|\u00a0${a}`);
+
+/* Organización y, cuando lo hay, el proyecto que hicimos con ella. Sin
+   enlaces: no están en el Figma (AGENTS.md §1). */
+const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
+  { nombre: 'CESAL', proyecto: 'Foc i Cor, restaurante escuela en Catarroja' },
+  { nombre: 'AEIPI y Eurlyaid', proyecto: 'ECI Conference Madrid 2027' },
+  { nombre: 'Izaskun Etxebarria' },
+  { nombre: 'Les Veus de la DANA' },
+  { nombre: 'Elogio de la Línea' },
+  { nombre: 'Teatro Off' },
+];
+---
+
+<Base
+  lang={lang}
+  current="estudio"
+  title="Estudio · Accesibilidad Primero"
+  description="Estudio de diseño que crea webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás."
+>
+  <!-- La casa: una persona sola ante una estructura grande, todavía abierta.
+       El `alt` dice eso, no «ilustración de una casa». -->
+  <HeroPagina
+    ilustracion={casa}
+    alt="Una persona diminuta ante una casa enorme, abierta y a medio dibujar."
+    titulo="Código, diseño y palabra."
+    texto={[
+      'La forma en que comunicamos construye realidades.',
+      'Por eso, trabajamos por un espacio digital más justo y abierto a todas las personas.',
+    ]}
+  />
+
+  <Bloque id="estudio" titulo="Estudio">
+    <div class="pila">
+      <p>Creamos webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás.</p>
+      <p set:html={conMarca('Accesibilidad Primero. Siempre.')} />
+      <p>Cada decisión de diseño facilita el acceso o levanta una barrera; invita a participar o excluye. La accesibilidad no es una capa que añadimos al final, sino el principio desde el que pensamos cada proyecto.</p>
+    </div>
+  </Bloque>
+
+  <Bloque id="servicios" titulo="Servicios">
+    <ul class="servicios">
+      {
+        SERVICIOS.map((s) => (
+          <li>
+            <h3 class="servicio__nombre">{s.nombre}</h3>
+            <p>{s.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Bloque>
+
+  <Bloque id="equipo" titulo="Equipo">
+    <div class="pila">
+      <p class="equipo__texto" set:html={conMarca('Accesibilidad Primero nació en marzo de 2026. Somos un estudio pequeño, trabajas directamente con las personas que diseñan y desarrollan tu proyecto.')} />
+      <div class="persona">
+        <!-- El nombre va al lado, así que el `alt` no lo repite: dice lo que
+             la foto añade. -->
+        <Picture
+          src={retrato}
+          formats={['avif', 'webp']}
+          widths={[178, 356]}
+          sizes="178px"
+          width={178}
+          height={206}
+          alt="Retrato: sonríe a cámara, con gafas de pasta negras, barba y chaqueta oscura, ante un fondo gris azulado."
+          class="persona__foto"
+        />
+        <div class="persona__datos">
+          <p>Johnny Vigas</p>
+          <p><span class="linea">Fundador</span> <span class="linea">y director creativo.</span></p>
+        </div>
+      </div>
+    </div>
+  </Bloque>
+
+  <Bloque id="catedra" titulo="Cátedra dicaTIC">
+    <div class="pila">
+      <p>Participamos en la dirección de la Cátedra dicaTIC de Brecha Digital y Discapacidad de la Universitat Politècnica de València, aportando una visión estratégica en diseño, tecnología y accesibilidad digital.</p>
+      <ul class="filas">
+        {CATEDRA.map((p) => <li class="fila">{p}</li>)}
+      </ul>
+    </div>
+  </Bloque>
+
+  <Bloque id="organizaciones" titulo="Organizaciones y proyectos">
+    <ul class="filas filas--cerradas">
+      {
+        ORGANIZACIONES.map((o) => (
+          <li class="fila fila--organizacion">
+            <span>{o.nombre}</span>
+            {o.proyecto && <span>{o.proyecto}</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </Bloque>
+
+  <Bloque id="contacto-estudio" titulo="Contacto">
+    <div class="pila pila--contacto">
+      {/* El <wbr> deja partir el correo después de la arroba: sin espacios, a
+          320 no cabe en una línea (1.4.10). */}
+      <CtaLink href={`mailto:${CORREO_ESTUDIO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
+      <Redes />
+    </div>
+  </Bloque>
+</Base>
+
+<style>
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+  .linea { display: block; }
+
+  /* Párrafos y piezas de un bloque: 24 entre ellos (Figma, «Contenido»). */
+  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; }
+  .pila--contacto { align-items: flex-start; }
+
+  /* Servicios: 48 entre servicio y servicio, 8 entre su nombre y su texto.
+     El nombre es un <h3> pintado como el cuerpo: el nivel lo da el marcado. */
+  .servicios { display: flex; flex-direction: column; gap: var(--space-48); max-width: 888px; }
+  .servicios li { display: flex; flex-direction: column; gap: var(--space-8); }
+  .servicio__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* Equipo: el texto a 718 y la persona 24 más abajo (48 en total, como en
+     el Figma). Foto de 178 × 206 y, 24 a su derecha, nombre y cargo. */
+  .equipo__texto { max-width: 718px; }
+  .persona { display: flex; align-items: flex-start; gap: var(--space-24); padding-block-start: var(--space-24); }
+  .persona__datos { display: flex; flex-direction: column; gap: var(--space-8); }
+  /* El hijo flex es el <picture> que pone Astro, no el <img>: sin esto se
+     encoge y a 390 la foto se quedaba en 176 de ancho. */
+  .persona :global(picture) { flex: 0 0 auto; }
+  .persona :global(.persona__foto) {
+    display: block;
+    inline-size: 178px;
+    block-size: 206px;
+    flex: 0 0 auto;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+  }
+
+  /* Listas con filete: 16 arriba y abajo, filete fino encima de cada fila
+     (decorativo: la lista ya la anuncia el marcado). La de organizaciones
+     cierra también por abajo. */
+  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
+  .filas--cerradas .fila:last-child { border-block-end: 1px solid var(--rule); }
+
+  /* Organizaciones: nombre y proyecto en dos columnas alineadas (296 en
+     escritorio, 240 en tableta); en móvil, uno debajo del otro. */
+  .fila--organizacion { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-4); max-width: 888px; }
+  @media (min-width: 768px) {
+    .fila--organizacion { grid-template-columns: 240px minmax(0, 1fr); column-gap: var(--space-24); }
+  }
+  @media (min-width: 1024px) {
+    .fila--organizacion { grid-template-columns: 296px minmax(0, 1fr); }
+  }
+</style>

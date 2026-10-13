@@ -1,0 +1,9 @@
+---
+/* /blog/ · todos los artículos, del más reciente al más antiguo. */
+import { getCollection } from 'astro:content';
+import ListadoBlog from '../../components/ListadoBlog.astro';
+
+const articulos = (await getCollection('blog')).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+---
+
+<ListadoBlog articulos={articulos} />

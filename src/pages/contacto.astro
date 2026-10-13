@@ -20,9 +20,15 @@
    --------------------------------------------------------------------------- */
 import Base from '../layouts/Base.astro';
 import CtaLink from '../components/CtaLink.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
 import Redes from '../components/Redes.astro';
-import { DEFAULT_LANG } from '../i18n/config';
+import { DEFAULT_LANG, path } from '../i18n/config';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
+/* Compilada por `npm run arte` desde arte/contacto/lapiz.svg (Johnny, 10/10).
+   Importada y no escrita a mano: Astro le pone el hash al nombre y, si el
+   archivo desaparece, el build se para. */
+import lapiz from '../assets/contacto/lapiz.svg';
 
 const lang = DEFAULT_LANG;
 const CORREO = CORREO_ESTUDIO;
@@ -34,7 +40,7 @@ const CAMPOS = [
   {
     id: 'nombre',
     etiqueta: 'Nombre y apellidos',
-    ayuda: 'Como quieras que te llamemos al contestar.',
+    ayuda: '¿Qué nombre prefieres que usemos al responderte?',
     tipo: 'text',
     autocomplete: 'name',
     obligatorio: true,
@@ -67,18 +73,16 @@ const CAMPOS = [
   title="Contacto · Accesibilidad Primero"
   description="No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os está costando. Contestamos siempre."
 >
-  <div class="apertura">
-    <h1 class="apertura__titulo">Cuéntanos a dónde quieres llegar.</h1>
-    <p class="apertura__texto">
-      No hace falta que traigas el proyecto resuelto. Con que nos digas qué hacéis y qué os está
-      costando, ya tenemos por dónde empezar. Contestamos siempre, aunque sea para decirte que no
-      somos el estudio adecuado.
-    </p>
-  </div>
+  <!-- Hero en menta, como la Home (HeroPagina.astro). El `alt` dice lo que
+       la ilustración aporta: trabajo hecho entre dos. -->
+  <HeroPagina
+    ilustracion={lapiz}
+    alt="Dos personas diminutas empujan juntas un lápiz enorme."
+    titulo="Cuéntanos a dónde quieres llegar."
+    texto={['No hace falta que traigas el proyecto resuelto. Con que nos digas qué hacéis y qué os está costando, ya tenemos por dónde empezar. Contestamos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
+  />
 
-  <section class="bloque" aria-labelledby="escribenos">
-    <h2 id="escribenos" class="bloque__titulo">Escríbenos</h2>
-    <div class="bloque__contenido">
+  <Bloque id="escribenos" titulo="Escríbenos">
       <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
            su etiqueta, «(opcional)». Así no hace falta explicar qué significa
            un asterisco (3.3.2), y el lector de pantalla no lo lee en cada
@@ -138,7 +142,7 @@ const CAMPOS = [
         <div class="campo">
           <label for="mensaje">Cuéntanos</label>
           <p id="mensaje-ayuda" class="campo__ayuda">
-            Qué hacéis, qué necesitáis y para cuándo. Con tres líneas nos vale.
+            ¿Qué necesitas o qué idea tienes? Cuéntanos lo que quieras compartir y te responderemos.
           </p>
           <p id="mensaje-error" class="campo__error" hidden />
           <textarea
@@ -166,10 +170,17 @@ const CAMPOS = [
               class="consentimiento__casilla"
             />
             <label for="consentimiento">
-              He leído la política de privacidad y acepto que uséis mis datos para contestarme.
+              He leído la política de privacidad y acepto que uséis mis datos para responderme.
             </label>
           </div>
         </div>
+
+        <!-- La política a la que se refiere la casilla. En su propia línea, no
+             dentro de la etiqueta: un enlace dentro de un <label> se lleva
+             el clic que debería marcar la casilla, y en un renglón mide 23
+             px (la regla del repo son 44). Figma: `CTA · Política de
+             privacidad`, 11/10/2026. -->
+        <CtaLink href={path('privacidad', lang)}>Política de privacidad</CtaLink>
 
         <!-- Turnstile en modo invisible: no dibuja nada ni pide nada. Su
              script se carga al empezar a rellenar el formulario, no al abrir
@@ -184,24 +195,23 @@ const CAMPOS = [
            existe y quien usa lector de pantalla no sabría qué ha pasado. Al
            llevar el foco no hace falta role="status": se lee al llegar. -->
       <p class="confirmacion" data-confirmacion tabindex="-1" hidden>
-        Gracias, ya tenemos tu mensaje. Te contestaremos a <span data-confirmacion-correo></span>.
+        Gracias, ya tenemos tu mensaje. Te responderemos a <span data-confirmacion-correo></span>.
       </p>
-    </div>
-  </section>
+  </Bloque>
 
-  <section class="bloque" aria-labelledby="directamente">
-    <h2 id="directamente" class="bloque__titulo">Directamente</h2>
-    <div class="bloque__contenido bloque__contenido--directo">
-      <p>
-        Si prefieres escribirnos sin formulario o encuentras algún problema al utilizarlo,
-        cuéntanoslo. Esa información también nos ayuda a mejorar.
-      </p>
-      {/* El <wbr> deja partir el correo después de la arroba: sin espacios,
-          a 320 no cabe en una línea (1.4.10). */}
+  <Bloque id="directamente" titulo="También puedes escribirnos directamente">
+    <div class="directo">
+      {/* La frase es de Johnny (10/10). El correo iba dentro de ella, pero un
+          enlace en un renglón de texto mide 23 px de alto y la regla del
+          repo son 44 en todo lo que se pulsa (AGENTS.md §4; WCAG lo
+          perdona en una frase, AP no). Así que el correo sale a su línea,
+          como enlace suelto con su flecha. El <wbr> deja partir la dirección
+          después de la arroba: sin espacios, a 320 no cabe (1.4.10). */}
+      <p>Si prefieres contactar por correo, puedes hacerlo en:</p>
       <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
       <Redes />
     </div>
-  </section>
+  </Bloque>
 </Base>
 
 <script>
@@ -209,55 +219,16 @@ const CAMPOS = [
 </script>
 
 <style>
-  /* ----- Apertura ------------------------------------------------------
-     128 desde la cabecera, como cualquier sección. Entre el titular y su
-     texto, 32: son una sola pieza. */
-  .apertura {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-32);
-    padding: var(--ritmo-seccion) var(--gutter-page) 0;
-  }
-  .apertura__titulo {
-    margin: 0;
-    font-size: var(--display-size);
-    line-height: var(--display-leading);
-    letter-spacing: var(--display-track);
-    font-weight: 400;
-  }
-  /* 930 en el Figma de escritorio. Como tope: por debajo ocupa lo que haya. */
-  .apertura__texto { margin: 0; max-width: 930px; }
+  /* El hero y los bloques viven en HeroPagina.astro y Bloque.astro: son los
+     mismos que en Estudio. */
 
-  /* ----- Bloques -------------------------------------------------------
-     Apilados por debajo de 1024: el nombre del bloque y, 64 más abajo
-     (`--ritmo-intro`), su contenido. Entre bloques, 128. */
-  .bloque {
-    display: flex;
-    flex-direction: column;
-    gap: var(--ritmo-intro);
-    padding: 0 var(--gutter-page);
-    margin-block-start: var(--ritmo-seccion);
-  }
-  .bloque__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
-
-  /* Escritorio (Figma 2284:22): nombre a la izquierda y contenido a 456 del
-     borde de la columna (204 de nombre + 252 de hueco, sobre 1392). Como
-     proporción, para que a 1024 el formulario no se quede sin sitio. */
-  @media (min-width: 1024px) {
-    .bloque {
-      display: grid;
-      grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr);
-      gap: 0;
-    }
-  }
-
-  .bloque__contenido--directo {
+  .directo {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-32);
   }
-  .bloque__contenido--directo p { margin: 0; max-width: 888px; }
+  .directo p { margin: 0; max-width: 888px; }
 
   /* ----- Formulario ----------------------------------------------------
      Campos de 560 como máximo; 32 entre ellos; 6 dentro de cada uno. */
@@ -267,7 +238,12 @@ const CAMPOS = [
     align-items: flex-start;
     gap: var(--space-32);
     max-width: 560px;
+    position: relative;
   }
+  /* El contenedor de Turnstile no pinta nada (modo invisible), pero como hijo
+     del flex sumaba un hueco más: 64 en vez de 32 hasta el botón. Fuera del
+     flujo deja de ocupar sitio y Turnstile sigue teniendo dónde montarse. */
+  .formulario [data-turnstile] { position: absolute; inset-block-start: 0; inset-inline-start: 0; }
   .campo {
     display: flex;
     flex-direction: column;

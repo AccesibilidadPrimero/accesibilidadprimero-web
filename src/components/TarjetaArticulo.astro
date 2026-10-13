@@ -1,0 +1,62 @@
+---
+/* ---------------------------------------------------------------------------
+   Tarjeta de un artículo del Blog · Figma «Tarjeta · Artículo del blog»
+   (3335:379), 11/10/2026.
+
+   Como las tarjetas de «Sobre la mesa»: la tarjeta ENTERA es un enlace, así
+   que la zona que responde es la que se ve. Su nombre accesible es el título
+   del artículo, distinto en cada tarjeta (2.4.4).
+
+   El orden es título y DESPUÉS fecha, en el código y en la vista. Con la
+   fecha delante, el nombre del enlace empezaba por «12 de junio de 2026» y
+   ocho tarjetas sonaban casi igual al saltar de enlace en enlace.
+
+   La portada va `alt=""`: el título ya nombra el artículo, y la alternativa
+   larga se lee dentro del artículo, no aquí.
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { fechaLarga } from '../data/blog';
+
+interface Props {
+  href: string;
+  titulo: string;
+  fecha: Date;
+  imagen: ImageMetadata;
+  /** h2 en el listado; h3 en «Sigue leyendo», que ya cuelga de un h2. */
+  nivel?: 2 | 3;
+}
+const { href, titulo, fecha, imagen, nivel = 2 } = Astro.props;
+const Titulo = nivel === 2 ? 'h2' : 'h3';
+const fechaTexto = fechaLarga(fecha);
+---
+
+<a class="tarjeta" href={href}>
+  <Picture
+    src={imagen}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[400, 700, 1000]}
+    sizes="(min-width: 1024px) 31vw, (min-width: 768px) 47vw, 100vw"
+    class="tarjeta__portada"
+    loading="lazy"
+  />
+  <Titulo class="tarjeta__titulo">{titulo}</Titulo>
+  <p class="tarjeta__fecha"><time datetime={fecha.toISOString().slice(0, 10)}>{fechaTexto}</time></p>
+</a>
+
+<style>
+  .tarjeta { display: flex; flex-direction: column; text-decoration: none; color: var(--text); }
+  /* 2:1, la proporción real de las portadas del blog: ni recorte ni relleno. */
+  .tarjeta :global(.tarjeta__portada),
+  .tarjeta :global(picture img) {
+    display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover;
+    border-radius: var(--radio); background: var(--silk);
+  }
+  .tarjeta :global(picture) { display: block; margin-block-end: var(--space-16); }
+  .tarjeta__titulo, .tarjeta__fecha { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  /* Sin subrayado en reposo, como «Sobre la mesa»; al pasar, el título. */
+  .tarjeta:hover .tarjeta__titulo {
+    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
+  }
+</style>

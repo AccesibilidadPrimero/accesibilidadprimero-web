@@ -1,0 +1,62 @@
+---
+/* ---------------------------------------------------------------------------
+   /proyectos/ · Figma `Producción · Proyectos`: Desktop 3343:541 ·
+   Tablet 3343:714 · Móvil 3343:861 (11/10/2026).
+
+   Solo casos para clientes; los productos tienen su propia página (Johnny,
+   11/10/2026). Y solo los que tienen su caso escrito (`casoPublicado`): una
+   tarjeta que lleva a una página que no existe no se pinta. El Figma enseña
+   los tres porque es el estado final; la web los irá enseñando según se
+   publique cada caso.
+   --------------------------------------------------------------------------- */
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import TarjetaProyecto from '../../components/TarjetaProyecto.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+
+const capturas = import.meta.glob<{ default: import('astro').ImageMetadata }>('../../assets/proyectos/*.png', { eager: true });
+const captura = (archivo: string) => Object.entries(capturas).find(([r]) => r.endsWith(`/${archivo}.png`))?.[1]?.default;
+
+const casos = (await getCollection('proyectos'))
+  .filter((p) => p.data.casoPublicado)
+  .sort((a, b) => a.data.orden - b.data.orden);
+
+for (const c of casos) {
+  if (!c.data.imagenes?.[0] || !captura(c.data.imagenes[0].archivo)) {
+    throw new Error(`${c.id}: la tarjeta usa la primera captura de \`imagenes\` y no está en src/assets/proyectos/.`);
+  }
+}
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title="Proyectos · Accesibilidad Primero"
+  description="Webs y plataformas accesibles para organizaciones y proyectos con impacto social."
+>
+  <HeroPagina titulo="Proyectos" texto={['Webs y plataformas accesibles para organizaciones y proyectos con impacto social.']} />
+
+  <ul class="rejilla">
+    {casos.map((c) => (
+      <li>
+        <TarjetaProyecto
+          href={`/proyectos/${c.id}/`}
+          nombre={c.data.titulo}
+          linea={c.data.linea ?? c.data.resumen}
+          captura={captura(c.data.imagenes![0].archivo)!}
+          color={c.data.paleta.acento}
+        />
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .rejilla {
+    margin: 0; padding: var(--ritmo-seccion) var(--gutter-page) 0; list-style: none;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-64) var(--space-24);
+  }
+  @media (min-width: 768px) { .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

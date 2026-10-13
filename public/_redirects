@@ -1,0 +1,77 @@
+# Redirecciones de la web anterior (WordPress) a la v2.0.
+# Mapa y motivos: proyecto «Accesibilidad Primero», claude/seo-migracion-urls-2026-10-11.md
+# Formato de Cloudflare: origen  destino  código. Las comprueba `npm run redirecciones`:
+# cada destino tiene que existir en dist/ y cada artículo con `urlAntigua` tiene que estar aquí.
+# Documentación: developers.cloudflare.com/workers/static-assets/redirects/
+
+# ── Artículos: misma dirección, ahora dentro de /blog/ ──
+/bienvenido-sr-only/  /blog/bienvenido-sr-only/  301
+/me-pueden-rechazar-una-subvencion-si-mi-web-no-es-accesible/  /blog/me-pueden-rechazar-una-subvencion-si-mi-web-no-es-accesible/  301
+/no-un-plugin-de-accesibilidad/  /blog/no-un-plugin-de-accesibilidad/  301
+/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/  /blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/  301
+/tipografia-accesible-lo-que-dice-la-wcag/  /blog/tipografia-accesible-lo-que-dice-la-wcag/  301
+/pero-que-es-la-wcag/  /blog/pero-que-es-la-wcag/  301
+/tipografia-accesible-atkinson-hyperlegible/  /blog/tipografia-accesible-atkinson-hyperlegible/  301
+/a11yprimero/  /blog/a11yprimero/  301
+
+# ── Categorías de WordPress ──
+/category/accesibilidad-digital/  /blog/categoria/accesibilidad-digital/  301
+/category/auditoria-wcag/  /blog/categoria/auditoria-wcag/  301
+/category/diseno/  /blog/categoria/diseno/  301
+/category/auditoria-express/  /blog/  301
+/feed/  /blog/  301
+
+# ── Páginas que pasan a Estudio ──
+/quienes-somos/  /estudio/  301
+/manifiesto-accesibilidad-primero/  /estudio/  301
+/nuestros-principios/  /estudio/  301
+/sobre-nuestro-contenido/  /estudio/  301
+/servicios/  /estudio/  301
+/diseno-y-tecnologia/  /estudio/  301
+/comunicacion-inclusiva/  /estudio/  301
+/formacion/  /estudio/  301
+/auditoria-de-accesibilidad-wcag/  /estudio/  301
+/auditoria-express-de-accesibilidad-en-tiempo-real/  /estudio/  301
+/accesibilidad-web-valencia/  /estudio/  301
+
+# ── Legales y contacto ──
+/accesibilidad/  /declaracion-de-accesibilidad/  301
+/accesibilidas/  /declaracion-de-accesibilidad/  301
+/privacida/  /privacidad/  301
+/formulario/  /contacto/  301
+
+# ── Restos de pruebas (con noindex desde el 11/10/2026) ──
+/home-2-0/  /  301
+/test-micro/  /  301
+/404-2/  /  301
+/tether-landing/  /  301
+/accesibilidad-primero-english/  /  301
+
+# ── Catalán e inglés: TEMPORALES (302) al castellano mientras no estén activos ──
+# Cuando se activen, /ca/projectes/ y /en/projects/ ya son su dirección (src/i18n/config.ts).
+/ca/  /  302
+/ca/inici/  /  302
+/en/  /  302
+/en/home/  /  302
+/ca/projectes/  /proyectos/  302
+/en/projects/  /proyectos/  302
+/ca/contacte/  /contacto/  302
+/en/contact/  /contacto/  302
+/ca/formulari/  /contacto/  302
+/en/form/  /contacto/  302
+/en/form  /contacto/  302
+/ca/serveis/  /estudio/  302
+/en/services/  /estudio/  302
+/ca/qui-som/  /estudio/  302
+/en/who-we-are/  /estudio/  302
+/ca/manifest/  /estudio/  302
+/ca/formacio/  /estudio/  302
+/en/training/  /estudio/  302
+/ca/comunicacio-inclusiva/  /estudio/  302
+/en/inclusive-communication/  /estudio/  302
+/ca/disseny-i-tecnologia/  /estudio/  302
+/en/design-tech/  /estudio/  302
+/ca/auditoria-daccessibilitat/  /estudio/  302
+/en/wcag-accessibility-audit/  /estudio/  302
+/en/accessibility-policy/  /declaracion-de-accesibilidad/  302
+/en/statement/  /declaracion-de-accesibilidad/  302

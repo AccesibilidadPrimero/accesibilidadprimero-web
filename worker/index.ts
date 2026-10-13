@@ -28,6 +28,7 @@
  * Variables (wrangler.toml, [vars]):
  *   CORREO_DESTINO, CORREO_REMITENTE, TURNSTILE_HOSTNAMES
  */
+import { hostSinIndexar } from '../src/data/sitio.ts';
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
   BREVO_API_KEY?: string;
@@ -194,7 +195,12 @@ export default {
       if (request.method !== 'POST') {
         return new Response('Método no permitido', { status: 405, headers: { allow: 'POST' } });
       }
-      return contacto(request, env);
+      const r = await contacto(request, env);
+      /* La web de pruebas no se indexa (public/_headers). Esa regla solo
+         cubre los estáticos; lo que responde el Worker lleva la cabecera
+         desde aquí. */
+      if (hostSinIndexar(url.hostname)) r.headers.set('X-Robots-Tag', 'noindex');
+      return r;
     }
 
     return env.ASSETS.fetch(request);

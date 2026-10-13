@@ -62,7 +62,8 @@ Están aquí porque ya han pasado, no en abstracto:
    lo que Claude escribe en el Mac a través del puente y admita metadatos sale
    con un manifiesto `c2pa` dentro: **SVG** (bloque `<metadata>` + el
    `xmlns:c2pa` del elemento raíz), **PNG** (un trozo auxiliar) y **MP4** (una
-   caja `uuid` detrás del `ftyp`). El 10/10 fueron 50 KB repartidos en ocho
+   caja `uuid` detrás del `ftyp`) y **JPEG** (un segmento APP11; pasó con el retrato de Estudio el
+   11/10, y se quita copiando el archivo sin los segmentos `FFEB`). El 10/10 fueron 50 KB repartidos en ocho
    archivos. No rompe nada —el vídeo decodifica fotograma a fotograma igual,
    comprobado con `framemd5`— pero son metadatos de procedencia ajenos pegados
    a obra de Johnny, y eso no se publica. **Regla: después de pasar material
@@ -145,6 +146,11 @@ Están aquí porque ya han pasado, no en abstracto:
   bordes de foco (1.4.3, 1.4.11). Medido, no estimado.
 - Objetivos táctiles de **44 px** como mínimo. WCAG 2.5.8 AA pide 24; AP pide
   44 y esa es la regla del repo.
+  **Única excepción: un enlace en mitad de una frase de un artículo del Blog**
+  (11/10/2026). Mide lo que mide la línea; es la excepción «en línea» de
+  2.5.8. `npm run a11y` la aplica solo dentro de `.prosa`, solo a enlaces con
+  `display: inline` dentro de un párrafo, lista, cita o tabla. Fuera de los
+  artículos, los enlaces siguen en su propia línea.
   **Una casilla cuenta con su `<label for>`** cuando la etiqueta está en la
   misma fila: pulsarla la marca igual. La casilla de Contacto mide 24, como en
   el Figma, y su fila con la etiqueta 44 o más; `npm run a11y` mide así las
@@ -186,7 +192,7 @@ Están aquí porque ya han pasado, no en abstracto:
 No son convenciones. Son errores de compilación, para que no dependan de la
 disciplina personal a las once de la noche.
 
-- `decisiones`: **mínimo 4, máximo 5**. Una sexta no compila. («Un hueco no es
+- `decisiones`: **mínimo 3, máximo 5** (3 desde el 11/10/2026, Johnny). Una sexta no compila. («Un hueco no es
   un problema que resolver: es el resultado.»)
 - `cifras`: **exactamente 3**, cada una con su `tipo`, y **no pueden ser las
   tres de accesibilidad**. Es la prueba del algodón del equilibrio
@@ -254,6 +260,31 @@ disciplina personal a las once de la noche.
   *nullable* en la API. El filtro detecta AUSENCIA, no mediocridad: que la
   alternativa sea buena sigue siendo trabajo humano, al publicar.
 
+- **Blog (11/10/2026).** Los artículos son Markdown en `src/content/blog/`,
+  migrados de WordPress con el mismo slug. Solo en castellano: la regla de los
+  tres idiomas del 30/09 entra cuando se activen catalán e inglés. Sin
+  negritas (un peso). `urlAntigua` obliga a una 301 en `public/_redirects`, y
+  `npm run redirecciones` comprueba que existe y que cada destino es una
+  página de verdad. Los filtros del listado son páginas
+  (`/blog/categoria/<nombre>/`), no un script.
+- **Proyectos (11/10/2026).** `/proyectos/` enseña solo los casos con
+  `casoPublicado: true` (una tarjeta hacia una página que no existe no se
+  pinta) y solo trabajo para clientes: los productos tienen su página. El
+  caso vive en el bloque `caso` del Markdown del proyecto y se pinta con
+  `src/pages/proyectos/[slug].astro`. La banda del hero lleva el color del
+  proyecto, no el menta: la identidad la pone el proyecto. Las fotos del caso
+  van en `arte/proyectos/<slug>/`.
+- **Las demostraciones del blog se marcan, no se esconden.** Lo que un
+  artículo pinta a propósito a otro tamaño o en otro gris lleva
+  `data-ejemplo`: `tipografia` no lo mide. Lo que además incumple el
+  contraste a propósito lleva `data-ejemplo="no-cumple"` y `aria-hidden`, con
+  su texto repetido al lado en Ink: `contraste` y axe lo saltan, y solo eso.
+- **Texto dentro de imágenes en el blog: deuda heredada.** Muchas imágenes de
+  los artículos de WordPress son infografías con texto. Incumplen la regla de
+  §1; su alternativa transcribe lo que dicen. Las capturas de tablas ya se
+  pasaron a tablas de verdad; las infografías se irán rehaciendo en HTML.
+  Ninguna imagen nueva entra con texto.
+
 ## 7. Flujo de trabajo
 
 - **Claude Code construye, Codex revisa.** Dos modelos distintos, uno
@@ -286,10 +317,48 @@ npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños
 npm run geometria    # mide los ANCHOS del render contra los del Figma
 npm run capturas     # capturas de los tres breakpoints para revisar a ojo
+npm run redirecciones # public/_redirects: destinos que existen y una 301 por artículo
 ```
 
-`a11y`, `tipografia` y `contraste` recorren la Home y **Contacto** (esta, en
-reposo y con los errores abiertos). Cada página nueva se añade a las tres.
+`a11y`, `tipografia` y `contraste` recorren la Home, **Contacto** (en reposo
+y con los errores abiertos), **Estudio**, las legales y el **Blog** (listado,
+una categoría y los artículos con demostraciones, tablas e imágenes).
+`contraste` mide con la ventana ya del alto de la página entera: si no, lo que
+se mueve entre medir y capturar da falsos fallos (pasó en los artículos
+largos). Cada página nueva se añade a las
+tres.
+
+**Páginas interiores (10/10/2026).** El hero en menta con ilustración vive en
+`HeroPagina.astro` y la fila «nombre del bloque | contenido» en `Bloque.astro`.
+Contacto y Estudio los usan, y las legales también; las páginas que vengan
+(Proyectos…), igual, para que la geometría esté en un solo sitio (§6).
+
+**Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
+accesibilidad salen de `src/data/legal.ts` con la plantilla
+`PaginaLegal.astro`. Ese archivo es también la fuente del texto del Figma:
+si cambia uno, cambia el otro. Los enlaces van en su propia línea, nunca
+dentro de un párrafo (44 px). No son asesoramiento jurídico: los revisa
+alguien con formación en protección de datos antes de publicar en la URL
+final. La declaración dice «parcialmente conforme» hasta que Johnny haga la
+revisión manual; al hacerla se actualizan fecha, conformidad, limitaciones,
+método y compatibilidad.
+
+**La web de pruebas no se indexa (11/10/2026).** `public/_headers` pone
+`X-Robots-Tag: noindex` solo en los hosts `*.workers.dev`, y `worker/index.ts`
+hace lo mismo con lo que responde el Worker. El dominio final no la recibe.
+Se comprueba en `npm run formulario` (el Worker); la regla de `_headers` solo
+la aplica Cloudflare, así que se verifica tras publicar con
+`curl -sI https://accesibilidadprimero.proyectos-44e.workers.dev/ | grep -i robots`.
+
+**Analítica (Johnny, 11/10/2026): Cloudflare Web Analytics y nada más.** Sin
+cookies, sin almacenamiento local y sin huella, así que sin banner. Se
+descartaron Google Analytics y los mapas de calor: los dos exigen
+consentimiento previo y un banner de cookies. El token va en
+`src/data/analitica.ts`; vacío, no se carga nada. Privacidad y Cookies ya lo
+nombran: o se pone el token o se quitan esas frases antes de publicar en la
+URL final. **Cualquier herramienta que guarde algo en el navegador o
+identifique a quien visita obliga a reescribir Privacidad y Cookies y a
+poner un banner. No se añade sin hablarlo.**
 
 `npm run formulario` prueba el Worker (`worker/index.ts`) y el formulario de
 Contacto con Brevo y Turnstile SIMULADOS: no envía correos. Necesita Node 22.6

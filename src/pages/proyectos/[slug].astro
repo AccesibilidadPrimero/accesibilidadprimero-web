@@ -1,0 +1,160 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso de un proyecto · Figma `Producción · Caso Foc i Cor`: Desktop 3344:658
+   · Tablet 3344:921 · Móvil 3344:1153 (11/10/2026).
+
+   El sistema de la Home con una excepción: la banda del hero lleva el color
+   del proyecto en vez del menta. La identidad la pone el proyecto (su paleta
+   en src/content/proyectos/), no la página; el build ya ha comprobado que el
+   texto y el foco rinden encima.
+
+   Orden de la plantilla de casos (claude/plantilla-casos-de-estudio-web-v2.md):
+   portada, ficha, cifras, el reto, decisiones y, al final y corta, la
+   accesibilidad. «Menos»: sin tabla WCAG en el caso; la tabla vive en la
+   declaración del cliente, que es su sitio (decisión del 30/08).
+   --------------------------------------------------------------------------- */
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import Bloque from '../../components/Bloque.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+import { fechaLarga } from '../../data/blog';
+
+export async function getStaticPaths() {
+  return (await getCollection('proyectos'))
+    .filter((p) => p.data.casoPublicado)
+    .map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props as { p: CollectionEntry<'proyectos'> };
+const d = p.data;
+const c = d.caso!;
+const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
+  description={d.resumen}
+  ctaTitulo={c.cierre}
+>
+  <HeroPagina
+    volver={{ href: '/proyectos/', texto: 'Proyectos' }}
+    titulo={c.titular}
+    texto={[c.entradilla]}
+    superficie={{ fondo: d.paleta.acento, foco: d.paleta.anilloFoco }}
+  />
+
+  <div class="caso">
+    <Picture
+      src={c.fotos.portada.archivo}
+      alt={c.fotos.portada.alt}
+      formats={['avif', 'webp']}
+      widths={[480, 960, 1440]}
+      sizes="(min-width: 1440px) 1392px, calc(100vw - 48px)"
+      class="caso__foto caso__foto--portada"
+    />
+
+    <Bloque id="ficha" titulo="Ficha">
+      <dl class="filas">
+        <div class="fila"><dt>Cliente</dt><dd>{d.cliente}</dd></div>
+        <div class="fila"><dt>Año</dt><dd>{c.anio}</dd></div>
+        <div class="fila"><dt>Qué hicimos</dt><dd>{c.queHicimos}</dd></div>
+        <div class="fila"><dt>Accesibilidad</dt><dd>{c.conformidad}</dd></div>
+        {d.web && dominio && (
+          <div class="fila fila--enlace"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>
+        )}
+      </dl>
+    </Bloque>
+
+    <Bloque id="cifras" titulo="En cifras">
+      <dl class="filas">
+        {d.cifras!.map((x) => <div class="fila"><dt>{x.valor}</dt><dd>{x.descripcion}</dd></div>)}
+      </dl>
+    </Bloque>
+
+    <Bloque id="reto" titulo="El reto">
+      <div class="pila">
+        <p>{c.reto.intro}</p>
+        {c.reto.tensiones.map((t) => (
+          <div class="punto">
+            <h3>{t.titulo}</h3>
+            <p>{t.cuerpo}</p>
+          </div>
+        ))}
+      </div>
+    </Bloque>
+
+    <div class="par">
+      {c.fotos.par.map((f) => (
+        <Picture src={f.archivo} alt={f.alt} formats={['avif', 'webp']} widths={[400, 700, 900]} sizes="(min-width: 768px) 50vw, 100vw" class="caso__foto caso__foto--cuadrada" loading="lazy" />
+      ))}
+    </div>
+
+    <Bloque id="decisiones" titulo="Decisiones de diseño">
+      <div class="pila">
+        {d.decisiones!.map((x) => (
+          <div class="punto">
+            <h3>{x.titulo}</h3>
+            <p>{x.cuerpo}</p>
+          </div>
+        ))}
+      </div>
+    </Bloque>
+
+    {c.fotos.cierre && (
+      <Picture src={c.fotos.cierre.archivo} alt={c.fotos.cierre.alt} formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 1440px) 1392px, calc(100vw - 48px)" class="caso__foto caso__foto--ancha" loading="lazy" />
+    )}
+
+    <Bloque id="accesibilidad" titulo="Accesibilidad">
+      <div class="pila">
+        <p>Medido sobre la web publicada el {fechaLarga(c.accesibilidad.medidoEl)}.</p>
+        <ul class="filas">
+          {c.accesibilidad.puntos.map((x) => <li class="fila">{x}</li>)}
+        </ul>
+        {c.accesibilidad.declaracion && (
+          <CtaLink href={c.accesibilidad.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
+        )}
+      </div>
+    </Bloque>
+  </div>
+</Base>
+
+<style>
+  /* Sin el padding-top del ritmo en el primer elemento: lo pone el gap, que
+     ya es el ritmo de sección (128). */
+  .caso { display: flex; flex-direction: column; gap: var(--ritmo-seccion); padding: var(--ritmo-seccion) var(--gutter-page) 0; }
+  .caso :global(.caso__foto) { display: block; width: 100%; height: auto; border-radius: var(--radio); object-fit: cover; }
+  .caso :global(.caso__foto--portada) { aspect-ratio: 16 / 10; }
+  .caso :global(.caso__foto--ancha) { aspect-ratio: 12 / 5; }
+  .caso :global(.caso__foto--cuadrada) { aspect-ratio: 1; }
+
+  .par { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  @media (min-width: 768px) { .par { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  p, h3, dl, dd, ul { margin: 0; }
+  h3 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .pila { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 888px; }
+  .pila > :not(a) { align-self: stretch; }
+  .punto { display: flex; flex-direction: column; gap: var(--space-8); }
+
+  /* Filas con filete, como en las legales y en Estudio. */
+  .filas { padding: 0; list-style: none; max-width: 888px; }
+  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
+  .fila:last-child { border-block-end: 1px solid var(--rule); }
+  dl .fila { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-4); }
+  @media (min-width: 768px) {
+    dl .fila { grid-template-columns: 240px minmax(0, 1fr); column-gap: var(--space-24); }
+  }
+  @media (min-width: 1024px) {
+    dl .fila { grid-template-columns: 296px minmax(0, 1fr); }
+  }
+  /* La fila del enlace: el enlace mide 44 y la fila no crece por ello. */
+  .fila--enlace { padding-block: calc(var(--space-16) - var(--aire-control)); align-items: center; }
+
+  /* La cabecera va sobre el color del proyecto: su anillo de foco, el del
+     proyecto (que el build ha medido contra ese color). */
+  :global(.header) { --focus-ring: var(--text); }
+</style>

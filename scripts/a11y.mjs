@@ -22,8 +22,17 @@ const axePath = require.resolve('axe-core/axe.min.js');
 const { readFileSync } = await import('node:fs');
 const axeSource = readFileSync(axePath, 'utf8');
 
-/* Contacto entra el 10/10/2026. Cada página nueva se añade aquí. */
-const RUTAS = ['/', '/contacto/'];
+/* Contacto y Estudio entran el 10/10/2026 y las tres legales el 11/10. Cada
+   página nueva se añade aquí. */
+const RUTAS = [
+  '/', '/contacto/', '/estudio/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
+  /* Blog (11/10/2026): el listado, una categoría y tres artículos que juntan
+     todo lo que puede traer un Markdown: demostraciones y tablas (tipografía),
+     tablas e imágenes (WCAG), y el más largo, con seis imágenes (A11y Primero). */
+  '/proyectos/', '/proyectos/foc-i-cor/',
+  '/blog/', '/blog/categoria/diseno/',
+  '/blog/tipografia-accesible-lo-que-dice-la-wcag/', '/blog/pero-que-es-la-wcag/', '/blog/a11yprimero/',
+];
 const PUERTO = 4399;
 const BASE = `http://localhost:${PUERTO}`;
 
@@ -49,7 +58,11 @@ for (const ruta of RUTAS) {
     await page.addScriptTag({ content: axeSource });
     const { violations } = await page.evaluate(async () =>
       // @ts-ignore
-      await window.axe.run(document, {
+      /* Las muestras de contraste insuficiente del artículo de tipografía
+         incumplen A PROPÓSITO: son lo que el artículo enseña a evitar. Van
+         `aria-hidden` y su texto se repite al lado, en Ink. Se excluyen por
+         su marca explícita, `data-ejemplo="no-cumple"`, y solo esas. */
+      await window.axe.run({ exclude: [['[data-ejemplo="no-cumple"]']] }, {
         runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] },
       }),
     );
@@ -87,6 +100,13 @@ for (const ruta of RUTAS) {
               r = { width: lr.right - r.left, height: bottom - top };
             }
           }
+          /* Un enlace en mitad de una frase de un artículo mide lo que mide
+             la línea. Es la excepción «en línea» de 2.5.8 y la única de la web
+             a los 44: solo dentro de `.prosa` y solo si el enlace es en línea
+             y está dentro de un párrafo, una lista, una cita o una tabla
+             (AGENTS.md §4, 11/10/2026). */
+          if (el.closest('.prosa') && getComputedStyle(el).display === 'inline'
+              && el.parentElement?.closest('p, li, blockquote, td, th')) return false;
           const visible = r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
           /* Medio píxel de margen: el navegador a veces devuelve 43,99 por
              redondeo de subpíxel según el momento de la medida (pasó el

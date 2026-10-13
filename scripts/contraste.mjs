@@ -41,6 +41,15 @@ const RUTAS = [
   { nombre: 'Contacto', url: '/contacto/', minimo: 15 },
   { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
     preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
+  { nombre: 'Estudio', url: '/estudio/', minimo: 30 },
+  { nombre: 'Privacidad', url: '/privacidad/', minimo: 30 },
+  { nombre: 'Cookies', url: '/cookies/', minimo: 15 },
+  { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', minimo: 25 },
+  { nombre: 'Proyectos', url: '/proyectos/', minimo: 10 },
+  { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', minimo: 40 },
+  { nombre: 'Blog', url: '/blog/', minimo: 20 },
+  { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },
+  { nombre: 'Blog · WCAG', url: '/blog/pero-que-es-la-wcag/', minimo: 60 },
 ];
 
 let fallos = 0, medidas = 0;
@@ -54,6 +63,24 @@ for (const ruta of RUTAS) {
   // Con reducir movimiento, lo que aún no ha entrado en pantalla está en
   // opacidad 0 y el medidor lo saltaría. Se recorre la página antes de medir.
   await recorrer(page);
+  /* Las fuentes, cargadas ANTES de medir. Si la primera pasada se hace con la
+     tipografía de reserva, el texto ocupa más líneas, la página es más alta y
+     las cajas caen sobre otra cosa en la captura (que ya lleva Instrument
+     Sans). Pasó con los artículos largos del blog el 11/10: «fallos» de 2,3:1
+     que eran el texto medido encima de las portadas de «Sigue leyendo». */
+  await page.evaluate(() => document.fonts.ready);
+  /* La ventana, ya del alto de la página entera. La captura de página entera
+     de Chromium estira la ventana para hacerse, y todo lo que dependa de su
+     alto (unidades vh, imágenes diferidas que entran de golpe) puede moverse
+     ENTRE medir y capturar. Midiendo ya con ese alto, las dos pasadas ven la
+     misma página. Lo destaparon los artículos largos del blog el 11/10:
+     «fallos» de 2,3:1 que eran texto medido encima de una portada. */
+  for (let i = 0; i < 3; i++) {
+    const alto = await page.evaluate(() => document.documentElement.scrollHeight);
+    await page.setViewportSize({ width: 1440, height: alto });
+    await page.waitForTimeout(250);
+    if (alto === await page.evaluate(() => document.documentElement.scrollHeight)) break;
+  }
   // Estados que solo existen tras una acción (los errores de Contacto).
   if (ruta.preparar) await ruta.preparar(page);
 
@@ -65,6 +92,9 @@ for (const ruta of RUTAS) {
         if (hijo.nodeType === Node.TEXT_NODE && hijo.textContent.trim().length > 1) {
           const el = hijo.parentElement;
           if (!el) continue;
+          /* Las dos muestras de gris que NO cumplen, a propósito (artículo de
+             tipografía). Solo esas: las que cumplen se miden. */
+          if (el.closest('[data-ejemplo="no-cumple"]')) continue;
           const cs = getComputedStyle(el);
           if (cs.visibility === 'hidden' || cs.display === 'none' || Number(cs.opacity) === 0) continue;
           // sr-only: está en el árbol pero no se ve. Medirlo es el falso

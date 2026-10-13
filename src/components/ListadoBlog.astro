@@ -1,0 +1,90 @@
+---
+/* ---------------------------------------------------------------------------
+   Listado del Blog · Figma `Producción · Blog` (3334:199): Desktop 3334:201 ·
+   Tablet 3334:445 · Móvil 3334:673. Lo usan /blog/ y cada categoría.
+
+   Los filtros son ENLACES, no botones: cada categoría es una página propia,
+   /blog/categoria/<nombre>/. Funciona sin JavaScript, se puede compartir y
+   guardar, y recoge las /category/ de WordPress (public/_redirects). La
+   página actual lleva aria-current y subrayado, como el menú.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import HeroPagina from './HeroPagina.astro';
+import TarjetaArticulo from './TarjetaArticulo.astro';
+import { DEFAULT_LANG } from '../i18n/config';
+import { CATEGORIAS } from '../data/blog';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  articulos: CollectionEntry<'blog'>[];
+  /** La categoría de esta página; sin ella, «Todos». */
+  categoria?: keyof typeof CATEGORIAS;
+}
+const { articulos, categoria } = Astro.props;
+const lang = DEFAULT_LANG;
+
+const filtros = [
+  { href: '/blog/', texto: 'Todos', actual: !categoria },
+  ...Object.entries(CATEGORIAS).map(([clave, texto]) => ({
+    href: `/blog/categoria/${clave}/`, texto, actual: clave === categoria,
+  })),
+];
+const nombre = categoria ? CATEGORIAS[categoria] : null;
+---
+
+<Base
+  lang={lang}
+  current="blog"
+  title={nombre ? `Blog · ${nombre} · Accesibilidad Primero` : 'Blog · Accesibilidad Primero'}
+  description="Lo que aprendemos diseñando webs accesibles: normativa, tipografía, herramientas y decisiones de diseño, contado sin tecnicismos de más."
+>
+  <HeroPagina
+    titulo={nombre ? `Blog · ${nombre}` : 'Blog'}
+    texto={['Lo que aprendemos diseñando webs accesibles, contado sin tecnicismos de más.']}
+  />
+
+  <div class="listado">
+    {/* Segundo <nav> de la página: lleva su propio nombre, distinto del menú
+        principal (AGENTS.md §3). */}
+    <nav class="filtros" aria-label="Categorías del blog">
+      <ul class="filtros__lista">
+        {filtros.map((f) => (
+          <li><a class="filtros__enlace" href={f.href} aria-current={f.actual ? 'page' : undefined}>{f.texto}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <ul class="rejilla">
+      {articulos.map((a) => (
+        <li>
+          <TarjetaArticulo href={`/blog/${a.id}/`} titulo={a.data.titulo} fecha={a.data.fecha} imagen={a.data.imagen} />
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .listado {
+    display: flex; flex-direction: column; gap: var(--ritmo-intro);
+    padding: var(--ritmo-seccion) var(--gutter-page) 0;
+  }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* Como el menú: 12 de relleno a cada lado (24 entre palabras) y la lista a
+     -12 para que el texto de «Todos» empiece en el margen. Si se parte en dos
+     líneas, la segunda también empieza en el margen. */
+  .filtros__lista { display: flex; flex-wrap: wrap; margin-inline-start: calc(var(--space-12) * -1); }
+  .filtros__enlace {
+    display: inline-flex; align-items: center; min-height: var(--touch-min);
+    padding: 0 var(--space-12); text-decoration: none;
+  }
+  .filtros__enlace:hover,
+  .filtros__enlace[aria-current] {
+    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
+  }
+
+  .rejilla { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-64) var(--space-24); }
+  @media (min-width: 768px) { .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

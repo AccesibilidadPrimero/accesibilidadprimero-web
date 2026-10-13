@@ -17,7 +17,97 @@ paleta:
 nota:
   valor: 91
   medidaEl: 2026-10-06
-casoPublicado: false
+casoPublicado: true
+linea: Restaurante escuela de la ONG Cesal en Catarroja.
+# Autoría de las tres decisiones: PENDIENTE DE CONFIRMAR CON JOHNNY. La paleta
+# viene del brand book del cliente (compartida); las otras dos, del estudio.
+decisiones:
+  - titulo: Personas, antes que platos.
+    cuerpo: >-
+      Foc i Cor no solo sirve comida: también enseña un oficio. La web presenta
+      sus tres pilares: cocina de mercado, compromiso con l’Horta Sud y
+      formación en un entorno real.
+    autoria: propia
+  - titulo: Una identidad accesible.
+    cuerpo: >-
+      La marca llegó con su paleta. No la cambiamos: la ampliamos con
+      variantes de más contraste para textos y elementos interactivos. La
+      identidad se mantiene; la legibilidad mejora.
+    autoria: compartida
+  - titulo: Una carta en tiempo real.
+    cuerpo: >-
+      El equipo cambia platos y precios desde una hoja de cálculo. La carta se
+      actualiza sola, sin PDF, y se lee desde cualquier dispositivo.
+    autoria: propia
+# Medidas el 11/10/2026: el texto principal sobre la crema da 5,68:1.
+cifras:
+  - valor: Más de 100
+    descripcion: personas en formación hasta abril de 2027
+    tipo: alcance
+  - valor: '5,7:1'
+    descripcion: el contraste del texto sobre la crema de la marca
+    tipo: accesibilidad
+  - valor: En tiempo real
+    descripcion: la carta, que el equipo actualiza desde una hoja de cálculo
+    tipo: negocio
+caso:
+  titular: Foc i Cor. Inclusión social a través de la cocina.
+  entradilla: >-
+    Foc i Cor es el restaurante escuela de la ONG Cesal en Catarroja, una de
+    las zonas que la DANA se llevó por delante. Hasta abril de 2027 formará a
+    más de cien personas en riesgo de exclusión en los oficios de cocina, sala
+    y barra.
+  anio: 2026
+  queHicimos: Diseño, desarrollo y accesibilidad
+  conformidad: WCAG 2.2 nivel AA, parcialmente conforme
+  reto:
+    intro: >-
+      Foc i Cor no es solo un restaurante con una web. Es un proyecto social
+      que, además, da de comer. Y eso planteaba dos retos desde el principio.
+    tensiones:
+      - titulo: Contarlo todo sin perder el foco.
+        cuerpo: >-
+          Es un negocio de hostelería, una escuela de oficios para personas en
+          riesgo de exclusión y una forma de reactivar el comercio de una zona
+          arrasada. Si la web solo cuenta una de estas tres dimensiones, las
+          otras dos desaparecen. Para que el proyecto sea sostenible, el
+          restaurante tiene que funcionar como puerta de entrada: atraer al
+          público y hacer posible todo lo demás.
+      - titulo: Todo proyecto social debe tener una web inclusiva.
+        cuerpo: >-
+          Si Foc i Cor existe para que nadie se quede fuera, su web tenía que
+          responder al mismo principio. La conversación con Cesal no empezó
+          por la normativa, sino por la coherencia.
+  fotos:
+    portada:
+      archivo: ../../assets/proyectos/foc-i-cor/portada.png
+      alt: >-
+        La portada de focicor.es: una fotografía del embarcadero de la
+        Albufera al atardecer con el lema «Cuina feta amb foc i Cor», el botón
+        de reserva y, abajo, el horario y la dirección.
+    par:
+      - archivo: ../../assets/proyectos/foc-i-cor/cocina.png
+        alt: >-
+          Parte del equipo trabaja de espaldas en la cocina del restaurante,
+          entre fogones y campanas, durante un servicio.
+      - archivo: ../../assets/proyectos/foc-i-cor/retrato.png
+        alt: >-
+          Una mujer del equipo, con el delantal de Foc i Cor y los brazos
+          cruzados, sonríe apoyada en la puerta del restaurante.
+    cierre:
+      archivo: ../../assets/proyectos/foc-i-cor/equipo.jpg
+      alt: >-
+        El equipo de Foc i Cor al completo, con delantales y gorros de cocina,
+        delante del rótulo del restaurante.
+  accesibilidad:
+    medidoEl: 2026-10-11
+    puntos:
+      - 10 de 10 imágenes de la portada con alternativa escrita.
+      - Encabezados sin saltos de nivel en la portada y en la carta.
+      - La pestaña activa de la carta, a 6,2:1 sobre el naranja de la marca.
+      - 'Pendiente: los enlaces legales del pie miden 14 px de alto; el criterio pide 24.'
+    declaracion: https://www.focicor.es/accessibilitat/
+  cierre: Lo que vive dentro de un PDF no está al alcance de todo el mundo.
 imagenes:
   - archivo: foc-1
     alt: >-

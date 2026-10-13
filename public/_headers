@@ -1,0 +1,24 @@
+# Cabeceras de los archivos estáticos (Cloudflare Workers Static Assets).
+#
+# La web de pruebas (accesibilidadprimero.proyectos-44e.workers.dev y las URL
+# de vista previa de cada versión) NO se indexa: tiene el mismo contenido que
+# tendrá accesibilidadprimero.com y competiría con la web actual en Google
+# (Johnny, 11/10/2026). La regla solo casa con hosts *.workers.dev: el dominio
+# final no la recibe. Las respuestas que genera el propio Worker (/api/*) no
+# pasan por aquí; esas llevan la cabecera desde worker/index.ts.
+# Documentación: developers.cloudflare.com/workers/static-assets/headers/
+
+https://:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:worker.:subdomain.workers.dev/*
+  X-Robots-Tag: noindex
+
+# Dominio provisional (Johnny, 12/10/2026): la web nueva vive en
+# accesibilidadprimero.eu sin indexar hasta el 20/01/2027, mientras el .com
+# sigue siendo el WordPress del Kit Digital. Ver src/data/sitio.ts.
+https://accesibilidadprimero.eu/*
+  X-Robots-Tag: noindex
+
+https://www.accesibilidadprimero.eu/*
+  X-Robots-Tag: noindex

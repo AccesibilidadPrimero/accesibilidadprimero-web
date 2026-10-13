@@ -42,7 +42,7 @@ por nombre, y si falta uno el build se para y te dice cuál.
 | 3 | `construccion-narrativa-amarillo.svg` | Construimos narrativas que ayuden a romper estereotipos. |
 | 4 | `regadera-diversidad.svg` | La comunicación debe representar, respetar y dar espacio a la diversidad. |
 | 5 | `arbol-semantica.svg` | Hacia el diseño universal y la tecnología semántica. |
-| 6 | `lapiz-proposito.svg` | Proyectos con propósito. |
+| 6 | `regadera-proposito.svg` (hoy `06-proposito.svg`) | Proyectos con propósito. Es la regadera, no el lápiz: el lápiz es la ilustración de Contacto (ver §4). |
 | 7 | `accesibilidad-primero-siempre.svg` | Accesibilidad primero. Siempre. |
 
 **Estado a 07/10/2026:** están las 7 menos `regadera-diversidad.svg`, que me
@@ -129,3 +129,19 @@ algún sitio grande, tres cosas que están medidas y hay que respetar:
 - Dibujo vectorial, logotipos, iconos → **SVG**
 - **Nunca WebP ni AVIF de origen.** Esos los genera Astro en el build. Mandar
   algo ya comprimido solo añade artefactos: se recomprime igual.
+
+## 4 · Ilustraciones de página · `arte/contacto/` y `arte/estudio/`
+
+Una por página, en el hero en menta, como la flor de la Home. Mismo formato
+que las del carrusel: SVG con `viewBox`, texto trazado, sin mapas de bits ni
+filtros.
+
+| Archivo | Página | Lienzo |
+|---|---|---|
+| `contacto/lapiz.svg` | Contacto: dos personas empujan un lápiz enorme. | 475,66 × 400 |
+| `estudio/casa.svg` | Estudio: una persona ante una casa enorme a medio dibujar. | 475,66 × 400 |
+| `estudio/johnny-vigas.jpg` | Estudio, bloque Equipo. Retrato recortado a la proporción del hueco (178 × 206) desde el original cuadrado de 1024; 885 × 1024, sin metadatos. | 885 × 1024 |
+
+Al pasar por el puente de Claude estos SVG reciben un bloque C2PA; se limpian
+y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
+
