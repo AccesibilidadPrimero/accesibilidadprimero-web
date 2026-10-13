@@ -290,9 +290,28 @@ const { class: clase } = Astro.props;
     display: grid;
     place-items: center;
   }
-  .simbolo__marco { position: relative; block-size: 108px; aspect-ratio: 338.4 / 299.43; }
-  @media (min-width: 768px) { .simbolo__marco { block-size: 144px; } }
-  @media (min-width: 1024px) { .simbolo__marco { block-size: 180px; } }
+  /* Un 15 % más pequeño que el de la Home (Johnny, 13/10/2026, 12:58):
+     153 · 122 · 92 en vez de 180 · 144 · 108. */
+  .simbolo__marco { position: relative; block-size: 92px; aspect-ratio: 338.4 / 299.43; }
+  @media (min-width: 768px) { .simbolo__marco { block-size: 122px; } }
+  @media (min-width: 1024px) { .simbolo__marco { block-size: 153px; } }
+
+  /* Centrado en el hero ENTERO, no en lo que queda encima del texto (Johnny,
+     13/10/2026): la caja cubre la banda de borde a borde, cabecera incluida, y
+     el símbolo queda en el centro de la pantalla. La caja no recibe el
+     puntero (el texto y la cabecera siguen siendo clicables a través de
+     ella); solo el dibujo, para repetir el chispeo.
+     Solo con ventanas de 600 de alto o más: más bajas, el centro caería sobre
+     el titular, y el símbolo vuelve a su sitio en el flujo, encima. */
+  @media (min-height: 600px) {
+    .simbolo.apertura__ilustracion {
+      position: absolute;
+      inset: 0;
+      block-size: auto;
+      pointer-events: none;
+    }
+    .simbolo__marco { pointer-events: auto; }
+  }
   .simbolo__dibujo { display: block; inline-size: 100%; block-size: 100%; fill: #231f20; }
   /* Cuadrados que se tocan dejan una línea clara entre ellos por el
      antialiasing: se veía una rejilla a 1440. Ni un trazo de 0,25 ni los

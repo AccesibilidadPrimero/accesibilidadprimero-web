@@ -103,6 +103,7 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
      el hueco como relleno. Abajo, 24 hasta el texto; en el iPhone se le suma
      lo que mide la barra, para que no lo tape al cargar. */
   .apertura {
+    position: relative;   /* para lo que se centra en la banda entera (el símbolo de Estudio) */
     display: flex;
     flex-direction: column;
     gap: var(--ritmo-intro);
