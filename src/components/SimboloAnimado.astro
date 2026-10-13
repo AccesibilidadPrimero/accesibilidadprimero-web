@@ -1,0 +1,369 @@
+---
+/* ---------------------------------------------------------------------------
+   Símbolo de Accesibilidad Primero®, animado · hero de Estudio (Johnny,
+   13/10/2026). Original: arte/estudio/simbolo-animado-original.svg.
+
+   Va EN LÍNEA, no como <img>: así su CSS vive con el de la web (el original
+   escribía `&gt;` dentro de <style>, que en HTML rompe el selector) y
+   `npm run movimiento` puede medirlo.
+
+   En bucle, con un control de pausa discreto (Johnny, 13/10/2026). 2.2.2: lo
+   que se mueve solo más de 5 s junto a otro contenido necesita un mecanismo
+   para pararlo. Por eso el bucle lo enciende el JavaScript, el mismo que
+   enseña el botón: sin JS, los cuadrados chispean UNA vez (el último acaba a
+   los 4,19 s) y no hay nada que pausar ni un botón que no haría nada
+   (AGENTS.md §5). Con «reducir movimiento», quieto y sin botón.
+
+   El control es como el del carrusel de proyectos de la Home
+   (ProjectSlider): icono de pausa / reproducir, que se entiende sin palabra;
+   la palabra va en `.sr-only` con lo que se pausa. Más discreto que aquel:
+   sin círculo, solo el icono en Ink, en la esquina vacía de arriba a la
+   izquierda del dibujo. La zona que se pulsa mide 44 × 44 (regla de AP) y el
+   anillo de foco es el de toda la web.
+
+   El dibujo es decorativo (`aria-hidden`): el titular dice de qué va la
+   página y el logotipo de la cabecera ya nombra el estudio.
+   --------------------------------------------------------------------------- */
+import { t } from '../i18n/ui';
+import { DEFAULT_LANG, type Lang } from '../i18n/config';
+
+interface Props { class?: string; lang?: Lang }
+const { class: clase, lang = DEFAULT_LANG } = Astro.props;
+const ui = t(lang);
+const que = ' la animación del símbolo';
+---
+
+<div class:list={['simbolo', clase]} data-simbolo>
+  <svg class="simbolo__dibujo" viewBox="0 0 338.4 299.43" aria-hidden="true" focusable="false" data-simbolo-animado>
+  <g>
+    <path d="M321.52,5.48c2.16-2.35,4.66-3.39,7.59-2.96,3,.42,5.54,2.58,6.47,5.47.69,2.23.42,4.74-.54,7.01-1.46,3.54-5.78,8.55-13.55,12.09-7.78-3.5-12.09-8.55-13.55-12.09-.92-2.27-1.23-4.77-.54-7.01.92-2.89,3.47-5.04,6.47-5.47,2.93-.42,5.43.65,7.59,2.96l.04.04s0-.04.04-.04h0ZM321.48,2.2c-4.7-3.7-12.05-2.73-15.44,2.81-1.12,1.85-1.54,3.97-1.46,6.12.15,3.7,1.77,6.89,4.08,9.7,3.16,3.73,7.7,6.7,12.71,8.89,0,0,.08,0,.12.04,0,0,.08,0,.12-.04,4.97-2.19,9.55-5.12,12.71-8.89,2.35-2.77,3.93-6.01,4.08-9.7.12-2.12-.31-4.27-1.46-6.12-3.39-5.54-10.74-6.51-15.44-2.81h0Z" />
+    <path d="M321.37,15.8l-2.16-1.08c-.73,1.08-1.27,1.81-2.85,1.39-1.23-.35-1.58-1.69-1.62-2.81-.08-1.54.46-3.31,2.31-3.23,1.19.08,1.69.77,1.93,1.39l2.35-1.19c-1.16-2.19-3.85-2.93-6.12-2.35-2.43.65-3.66,2.89-3.62,5.31.04,2.46,1.23,4.58,3.77,5.16,1.23.27,2.58.19,3.73-.39.89-.46,1.89-1.31,2.27-2.23h0v.04ZM331.46,15.8l-2.16-1.08c-.73,1.08-1.27,1.81-2.85,1.39-1.23-.35-1.58-1.69-1.62-2.81-.08-1.54.46-3.31,2.31-3.23,1.19.08,1.69.77,1.93,1.39l2.35-1.19c-1.16-2.19-3.85-2.93-6.12-2.35-2.43.65-3.66,2.89-3.62,5.31.04,2.46,1.23,4.58,3.77,5.16,1.23.27,2.58.19,3.73-.39.89-.46,1.89-1.31,2.27-2.23h0v.04Z" />
+  </g>
+  <g class="simbolo__trama">
+    <rect x="65.61" y="0.54" width="7.29" height="7.29" style="--d:-1.039s;--c:4.19s" />
+    <rect x="94.77" y="0.54" width="7.29" height="7.29" style="--d:-0.367s;--c:3.51s" />
+    <rect x="123.93" y="0.54" width="7.29" height="7.29" style="--d:-0.856s;--c:4.19s" />
+    <rect x="80.19" y="15.12" width="7.29" height="7.29" style="--d:-1.100s;--c:4.19s" />
+    <rect x="94.77" y="15.12" width="7.29" height="7.29" style="--d:-0.183s;--c:3.85s" />
+    <rect x="109.35" y="15.12" width="7.29" height="7.29" style="--d:-0.428s;--c:3.51s" />
+    <rect x="123.93" y="15.12" width="7.29" height="7.29" style="--d:-0.672s;--c:3.17s" />
+    <rect x="51.03" y="29.7" width="7.29" height="7.29" style="--d:-0.428s;--c:3.85s" />
+    <rect x="65.61" y="29.7" width="7.29" height="7.29" style="--d:-0.672s;--c:3.51s" />
+    <rect x="80.19" y="29.7" width="7.29" height="7.29" style="--d:-0.917s;--c:3.17s" />
+    <rect x="94.77" y="29.7" width="7.29" height="7.29" style="--d:0.000s;--c:4.19s" />
+    <rect x="109.35" y="29.7" width="7.29" height="7.29" style="--d:-0.244s;--c:3.85s" />
+    <rect x="123.93" y="29.7" width="7.29" height="7.29" style="--d:-0.489s;--c:3.51s" />
+    <rect x="87.48" y="36.99" width="7.29" height="7.29" style="--d:-0.367s;--c:3.85s" />
+    <rect x="116.64" y="36.99" width="7.29" height="7.29" style="--d:-0.856s;--c:3.17s" />
+    <rect x="51.03" y="44.28" width="7.29" height="7.29" style="--d:-0.244s;--c:4.19s" />
+    <rect x="65.61" y="44.28" width="7.29" height="7.29" style="--d:-0.489s;--c:3.85s" />
+    <rect x="80.19" y="44.28" width="7.29" height="7.29" style="--d:-0.733s;--c:3.51s" />
+    <rect x="94.77" y="44.28" width="7.29" height="7.29" style="--d:-0.978s;--c:3.17s" />
+    <rect x="109.35" y="44.28" width="7.29" height="7.29" style="--d:-0.061s;--c:4.19s" />
+    <rect x="51.03" y="58.86" width="7.29" height="7.29" style="--d:-0.061s;--c:3.17s" />
+    <rect x="65.61" y="58.86" width="7.29" height="7.29" style="--d:-0.306s;--c:4.19s" />
+    <rect x="80.19" y="58.86" width="7.29" height="7.29" style="--d:-0.550s;--c:3.85s" />
+    <rect x="94.77" y="58.86" width="7.29" height="7.29" style="--d:-0.794s;--c:3.51s" />
+    <rect x="109.35" y="58.86" width="7.29" height="7.29" style="--d:-1.039s;--c:3.17s" />
+    <rect x="43.74" y="66.15" width="7.29" height="7.29" style="--d:-0.428s;--c:4.19s" />
+    <rect x="72.9" y="66.15" width="7.29" height="7.29" style="--d:-0.917s;--c:3.51s" />
+    <rect x="102.06" y="66.15" width="7.29" height="7.29" style="--d:-0.244s;--c:4.19s" />
+    <rect x="51.03" y="73.44" width="7.29" height="7.29" style="--d:-1.039s;--c:3.51s" />
+    <rect x="65.61" y="73.44" width="7.29" height="7.29" style="--d:-0.122s;--c:3.17s" />
+    <rect x="80.19" y="73.44" width="7.29" height="7.29" style="--d:-0.367s;--c:4.19s" />
+    <rect x="94.77" y="73.44" width="7.29" height="7.29" style="--d:-0.611s;--c:3.85s" />
+    <rect x="109.35" y="73.44" width="7.29" height="7.29" style="--d:-0.856s;--c:3.51s" />
+    <rect x="43.74" y="80.73" width="7.29" height="7.29" style="--d:-0.244s;--c:3.17s" />
+    <rect x="72.9" y="80.73" width="7.29" height="7.29" style="--d:-0.733s;--c:3.85s" />
+    <rect x="102.06" y="80.73" width="7.29" height="7.29" style="--d:-0.061s;--c:3.17s" />
+    <rect x="51.03" y="88.02" width="7.29" height="7.29" style="--d:-0.856s;--c:3.85s" />
+    <rect x="65.61" y="88.02" width="7.29" height="7.29" style="--d:-1.100s;--c:3.51s" />
+    <rect x="80.19" y="88.02" width="7.29" height="7.29" style="--d:-0.183s;--c:3.17s" />
+    <rect x="94.77" y="88.02" width="7.29" height="7.29" style="--d:-0.428s;--c:4.19s" />
+    <rect x="109.35" y="88.02" width="7.29" height="7.29" style="--d:-0.672s;--c:3.85s" />
+    <rect x="43.74" y="95.31" width="7.29" height="7.29" style="--d:-0.061s;--c:3.51s" />
+    <rect x="58.32" y="95.31" width="7.29" height="7.29" style="--d:-0.306s;--c:3.17s" />
+    <rect x="72.9" y="95.31" width="7.29" height="7.29" style="--d:-0.550s;--c:4.19s" />
+    <rect x="87.48" y="95.31" width="7.29" height="7.29" style="--d:-0.794s;--c:3.85s" />
+    <rect x="102.06" y="95.31" width="7.29" height="7.29" style="--d:-1.039s;--c:3.51s" />
+    <rect x="36.45" y="102.6" width="7.29" height="7.29" style="--d:-0.428s;--c:3.17s" />
+    <rect x="51.03" y="102.6" width="7.29" height="7.29" style="--d:-0.672s;--c:4.19s" />
+    <rect x="65.61" y="102.6" width="7.29" height="7.29" style="--d:-0.917s;--c:3.85s" />
+    <rect x="80.19" y="102.6" width="7.29" height="7.29" style="--d:0.000s;--c:3.51s" />
+    <rect x="94.77" y="102.6" width="7.29" height="7.29" style="--d:-0.244s;--c:3.17s" />
+    <rect x="58.32" y="109.89" width="7.29" height="7.29" style="--d:-0.122s;--c:3.51s" />
+    <rect x="72.9" y="109.89" width="7.29" height="7.29" style="--d:-0.367s;--c:3.17s" />
+    <rect x="87.48" y="109.89" width="7.29" height="7.29" style="--d:-0.611s;--c:4.19s" />
+    <rect x="102.06" y="109.89" width="7.29" height="7.29" style="--d:-0.856s;--c:3.85s" />
+    <rect x="36.45" y="117.18" width="7.29" height="7.29" style="--d:-0.244s;--c:3.51s" />
+    <rect x="51.03" y="117.18" width="7.29" height="7.29" style="--d:-0.489s;--c:3.17s" />
+    <rect x="65.61" y="117.18" width="7.29" height="7.29" style="--d:-0.733s;--c:4.19s" />
+    <rect x="80.19" y="117.18" width="7.29" height="7.29" style="--d:-0.978s;--c:3.85s" />
+    <rect x="94.77" y="117.18" width="7.29" height="7.29" style="--d:-0.061s;--c:3.51s" />
+    <rect x="43.74" y="124.47" width="7.29" height="7.29" style="--d:-0.856s;--c:4.19s" />
+    <rect x="58.32" y="124.47" width="7.29" height="7.29" style="--d:-1.100s;--c:3.85s" />
+    <rect x="72.9" y="124.47" width="7.29" height="7.29" style="--d:-0.183s;--c:3.51s" />
+    <rect x="87.48" y="124.47" width="7.29" height="7.29" style="--d:-0.428s;--c:3.17s" />
+    <rect x="102.06" y="124.47" width="7.29" height="7.29" style="--d:-0.672s;--c:4.19s" />
+    <rect x="36.45" y="131.76" width="7.29" height="7.29" style="--d:-0.061s;--c:3.85s" />
+    <rect x="51.03" y="131.76" width="7.29" height="7.29" style="--d:-0.306s;--c:3.51s" />
+    <rect x="65.61" y="131.76" width="7.29" height="7.29" style="--d:-0.550s;--c:3.17s" />
+    <rect x="72.9" y="131.76" width="7.29" height="7.29" style="--d:-0.672s;--c:3s" />
+    <rect x="80.19" y="131.76" width="7.29" height="7.29" style="--d:-0.794s;--c:4.19s" />
+    <rect x="94.77" y="131.76" width="7.29" height="7.29" style="--d:-1.039s;--c:3.85s" />
+    <rect x="102.06" y="131.76" width="7.29" height="7.29" style="--d:0.000s;--c:3.68s" />
+    <rect x="29.16" y="139.05" width="7.29" height="7.29" style="--d:-0.428s;--c:3.51s" />
+    <rect x="43.74" y="139.05" width="7.29" height="7.29" style="--d:-0.672s;--c:3.17s" />
+    <rect x="58.32" y="139.05" width="7.29" height="7.29" style="--d:-0.917s;--c:4.19s" />
+    <rect x="72.9" y="139.05" width="7.29" height="7.29" style="--d:0.000s;--c:3.85s" />
+    <rect x="87.48" y="139.05" width="7.29" height="7.29" style="--d:-0.244s;--c:3.51s" />
+    <rect x="36.45" y="146.34" width="7.29" height="7.29" style="--d:-1.039s;--c:4.19s" />
+    <rect x="51.03" y="146.34" width="7.29" height="7.29" style="--d:-0.122s;--c:3.85s" />
+    <rect x="65.61" y="146.34" width="7.29" height="7.29" style="--d:-0.367s;--c:3.51s" />
+    <rect x="72.9" y="146.34" width="7.29" height="7.29" style="--d:-0.489s;--c:3.34s" />
+    <rect x="80.19" y="146.34" width="7.29" height="7.29" style="--d:-0.611s;--c:3.17s" />
+    <rect x="94.77" y="146.34" width="7.29" height="7.29" style="--d:-0.856s;--c:4.19s" />
+    <rect x="29.16" y="153.63" width="7.29" height="7.29" style="--d:-0.244s;--c:3.85s" />
+    <rect x="43.74" y="153.63" width="7.29" height="7.29" style="--d:-0.489s;--c:3.51s" />
+    <rect x="58.32" y="153.63" width="7.29" height="7.29" style="--d:-0.733s;--c:3.17s" />
+    <rect x="72.9" y="153.63" width="7.29" height="7.29" style="--d:-0.978s;--c:4.19s" />
+    <rect x="87.48" y="153.63" width="7.29" height="7.29" style="--d:-0.061s;--c:3.85s" />
+    <rect x="29.16" y="160.92" width="7.29" height="7.29" style="--d:-0.733s;--c:3.34s" />
+    <rect x="36.45" y="160.92" width="7.29" height="7.29" style="--d:-0.856s;--c:3.17s" />
+    <rect x="51.03" y="160.92" width="7.29" height="7.29" style="--d:-1.100s;--c:4.19s" />
+    <rect x="58.32" y="160.92" width="7.29" height="7.29" style="--d:-0.061s;--c:4.02s" />
+    <rect x="65.61" y="160.92" width="7.29" height="7.29" style="--d:-0.183s;--c:3.85s" />
+    <rect x="72.9" y="160.92" width="7.29" height="7.29" style="--d:-0.306s;--c:3.68s" />
+    <rect x="80.19" y="160.92" width="7.29" height="7.29" style="--d:-0.428s;--c:3.51s" />
+    <rect x="87.48" y="160.92" width="7.29" height="7.29" style="--d:-0.550s;--c:3.34s" />
+    <rect x="94.77" y="160.92" width="7.29" height="7.29" style="--d:-0.672s;--c:3.17s" />
+    <rect x="29.16" y="168.21" width="7.29" height="7.29" style="--d:-0.061s;--c:4.19s" />
+    <rect x="43.74" y="168.21" width="7.29" height="7.29" style="--d:-0.306s;--c:3.85s" />
+    <rect x="58.32" y="168.21" width="7.29" height="7.29" style="--d:-0.550s;--c:3.51s" />
+    <rect x="72.9" y="168.21" width="7.29" height="7.29" style="--d:-0.794s;--c:3.17s" />
+    <rect x="87.48" y="168.21" width="7.29" height="7.29" style="--d:-1.039s;--c:4.19s" />
+    <rect x="21.87" y="175.5" width="7.29" height="7.29" style="--d:-0.428s;--c:3.85s" />
+    <rect x="29.16" y="175.5" width="7.29" height="7.29" style="--d:-0.550s;--c:3.68s" />
+    <rect x="36.45" y="175.5" width="7.29" height="7.29" style="--d:-0.672s;--c:3.51s" />
+    <rect x="51.03" y="175.5" width="7.29" height="7.29" style="--d:-0.917s;--c:3.17s" />
+    <rect x="58.32" y="175.5" width="7.29" height="7.29" style="--d:-1.039s;--c:3s" />
+    <rect x="65.61" y="175.5" width="7.29" height="7.29" style="--d:0.000s;--c:4.19s" />
+    <rect x="80.19" y="175.5" width="7.29" height="7.29" style="--d:-0.244s;--c:3.85s" />
+    <rect x="87.48" y="175.5" width="7.29" height="7.29" style="--d:-0.367s;--c:3.68s" />
+    <rect x="29.16" y="182.79" width="7.29" height="7.29" style="--d:-1.039s;--c:3.17s" />
+    <rect x="43.74" y="182.79" width="7.29" height="7.29" style="--d:-0.122s;--c:4.19s" />
+    <rect x="58.32" y="182.79" width="7.29" height="7.29" style="--d:-0.367s;--c:3.85s" />
+    <rect x="72.9" y="182.79" width="7.29" height="7.29" style="--d:-0.611s;--c:3.51s" />
+    <rect x="87.48" y="182.79" width="7.29" height="7.29" style="--d:-0.856s;--c:3.17s" />
+    <rect x="21.87" y="190.08" width="7.29" height="7.29" style="--d:-0.244s;--c:4.19s" />
+    <rect x="29.16" y="190.08" width="7.29" height="7.29" style="--d:-0.367s;--c:4.02s" />
+    <rect x="36.45" y="190.08" width="7.29" height="7.29" style="--d:-0.489s;--c:3.85s" />
+    <rect x="43.74" y="190.08" width="7.29" height="7.29" style="--d:-0.611s;--c:3.68s" />
+    <rect x="51.03" y="190.08" width="7.29" height="7.29" style="--d:-0.733s;--c:3.51s" />
+    <rect x="58.32" y="190.08" width="7.29" height="7.29" style="--d:-0.856s;--c:3.34s" />
+    <rect x="65.61" y="190.08" width="7.29" height="7.29" style="--d:-0.978s;--c:3.17s" />
+    <rect x="72.9" y="190.08" width="7.29" height="7.29" style="--d:-1.100s;--c:3s" />
+    <rect x="80.19" y="190.08" width="7.29" height="7.29" style="--d:-0.061s;--c:4.19s" />
+    <rect x="87.48" y="190.08" width="7.29" height="7.29" style="--d:-0.183s;--c:4.02s" />
+    <rect x="29.16" y="197.37" width="7.29" height="7.29" style="--d:-0.856s;--c:3.51s" />
+    <rect x="43.74" y="197.37" width="7.29" height="7.29" style="--d:-1.100s;--c:3.17s" />
+    <rect x="58.32" y="197.37" width="7.29" height="7.29" style="--d:-0.183s;--c:4.19s" />
+    <rect x="72.9" y="197.37" width="7.29" height="7.29" style="--d:-0.428s;--c:3.85s" />
+    <rect x="87.48" y="197.37" width="7.29" height="7.29" style="--d:-0.672s;--c:3.51s" />
+    <rect x="21.87" y="204.66" width="7.29" height="7.29" style="--d:-0.061s;--c:3.17s" />
+    <rect x="29.16" y="204.66" width="7.29" height="7.29" style="--d:-0.183s;--c:3s" />
+    <rect x="36.45" y="204.66" width="7.29" height="7.29" style="--d:-0.306s;--c:4.19s" />
+    <rect x="43.74" y="204.66" width="7.29" height="7.29" style="--d:-0.428s;--c:4.02s" />
+    <rect x="51.03" y="204.66" width="7.29" height="7.29" style="--d:-0.550s;--c:3.85s" />
+    <rect x="58.32" y="204.66" width="7.29" height="7.29" style="--d:-0.672s;--c:3.68s" />
+    <rect x="65.61" y="204.66" width="7.29" height="7.29" style="--d:-0.794s;--c:3.51s" />
+    <rect x="72.9" y="204.66" width="7.29" height="7.29" style="--d:-0.917s;--c:3.34s" />
+    <rect x="80.19" y="204.66" width="7.29" height="7.29" style="--d:-1.039s;--c:3.17s" />
+    <rect x="14.58" y="211.95" width="7.29" height="7.29" style="--d:-0.428s;--c:4.19s" />
+    <rect x="29.16" y="211.95" width="7.29" height="7.29" style="--d:-0.672s;--c:3.85s" />
+    <rect x="43.74" y="211.95" width="7.29" height="7.29" style="--d:-0.917s;--c:3.51s" />
+    <rect x="51.03" y="211.95" width="7.29" height="7.29" style="--d:-1.039s;--c:3.34s" />
+    <rect x="58.32" y="211.95" width="7.29" height="7.29" style="--d:0.000s;--c:3.17s" />
+    <rect x="72.9" y="211.95" width="7.29" height="7.29" style="--d:-0.244s;--c:4.19s" />
+    <rect x="80.19" y="211.95" width="7.29" height="7.29" style="--d:-0.367s;--c:4.02s" />
+    <rect x="14.58" y="219.24" width="7.29" height="7.29" style="--d:-0.917s;--c:3.68s" />
+    <rect x="21.87" y="219.24" width="7.29" height="7.29" style="--d:-1.039s;--c:3.51s" />
+    <rect x="29.16" y="219.24" width="7.29" height="7.29" style="--d:0.000s;--c:3.34s" />
+    <rect x="36.45" y="219.24" width="7.29" height="7.29" style="--d:-0.122s;--c:3.17s" />
+    <rect x="43.74" y="219.24" width="7.29" height="7.29" style="--d:-0.244s;--c:3s" />
+    <rect x="51.03" y="219.24" width="7.29" height="7.29" style="--d:-0.367s;--c:4.19s" />
+    <rect x="58.32" y="219.24" width="7.29" height="7.29" style="--d:-0.489s;--c:4.02s" />
+    <rect x="65.61" y="219.24" width="7.29" height="7.29" style="--d:-0.611s;--c:3.85s" />
+    <rect x="72.9" y="219.24" width="7.29" height="7.29" style="--d:-0.733s;--c:3.68s" />
+    <rect x="80.19" y="219.24" width="7.29" height="7.29" style="--d:-0.856s;--c:3.51s" />
+    <rect x="14.58" y="226.53" width="7.29" height="7.29" style="--d:-0.244s;--c:3.17s" />
+    <rect x="29.16" y="226.53" width="7.29" height="7.29" style="--d:-0.489s;--c:4.19s" />
+    <rect x="43.74" y="226.53" width="7.29" height="7.29" style="--d:-0.733s;--c:3.85s" />
+    <rect x="58.32" y="226.53" width="7.29" height="7.29" style="--d:-0.978s;--c:3.51s" />
+    <rect x="72.9" y="226.53" width="7.29" height="7.29" style="--d:-0.061s;--c:3.17s" />
+    <rect x="14.58" y="233.82" width="7.29" height="7.29" style="--d:-0.733s;--c:4.02s" />
+    <rect x="21.87" y="233.82" width="7.29" height="7.29" style="--d:-0.856s;--c:3.85s" />
+    <rect x="29.16" y="233.82" width="7.29" height="7.29" style="--d:-0.978s;--c:3.68s" />
+    <rect x="36.45" y="233.82" width="7.29" height="7.29" style="--d:-1.100s;--c:3.51s" />
+    <rect x="43.74" y="233.82" width="7.29" height="7.29" style="--d:-0.061s;--c:3.34s" />
+    <rect x="51.03" y="233.82" width="7.29" height="7.29" style="--d:-0.183s;--c:3.17s" />
+    <rect x="58.32" y="233.82" width="7.29" height="7.29" style="--d:-0.306s;--c:3s" />
+    <rect x="65.61" y="233.82" width="7.29" height="7.29" style="--d:-0.428s;--c:4.19s" />
+    <rect x="72.9" y="233.82" width="7.29" height="7.29" style="--d:-0.550s;--c:4.02s" />
+    <rect x="80.19" y="233.82" width="7.29" height="7.29" style="--d:-0.672s;--c:3.85s" />
+    <rect x="14.58" y="241.11" width="7.29" height="7.29" style="--d:-0.061s;--c:3.51s" />
+    <rect x="29.16" y="241.11" width="7.29" height="7.29" style="--d:-0.306s;--c:3.17s" />
+    <rect x="36.45" y="241.11" width="7.29" height="7.29" style="--d:-0.428s;--c:3s" />
+    <rect x="43.74" y="241.11" width="7.29" height="7.29" style="--d:-0.550s;--c:4.19s" />
+    <rect x="58.32" y="241.11" width="7.29" height="7.29" style="--d:-0.794s;--c:3.85s" />
+    <rect x="65.61" y="241.11" width="7.29" height="7.29" style="--d:-0.917s;--c:3.68s" />
+    <rect x="72.9" y="241.11" width="7.29" height="7.29" style="--d:-1.039s;--c:3.51s" />
+    <rect x="7.29" y="248.4" width="7.29" height="7.29" style="--d:-0.428s;--c:3.17s" />
+    <rect x="14.58" y="248.4" width="7.29" height="7.29" style="--d:-0.550s;--c:3s" />
+    <rect x="21.87" y="248.4" width="7.29" height="7.29" style="--d:-0.672s;--c:4.19s" />
+    <rect x="29.16" y="248.4" width="7.29" height="7.29" style="--d:-0.794s;--c:4.02s" />
+    <rect x="36.45" y="248.4" width="7.29" height="7.29" style="--d:-0.917s;--c:3.85s" />
+    <rect x="43.74" y="248.4" width="7.29" height="7.29" style="--d:-1.039s;--c:3.68s" />
+    <rect x="51.03" y="248.4" width="7.29" height="7.29" style="--d:0.000s;--c:3.51s" />
+    <rect x="58.32" y="248.4" width="7.29" height="7.29" style="--d:-0.122s;--c:3.34s" />
+    <rect x="65.61" y="248.4" width="7.29" height="7.29" style="--d:-0.244s;--c:3.17s" />
+    <rect x="72.9" y="248.4" width="7.29" height="7.29" style="--d:-0.367s;--c:3s" />
+    <rect x="7.29" y="255.69" width="7.29" height="7.29" style="--d:-0.917s;--c:4.02s" />
+    <rect x="14.58" y="255.69" width="7.29" height="7.29" style="--d:-1.039s;--c:3.85s" />
+    <rect x="29.16" y="255.69" width="7.29" height="7.29" style="--d:-0.122s;--c:3.51s" />
+    <rect x="36.45" y="255.69" width="7.29" height="7.29" style="--d:-0.244s;--c:3.34s" />
+    <rect x="43.74" y="255.69" width="7.29" height="7.29" style="--d:-0.367s;--c:3.17s" />
+    <rect x="58.32" y="255.69" width="7.29" height="7.29" style="--d:-0.611s;--c:4.19s" />
+    <rect x="65.61" y="255.69" width="7.29" height="7.29" style="--d:-0.733s;--c:4.02s" />
+    <rect x="72.9" y="255.69" width="7.29" height="7.29" style="--d:-0.856s;--c:3.85s" />
+    <rect x="7.29" y="262.98" width="7.29" height="7.29" style="--d:-0.244s;--c:3.51s" />
+    <rect x="14.58" y="262.98" width="7.29" height="7.29" style="--d:-0.367s;--c:3.34s" />
+    <rect x="21.87" y="262.98" width="7.29" height="7.29" style="--d:-0.489s;--c:3.17s" />
+    <rect x="29.16" y="262.98" width="7.29" height="7.29" style="--d:-0.611s;--c:3s" />
+    <rect x="36.45" y="262.98" width="7.29" height="7.29" style="--d:-0.733s;--c:4.19s" />
+    <rect x="43.74" y="262.98" width="7.29" height="7.29" style="--d:-0.856s;--c:4.02s" />
+    <rect x="51.03" y="262.98" width="7.29" height="7.29" style="--d:-0.978s;--c:3.85s" />
+    <rect x="58.32" y="262.98" width="7.29" height="7.29" style="--d:-1.100s;--c:3.68s" />
+    <rect x="65.61" y="262.98" width="7.29" height="7.29" style="--d:-0.061s;--c:3.51s" />
+    <rect x="72.9" y="262.98" width="7.29" height="7.29" style="--d:-0.183s;--c:3.34s" />
+    <rect x="14.58" y="270.27" width="7.29" height="7.29" style="--d:-0.856s;--c:4.19s" />
+    <rect x="21.87" y="270.27" width="7.29" height="7.29" style="--d:-0.978s;--c:4.02s" />
+    <rect x="29.16" y="270.27" width="7.29" height="7.29" style="--d:-1.100s;--c:3.85s" />
+    <rect x="36.45" y="270.27" width="7.29" height="7.29" style="--d:-0.061s;--c:3.68s" />
+    <rect x="43.74" y="270.27" width="7.29" height="7.29" style="--d:-0.183s;--c:3.51s" />
+    <rect x="51.03" y="270.27" width="7.29" height="7.29" style="--d:-0.306s;--c:3.34s" />
+    <rect x="58.32" y="270.27" width="7.29" height="7.29" style="--d:-0.428s;--c:3.17s" />
+    <rect x="65.61" y="270.27" width="7.29" height="7.29" style="--d:-0.550s;--c:3s" />
+    <rect x="72.9" y="270.27" width="7.29" height="7.29" style="--d:-0.672s;--c:4.19s" />
+    <rect x="7.29" y="277.56" width="7.29" height="7.29" style="--d:-0.061s;--c:3.85s" />
+    <rect x="14.58" y="277.56" width="7.29" height="7.29" style="--d:-0.183s;--c:3.68s" />
+    <rect x="21.87" y="277.56" width="7.29" height="7.29" style="--d:-0.306s;--c:3.51s" />
+    <rect x="29.16" y="277.56" width="7.29" height="7.29" style="--d:-0.428s;--c:3.34s" />
+    <rect x="36.45" y="277.56" width="7.29" height="7.29" style="--d:-0.550s;--c:3.17s" />
+    <rect x="43.74" y="277.56" width="7.29" height="7.29" style="--d:-0.672s;--c:3s" />
+    <rect x="51.03" y="277.56" width="7.29" height="7.29" style="--d:-0.794s;--c:4.19s" />
+    <rect x="58.32" y="277.56" width="7.29" height="7.29" style="--d:-0.917s;--c:4.02s" />
+    <rect x="65.61" y="277.56" width="7.29" height="7.29" style="--d:-1.039s;--c:3.85s" />
+    <rect x="0" y="284.85" width="7.29" height="7.29" style="--d:-0.428s;--c:3.51s" />
+    <rect x="14.58" y="284.85" width="7.29" height="7.29" style="--d:-0.672s;--c:3.17s" />
+    <rect x="21.87" y="284.85" width="7.29" height="7.29" style="--d:-0.794s;--c:3s" />
+    <rect x="29.16" y="284.85" width="7.29" height="7.29" style="--d:-0.917s;--c:4.19s" />
+    <rect x="43.74" y="284.85" width="7.29" height="7.29" style="--d:0.000s;--c:3.85s" />
+    <rect x="51.03" y="284.85" width="7.29" height="7.29" style="--d:-0.122s;--c:3.68s" />
+    <rect x="58.32" y="284.85" width="7.29" height="7.29" style="--d:-0.244s;--c:3.51s" />
+    <rect x="0" y="292.14" width="7.29" height="7.29" style="--d:-0.917s;--c:3s" />
+    <rect x="7.29" y="292.14" width="7.29" height="7.29" style="--d:-1.039s;--c:4.19s" />
+    <rect x="14.58" y="292.14" width="7.29" height="7.29" style="--d:0.000s;--c:4.02s" />
+    <rect x="21.87" y="292.14" width="7.29" height="7.29" style="--d:-0.122s;--c:3.85s" />
+    <rect x="29.16" y="292.14" width="7.29" height="7.29" style="--d:-0.244s;--c:3.68s" />
+    <rect x="36.45" y="292.14" width="7.29" height="7.29" style="--d:-0.367s;--c:3.51s" />
+    <rect x="43.74" y="292.14" width="7.29" height="7.29" style="--d:-0.489s;--c:3.34s" />
+    <rect x="51.03" y="292.14" width="7.29" height="7.29" style="--d:-0.611s;--c:3.17s" />
+    <rect x="58.32" y="292.14" width="7.29" height="7.29" style="--d:-0.733s;--c:3s" />
+    <rect x="65.61" y="292.14" width="7.29" height="7.29" style="--d:-0.856s;--c:4.19s" />
+  </g>
+  <path d="M338.4,297.31C184.54,297.31,59.8,164.34,59.8.31c0-.69,71.67,0,71.67,0,0,121.83,92.65,220.6,206.93,220.6v76.4Z" />
+  </svg>
+  <button
+    type="button"
+    class="simbolo__control"
+    data-simbolo-control
+    data-label-pausar={ui.carouselPause + que}
+    data-label-reproducir={ui.carouselPlay + que}
+    hidden
+  >
+    <svg class="simbolo__icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+      <g class="simbolo__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+      <path class="simbolo__play" d="M1 0 10 6 1 12z" />
+    </svg>
+    <span class="sr-only" data-simbolo-label>{ui.carouselPause + que}</span>
+  </button>
+</div>
+
+<style>
+  .simbolo { position: relative; aspect-ratio: 338.4 / 299.43; }
+  .simbolo__dibujo { display: block; inline-size: 100%; block-size: 100%; fill: #231f20; }
+  /* Cuadrados que se tocan dejan una línea clara entre ellos por el
+     antialiasing: se veía una rejilla a 1440. Ni un trazo de 0,25 ni los
+     bordes a píxel entero (crispEdges abría huecos de 1 px) la quitaban.
+     Un trazo de 0,6 del mismo color sí: cada cuadrado crece 0,3 por lado
+     y los separados siguen separados. */
+  .simbolo__trama rect {
+    stroke: #231f20;
+    stroke-width: 0.6;
+    animation: simbolo-chispa var(--c) var(--d) ease-in-out 1 both;
+  }
+  .simbolo[data-bucle] .simbolo__trama rect { animation-iteration-count: infinite; }
+  .simbolo[data-parado] .simbolo__trama rect { animation-play-state: paused; }
+  @keyframes simbolo-chispa {
+    0%, 30%, 70%, 100% { opacity: 1; }
+    48%, 52% { opacity: 0.08; }
+  }
+
+  .simbolo__control {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    display: grid;
+    place-items: center;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .simbolo__control[hidden] { display: none; }
+  .simbolo__icono { fill: currentColor; }
+  /* Parado, el icono pasa de pausa a reproducir: el estado lo lleva la
+     forma, no el color (1.4.1), y el nombre accesible cambia con él. */
+  .simbolo__play { display: none; }
+  .simbolo[data-parado] .simbolo__pausa { display: none; }
+  .simbolo[data-parado] .simbolo__play { display: inline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .simbolo__trama rect { animation: none; }
+    .simbolo__control { display: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-simbolo]').forEach((raiz) => {
+    const control = raiz.querySelector<HTMLButtonElement>('[data-simbolo-control]');
+    const etiqueta = raiz.querySelector<HTMLElement>('[data-simbolo-label]');
+    if (!control || !etiqueta) return;
+    // Con «reducir movimiento» no hay animación: ni bucle ni botón.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    raiz.setAttribute('data-bucle', '');
+    control.hidden = false;
+    control.addEventListener('click', () => {
+      const parar = !raiz.hasAttribute('data-parado');
+      raiz.toggleAttribute('data-parado', parar);
+      etiqueta.textContent = parar
+        ? (control.dataset.labelReproducir ?? 'Reproducir')
+        : (control.dataset.labelPausar ?? 'Pausar');
+    });
+  });
+</script>

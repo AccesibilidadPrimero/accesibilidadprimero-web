@@ -34,10 +34,14 @@ interface Props {
   superficie?: { fondo: string; foco: string };
 }
 const { ilustracion, alt = '', titulo, texto, nota, volver, superficie } = Astro.props;
+/* En vez de una imagen, un dibujo en línea (el símbolo animado de Estudio,
+   13/10/2026). Lleva la clase `apertura__ilustracion` y mide lo mismo. */
+const conDibujo = Astro.slots.has('ilustracion');
 const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring: ${superficie.foco};` : undefined;
 ---
 
-<div class:list={['apertura', !ilustracion && 'apertura--sin-ilustracion']} style={estilo}>
+<div class:list={['apertura', !ilustracion && !conDibujo && 'apertura--sin-ilustracion']} style={estilo}>
+  <slot name="ilustracion" />
   {
     ilustracion && (
       <img
@@ -92,15 +96,15 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
 
   /* 240 · 320 · 400 de alto (Figma Móvil, Tableta, Escritorio); el ancho sale
      de su proporción. Nunca más ancho que la columna. */
-  .apertura__ilustracion {
+  .apertura :global(.apertura__ilustracion) {
     align-self: center;
     block-size: 240px;
     inline-size: auto;
     max-inline-size: 100%;
     object-fit: contain;
   }
-  @media (min-width: 768px) { .apertura__ilustracion { block-size: 320px; } }
-  @media (min-width: 1024px) { .apertura__ilustracion { block-size: 400px; } }
+  @media (min-width: 768px) { .apertura :global(.apertura__ilustracion) { block-size: 320px; } }
+  @media (min-width: 1024px) { .apertura :global(.apertura__ilustracion) { block-size: 400px; } }
 
   .apertura__titulo {
     margin: 0;

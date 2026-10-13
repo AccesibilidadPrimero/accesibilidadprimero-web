@@ -312,6 +312,7 @@ npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
 npm run aparicion    # aparición al hacer scroll y «Leer más»: sin JS, normal y reducido
+npm run movimiento   # 2.2.2: el símbolo de Estudio en bucle se para con su botón; sin JS acaba antes de 5 s; reducido, quieto
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
 npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños

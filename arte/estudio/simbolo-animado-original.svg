@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" data-name="Capa 1" viewBox="0 0 338.4 299.43">
+  <defs>
+    <style>
+      .cls-1 { fill: #231f20; }
+
+      /* El símbolo aparece completo desde el primer fotograma. */
+      #main-curve {
+        opacity: 1;
+        clip-path: none;
+      }
+
+      #cc-mark {
+        opacity: 1;
+      }
+
+      /* Cada cuadrado conserva su ritmo propio para recuperar el chispeo orgánico. */
+      #pixel-field &gt; rect {
+        opacity: 1;
+        animation: pixel-idle var(--cycle) calc(var(--idle-start) - 4.22s) ease-in-out infinite;
+      }
+
+      /* Solo cambia la opacidad; no hay escalado ni desplazamiento. */
+      @keyframes pixel-idle {
+        0%, 30%, 70%, 100% { opacity: 1; }
+        48%, 52%           { opacity: .08; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #main-curve,
+        #pixel-field &gt; rect,
+        #cc-mark {
+          animation: none !important;
+          opacity: 1 !important;
+          clip-path: none !important;
+        }
+      }
+</style>
+  </defs>
+  <g id="cc-mark" data-name="Símbolo CC">
+    <g id="_1761831900240" data-name=" 1761831900240">
+      <path class="cls-1" d="M321.52,5.48c2.16-2.35,4.66-3.39,7.59-2.96,3,.42,5.54,2.58,6.47,5.47.69,2.23.42,4.74-.54,7.01-1.46,3.54-5.78,8.55-13.55,12.09-7.78-3.5-12.09-8.55-13.55-12.09-.92-2.27-1.23-4.77-.54-7.01.92-2.89,3.47-5.04,6.47-5.47,2.93-.42,5.43.65,7.59,2.96l.04.04s0-.04.04-.04h0ZM321.48,2.2c-4.7-3.7-12.05-2.73-15.44,2.81-1.12,1.85-1.54,3.97-1.46,6.12.15,3.7,1.77,6.89,4.08,9.7,3.16,3.73,7.7,6.7,12.71,8.89,0,0,.08,0,.12.04,0,0,.08,0,.12-.04,4.97-2.19,9.55-5.12,12.71-8.89,2.35-2.77,3.93-6.01,4.08-9.7.12-2.12-.31-4.27-1.46-6.12-3.39-5.54-10.74-6.51-15.44-2.81h0Z" />
+      <path class="cls-1" d="M321.37,15.8l-2.16-1.08c-.73,1.08-1.27,1.81-2.85,1.39-1.23-.35-1.58-1.69-1.62-2.81-.08-1.54.46-3.31,2.31-3.23,1.19.08,1.69.77,1.93,1.39l2.35-1.19c-1.16-2.19-3.85-2.93-6.12-2.35-2.43.65-3.66,2.89-3.62,5.31.04,2.46,1.23,4.58,3.77,5.16,1.23.27,2.58.19,3.73-.39.89-.46,1.89-1.31,2.27-2.23h0v.04ZM331.46,15.8l-2.16-1.08c-.73,1.08-1.27,1.81-2.85,1.39-1.23-.35-1.58-1.69-1.62-2.81-.08-1.54.46-3.31,2.31-3.23,1.19.08,1.69.77,1.93,1.39l2.35-1.19c-1.16-2.19-3.85-2.93-6.12-2.35-2.43.65-3.66,2.89-3.62,5.31.04,2.46,1.23,4.58,3.77,5.16,1.23.27,2.58.19,3.73-.39.89-.46,1.89-1.31,2.27-2.23h0v.04Z" />
+    </g>
+  </g>
+  <g id="logo-body" data-name="Cuerpo del símbolo">
+    <g id="pixel-field" data-name="Trama de cuadrados">
+      <rect class="cls-1 pixel" x="65.61" y="0.54" width="7.29" height="7.29" style="--enter:1.297s;--idle-start:3.181s;--cycle:4.190s" data-cell="9-0" />
+      <rect class="cls-1 pixel" x="94.77" y="0.54" width="7.29" height="7.29" style="--enter:1.248s;--idle-start:3.853s;--cycle:3.510s" data-cell="13-0" />
+      <rect class="cls-1 pixel" x="123.93" y="0.54" width="7.29" height="7.29" style="--enter:1.200s;--idle-start:3.364s;--cycle:4.190s" data-cell="17-0" />
+      <rect class="cls-1 pixel" x="80.19" y="15.12" width="7.29" height="7.29" style="--enter:1.348s;--idle-start:3.120s;--cycle:4.190s" data-cell="11-2" />
+      <rect class="cls-1 pixel" x="94.77" y="15.12" width="7.29" height="7.29" style="--enter:1.324s;--idle-start:4.037s;--cycle:3.850s" data-cell="13-2" />
+      <rect class="cls-1 pixel" x="109.35" y="15.12" width="7.29" height="7.29" style="--enter:1.300s;--idle-start:3.792s;--cycle:3.510s" data-cell="15-2" />
+      <rect class="cls-1 pixel" x="123.93" y="15.12" width="7.29" height="7.29" style="--enter:1.276s;--idle-start:3.548s;--cycle:3.170s" data-cell="17-2" />
+      <rect class="cls-1 pixel" x="51.03" y="29.70" width="7.29" height="7.29" style="--enter:1.473s;--idle-start:3.792s;--cycle:3.850s" data-cell="7-4" />
+      <rect class="cls-1 pixel" x="65.61" y="29.70" width="7.29" height="7.29" style="--enter:1.448s;--idle-start:3.548s;--cycle:3.510s" data-cell="9-4" />
+      <rect class="cls-1 pixel" x="80.19" y="29.70" width="7.29" height="7.29" style="--enter:1.424s;--idle-start:3.303s;--cycle:3.170s" data-cell="11-4" />
+      <rect class="cls-1 pixel" x="94.77" y="29.70" width="7.29" height="7.29" style="--enter:1.400s;--idle-start:4.220s;--cycle:4.190s" data-cell="13-4" />
+      <rect class="cls-1 pixel" x="109.35" y="29.70" width="7.29" height="7.29" style="--enter:1.376s;--idle-start:3.976s;--cycle:3.850s" data-cell="15-4" />
+      <rect class="cls-1 pixel" x="123.93" y="29.70" width="7.29" height="7.29" style="--enter:1.351s;--idle-start:3.731s;--cycle:3.510s" data-cell="17-4" />
+      <rect class="cls-1 pixel" x="87.48" y="36.99" width="7.29" height="7.29" style="--enter:1.450s;--idle-start:3.853s;--cycle:3.850s" data-cell="12-5" />
+      <rect class="cls-1 pixel" x="116.64" y="36.99" width="7.29" height="7.29" style="--enter:1.401s;--idle-start:3.364s;--cycle:3.170s" data-cell="16-5" />
+      <rect class="cls-1 pixel" x="51.03" y="44.28" width="7.29" height="7.29" style="--enter:1.548s;--idle-start:3.976s;--cycle:4.190s" data-cell="7-6" />
+      <rect class="cls-1 pixel" x="65.61" y="44.28" width="7.29" height="7.29" style="--enter:1.524s;--idle-start:3.731s;--cycle:3.850s" data-cell="9-6" />
+      <rect class="cls-1 pixel" x="80.19" y="44.28" width="7.29" height="7.29" style="--enter:1.500s;--idle-start:3.487s;--cycle:3.510s" data-cell="11-6" />
+      <rect class="cls-1 pixel" x="94.77" y="44.28" width="7.29" height="7.29" style="--enter:1.476s;--idle-start:3.242s;--cycle:3.170s" data-cell="13-6" />
+      <rect class="cls-1 pixel" x="109.35" y="44.28" width="7.29" height="7.29" style="--enter:1.451s;--idle-start:4.159s;--cycle:4.190s" data-cell="15-6" />
+      <rect class="cls-1 pixel" x="51.03" y="58.86" width="7.29" height="7.29" style="--enter:1.624s;--idle-start:4.159s;--cycle:3.170s" data-cell="7-8" />
+      <rect class="cls-1 pixel" x="65.61" y="58.86" width="7.29" height="7.29" style="--enter:1.600s;--idle-start:3.914s;--cycle:4.190s" data-cell="9-8" />
+      <rect class="cls-1 pixel" x="80.19" y="58.86" width="7.29" height="7.29" style="--enter:1.575s;--idle-start:3.670s;--cycle:3.850s" data-cell="11-8" />
+      <rect class="cls-1 pixel" x="94.77" y="58.86" width="7.29" height="7.29" style="--enter:1.551s;--idle-start:3.426s;--cycle:3.510s" data-cell="13-8" />
+      <rect class="cls-1 pixel" x="109.35" y="58.86" width="7.29" height="7.29" style="--enter:1.527s;--idle-start:3.181s;--cycle:3.170s" data-cell="15-8" />
+      <rect class="cls-1 pixel" x="43.74" y="66.15" width="7.29" height="7.29" style="--enter:1.674s;--idle-start:3.792s;--cycle:4.190s" data-cell="6-9" />
+      <rect class="cls-1 pixel" x="72.90" y="66.15" width="7.29" height="7.29" style="--enter:1.625s;--idle-start:3.303s;--cycle:3.510s" data-cell="10-9" />
+      <rect class="cls-1 pixel" x="102.06" y="66.15" width="7.29" height="7.29" style="--enter:1.577s;--idle-start:3.976s;--cycle:4.190s" data-cell="14-9" />
+      <rect class="cls-1 pixel" x="51.03" y="73.44" width="7.29" height="7.29" style="--enter:1.700s;--idle-start:3.181s;--cycle:3.510s" data-cell="7-10" />
+      <rect class="cls-1 pixel" x="65.61" y="73.44" width="7.29" height="7.29" style="--enter:1.675s;--idle-start:4.098s;--cycle:3.170s" data-cell="9-10" />
+      <rect class="cls-1 pixel" x="80.19" y="73.44" width="7.29" height="7.29" style="--enter:1.651s;--idle-start:3.853s;--cycle:4.190s" data-cell="11-10" />
+      <rect class="cls-1 pixel" x="94.77" y="73.44" width="7.29" height="7.29" style="--enter:1.627s;--idle-start:3.609s;--cycle:3.850s" data-cell="13-10" />
+      <rect class="cls-1 pixel" x="109.35" y="73.44" width="7.29" height="7.29" style="--enter:1.603s;--idle-start:3.364s;--cycle:3.510s" data-cell="15-10" />
+      <rect class="cls-1 pixel" x="43.74" y="80.73" width="7.29" height="7.29" style="--enter:1.750s;--idle-start:3.976s;--cycle:3.170s" data-cell="6-11" />
+      <rect class="cls-1 pixel" x="72.90" y="80.73" width="7.29" height="7.29" style="--enter:1.701s;--idle-start:3.487s;--cycle:3.850s" data-cell="10-11" />
+      <rect class="cls-1 pixel" x="102.06" y="80.73" width="7.29" height="7.29" style="--enter:1.653s;--idle-start:4.159s;--cycle:3.170s" data-cell="14-11" />
+      <rect class="cls-1 pixel" x="51.03" y="88.02" width="7.29" height="7.29" style="--enter:1.775s;--idle-start:3.364s;--cycle:3.850s" data-cell="7-12" />
+      <rect class="cls-1 pixel" x="65.61" y="88.02" width="7.29" height="7.29" style="--enter:1.751s;--idle-start:3.120s;--cycle:3.510s" data-cell="9-12" />
+      <rect class="cls-1 pixel" x="80.19" y="88.02" width="7.29" height="7.29" style="--enter:1.727s;--idle-start:4.037s;--cycle:3.170s" data-cell="11-12" />
+      <rect class="cls-1 pixel" x="94.77" y="88.02" width="7.29" height="7.29" style="--enter:1.703s;--idle-start:3.792s;--cycle:4.190s" data-cell="13-12" />
+      <rect class="cls-1 pixel" x="109.35" y="88.02" width="7.29" height="7.29" style="--enter:1.678s;--idle-start:3.548s;--cycle:3.850s" data-cell="15-12" />
+      <rect class="cls-1 pixel" x="43.74" y="95.31" width="7.29" height="7.29" style="--enter:1.825s;--idle-start:4.159s;--cycle:3.510s" data-cell="6-13" />
+      <rect class="cls-1 pixel" x="58.32" y="95.31" width="7.29" height="7.29" style="--enter:1.801s;--idle-start:3.914s;--cycle:3.170s" data-cell="8-13" />
+      <rect class="cls-1 pixel" x="72.90" y="95.31" width="7.29" height="7.29" style="--enter:1.777s;--idle-start:3.670s;--cycle:4.190s" data-cell="10-13" />
+      <rect class="cls-1 pixel" x="87.48" y="95.31" width="7.29" height="7.29" style="--enter:1.753s;--idle-start:3.426s;--cycle:3.850s" data-cell="12-13" />
+      <rect class="cls-1 pixel" x="102.06" y="95.31" width="7.29" height="7.29" style="--enter:1.728s;--idle-start:3.181s;--cycle:3.510s" data-cell="14-13" />
+      <rect class="cls-1 pixel" x="36.45" y="102.60" width="7.29" height="7.29" style="--enter:1.875s;--idle-start:3.792s;--cycle:3.170s" data-cell="5-14" />
+      <rect class="cls-1 pixel" x="51.03" y="102.60" width="7.29" height="7.29" style="--enter:1.851s;--idle-start:3.548s;--cycle:4.190s" data-cell="7-14" />
+      <rect class="cls-1 pixel" x="65.61" y="102.60" width="7.29" height="7.29" style="--enter:1.827s;--idle-start:3.303s;--cycle:3.850s" data-cell="9-14" />
+      <rect class="cls-1 pixel" x="80.19" y="102.60" width="7.29" height="7.29" style="--enter:1.803s;--idle-start:4.220s;--cycle:3.510s" data-cell="11-14" />
+      <rect class="cls-1 pixel" x="94.77" y="102.60" width="7.29" height="7.29" style="--enter:1.778s;--idle-start:3.976s;--cycle:3.170s" data-cell="13-14" />
+      <rect class="cls-1 pixel" x="58.32" y="109.89" width="7.29" height="7.29" style="--enter:1.877s;--idle-start:4.098s;--cycle:3.510s" data-cell="8-15" />
+      <rect class="cls-1 pixel" x="72.90" y="109.89" width="7.29" height="7.29" style="--enter:1.853s;--idle-start:3.853s;--cycle:3.170s" data-cell="10-15" />
+      <rect class="cls-1 pixel" x="87.48" y="109.89" width="7.29" height="7.29" style="--enter:1.828s;--idle-start:3.609s;--cycle:4.190s" data-cell="12-15" />
+      <rect class="cls-1 pixel" x="102.06" y="109.89" width="7.29" height="7.29" style="--enter:1.804s;--idle-start:3.364s;--cycle:3.850s" data-cell="14-15" />
+      <rect class="cls-1 pixel" x="36.45" y="117.18" width="7.29" height="7.29" style="--enter:1.951s;--idle-start:3.976s;--cycle:3.510s" data-cell="5-16" />
+      <rect class="cls-1 pixel" x="51.03" y="117.18" width="7.29" height="7.29" style="--enter:1.927s;--idle-start:3.731s;--cycle:3.170s" data-cell="7-16" />
+      <rect class="cls-1 pixel" x="65.61" y="117.18" width="7.29" height="7.29" style="--enter:1.903s;--idle-start:3.487s;--cycle:4.190s" data-cell="9-16" />
+      <rect class="cls-1 pixel" x="80.19" y="117.18" width="7.29" height="7.29" style="--enter:1.878s;--idle-start:3.242s;--cycle:3.850s" data-cell="11-16" />
+      <rect class="cls-1 pixel" x="94.77" y="117.18" width="7.29" height="7.29" style="--enter:1.854s;--idle-start:4.159s;--cycle:3.510s" data-cell="13-16" />
+      <rect class="cls-1 pixel" x="43.74" y="124.47" width="7.29" height="7.29" style="--enter:1.977s;--idle-start:3.364s;--cycle:4.190s" data-cell="6-17" />
+      <rect class="cls-1 pixel" x="58.32" y="124.47" width="7.29" height="7.29" style="--enter:1.952s;--idle-start:3.120s;--cycle:3.850s" data-cell="8-17" />
+      <rect class="cls-1 pixel" x="72.90" y="124.47" width="7.29" height="7.29" style="--enter:1.928s;--idle-start:4.037s;--cycle:3.510s" data-cell="10-17" />
+      <rect class="cls-1 pixel" x="87.48" y="124.47" width="7.29" height="7.29" style="--enter:1.904s;--idle-start:3.792s;--cycle:3.170s" data-cell="12-17" />
+      <rect class="cls-1 pixel" x="102.06" y="124.47" width="7.29" height="7.29" style="--enter:1.880s;--idle-start:3.548s;--cycle:4.190s" data-cell="14-17" />
+      <rect class="cls-1 pixel" x="36.45" y="131.76" width="7.29" height="7.29" style="--enter:2.027s;--idle-start:4.159s;--cycle:3.850s" data-cell="5-18" />
+      <rect class="cls-1 pixel" x="51.03" y="131.76" width="7.29" height="7.29" style="--enter:2.002s;--idle-start:3.914s;--cycle:3.510s" data-cell="7-18" />
+      <rect class="cls-1 pixel" x="65.61" y="131.76" width="7.29" height="7.29" style="--enter:1.978s;--idle-start:3.670s;--cycle:3.170s" data-cell="9-18" />
+      <rect class="cls-1 pixel" x="72.90" y="131.76" width="7.29" height="7.29" style="--enter:1.966s;--idle-start:3.548s;--cycle:3.000s" data-cell="10-18" />
+      <rect class="cls-1 pixel" x="80.19" y="131.76" width="7.29" height="7.29" style="--enter:1.954s;--idle-start:3.426s;--cycle:4.190s" data-cell="11-18" />
+      <rect class="cls-1 pixel" x="94.77" y="131.76" width="7.29" height="7.29" style="--enter:1.930s;--idle-start:3.181s;--cycle:3.850s" data-cell="13-18" />
+      <rect class="cls-1 pixel" x="102.06" y="131.76" width="7.29" height="7.29" style="--enter:1.918s;--idle-start:4.220s;--cycle:3.680s" data-cell="14-18" />
+      <rect class="cls-1 pixel" x="29.16" y="139.05" width="7.29" height="7.29" style="--enter:2.077s;--idle-start:3.792s;--cycle:3.510s" data-cell="4-19" />
+      <rect class="cls-1 pixel" x="43.74" y="139.05" width="7.29" height="7.29" style="--enter:2.052s;--idle-start:3.548s;--cycle:3.170s" data-cell="6-19" />
+      <rect class="cls-1 pixel" x="58.32" y="139.05" width="7.29" height="7.29" style="--enter:2.028s;--idle-start:3.303s;--cycle:4.190s" data-cell="8-19" />
+      <rect class="cls-1 pixel" x="72.90" y="139.05" width="7.29" height="7.29" style="--enter:2.004s;--idle-start:4.220s;--cycle:3.850s" data-cell="10-19" />
+      <rect class="cls-1 pixel" x="87.48" y="139.05" width="7.29" height="7.29" style="--enter:1.980s;--idle-start:3.976s;--cycle:3.510s" data-cell="12-19" />
+      <rect class="cls-1 pixel" x="36.45" y="146.34" width="7.29" height="7.29" style="--enter:2.102s;--idle-start:3.181s;--cycle:4.190s" data-cell="5-20" />
+      <rect class="cls-1 pixel" x="51.03" y="146.34" width="7.29" height="7.29" style="--enter:2.078s;--idle-start:4.098s;--cycle:3.850s" data-cell="7-20" />
+      <rect class="cls-1 pixel" x="65.61" y="146.34" width="7.29" height="7.29" style="--enter:2.054s;--idle-start:3.853s;--cycle:3.510s" data-cell="9-20" />
+      <rect class="cls-1 pixel" x="72.90" y="146.34" width="7.29" height="7.29" style="--enter:2.042s;--idle-start:3.731s;--cycle:3.340s" data-cell="10-20" />
+      <rect class="cls-1 pixel" x="80.19" y="146.34" width="7.29" height="7.29" style="--enter:2.030s;--idle-start:3.609s;--cycle:3.170s" data-cell="11-20" />
+      <rect class="cls-1 pixel" x="94.77" y="146.34" width="7.29" height="7.29" style="--enter:2.005s;--idle-start:3.364s;--cycle:4.190s" data-cell="13-20" />
+      <rect class="cls-1 pixel" x="29.16" y="153.63" width="7.29" height="7.29" style="--enter:2.152s;--idle-start:3.976s;--cycle:3.850s" data-cell="4-21" />
+      <rect class="cls-1 pixel" x="43.74" y="153.63" width="7.29" height="7.29" style="--enter:2.128s;--idle-start:3.731s;--cycle:3.510s" data-cell="6-21" />
+      <rect class="cls-1 pixel" x="58.32" y="153.63" width="7.29" height="7.29" style="--enter:2.104s;--idle-start:3.487s;--cycle:3.170s" data-cell="8-21" />
+      <rect class="cls-1 pixel" x="72.90" y="153.63" width="7.29" height="7.29" style="--enter:2.080s;--idle-start:3.242s;--cycle:4.190s" data-cell="10-21" />
+      <rect class="cls-1 pixel" x="87.48" y="153.63" width="7.29" height="7.29" style="--enter:2.055s;--idle-start:4.159s;--cycle:3.850s" data-cell="12-21" />
+      <rect class="cls-1 pixel" x="29.16" y="160.92" width="7.29" height="7.29" style="--enter:2.190s;--idle-start:3.487s;--cycle:3.340s" data-cell="4-22" />
+      <rect class="cls-1 pixel" x="36.45" y="160.92" width="7.29" height="7.29" style="--enter:2.178s;--idle-start:3.364s;--cycle:3.170s" data-cell="5-22" />
+      <rect class="cls-1 pixel" x="51.03" y="160.92" width="7.29" height="7.29" style="--enter:2.154s;--idle-start:3.120s;--cycle:4.190s" data-cell="7-22" />
+      <rect class="cls-1 pixel" x="58.32" y="160.92" width="7.29" height="7.29" style="--enter:2.142s;--idle-start:4.159s;--cycle:4.020s" data-cell="8-22" />
+      <rect class="cls-1 pixel" x="65.61" y="160.92" width="7.29" height="7.29" style="--enter:2.130s;--idle-start:4.037s;--cycle:3.850s" data-cell="9-22" />
+      <rect class="cls-1 pixel" x="72.90" y="160.92" width="7.29" height="7.29" style="--enter:2.118s;--idle-start:3.914s;--cycle:3.680s" data-cell="10-22" />
+      <rect class="cls-1 pixel" x="80.19" y="160.92" width="7.29" height="7.29" style="--enter:2.105s;--idle-start:3.792s;--cycle:3.510s" data-cell="11-22" />
+      <rect class="cls-1 pixel" x="87.48" y="160.92" width="7.29" height="7.29" style="--enter:2.093s;--idle-start:3.670s;--cycle:3.340s" data-cell="12-22" />
+      <rect class="cls-1 pixel" x="94.77" y="160.92" width="7.29" height="7.29" style="--enter:2.081s;--idle-start:3.548s;--cycle:3.170s" data-cell="13-22" />
+      <rect class="cls-1 pixel" x="29.16" y="168.21" width="7.29" height="7.29" style="--enter:2.228s;--idle-start:4.159s;--cycle:4.190s" data-cell="4-23" />
+      <rect class="cls-1 pixel" x="43.74" y="168.21" width="7.29" height="7.29" style="--enter:2.204s;--idle-start:3.914s;--cycle:3.850s" data-cell="6-23" />
+      <rect class="cls-1 pixel" x="58.32" y="168.21" width="7.29" height="7.29" style="--enter:2.180s;--idle-start:3.670s;--cycle:3.510s" data-cell="8-23" />
+      <rect class="cls-1 pixel" x="72.90" y="168.21" width="7.29" height="7.29" style="--enter:2.155s;--idle-start:3.426s;--cycle:3.170s" data-cell="10-23" />
+      <rect class="cls-1 pixel" x="87.48" y="168.21" width="7.29" height="7.29" style="--enter:2.131s;--idle-start:3.181s;--cycle:4.190s" data-cell="12-23" />
+      <rect class="cls-1 pixel" x="21.87" y="175.50" width="7.29" height="7.29" style="--enter:2.278s;--idle-start:3.792s;--cycle:3.850s" data-cell="3-24" />
+      <rect class="cls-1 pixel" x="29.16" y="175.50" width="7.29" height="7.29" style="--enter:2.266s;--idle-start:3.670s;--cycle:3.680s" data-cell="4-24" />
+      <rect class="cls-1 pixel" x="36.45" y="175.50" width="7.29" height="7.29" style="--enter:2.254s;--idle-start:3.548s;--cycle:3.510s" data-cell="5-24" />
+      <rect class="cls-1 pixel" x="51.03" y="175.50" width="7.29" height="7.29" style="--enter:2.230s;--idle-start:3.303s;--cycle:3.170s" data-cell="7-24" />
+      <rect class="cls-1 pixel" x="58.32" y="175.50" width="7.29" height="7.29" style="--enter:2.217s;--idle-start:3.181s;--cycle:3.000s" data-cell="8-24" />
+      <rect class="cls-1 pixel" x="65.61" y="175.50" width="7.29" height="7.29" style="--enter:2.205s;--idle-start:4.220s;--cycle:4.190s" data-cell="9-24" />
+      <rect class="cls-1 pixel" x="80.19" y="175.50" width="7.29" height="7.29" style="--enter:2.181s;--idle-start:3.976s;--cycle:3.850s" data-cell="11-24" />
+      <rect class="cls-1 pixel" x="87.48" y="175.50" width="7.29" height="7.29" style="--enter:2.169s;--idle-start:3.853s;--cycle:3.680s" data-cell="12-24" />
+      <rect class="cls-1 pixel" x="29.16" y="182.79" width="7.29" height="7.29" style="--enter:2.304s;--idle-start:3.181s;--cycle:3.170s" data-cell="4-25" />
+      <rect class="cls-1 pixel" x="43.74" y="182.79" width="7.29" height="7.29" style="--enter:2.280s;--idle-start:4.098s;--cycle:4.190s" data-cell="6-25" />
+      <rect class="cls-1 pixel" x="58.32" y="182.79" width="7.29" height="7.29" style="--enter:2.255s;--idle-start:3.853s;--cycle:3.850s" data-cell="8-25" />
+      <rect class="cls-1 pixel" x="72.90" y="182.79" width="7.29" height="7.29" style="--enter:2.231s;--idle-start:3.609s;--cycle:3.510s" data-cell="10-25" />
+      <rect class="cls-1 pixel" x="87.48" y="182.79" width="7.29" height="7.29" style="--enter:2.207s;--idle-start:3.364s;--cycle:3.170s" data-cell="12-25" />
+      <rect class="cls-1 pixel" x="21.87" y="190.08" width="7.29" height="7.29" style="--enter:2.354s;--idle-start:3.976s;--cycle:4.190s" data-cell="3-26" />
+      <rect class="cls-1 pixel" x="29.16" y="190.08" width="7.29" height="7.29" style="--enter:2.342s;--idle-start:3.853s;--cycle:4.020s" data-cell="4-26" />
+      <rect class="cls-1 pixel" x="36.45" y="190.08" width="7.29" height="7.29" style="--enter:2.330s;--idle-start:3.731s;--cycle:3.850s" data-cell="5-26" />
+      <rect class="cls-1 pixel" x="43.74" y="190.08" width="7.29" height="7.29" style="--enter:2.317s;--idle-start:3.609s;--cycle:3.680s" data-cell="6-26" />
+      <rect class="cls-1 pixel" x="51.03" y="190.08" width="7.29" height="7.29" style="--enter:2.305s;--idle-start:3.487s;--cycle:3.510s" data-cell="7-26" />
+      <rect class="cls-1 pixel" x="58.32" y="190.08" width="7.29" height="7.29" style="--enter:2.293s;--idle-start:3.364s;--cycle:3.340s" data-cell="8-26" />
+      <rect class="cls-1 pixel" x="65.61" y="190.08" width="7.29" height="7.29" style="--enter:2.281s;--idle-start:3.242s;--cycle:3.170s" data-cell="9-26" />
+      <rect class="cls-1 pixel" x="72.90" y="190.08" width="7.29" height="7.29" style="--enter:2.269s;--idle-start:3.120s;--cycle:3.000s" data-cell="10-26" />
+      <rect class="cls-1 pixel" x="80.19" y="190.08" width="7.29" height="7.29" style="--enter:2.257s;--idle-start:4.159s;--cycle:4.190s" data-cell="11-26" />
+      <rect class="cls-1 pixel" x="87.48" y="190.08" width="7.29" height="7.29" style="--enter:2.245s;--idle-start:4.037s;--cycle:4.020s" data-cell="12-26" />
+      <rect class="cls-1 pixel" x="29.16" y="197.37" width="7.29" height="7.29" style="--enter:2.379s;--idle-start:3.364s;--cycle:3.510s" data-cell="4-27" />
+      <rect class="cls-1 pixel" x="43.74" y="197.37" width="7.29" height="7.29" style="--enter:2.355s;--idle-start:3.120s;--cycle:3.170s" data-cell="6-27" />
+      <rect class="cls-1 pixel" x="58.32" y="197.37" width="7.29" height="7.29" style="--enter:2.331s;--idle-start:4.037s;--cycle:4.190s" data-cell="8-27" />
+      <rect class="cls-1 pixel" x="72.90" y="197.37" width="7.29" height="7.29" style="--enter:2.307s;--idle-start:3.792s;--cycle:3.850s" data-cell="10-27" />
+      <rect class="cls-1 pixel" x="87.48" y="197.37" width="7.29" height="7.29" style="--enter:2.283s;--idle-start:3.548s;--cycle:3.510s" data-cell="12-27" />
+      <rect class="cls-1 pixel" x="21.87" y="204.66" width="7.29" height="7.29" style="--enter:2.429s;--idle-start:4.159s;--cycle:3.170s" data-cell="3-28" />
+      <rect class="cls-1 pixel" x="29.16" y="204.66" width="7.29" height="7.29" style="--enter:2.417s;--idle-start:4.037s;--cycle:3.000s" data-cell="4-28" />
+      <rect class="cls-1 pixel" x="36.45" y="204.66" width="7.29" height="7.29" style="--enter:2.405s;--idle-start:3.914s;--cycle:4.190s" data-cell="5-28" />
+      <rect class="cls-1 pixel" x="43.74" y="204.66" width="7.29" height="7.29" style="--enter:2.393s;--idle-start:3.792s;--cycle:4.020s" data-cell="6-28" />
+      <rect class="cls-1 pixel" x="51.03" y="204.66" width="7.29" height="7.29" style="--enter:2.381s;--idle-start:3.670s;--cycle:3.850s" data-cell="7-28" />
+      <rect class="cls-1 pixel" x="58.32" y="204.66" width="7.29" height="7.29" style="--enter:2.369s;--idle-start:3.548s;--cycle:3.680s" data-cell="8-28" />
+      <rect class="cls-1 pixel" x="65.61" y="204.66" width="7.29" height="7.29" style="--enter:2.357s;--idle-start:3.426s;--cycle:3.510s" data-cell="9-28" />
+      <rect class="cls-1 pixel" x="72.90" y="204.66" width="7.29" height="7.29" style="--enter:2.345s;--idle-start:3.303s;--cycle:3.340s" data-cell="10-28" />
+      <rect class="cls-1 pixel" x="80.19" y="204.66" width="7.29" height="7.29" style="--enter:2.333s;--idle-start:3.181s;--cycle:3.170s" data-cell="11-28" />
+      <rect class="cls-1 pixel" x="14.58" y="211.95" width="7.29" height="7.29" style="--enter:2.479s;--idle-start:3.792s;--cycle:4.190s" data-cell="2-29" />
+      <rect class="cls-1 pixel" x="29.16" y="211.95" width="7.29" height="7.29" style="--enter:2.455s;--idle-start:3.548s;--cycle:3.850s" data-cell="4-29" />
+      <rect class="cls-1 pixel" x="43.74" y="211.95" width="7.29" height="7.29" style="--enter:2.431s;--idle-start:3.303s;--cycle:3.510s" data-cell="6-29" />
+      <rect class="cls-1 pixel" x="51.03" y="211.95" width="7.29" height="7.29" style="--enter:2.419s;--idle-start:3.181s;--cycle:3.340s" data-cell="7-29" />
+      <rect class="cls-1 pixel" x="58.32" y="211.95" width="7.29" height="7.29" style="--enter:2.407s;--idle-start:4.220s;--cycle:3.170s" data-cell="8-29" />
+      <rect class="cls-1 pixel" x="72.90" y="211.95" width="7.29" height="7.29" style="--enter:2.382s;--idle-start:3.976s;--cycle:4.190s" data-cell="10-29" />
+      <rect class="cls-1 pixel" x="80.19" y="211.95" width="7.29" height="7.29" style="--enter:2.370s;--idle-start:3.853s;--cycle:4.020s" data-cell="11-29" />
+      <rect class="cls-1 pixel" x="14.58" y="219.24" width="7.29" height="7.29" style="--enter:2.517s;--idle-start:3.303s;--cycle:3.680s" data-cell="2-30" />
+      <rect class="cls-1 pixel" x="21.87" y="219.24" width="7.29" height="7.29" style="--enter:2.505s;--idle-start:3.181s;--cycle:3.510s" data-cell="3-30" />
+      <rect class="cls-1 pixel" x="29.16" y="219.24" width="7.29" height="7.29" style="--enter:2.493s;--idle-start:4.220s;--cycle:3.340s" data-cell="4-30" />
+      <rect class="cls-1 pixel" x="36.45" y="219.24" width="7.29" height="7.29" style="--enter:2.481s;--idle-start:4.098s;--cycle:3.170s" data-cell="5-30" />
+      <rect class="cls-1 pixel" x="43.74" y="219.24" width="7.29" height="7.29" style="--enter:2.469s;--idle-start:3.976s;--cycle:3.000s" data-cell="6-30" />
+      <rect class="cls-1 pixel" x="51.03" y="219.24" width="7.29" height="7.29" style="--enter:2.457s;--idle-start:3.853s;--cycle:4.190s" data-cell="7-30" />
+      <rect class="cls-1 pixel" x="58.32" y="219.24" width="7.29" height="7.29" style="--enter:2.445s;--idle-start:3.731s;--cycle:4.020s" data-cell="8-30" />
+      <rect class="cls-1 pixel" x="65.61" y="219.24" width="7.29" height="7.29" style="--enter:2.432s;--idle-start:3.609s;--cycle:3.850s" data-cell="9-30" />
+      <rect class="cls-1 pixel" x="72.90" y="219.24" width="7.29" height="7.29" style="--enter:2.420s;--idle-start:3.487s;--cycle:3.680s" data-cell="10-30" />
+      <rect class="cls-1 pixel" x="80.19" y="219.24" width="7.29" height="7.29" style="--enter:2.408s;--idle-start:3.364s;--cycle:3.510s" data-cell="11-30" />
+      <rect class="cls-1 pixel" x="14.58" y="226.53" width="7.29" height="7.29" style="--enter:2.555s;--idle-start:3.976s;--cycle:3.170s" data-cell="2-31" />
+      <rect class="cls-1 pixel" x="29.16" y="226.53" width="7.29" height="7.29" style="--enter:2.531s;--idle-start:3.731s;--cycle:4.190s" data-cell="4-31" />
+      <rect class="cls-1 pixel" x="43.74" y="226.53" width="7.29" height="7.29" style="--enter:2.507s;--idle-start:3.487s;--cycle:3.850s" data-cell="6-31" />
+      <rect class="cls-1 pixel" x="58.32" y="226.53" width="7.29" height="7.29" style="--enter:2.482s;--idle-start:3.242s;--cycle:3.510s" data-cell="8-31" />
+      <rect class="cls-1 pixel" x="72.90" y="226.53" width="7.29" height="7.29" style="--enter:2.458s;--idle-start:4.159s;--cycle:3.170s" data-cell="10-31" />
+      <rect class="cls-1 pixel" x="14.58" y="233.82" width="7.29" height="7.29" style="--enter:2.593s;--idle-start:3.487s;--cycle:4.020s" data-cell="2-32" />
+      <rect class="cls-1 pixel" x="21.87" y="233.82" width="7.29" height="7.29" style="--enter:2.581s;--idle-start:3.364s;--cycle:3.850s" data-cell="3-32" />
+      <rect class="cls-1 pixel" x="29.16" y="233.82" width="7.29" height="7.29" style="--enter:2.569s;--idle-start:3.242s;--cycle:3.680s" data-cell="4-32" />
+      <rect class="cls-1 pixel" x="36.45" y="233.82" width="7.29" height="7.29" style="--enter:2.557s;--idle-start:3.120s;--cycle:3.510s" data-cell="5-32" />
+      <rect class="cls-1 pixel" x="43.74" y="233.82" width="7.29" height="7.29" style="--enter:2.545s;--idle-start:4.159s;--cycle:3.340s" data-cell="6-32" />
+      <rect class="cls-1 pixel" x="51.03" y="233.82" width="7.29" height="7.29" style="--enter:2.532s;--idle-start:4.037s;--cycle:3.170s" data-cell="7-32" />
+      <rect class="cls-1 pixel" x="58.32" y="233.82" width="7.29" height="7.29" style="--enter:2.520s;--idle-start:3.914s;--cycle:3.000s" data-cell="8-32" />
+      <rect class="cls-1 pixel" x="65.61" y="233.82" width="7.29" height="7.29" style="--enter:2.508s;--idle-start:3.792s;--cycle:4.190s" data-cell="9-32" />
+      <rect class="cls-1 pixel" x="72.90" y="233.82" width="7.29" height="7.29" style="--enter:2.496s;--idle-start:3.670s;--cycle:4.020s" data-cell="10-32" />
+      <rect class="cls-1 pixel" x="80.19" y="233.82" width="7.29" height="7.29" style="--enter:2.484s;--idle-start:3.548s;--cycle:3.850s" data-cell="11-32" />
+      <rect class="cls-1 pixel" x="14.58" y="241.11" width="7.29" height="7.29" style="--enter:2.631s;--idle-start:4.159s;--cycle:3.510s" data-cell="2-33" />
+      <rect class="cls-1 pixel" x="29.16" y="241.11" width="7.29" height="7.29" style="--enter:2.607s;--idle-start:3.914s;--cycle:3.170s" data-cell="4-33" />
+      <rect class="cls-1 pixel" x="36.45" y="241.11" width="7.29" height="7.29" style="--enter:2.594s;--idle-start:3.792s;--cycle:3.000s" data-cell="5-33" />
+      <rect class="cls-1 pixel" x="43.74" y="241.11" width="7.29" height="7.29" style="--enter:2.582s;--idle-start:3.670s;--cycle:4.190s" data-cell="6-33" />
+      <rect class="cls-1 pixel" x="58.32" y="241.11" width="7.29" height="7.29" style="--enter:2.558s;--idle-start:3.426s;--cycle:3.850s" data-cell="8-33" />
+      <rect class="cls-1 pixel" x="65.61" y="241.11" width="7.29" height="7.29" style="--enter:2.546s;--idle-start:3.303s;--cycle:3.680s" data-cell="9-33" />
+      <rect class="cls-1 pixel" x="72.90" y="241.11" width="7.29" height="7.29" style="--enter:2.534s;--idle-start:3.181s;--cycle:3.510s" data-cell="10-33" />
+      <rect class="cls-1 pixel" x="7.29" y="248.40" width="7.29" height="7.29" style="--enter:2.681s;--idle-start:3.792s;--cycle:3.170s" data-cell="1-34" />
+      <rect class="cls-1 pixel" x="14.58" y="248.40" width="7.29" height="7.29" style="--enter:2.669s;--idle-start:3.670s;--cycle:3.000s" data-cell="2-34" />
+      <rect class="cls-1 pixel" x="21.87" y="248.40" width="7.29" height="7.29" style="--enter:2.657s;--idle-start:3.548s;--cycle:4.190s" data-cell="3-34" />
+      <rect class="cls-1 pixel" x="29.16" y="248.40" width="7.29" height="7.29" style="--enter:2.644s;--idle-start:3.426s;--cycle:4.020s" data-cell="4-34" />
+      <rect class="cls-1 pixel" x="36.45" y="248.40" width="7.29" height="7.29" style="--enter:2.632s;--idle-start:3.303s;--cycle:3.850s" data-cell="5-34" />
+      <rect class="cls-1 pixel" x="43.74" y="248.40" width="7.29" height="7.29" style="--enter:2.620s;--idle-start:3.181s;--cycle:3.680s" data-cell="6-34" />
+      <rect class="cls-1 pixel" x="51.03" y="248.40" width="7.29" height="7.29" style="--enter:2.608s;--idle-start:4.220s;--cycle:3.510s" data-cell="7-34" />
+      <rect class="cls-1 pixel" x="58.32" y="248.40" width="7.29" height="7.29" style="--enter:2.596s;--idle-start:4.098s;--cycle:3.340s" data-cell="8-34" />
+      <rect class="cls-1 pixel" x="65.61" y="248.40" width="7.29" height="7.29" style="--enter:2.584s;--idle-start:3.976s;--cycle:3.170s" data-cell="9-34" />
+      <rect class="cls-1 pixel" x="72.90" y="248.40" width="7.29" height="7.29" style="--enter:2.572s;--idle-start:3.853s;--cycle:3.000s" data-cell="10-34" />
+      <rect class="cls-1 pixel" x="7.29" y="255.69" width="7.29" height="7.29" style="--enter:2.719s;--idle-start:3.303s;--cycle:4.020s" data-cell="1-35" />
+      <rect class="cls-1 pixel" x="14.58" y="255.69" width="7.29" height="7.29" style="--enter:2.707s;--idle-start:3.181s;--cycle:3.850s" data-cell="2-35" />
+      <rect class="cls-1 pixel" x="29.16" y="255.69" width="7.29" height="7.29" style="--enter:2.682s;--idle-start:4.098s;--cycle:3.510s" data-cell="4-35" />
+      <rect class="cls-1 pixel" x="36.45" y="255.69" width="7.29" height="7.29" style="--enter:2.670s;--idle-start:3.976s;--cycle:3.340s" data-cell="5-35" />
+      <rect class="cls-1 pixel" x="43.74" y="255.69" width="7.29" height="7.29" style="--enter:2.658s;--idle-start:3.853s;--cycle:3.170s" data-cell="6-35" />
+      <rect class="cls-1 pixel" x="58.32" y="255.69" width="7.29" height="7.29" style="--enter:2.634s;--idle-start:3.609s;--cycle:4.190s" data-cell="8-35" />
+      <rect class="cls-1 pixel" x="65.61" y="255.69" width="7.29" height="7.29" style="--enter:2.622s;--idle-start:3.487s;--cycle:4.020s" data-cell="9-35" />
+      <rect class="cls-1 pixel" x="72.90" y="255.69" width="7.29" height="7.29" style="--enter:2.610s;--idle-start:3.364s;--cycle:3.850s" data-cell="10-35" />
+      <rect class="cls-1 pixel" x="7.29" y="262.98" width="7.29" height="7.29" style="--enter:2.756s;--idle-start:3.976s;--cycle:3.510s" data-cell="1-36" />
+      <rect class="cls-1 pixel" x="14.58" y="262.98" width="7.29" height="7.29" style="--enter:2.744s;--idle-start:3.853s;--cycle:3.340s" data-cell="2-36" />
+      <rect class="cls-1 pixel" x="21.87" y="262.98" width="7.29" height="7.29" style="--enter:2.732s;--idle-start:3.731s;--cycle:3.170s" data-cell="3-36" />
+      <rect class="cls-1 pixel" x="29.16" y="262.98" width="7.29" height="7.29" style="--enter:2.720s;--idle-start:3.609s;--cycle:3.000s" data-cell="4-36" />
+      <rect class="cls-1 pixel" x="36.45" y="262.98" width="7.29" height="7.29" style="--enter:2.708s;--idle-start:3.487s;--cycle:4.190s" data-cell="5-36" />
+      <rect class="cls-1 pixel" x="43.74" y="262.98" width="7.29" height="7.29" style="--enter:2.696s;--idle-start:3.364s;--cycle:4.020s" data-cell="6-36" />
+      <rect class="cls-1 pixel" x="51.03" y="262.98" width="7.29" height="7.29" style="--enter:2.684s;--idle-start:3.242s;--cycle:3.850s" data-cell="7-36" />
+      <rect class="cls-1 pixel" x="58.32" y="262.98" width="7.29" height="7.29" style="--enter:2.672s;--idle-start:3.120s;--cycle:3.680s" data-cell="8-36" />
+      <rect class="cls-1 pixel" x="65.61" y="262.98" width="7.29" height="7.29" style="--enter:2.660s;--idle-start:4.159s;--cycle:3.510s" data-cell="9-36" />
+      <rect class="cls-1 pixel" x="72.90" y="262.98" width="7.29" height="7.29" style="--enter:2.647s;--idle-start:4.037s;--cycle:3.340s" data-cell="10-36" />
+      <rect class="cls-1 pixel" x="14.58" y="270.27" width="7.29" height="7.29" style="--enter:2.782s;--idle-start:3.364s;--cycle:4.190s" data-cell="2-37" />
+      <rect class="cls-1 pixel" x="21.87" y="270.27" width="7.29" height="7.29" style="--enter:2.770s;--idle-start:3.242s;--cycle:4.020s" data-cell="3-37" />
+      <rect class="cls-1 pixel" x="29.16" y="270.27" width="7.29" height="7.29" style="--enter:2.758s;--idle-start:3.120s;--cycle:3.850s" data-cell="4-37" />
+      <rect class="cls-1 pixel" x="36.45" y="270.27" width="7.29" height="7.29" style="--enter:2.746s;--idle-start:4.159s;--cycle:3.680s" data-cell="5-37" />
+      <rect class="cls-1 pixel" x="43.74" y="270.27" width="7.29" height="7.29" style="--enter:2.734s;--idle-start:4.037s;--cycle:3.510s" data-cell="6-37" />
+      <rect class="cls-1 pixel" x="51.03" y="270.27" width="7.29" height="7.29" style="--enter:2.722s;--idle-start:3.914s;--cycle:3.340s" data-cell="7-37" />
+      <rect class="cls-1 pixel" x="58.32" y="270.27" width="7.29" height="7.29" style="--enter:2.710s;--idle-start:3.792s;--cycle:3.170s" data-cell="8-37" />
+      <rect class="cls-1 pixel" x="65.61" y="270.27" width="7.29" height="7.29" style="--enter:2.697s;--idle-start:3.670s;--cycle:3.000s" data-cell="9-37" />
+      <rect class="cls-1 pixel" x="72.90" y="270.27" width="7.29" height="7.29" style="--enter:2.685s;--idle-start:3.548s;--cycle:4.190s" data-cell="10-37" />
+      <rect class="cls-1 pixel" x="7.29" y="277.56" width="7.29" height="7.29" style="--enter:2.832s;--idle-start:4.159s;--cycle:3.850s" data-cell="1-38" />
+      <rect class="cls-1 pixel" x="14.58" y="277.56" width="7.29" height="7.29" style="--enter:2.820s;--idle-start:4.037s;--cycle:3.680s" data-cell="2-38" />
+      <rect class="cls-1 pixel" x="21.87" y="277.56" width="7.29" height="7.29" style="--enter:2.808s;--idle-start:3.914s;--cycle:3.510s" data-cell="3-38" />
+      <rect class="cls-1 pixel" x="29.16" y="277.56" width="7.29" height="7.29" style="--enter:2.796s;--idle-start:3.792s;--cycle:3.340s" data-cell="4-38" />
+      <rect class="cls-1 pixel" x="36.45" y="277.56" width="7.29" height="7.29" style="--enter:2.784s;--idle-start:3.670s;--cycle:3.170s" data-cell="5-38" />
+      <rect class="cls-1 pixel" x="43.74" y="277.56" width="7.29" height="7.29" style="--enter:2.772s;--idle-start:3.548s;--cycle:3.000s" data-cell="6-38" />
+      <rect class="cls-1 pixel" x="51.03" y="277.56" width="7.29" height="7.29" style="--enter:2.760s;--idle-start:3.426s;--cycle:4.190s" data-cell="7-38" />
+      <rect class="cls-1 pixel" x="58.32" y="277.56" width="7.29" height="7.29" style="--enter:2.747s;--idle-start:3.303s;--cycle:4.020s" data-cell="8-38" />
+      <rect class="cls-1 pixel" x="65.61" y="277.56" width="7.29" height="7.29" style="--enter:2.735s;--idle-start:3.181s;--cycle:3.850s" data-cell="9-38" />
+      <rect class="cls-1 pixel" x="0.00" y="284.85" width="7.29" height="7.29" style="--enter:2.882s;--idle-start:3.792s;--cycle:3.510s" data-cell="0-39" />
+      <rect class="cls-1 pixel" x="14.58" y="284.85" width="7.29" height="7.29" style="--enter:2.858s;--idle-start:3.548s;--cycle:3.170s" data-cell="2-39" />
+      <rect class="cls-1 pixel" x="21.87" y="284.85" width="7.29" height="7.29" style="--enter:2.846s;--idle-start:3.426s;--cycle:3.000s" data-cell="3-39" />
+      <rect class="cls-1 pixel" x="29.16" y="284.85" width="7.29" height="7.29" style="--enter:2.834s;--idle-start:3.303s;--cycle:4.190s" data-cell="4-39" />
+      <rect class="cls-1 pixel" x="43.74" y="284.85" width="7.29" height="7.29" style="--enter:2.809s;--idle-start:4.220s;--cycle:3.850s" data-cell="6-39" />
+      <rect class="cls-1 pixel" x="51.03" y="284.85" width="7.29" height="7.29" style="--enter:2.797s;--idle-start:4.098s;--cycle:3.680s" data-cell="7-39" />
+      <rect class="cls-1 pixel" x="58.32" y="284.85" width="7.29" height="7.29" style="--enter:2.785s;--idle-start:3.976s;--cycle:3.510s" data-cell="8-39" />
+      <rect class="cls-1 pixel" x="0.00" y="292.14" width="7.29" height="7.29" style="--enter:2.920s;--idle-start:3.303s;--cycle:3.000s" data-cell="0-40" />
+      <rect class="cls-1 pixel" x="7.29" y="292.14" width="7.29" height="7.29" style="--enter:2.908s;--idle-start:3.181s;--cycle:4.190s" data-cell="1-40" />
+      <rect class="cls-1 pixel" x="14.58" y="292.14" width="7.29" height="7.29" style="--enter:2.896s;--idle-start:4.220s;--cycle:4.020s" data-cell="2-40" />
+      <rect class="cls-1 pixel" x="21.87" y="292.14" width="7.29" height="7.29" style="--enter:2.884s;--idle-start:4.098s;--cycle:3.850s" data-cell="3-40" />
+      <rect class="cls-1 pixel" x="29.16" y="292.14" width="7.29" height="7.29" style="--enter:2.872s;--idle-start:3.976s;--cycle:3.680s" data-cell="4-40" />
+      <rect class="cls-1 pixel" x="36.45" y="292.14" width="7.29" height="7.29" style="--enter:2.859s;--idle-start:3.853s;--cycle:3.510s" data-cell="5-40" />
+      <rect class="cls-1 pixel" x="43.74" y="292.14" width="7.29" height="7.29" style="--enter:2.847s;--idle-start:3.731s;--cycle:3.340s" data-cell="6-40" />
+      <rect class="cls-1 pixel" x="51.03" y="292.14" width="7.29" height="7.29" style="--enter:2.835s;--idle-start:3.609s;--cycle:3.170s" data-cell="7-40" />
+      <rect class="cls-1 pixel" x="58.32" y="292.14" width="7.29" height="7.29" style="--enter:2.823s;--idle-start:3.487s;--cycle:3.000s" data-cell="8-40" />
+      <rect class="cls-1 pixel" x="65.61" y="292.14" width="7.29" height="7.29" style="--enter:2.811s;--idle-start:3.364s;--cycle:4.190s" data-cell="9-40" />
+      </g>
+    <path id="main-curve" class="cls-1" d="M338.4,297.31C184.54,297.31,59.8,164.34,59.8.31c0-.69,71.67,0,71.67,0,0,121.83,92.65,220.6,206.93,220.6v76.4Z" />
+  </g>
+</svg>

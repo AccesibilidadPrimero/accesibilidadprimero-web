@@ -25,7 +25,7 @@ import { DEFAULT_LANG } from '../i18n/config';
 import { conMarca } from '../i18n/marca';
 import { CORREO_ESTUDIO } from '../data/contacto';
 /* Las dos las compila `npm run arte` desde arte/estudio/. */
-import casa from '../assets/estudio/casa.svg';
+import SimboloAnimado from '../components/SimboloAnimado.astro';
 import retrato from '../assets/estudio/johnny-vigas.jpg';
 
 const lang = DEFAULT_LANG;
@@ -78,17 +78,18 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   title="Estudio · Accesibilidad Primero"
   description="Estudio de diseño que crea webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás."
 >
-  <!-- La casa: una persona sola ante una estructura grande, todavía abierta.
-       El `alt` dice eso, no «ilustración de una casa». -->
+  <!-- El símbolo de AP, con los cuadrados chispeando una vez (Johnny,
+       13/10/2026; antes, la casa). Mismo alto que las ilustraciones de la Home:
+       400 · 320 · 240. Decorativo: ver SimboloAnimado.astro. -->
   <HeroPagina
-    ilustracion={casa}
-    alt="Una persona diminuta ante una casa enorme, abierta y a medio dibujar."
     titulo="Código, diseño y palabra."
     texto={[
       'La forma en que comunicamos construye realidades.',
       'Por eso, trabajamos por un espacio digital más justo y abierto a todas las personas.',
     ]}
-  />
+  >
+    <SimboloAnimado slot="ilustracion" class="apertura__ilustracion" />
+  </HeroPagina>
 
   <Bloque id="estudio" titulo="Estudio">
     <div class="pila">
