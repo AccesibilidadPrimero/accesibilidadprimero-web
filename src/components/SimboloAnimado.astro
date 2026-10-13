@@ -17,8 +17,8 @@
    El control es como el del carrusel de proyectos de la Home
    (ProjectSlider): icono de pausa / reproducir, que se entiende sin palabra;
    la palabra va en `.sr-only` con lo que se pausa. Más discreto que aquel:
-   sin círculo, solo el icono en Ink, en la esquina vacía de arriba a la
-   izquierda del dibujo. La zona que se pulsa mide 44 × 44 (regla de AP) y el
+   sin círculo, solo el icono en Ink, a la izquierda del dibujo y alineado
+   con su borde de arriba. La zona que se pulsa mide 44 × 44 (regla de AP) y el
    anillo de foco es el de toda la web.
 
    El dibujo es decorativo (`aria-hidden`): el titular dice de qué va la
@@ -33,7 +33,8 @@ const ui = t(lang);
 const que = ' la animación del símbolo';
 ---
 
-<div class:list={['simbolo', clase]} data-simbolo>
+<div class:list={['simbolo', clase]}>
+  <div class="simbolo__marco" data-simbolo>
   <svg class="simbolo__dibujo" viewBox="0 0 338.4 299.43" aria-hidden="true" focusable="false" data-simbolo-animado>
   <g>
     <path d="M321.52,5.48c2.16-2.35,4.66-3.39,7.59-2.96,3,.42,5.54,2.58,6.47,5.47.69,2.23.42,4.74-.54,7.01-1.46,3.54-5.78,8.55-13.55,12.09-7.78-3.5-12.09-8.55-13.55-12.09-.92-2.27-1.23-4.77-.54-7.01.92-2.89,3.47-5.04,6.47-5.47,2.93-.42,5.43.65,7.59,2.96l.04.04s0-.04.04-.04h0ZM321.48,2.2c-4.7-3.7-12.05-2.73-15.44,2.81-1.12,1.85-1.54,3.97-1.46,6.12.15,3.7,1.77,6.89,4.08,9.7,3.16,3.73,7.7,6.7,12.71,8.89,0,0,.08,0,.12.04,0,0,.08,0,.12-.04,4.97-2.19,9.55-5.12,12.71-8.89,2.35-2.77,3.93-6.01,4.08-9.7.12-2.12-.31-4.27-1.46-6.12-3.39-5.54-10.74-6.51-15.44-2.81h0Z" />
@@ -298,10 +299,24 @@ const que = ' la animación del símbolo';
     </svg>
     <span class="sr-only" data-simbolo-label>{ui.carouselPause + que}</span>
   </button>
+  </div>
 </div>
 
 <style>
-  .simbolo { position: relative; aspect-ratio: 338.4 / 299.43; }
+  /* Tamaño (Johnny, 13/10/2026): el del símbolo en la Home. Allí es la
+     lámina 07 del carrusel y el dibujo ocupa 180 de alto dentro de los 400
+     de la ilustración, centrado. Aquí igual: la caja del hero sigue midiendo
+     lo que cualquier ilustración (400 · 320 · 240, la pone HeroPagina) y el
+     símbolo, centrado dentro, mide 180 · 144 · 108 (el 45 %). */
+  .simbolo.apertura__ilustracion {
+    align-self: stretch;
+    inline-size: auto;
+    display: grid;
+    place-items: center;
+  }
+  .simbolo__marco { position: relative; block-size: 108px; aspect-ratio: 338.4 / 299.43; }
+  @media (min-width: 768px) { .simbolo__marco { block-size: 144px; } }
+  @media (min-width: 1024px) { .simbolo__marco { block-size: 180px; } }
   .simbolo__dibujo { display: block; inline-size: 100%; block-size: 100%; fill: #231f20; }
   /* Cuadrados que se tocan dejan una línea clara entre ellos por el
      antialiasing: se veía una rejilla a 1440. Ni un trazo de 0,25 ni los
@@ -313,17 +328,19 @@ const que = ' la animación del símbolo';
     stroke-width: 0.6;
     animation: simbolo-chispa var(--c) var(--d) ease-in-out 1 both;
   }
-  .simbolo[data-bucle] .simbolo__trama rect { animation-iteration-count: infinite; }
-  .simbolo[data-parado] .simbolo__trama rect { animation-play-state: paused; }
+  [data-bucle] .simbolo__trama rect { animation-iteration-count: infinite; }
+  [data-parado] .simbolo__trama rect { animation-play-state: paused; }
   @keyframes simbolo-chispa {
     0%, 30%, 70%, 100% { opacity: 1; }
     48%, 52% { opacity: 0.08; }
   }
 
   .simbolo__control {
+    /* A la izquierda del dibujo, alineado arriba, a 8 del cuadrado más a
+       la izquierda: fuera del símbolo, pero pegado a lo que para. */
     position: absolute;
     inset-block-start: 0;
-    inset-inline-start: 0;
+    inset-inline-end: calc(100% + var(--space-8));
     display: grid;
     place-items: center;
     inline-size: var(--touch-min);
@@ -339,8 +356,8 @@ const que = ' la animación del símbolo';
   /* Parado, el icono pasa de pausa a reproducir: el estado lo lleva la
      forma, no el color (1.4.1), y el nombre accesible cambia con él. */
   .simbolo__play { display: none; }
-  .simbolo[data-parado] .simbolo__pausa { display: none; }
-  .simbolo[data-parado] .simbolo__play { display: inline; }
+  [data-parado] .simbolo__pausa { display: none; }
+  [data-parado] .simbolo__play { display: inline; }
 
   @media (prefers-reduced-motion: reduce) {
     .simbolo__trama rect { animation: none; }
