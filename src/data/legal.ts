@@ -204,7 +204,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
       titulo: 'Grado de conformidad',
       piezas: [
         { p: 'Este sitio es parcialmente conforme con las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.2, nivel AA.' },
-        { p: 'Parcialmente porque todavía no está hecha la revisión manual completa, no porque conozcamos un incumplimiento. Lo explicamos en «Cómo se ha comprobado».' },
+        { p: 'Parcialmente por dos razones: todavía no está hecha la revisión manual completa, lo explicamos en «Cómo se ha comprobado», y hay un incumplimiento que conocemos y hemos decidido mantener, lo explicamos en «Contenido no accesible».' },
         { p: 'Además, nos ponemos una regla más exigente que la norma: todo lo que se pulsa mide al menos 44 píxeles. WCAG pide 24.' },
       ],
     },
@@ -212,7 +212,13 @@ export const ACCESIBILIDAD: PaginaLegal = {
       id: 'no-accesible',
       titulo: 'Contenido no accesible',
       piezas: [
-        { p: 'A fecha de esta revisión no conocemos ningún incumplimiento. Sí conocemos estas limitaciones:' },
+        { p: 'Conocemos un incumplimiento, y es una decisión nuestra:' },
+        {
+          lista: [
+            'El emblema de la página Estudio está siempre animado: sus cuadrados se apagan y se encienden despacio, sin parar, y no hay botón para detenerlo. Incumple el criterio 2.2.2 (Pausar, detener, ocultar). Es una licencia de diseño que nos damos en ese único dibujo. Si tienes activada la opción de reducir el movimiento en tu dispositivo, el emblema se queda quieto. Si te molesta o te distrae, escríbenos y lo reconsideramos.',
+          ],
+        },
+        { p: 'Y conocemos estas limitaciones:' },
         {
           lista: [
             'El formulario de contacto necesita JavaScript, porque la protección contra envíos automáticos lo necesita. Sin JavaScript no aparece, y en su lugar se ofrece el correo.',

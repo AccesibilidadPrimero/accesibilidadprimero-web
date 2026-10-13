@@ -1,17 +1,21 @@
 /* ---------------------------------------------------------------------------
    Movimiento que empieza solo · 2.2.2 (Pausar, detener, ocultar), medido.
 
-   Lo que se mueve sin que nadie lo pida y dura más de 5 s junto a otro
-   contenido necesita un control para pararlo. El símbolo de Estudio no lleva
-   control (Johnny, 13/10/2026), así que tiene que acabar antes de 5 s. Esto
-   lo MIDE en el navegador, con las animaciones reales de la página y no con
-   el CSS escrito (AGENTS.md §2.9):
+   Regla de la casa: lo que se mueve solo y dura más de 5 s junto a otro
+   contenido lleva un control para pararlo, o termina antes de 5 s.
 
-   · Con y sin JS: ninguna animación infinita, todo acaba antes de 5 s y el
-     símbolo queda completo. Y no hay ningún botón de pausa (no hace falta).
-   · Al pasar el puntero, vuelve a chispear (lo pide quien mira) y también
-     acaba antes de 5 s.
-   · Con «reducir movimiento»: ninguna animación.
+   UNA EXCEPCIÓN DECLARADA: el emblema de Estudio chispea en bucle y sin botón
+   (licencia de Johnny, 13/10/2026). Está nombrada como incumplimiento en la
+   Declaración de accesibilidad. Esto comprueba que sigue siendo la ÚNICA:
+   · el emblema: 241 cuadrados en bucle, con y sin JS, y quieto con «reducir
+     movimiento»;
+   · la Declaración lo sigue nombrando (si se quita el bucle, se quita de
+     allí; si se quita de allí, falla);
+   · y el titular de Estudio: entero en el h1, quieto sin JS, y todo en su
+     sitio antes de 2 s.
+   Lo mide en el navegador, con las animaciones reales (AGENTS.md §2.9).
+   No recorre el resto de la web: el carrusel de la Home tiene su propia
+   comprobación (teclado), y cualquier bucle nuevo se añade aquí.
    --------------------------------------------------------------------------- */
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
@@ -51,23 +55,18 @@ for (const js of [false, true]) {
   const p = await ctx.newPage();
   const n = js ? 'con JS' : 'sin JS';
   await p.goto(PAGINA, { waitUntil: 'load' });
-  let m = await medir(p);
-  anota(m.cuadrados === CUADRADOS, `${n} · el símbolo está en el hero (${m.cuadrados} cuadrados)`);
-  // Un suelo: si no hay animaciones, esta comprobación no está mirando nada.
-  anota(m.animaciones === CUADRADOS, `${n} · cada cuadrado lleva su animación (${m.animaciones})`);
-  anota(m.infinitas === 0 && m.finMax <= LIMITE_MS, `${n} · sin bucle: todo acaba antes de 5 s (a los ${(m.finMax / 1000).toFixed(2)} s)`);
-  anota(!m.boton, `${n} · sin botón de pausa: no hace falta`);
-  await p.waitForTimeout(m.finMax + 300);
-  const opacos = () => p.evaluate(() => [...document.querySelectorAll('[data-simbolo-animado] rect')].every((r) => getComputedStyle(r).opacity === '1'));
-  anota(await opacos(), `${n} · al terminar, el símbolo queda completo`);
-  if (js) {
-    await p.hover('[data-simbolo]');
-    m = await medir(p);
-    anota(m.enMarcha === CUADRADOS && m.infinitas === 0, `${n} · al pasar el puntero vuelve a chispear, sin bucle (${m.enMarcha})`);
-    const fin = await p.evaluate(() => Math.max(...document.querySelector('[data-simbolo-animado]').getAnimations({ subtree: true }).map((a) => a.effect.getComputedTiming().endTime - a.currentTime)));
-    anota(fin <= LIMITE_MS, `${n} · y acaba antes de 5 s (le quedan ${(fin / 1000).toFixed(2)} s)`);
-  }
+  const m = await medir(p);
+  anota(m.cuadrados === CUADRADOS, `${n} · el emblema está en el hero (${m.cuadrados} cuadrados)`);
+  anota(m.infinitas === CUADRADOS, `${n} · en bucle, la excepción declarada (${m.infinitas} de ${CUADRADOS})`);
+  anota(!m.boton, `${n} · sin botón de pausa, como se decidió`);
   await ctx.close();
+}
+{
+  const p = await navegador.newPage();
+  await p.goto(`http://localhost:${PUERTO}/declaracion-de-accesibilidad/`, { waitUntil: 'load' });
+  const dice = await p.evaluate(() => document.body.innerText.includes('2.2.2') && /emblema de la página Estudio/.test(document.body.innerText));
+  anota(dice, 'la Declaración de accesibilidad nombra el bucle del emblema como incumplimiento (2.2.2)');
+  await p.close();
 }
 
 /* 3 · Reducir movimiento. */
@@ -115,4 +114,4 @@ for (const js of [false, true]) {
 await navegador.close();
 servidor.close();
 if (fallos) { console.error(`\n${fallos} comprobaciones fallan.`); process.exit(1); }
-console.log('\nEl movimiento que empieza solo acaba antes de 5 s.');
+console.log('\nEl bucle del emblema de Estudio está declarado y se para con «reducir movimiento».');

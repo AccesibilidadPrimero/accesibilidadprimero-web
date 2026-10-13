@@ -312,7 +312,7 @@ npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
 npm run aparicion    # aparición al hacer scroll y «Leer más»: sin JS, normal y reducido
-npm run movimiento   # 2.2.2: el símbolo de Estudio acaba antes de 5 s; el titular en golpes, entero en el h1 y quieto en 2 s
+npm run movimiento   # 2.2.2: el bucle del emblema de Estudio (excepción declarada) se para con «reducir movimiento» y la Declaración lo nombra; el titular en golpes, entero y quieto en 2 s
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
 npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños
@@ -339,6 +339,12 @@ ilustración, si la hay, centrada en lo que sobra. Sin excepciones por página:
 `npm run geometria` lo mide en todas las que usan `HeroPagina`. Un titular
 puede entrar en golpes (`golpes`, Estudio): el `<h1>` va entero en el HTML,
 sin JS no se anima y `npm run movimiento` comprueba las dos cosas.
+**Excepción declarada a 2.2.2 (Johnny, 13/10/2026):** el emblema animado del
+hero de Estudio chispea en bucle y sin botón de pausa, por decisión de diseño.
+Es la ÚNICA: cualquier otro movimiento que dure más de 5 s lleva control. La
+Declaración de accesibilidad lo nombra como incumplimiento conocido, y con
+«reducir movimiento» se para. Quitar el bucle obliga a quitarlo de la
+Declaración, y al revés; `npm run movimiento` vigila las dos cosas.
 
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla

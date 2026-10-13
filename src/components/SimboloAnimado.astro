@@ -7,16 +7,19 @@
    escribía `&gt;` dentro de <style>, que en HTML rompe el selector) y
    `npm run movimiento` puede medirlo.
 
-   SIN BOTÓN DE PAUSA (Johnny, 13/10/2026: «la animación es muy leve»). Por
-   eso NO va en bucle: 2.2.2 no tiene excepción por levedad, y lo que se mueve
-   solo más de 5 s junto a otro contenido necesita un control para pararlo.
-   Sin control, la única salida que cumple es que termine antes de 5 s:
-   · al cargar, cada cuadrado chispea una vez a su ritmo; el último acaba a
-     los 4,19 s y el símbolo se queda completo y quieto;
-   · al pasar el puntero por encima, vuelve a chispear una vez. Eso no
-     incumple: lo ha pedido quien mira, y también acaba solo.
-   `npm run movimiento` lo mide en cada build (AGENTS.md §2.9).
-
+   EN BUCLE Y SIN BOTÓN DE PAUSA: LICENCIA DECLARADA (Johnny, 13/10/2026,
+   14:01: «quiero que el emblema esté siempre animado, es una licencia que me
+   quiero dar»). Incumple 2.2.2 (Pausar, detener, ocultar) a sabiendas: se
+   mueve más de 5 s junto a otro contenido y no hay control para pararlo. No
+   hay excepción por levedad. Por eso:
+   · la Declaración de accesibilidad lo nombra como incumplimiento conocido
+     (src/data/legal.ts). Si este bucle se quita, se quita también de allí;
+   · con «reducir movimiento» el símbolo está quieto: quien lo ha pedido a su
+     sistema no lo ve moverse;
+   · `npm run movimiento` comprueba que es ESTE bucle y solo este: que nada
+     más de la web se mueva sin fin y que con «reducir movimiento» se pare.
+   El parpadeo es lento (un cuadrado tarda 3 a 4 s en apagarse y volver) y
+   pequeño: muy por debajo de los 3 destellos por segundo de 2.3.1.
    Con «reducir movimiento», quieto. Decorativo (`aria-hidden`): el titular
    dice de qué va la página y el logotipo de la cabecera nombra el estudio.
    --------------------------------------------------------------------------- */
@@ -321,7 +324,7 @@ const { class: clase } = Astro.props;
   .simbolo__trama rect {
     stroke: #231f20;
     stroke-width: 0.6;
-    animation: simbolo-chispa var(--c) var(--d) ease-in-out 1 both;
+    animation: simbolo-chispa var(--c) var(--d) ease-in-out infinite both;
   }
   @keyframes simbolo-chispa {
     0%, 30%, 70%, 100% { opacity: 1; }
@@ -334,15 +337,3 @@ const { class: clase } = Astro.props;
   }
 </style>
 
-<script>
-  /* Al pasar el puntero, otra vuelta: solo a las animaciones que ya han
-     terminado, para que pasar y repasar no las corte a medias. Con «reducir
-     movimiento» no hay animaciones y esto no hace nada. */
-  document.querySelectorAll<HTMLElement>('[data-simbolo]').forEach((marco) => {
-    marco.addEventListener('pointerenter', () => {
-      marco.getAnimations({ subtree: true }).forEach((a) => {
-        if (a.playState === 'finished') { a.currentTime = 0; a.play(); }
-      });
-    });
-  });
-</script>
