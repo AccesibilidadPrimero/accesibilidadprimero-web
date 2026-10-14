@@ -3,12 +3,14 @@ titulo: ECI Conference Mad 2027
 cliente: ECI Conference
 nombreCorto: ECI Conference
 # `|-`: los saltos son cortes fijos en escritorio (ProjectSection.astro).
+# Ninguno puede caer detrás de una partícula («reúne a»): 14/10/2026, AGENTS.md §4.
 resumen: |-
-  ECI (Early Childhood Intervention) reúne a
-  profesionales de toda Europa para avanzar hacia
-  una intervención temprana más inclusiva.
+  ECI (Early Childhood Intervention) reúne
+  a profesionales de toda Europa para avanzar
+  hacia una intervención temprana más inclusiva.
 web: https://eciconference2027.com/
 orden: 1
+tipo: webs
 destacado: true
 paleta:
   acento: '#005fcc'

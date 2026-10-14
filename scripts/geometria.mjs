@@ -562,7 +562,9 @@ for (const ancho of [1440, 768, 390]) {
    Pantalla entera y el texto a 24 del borde de abajo, como la Home. Se mide
    en todas las páginas que usan HeroPagina, a los tres anchos. */
 {
-  const PAGINAS = ['/estudio/', '/contacto/', '/proyectos/', '/proyectos/foc-i-cor/', '/blog/',
+  /* /proyectos/ salió de la lista el 14/10/2026: ya no lleva hero (ver el
+     bloque siguiente). */
+  const PAGINAS = ['/estudio/', '/contacto/', '/proyectos/foc-i-cor/', '/blog/',
     '/blog/categoria/diseno/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/'];
   const art = (await (await fetch(`http://localhost:${PUERTO}/blog/`)).text()).match(/href="(\/blog\/(?!categoria)[^"]+\/)"/);
   if (art) PAGINAS.push(art[1]);
@@ -584,6 +586,71 @@ for (const ancho of [1440, 768, 390]) {
       const bien = r.arriba === 0 && r.alto >= alto - TOLERANCIA && Math.abs(r.abajo - 24) <= 1;
       if (!bien) fallos++;
       console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} ${url.padEnd(34)} alto ${r.alto} (ventana ${alto}) · texto a ${r.abajo} del borde`);
+    }
+    await ph.close();
+  }
+}
+
+/* ---- Título y texto al mismo cuerpo (Johnny, 14/10/2026) ----
+   Servicios de Estudio: 16 entre el nombre y su texto, 48 entre servicio y
+   servicio, y el de fuera al menos el triple del de dentro (AGENTS.md §4).
+   Se miden las cajas de texto reales, no el CSS. */
+{
+  console.log('\n── Estudio · servicios: 16 dentro, 48 entre ellos ──\n');
+  for (const [ancho, alto] of [[1440, 900], [768, 1024], [390, 844]]) {
+    const ph = await nav.newPage({ viewport: { width: ancho, height: alto } });
+    await ph.goto(`http://localhost:${PUERTO}/estudio/`, { waitUntil: 'load' });
+    const r = await ph.evaluate(() => {
+      const items = [...document.querySelectorAll('.servicios > li')];
+      const dentro = items.map((li) => Math.round(li.querySelector('p').getBoundingClientRect().top - li.querySelector('h3').getBoundingClientRect().bottom));
+      const fuera = items.slice(1).map((li, i) => Math.round(li.getBoundingClientRect().top - items[i].getBoundingClientRect().bottom));
+      return { n: items.length, dentro, fuera };
+    });
+    esperadas++; medidos++;
+    const bien = r.n > 1 && r.dentro.every((d) => Math.abs(d - 16) <= TOLERANCIA) &&
+      r.fuera.every((f) => Math.abs(f - 48) <= TOLERANCIA && f >= 3 * Math.max(...r.dentro) - TOLERANCIA);
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} · ${r.n} servicios · dentro ${[...new Set(r.dentro)].join('/')} · entre ${[...new Set(r.fuera)].join('/')}`);
+    await ph.close();
+  }
+}
+
+/* ---- Proyectos sin hero (Johnny, 14/10/2026) ----
+   La página es el listado: ni banda de color ni titular a la vista. Los
+   filtros empiezan a 64 (`--ritmo-intro`) del borde de la cabecera, «Todos»
+   en el margen, y la rejilla otros 64 debajo. Se mide en el listado entero y
+   en un filtro, a los tres anchos. */
+{
+  console.log('\n── Proyectos: sin hero, filtros arriba ──\n');
+  for (const [ancho, alto] of [[1440, 900], [768, 1024], [390, 844]]) {
+    const ph = await nav.newPage({ viewport: { width: ancho, height: alto } });
+    for (const url of ['/proyectos/', '/proyectos/tipo/aplicaciones/']) {
+      await ph.goto(`http://localhost:${PUERTO}${url}`, { waitUntil: 'load' });
+      const r = await ph.evaluate(() => {
+        const cab = document.querySelector('.header').getBoundingClientRect();
+        const lista = document.querySelector('.filtros__lista').getBoundingClientRect();
+        const primero = document.querySelector('.filtros__enlace').getBoundingClientRect();
+        const texto = (() => { const rg = document.createRange(); rg.selectNodeContents(document.querySelector('.filtros__enlace')); return rg.getBoundingClientRect(); })();
+        const rej = document.querySelector('.rejilla').getBoundingClientRect();
+        const gutter = parseFloat(getComputedStyle(document.querySelector('.listado')).paddingInlineStart);
+        return {
+          hero: Boolean(document.querySelector('.apertura')),
+          h1Oculto: document.querySelector('h1')?.classList.contains('sr-only') ?? false,
+          filtros: document.querySelectorAll('.filtros__enlace').length,
+          actual: document.querySelectorAll('.filtros__enlace[aria-current="page"]').length,
+          aFiltros: Math.round(lista.top - cab.bottom),
+          aRejilla: Math.round(rej.top - lista.bottom),
+          margen: Math.round(texto.left - gutter),
+          tarjetas: document.querySelectorAll('.rejilla > li').length,
+          alto44: Math.round(primero.height) >= 44,
+        };
+      });
+      const ritmo = await ph.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.listado')).rowGap));
+      esperadas++; medidos++;
+      const bien = !r.hero && r.h1Oculto && r.filtros === 4 && r.actual === 1 && Math.abs(r.aFiltros - ritmo) <= TOLERANCIA &&
+        Math.abs(r.aRejilla - ritmo) <= TOLERANCIA && Math.abs(r.margen) <= 1 && r.tarjetas > 0 && r.alto44;
+      if (!bien) fallos++;
+      console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} ${url.padEnd(30)} ${r.hero ? 'CON HERO · ' : ''}${r.filtros} filtros, ${r.actual} actual · cabecera→filtros ${r.aFiltros} · filtros→rejilla ${r.aRejilla} (toca ${ritmo}) · margen ${r.margen} · ${r.tarjetas} tarjetas`);
     }
     await ph.close();
   }

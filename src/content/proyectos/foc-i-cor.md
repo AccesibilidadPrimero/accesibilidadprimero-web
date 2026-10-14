@@ -6,6 +6,7 @@ resumen: >-
   cocina se convierte en una oportunidad de futuro.
 web: https://focicor.es/
 orden: 2
+tipo: webs
 destacado: true
 paleta:
   acento: '#ed6a12'

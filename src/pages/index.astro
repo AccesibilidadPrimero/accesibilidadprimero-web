@@ -7,6 +7,7 @@ import Mesa from '../components/Mesa.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { REGISTRADA } from '../i18n/marca';
 import { path, DEFAULT_LANG } from '../i18n/config';
+import { PRODUCTOS as productos } from '../data/productos';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
    Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
    sirve con caché larga, y si el archivo desaparece el build se para. */
@@ -60,57 +61,6 @@ const conCuerpo = await Promise.all(
    `display: none` en el otro: así lo saca también del árbol de accesibilidad
    y el lector oye solo el que se ve. Las clases están en base.css porque las
    usa más de un bloque. */
-const productos = [
-  {
-    nombre: 'Itza',
-    marca: true,
-    descripcion: 'El asistente accesible para organizaciones con impacto social.',
-    cta: 'Ver Itza',
-    href: 'https://itza.accesibilidadprimero.com/',
-    clase: 'producto--itza',
-    video: {
-      mp4: '/video/itza.mp4',
-      webm: '/video/itza.webm',
-      descripcion:
-        'El asistente Itza en el móvil, dentro de la web de Off Escuela: Ana pregunta ' +
-        'qué cursos hay para adultos y el asistente le responde con los de interpretación ' +
-        'para mayores de 18 años y le pregunta qué día de la semana le viene mejor.',
-    },
-  },
-  {
-    nombre: 'A11y Primero',
-    marca: true,
-    descripcion:
-      'Extensión de Chrome para auditorías express, fácil de ver, entender y corregir.',
-    cta: 'Ver A11y Primero',
-    href: 'https://www.accesibilidadprimero.com/a11yprimero/',
-    clase: 'producto--a11y',
-    imagen: 'a11y-primero',
-    alt:
-      'El panel de la extensión A11y Primero: la nota 72 marcada como «mejorable» sobre ' +
-      'accesibilidadprimero.com, cuatro barras por apartado —imágenes 85, estructura 60, ' +
-      'formularios 50 y contraste 45—, el recuento de encabezados y un resumen para el ' +
-      'cliente con los cuatro problemas principales en lenguaje claro.',
-  },
-  {
-    nombre: 'Accessible Abstracts',
-    marca: true,
-    descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
-    /* Por debajo de 768, el texto del Figma de Móvil (ver `variantes`). */
-    descripcionMovil: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
-    /* El nombre entero y no «AA»: en una web de accesibilidad «AA» se lee
-       como el nivel de conformidad de WCAG, y muchos lectores de pantalla lo
-       pronuncian «a a» (Johnny, 09/10). */
-    cta: 'Ver Accessible Abstracts',
-    href: 'https://aa.accesibilidadprimero.com/',
-    clase: 'producto--aa',
-    imagen: 'accessible-abstracts',
-    alt:
-      'La plataforma Accessible Abstracts en un móvil: el titular «Abstract management ' +
-      'that everyone can actually use», los botones de demostración y un panel con ' +
-      'cuatro abstracts enviados y su estado de revisión.',
-  },
-];
 ---
 
 <Base

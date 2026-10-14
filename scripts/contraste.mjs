@@ -46,6 +46,7 @@ const RUTAS = [
   { nombre: 'Cookies', url: '/cookies/', minimo: 15 },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', minimo: 25 },
   { nombre: 'Proyectos', url: '/proyectos/', minimo: 10 },
+  { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', minimo: 4 },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', minimo: 40 },
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },

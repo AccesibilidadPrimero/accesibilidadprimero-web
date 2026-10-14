@@ -26,7 +26,9 @@ const check = (nombre, ok, detalle = '') => {
 const activo = () => page.evaluate(() => {
   const el = document.activeElement;
   if (!el) return null;
-  return { tag: el.tagName.toLowerCase(), texto: (el.textContent ?? '').trim().slice(0, 40), id: el.id };
+  /* El espacio que no se parte (src/lib/particulas.ts) cuenta como espacio:
+     el lector lo lee igual y el texto que se compara lo escribe una persona. */
+  return { tag: el.tagName.toLowerCase(), texto: (el.textContent ?? '').replace(/\u00A0/g, ' ').trim().slice(0, 40), id: el.id };
 });
 
 // 1. El skip link es el primer elemento enfocable (2.4.1).

@@ -129,7 +129,10 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
           alt="Retrato: sonríe a cámara, con gafas de pasta negras, barba y chaqueta oscura, ante un fondo gris azulado."
           class="persona__foto"
         />
-        <div class="persona__datos">
+        {/* `libre`: al lado de la foto, a 320 px la columna mide unos 70 px y
+            ni «Johnny Vigas» ni «y director creativo.» caben unidos
+            (src/lib/particulas.ts). */}
+        <div class="persona__datos" data-renglones="libre">
           <p>Johnny Vigas</p>
           <p><span class="linea">Fundador</span> <span class="linea">y director creativo.</span></p>
         </div>
@@ -178,15 +181,20 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; }
   .pila--contacto { align-items: flex-start; }
 
-  /* Servicios: 48 entre servicio y servicio, 8 entre su nombre y su texto.
+  /* Servicios: 16 entre su nombre y su texto, 48 entre servicio y servicio
+     (Johnny, 14/10/2026). El nombre va al mismo cuerpo que el texto, así que
+     lo separa el espacio: 16 se nota frente al interlineado y el de fuera es
+     el triple, para que cada nombre se lea pegado a su texto (AGENTS.md §4).
+     Se probó 32 / 64 y el nombre se quedaba suelto: la lista se leía como
+     ocho trozos y no como cuatro servicios.
      El nombre es un <h3> pintado como el cuerpo: el nivel lo da el marcado. */
   .servicios { display: flex; flex-direction: column; gap: var(--space-48); max-width: 888px; }
-  .servicios li { display: flex; flex-direction: column; gap: var(--space-8); }
+  .servicios li { display: flex; flex-direction: column; gap: var(--space-16); }
   .servicio__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
 
-  /* Equipo: el texto a 718 y la persona 24 más abajo (48 en total, como en
+  /* Equipo: el texto a la medida común (52ch; 718 en el Figma) y la persona 24 más abajo (48 en total, como en
      el Figma). Foto de 178 × 206 y, 24 a su derecha, nombre y cargo. */
-  .equipo__texto { max-width: 718px; }
+  .equipo__texto { max-width: var(--measure); }   /* antes 718 (Figma); la medida común manda, 14/10 */
   .persona { display: flex; align-items: flex-start; gap: var(--space-24); padding-block-start: var(--space-24); }
   .persona__datos { display: flex; flex-direction: column; gap: var(--space-8); }
   /* El hijo flex es el <picture> que pone Astro, no el <img>: sin esto se

@@ -51,6 +51,18 @@ h1, h2, h3, h4 {
   font-weight: 400;
 }
 
+/* Reparto de las líneas (Johnny, 14/10/2026). Dos reglas del navegador, y
+   donde no las entienda el texto se reparte como siempre:
+   · `pretty` en el texto corrido: evita que un párrafo acabe con una palabra
+     sola en la última línea y empareja los finales de línea.
+   · `balance` en los encabezados: las líneas salen de largo parecido, no una
+     llena y otra con dos palabras. Solo sirve en textos cortos (el navegador
+     lo limita a unas pocas líneas), que es lo que es un encabezado.
+   La tercera pata, que ninguna línea acabe en «y», «de», «la»…, no la da el
+   CSS: la pone src/lib/particulas.ts. `npm run renglones` mide las tres. */
+p, li, dd, figcaption, blockquote, td, th { text-wrap: pretty; }
+h1, h2, h3, h4 { text-wrap: balance; }
+
 /* Los enlaces también son negros: son lo que se puede tocar. El subrayado
    sigue siendo quien lleva el estado, no el color (AGENTS.md §4). */
 a { color: var(--link); }
@@ -118,6 +130,15 @@ a:active { text-decoration-thickness: var(--underline-hover); text-underline-off
 }
 
 .measure { max-width: var(--measure); }
+
+/* La medida va en el TEXTO, no en la columna (Johnny, 14/10/2026): las
+   columnas siguen a 888 y las imágenes y figuras las llenan; los párrafos se
+   paran en 52ch. Con `:where` pesa como una etiqueta: el titular y el texto
+   de los heros (`.apertura__texto`, 930, con sus cortes fijos) y cualquier
+   componente que declare su propio ancho siguen mandando. Las listas, solo
+   las de texto (sin clase, las del Markdown): un <li> con clase es una pieza
+   de maqueta (una lámina del carrusel, una tarjeta) y no se toca. */
+main :where(p, dd, blockquote, figcaption, ul:not([class]) > li, ol:not([class]) > li) { max-inline-size: var(--measure); }
 
 /* ------------------------------------------------- modo de alto contraste -- */
 /* Con forced-colors el navegador sustituye los colores del autor. Lo que se

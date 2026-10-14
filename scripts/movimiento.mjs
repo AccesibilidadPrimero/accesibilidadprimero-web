@@ -64,7 +64,7 @@ for (const js of [false, true]) {
 {
   const p = await navegador.newPage();
   await p.goto(`http://localhost:${PUERTO}/declaracion-de-accesibilidad/`, { waitUntil: 'load' });
-  const dice = await p.evaluate(() => document.body.innerText.includes('2.2.2') && /emblema de la página Estudio/.test(document.body.innerText));
+  const dice = await p.evaluate(() => document.body.innerText.includes('2.2.2') && /emblema\sde\sla\spágina\sEstudio/.test(document.body.innerText) /* \s: también el espacio que no se parte */);
   anota(dice, 'la Declaración de accesibilidad nombra el bucle del emblema como incumplimiento (2.2.2)');
   await p.close();
 }

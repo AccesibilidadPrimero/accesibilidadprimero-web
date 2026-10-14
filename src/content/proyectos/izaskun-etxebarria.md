@@ -9,6 +9,7 @@ resumen: |-
   el libro de artista y el dibujo.
 web: https://izaskunetxebarria.com/
 orden: 3
+tipo: webs
 destacado: true
 paleta:
   acento: '#c2002f'

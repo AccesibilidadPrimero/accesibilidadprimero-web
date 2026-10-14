@@ -175,7 +175,11 @@
   /* ===== Medidas ========================================================== */
   --touch-min: 44px;          /* AP pide 44. WCAG 2.5.8 AA se conforma con 24. */
   --gutter-page: var(--space-24);
-  --measure: 62ch;            /* medida de lectura */
+  /* Medida de lectura (Johnny, 14/10/2026): 52ch ≈ 70 caracteres reales por
+     línea. OJO: el `ch` es el ancho de la cifra 0, que en Instrument Sans es
+     ancha; los 62ch de antes daban 785 px y unos 86 caracteres. Medido en el
+     render: 52ch = 658 px a 1440 y la mediana sale en 71 (p90, 77). */
+  --measure: 52ch;
   /* TEXTO A 24 DEL BORDE (Johnny, 09/10): en la cabecera, la banda del hero y
      el pie, lo que queda a 24 del borde es el TEXTO, no la caja del control.
      Un control mide 44 de alto y su texto va centrado dentro, así que tiene

@@ -1,0 +1,138 @@
+---
+/* ---------------------------------------------------------------------------
+   Listado de Proyectos · lo usan /proyectos/ y cada tipo,
+   /proyectos/tipo/<clave>/ (Johnny, 14/10/2026).
+
+   SIN HERO. La página es la rejilla: filtros arriba y tarjetas debajo. El
+   <h1> sigue existiendo —es el único de la página y el que anuncia el lector
+   al llegar— pero va oculto a la vista: lo que se ve ya lo dice el menú, con
+   «Proyectos» marcado como página actual, y el filtro activo.
+
+   En la rejilla entran los casos publicados (`casoPublicado`) y los
+   productos propios (src/data/productos.ts). Orden: por tipo, en el orden de
+   los filtros, y dentro de cada tipo el de siempre.
+
+   Los filtros son ENLACES, como en el Blog: cada tipo es una página propia.
+   Funciona sin JavaScript, se puede compartir y guardar, y el actual lleva
+   aria-current y subrayado. Un tipo sin nada que enseñar no se pinta: un
+   filtro que lleva a una rejilla vacía es un enlace que no cumple (2.4.4).
+   --------------------------------------------------------------------------- */
+import { getCollection } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import TarjetaProyecto from './TarjetaProyecto.astro';
+import { DEFAULT_LANG } from '../i18n/config';
+import { TIPOS, CLAVES_TIPO, type Tipo } from '../data/proyectos';
+import { PRODUCTOS } from '../data/productos';
+
+interface Props {
+  /** El tipo de esta página; sin él, «Todos». */
+  tipo?: Tipo;
+}
+const { tipo } = Astro.props;
+
+const capturasCaso = import.meta.glob<{ default: ImageMetadata }>('../assets/proyectos/*.png', { eager: true });
+const capturasProducto = import.meta.glob<{ default: ImageMetadata }>('../assets/productos/*.{png,jpg,jpeg,webp,svg}', { eager: true });
+const buscar = (glob: Record<string, { default: ImageMetadata }>, archivo: string, quien: string) => {
+  const hallado = Object.entries(glob).find(([r]) => r.includes(`/${archivo}.`))?.[1]?.default;
+  if (!hallado) throw new Error(`${quien}: la tarjeta pide «${archivo}» y no está en src/assets/.`);
+  return hallado;
+};
+
+interface Item { clave: string; tipo: Tipo; href: string; nombre: string; linea: string; captura: ImageMetadata; color: string; marca: boolean }
+
+const casos: Item[] = (await getCollection('proyectos'))
+  .filter((p) => p.data.casoPublicado)
+  .sort((a, b) => a.data.orden - b.data.orden)
+  .map((c) => {
+    if (!c.data.imagenes?.[0]) throw new Error(`${c.id}: la tarjeta usa la primera captura de \`imagenes\` y no tiene.`);
+    return {
+      clave: c.id,
+      tipo: c.data.tipo,
+      href: `/proyectos/${c.id}/`,
+      nombre: c.data.titulo,
+      linea: c.data.linea ?? c.data.resumen,
+      captura: buscar(capturasCaso, c.data.imagenes[0].archivo, c.id),
+      color: c.data.paleta.acento,
+      marca: false,
+    };
+  });
+
+const productos: Item[] = PRODUCTOS.map((p) => ({
+  clave: p.clase,
+  tipo: p.tipo,
+  href: p.href,
+  nombre: p.nombre,
+  linea: p.tarjeta.linea,
+  captura: buscar(capturasProducto, p.tarjeta.captura, p.nombre),
+  color: p.tarjeta.color,
+  marca: p.marca,
+}));
+
+const orden = (t: Tipo) => CLAVES_TIPO.indexOf(t);
+const todos = [...casos, ...productos].sort((a, b) => orden(a.tipo) - orden(b.tipo));
+const visibles = tipo ? todos.filter((i) => i.tipo === tipo) : todos;
+
+const filtros = [
+  { href: '/proyectos/', texto: 'Todos', actual: !tipo },
+  ...CLAVES_TIPO.filter((t) => todos.some((i) => i.tipo === t)).map((t) => ({
+    href: `/proyectos/tipo/${t}/`, texto: TIPOS[t], actual: t === tipo,
+  })),
+];
+const nombre = tipo ? TIPOS[tipo] : null;
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={nombre ? `Proyectos · ${nombre} · Accesibilidad Primero` : 'Proyectos · Accesibilidad Primero'}
+  description="Webs, aplicaciones y extensiones accesibles para organizaciones y proyectos con impacto social."
+>
+  <div class="listado">
+    <h1 class="sr-only">{nombre ? `Proyectos · ${nombre}` : 'Proyectos'}</h1>
+
+    {/* Segundo <nav> de la página: lleva su propio nombre, distinto del menú
+        principal (AGENTS.md §3). */}
+    <nav class="filtros" aria-label="Tipos de proyecto">
+      <ul class="filtros__lista">
+        {filtros.map((f) => (
+          <li><a class="filtros__enlace" href={f.href} aria-current={f.actual ? 'page' : undefined}>{f.texto}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <ul class="rejilla">
+      {visibles.map((i) => (
+        <li data-tipo={i.tipo}>
+          <TarjetaProyecto href={i.href} nombre={i.nombre} linea={i.linea} captura={i.captura} color={i.color} marca={i.marca} />
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>
+
+<style>
+  /* Sin hero, la rejilla empieza bajo la cabecera: 64 hasta los filtros, el
+     mismo `--ritmo-intro` que separa los filtros de las tarjetas. */
+  .listado {
+    display: flex; flex-direction: column; gap: var(--ritmo-intro);
+    padding: var(--ritmo-intro) var(--gutter-page) 0;
+  }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* Como el Blog y el menú: 12 de relleno a cada lado y la lista a -12 para
+     que «Todos» empiece en el margen. */
+  .filtros__lista { display: flex; flex-wrap: wrap; margin-inline-start: calc(var(--space-12) * -1); }
+  .filtros__enlace {
+    display: inline-flex; align-items: center; min-height: var(--touch-min);
+    padding: 0 var(--space-12); text-decoration: none;
+  }
+  .filtros__enlace:hover,
+  .filtros__enlace[aria-current] {
+    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
+  }
+
+  .rejilla { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-64) var(--space-24); }
+  @media (min-width: 768px) { .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+</style>

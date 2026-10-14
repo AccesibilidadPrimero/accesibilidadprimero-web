@@ -258,7 +258,10 @@ const INTERIORES = [
   { nombre: 'Privacidad', url: '/privacidad/', conErrores: false },
   { nombre: 'Cookies', url: '/cookies/', conErrores: false },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', conErrores: false },
-  { nombre: 'Proyectos', url: '/proyectos/', conErrores: false },
+  /* Sin hero desde el 14/10/2026: el <h1> va oculto (sr-only) y en la página
+     no hay NINGÚN texto en display. Todo, filtros y tarjetas, a tamaño texto. */
+  { nombre: 'Proyectos', url: '/proyectos/', conErrores: false, sinTitular: true },
+  { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', conErrores: false, sinTitular: true },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', conErrores: false },
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
@@ -308,15 +311,15 @@ for (const ancho of [390, 768, 1440]) {
     medidos++; esperados_extra++;
     const etiqueta = `${String(ancho).padStart(4)} px${conErrores ? ' · con errores' : ''}`;
     const faltanErrores = conErrores && r.errores !== 4;
-    const titularMal = !r.titular || Math.abs(r.titular[0] - DISPLAY[ancho][0]) > 0.5 || Math.abs(r.titular[1] - DISPLAY[ancho][1]) > 1;
+    const titularMal = pagina.sinTitular ? r.titular !== null : !r.titular || Math.abs(r.titular[0] - DISPLAY[ancho][0]) > 0.5 || Math.abs(r.titular[1] - DISPLAY[ancho][1]) > 1;
     if (r.mal.length || faltanErrores || titularMal) {
       fallos++;
       console.error(`  ✗ ${etiqueta}`);
-      if (titularMal) console.error(`      titular ${r.titular ? r.titular.join('/') : 'NO MEDIDO'} (toca ${DISPLAY[ancho].join('/')})`);
+      if (titularMal) console.error(pagina.sinTitular ? `      hay un titular visible y esta página no lleva` : `      titular ${r.titular ? r.titular.join('/') : 'NO MEDIDO'} (toca ${DISPLAY[ancho].join('/')})`);
       if (faltanErrores) console.error(`      ${r.errores} mensajes de error visibles (tocan 4)`);
       for (const x of r.mal.slice(0, 8)) console.error(`      ${x}`);
     } else {
-      console.log(`  ✓ ${etiqueta} · titular ${r.titular.map((v) => Math.round(v)).join("/")}, el resto a ${TEXTO[ancho][0]}, 400 y negro${conErrores ? `, ${r.errores} errores` : ''}`);
+      console.log(`  ✓ ${etiqueta} · ${r.titular ? `titular ${r.titular.map((v) => Math.round(v)).join("/")}` : 'sin titular visible'}, el resto a ${TEXTO[ancho][0]}, 400 y negro${conErrores ? `, ${r.errores} errores` : ''}`);
     }
   }
 }

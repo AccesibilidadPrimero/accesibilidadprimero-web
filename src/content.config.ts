@@ -1,6 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { CATEGORIAS } from './data/blog';
+import { CLAVES_TIPO } from './data/proyectos';
 
 /* ---------------------------------------------------------------------------
    Esquemas de contenido.
@@ -86,6 +87,9 @@ const proyectos = defineCollection({
          Mad 2027». Sin él, el enlace usa el título. */
       nombreCorto: z.string().optional(),
       orden: z.number().int(),
+      /* El filtro de /proyectos/ al que pertenece (src/data/proyectos.ts).
+         Obligatorio: un proyecto sin tipo no aparecería en ningún filtro. */
+      tipo: z.enum(CLAVES_TIPO),
       destacado: z.boolean().default(false),
       paleta,
 

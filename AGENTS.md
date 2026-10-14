@@ -136,6 +136,40 @@ Están aquí porque ya han pasado, no en abstracto:
   día el gris separaba el título de su explicación; ahora los separa el sitio
   y el espacio. La jerarquía la lleva el marcado (`<h2>`, `<p>`), no el color.
   `npm run tipografia` falla si aparece un texto que no sea negro.
+- **Título y texto al mismo cuerpo: los separa el espacio** (Johnny,
+  14/10/2026). Cuando un título va al mismo tamaño que su texto, el hueco
+  entre los dos tiene que notarse frente al interlineado (**16 como mínimo**) y
+  el hueco hasta el bloque siguiente tiene que ser **al menos el triple**. Lo que
+  manda es la proporción, no una cifra: si el hueco interior se acerca al
+  exterior, el título se queda suelto y no se sabe a qué texto pertenece.
+  No es el interlineado, que no se toca.
+  - Servicios de Estudio, lista de párrafos en una columna: **16 / 48**. Se
+    probó 32 / 64 y sobraba blanco: el nombre se despegaba de su texto.
+  - Productos de la Home: **32**. Cada producto es una columna suelta, con la
+    imagen encima y nada debajo con lo que competir.
+  - No se aplica a titulares en display (ya los separa el tamaño), a nombre +
+    cargo (un solo dato en dos líneas) ni a las tarjetas que son un único
+    enlace (nombre y línea forman su texto).
+  `npm run geometria` mide los dos huecos de los servicios.
+- **Reparto de las líneas** (Johnny, 14/10/2026). Tres reglas, y las tres se
+  aplican solas, sin que nadie tenga que acordarse:
+  - **Ninguna línea acaba en partícula** («y», «de», «la», «a», «en»…). Lo pone
+    `src/lib/particulas.ts` desde `src/middleware.ts` en todo el HTML en
+    castellano, Markdown incluido: un espacio que no se parte detrás de la
+    partícula. En el `<h1>` la cadena unida no pasa de 18 caracteres, porque a
+    320 px el titular en display mide 272 de ancho; si no cabe, la partícula
+    se queda al final: el reflow (1.4.10) manda. Las tablas no se tocan.
+  - **Ningún párrafo acaba con una palabra sola** (viuda): `text-wrap: pretty`
+    en el texto corrido (base.css) y, además, las dos últimas palabras de cada
+    párrafo unidas si juntas no pasan de 28 caracteres.
+  - **Encabezados equilibrados**: `text-wrap: balance` en h1–h4.
+  - Escape, solo para columnas muy estrechas donde unir palabras desborda:
+    `data-renglones="libre"` en el elemento (hoy, el nombre y el cargo junto a
+    la foto de Estudio). Nunca para callar un fallo de `npm run renglones`.
+  - Un texto con cortes fijos (`|-` en el Markdown, `.linea`) tampoco puede
+    cortar detrás de una partícula: se reescribe el corte, no se tapa.
+  `npm run renglones` recorre todas las páginas del build a 390, 768 y 1440,
+  línea a línea, y falla con cualquiera de las dos cosas.
 - **El gris es `Ink / Secondary` del Figma, `#686864`**: 5,60:1 sobre el papel
   blanco. Sobre menta da 4,35:1 y no cumple, así que en el hero no entra.
 - Sin framework de utilidades. Si una regla sirve para un solo componente, vive
