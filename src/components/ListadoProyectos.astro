@@ -24,6 +24,7 @@ import TarjetaProyecto from './TarjetaProyecto.astro';
 import { DEFAULT_LANG } from '../i18n/config';
 import { TIPOS, CLAVES_TIPO, type Tipo } from '../data/proyectos';
 import { PRODUCTOS } from '../data/productos';
+import '../styles/listados.css';
 
 interface Props {
   /** El tipo de esta página; sin él, «Todos». */
@@ -101,15 +102,22 @@ const nombre = tipo ? TIPOS[tipo] : null;
       </ul>
     </nav>
 
-    <ul class="rejilla">
-      {visibles.map((i) => (
-        <li data-tipo={i.tipo}>
+    {/* `tarjetas`: entrada y cambio de filtro (src/styles/listados.css). Cada
+        tarjeta lleva su posición (`--i`, para el escalonado) y su nombre de
+        transición, el mismo en todos los filtros: así se desliza a su sitio. */}
+    <ul class="rejilla tarjetas">
+      {visibles.map((i, n) => (
+        <li data-tipo={i.tipo} data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${i.clave}`}>
           <TarjetaProyecto href={i.href} nombre={i.nombre} linea={i.linea} captura={i.captura} color={i.color} marca={i.marca} />
         </li>
       ))}
     </ul>
   </div>
 </Base>
+
+<script>
+  import '../scripts/tarjetas';
+</script>
 
 <style>
   /* Sin hero, la rejilla empieza bajo la cabecera: 64 hasta los filtros, el

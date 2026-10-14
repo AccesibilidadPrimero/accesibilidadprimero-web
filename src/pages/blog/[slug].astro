@@ -95,6 +95,15 @@ const nota = `${fechaLarga(d.fecha)} · ${d.categorias.map((c) => CATEGORIAS[c])
   /* ---- El texto del artículo (viene del Markdown: de ahí los :global) ---- */
   .prosa { display: flex; flex-direction: column; gap: var(--space-24); }
   .prosa :global(:is(h2, h3, h4)) { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  /* EL TEXTO, CENTRADO BAJO LA IMAGEN (Johnny, 14/10/2026). La columna mide
+     888 y la llenan la portada, las imágenes, las tablas y las
+     demostraciones; el texto se para en la medida de lectura (52ch) y va
+     centrado en ella, con el mismo borde izquierdo en párrafos, títulos y
+     listas. `inline-size: 100%`: en una columna flex, el margen automático
+     sin ancho haría que cada párrafo midiera lo que su texto. */
+  .prosa > :global(:is(p:not(:has(> img, > picture, > video)), h2, h3, h4, ul, ol, blockquote)) {
+    inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto;
+  }
   .prosa :global(h2) { margin-block-start: calc(var(--space-64) - var(--space-24)); }
   .prosa :global(:is(h3, h4)) { margin-block-start: calc(var(--space-32) - var(--space-24)); }
   .prosa :global(:is(p, ul, ol, blockquote, figure, table)) { margin: 0; }

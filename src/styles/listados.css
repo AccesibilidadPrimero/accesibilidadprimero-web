@@ -1,0 +1,71 @@
+/* ---------------------------------------------------------------------------
+   Listados de tarjetas · Proyectos y Blog (Johnny, 14/10/2026: «que las
+   tarjetas aparezcan de una forma orgánica y amable… que las transiciones
+   sean visualmente amables»).
+
+   Dos movimientos, los dos con la curva de la casa (`--ease-asentar`, la de
+   la Home) y sin rebote:
+
+   1. ENTRADA. Cada tarjeta sube 32 px y aparece; su texto llega un poco
+      después que su imagen, como si se posara. Escalonadas en el orden de
+      lectura, 110 ms entre una y otra. Las que no se ven al cargar esperan a
+      asomar (src/scripts/tarjetas.ts) y entran entonces, escalonadas entre
+      las que asoman juntas. Todo acaba antes de 2 s.
+      · Excepción consciente a la regla 2 de aparicion.ts («lo que ya se ve al
+        cargar no se toca»): en un listado sin hero las tarjetas SON la
+        página; la entrada es la bienvenida, no un salto delante de los ojos.
+      · Solo con JS (`html.js`): sin JS, todo quieto y visible. Es una
+        animación CSS que arranca sola; el script solo la pausa para lo que
+        está por debajo, así que si el script falla las tarjetas entran igual.
+      · Con reducir movimiento: solo fundido, 300 ms (`data-mov-propio` en
+        cada <li>, para que la regla global de base.css no lo deje en nada).
+
+   2. CAMBIO DE FILTRO. Cada filtro es una página, y entre ellas hay una
+      transición de vista (View Transitions entre documentos): las tarjetas
+      que siguen en el filtro nuevo se deslizan a su sitio y las demás se
+      funden. Cada <li> lleva su `view-transition-name`. Donde el navegador no
+      la conoce, la página cambia como siempre y las tarjetas hacen su
+      entrada. Con reducir movimiento no hay transición.
+      Al llegar por una transición, la entrada no se repite: lo marca un
+      script en <head> (Base.astro, `data-llegada`).
+   --------------------------------------------------------------------------- */
+:root {
+  --recorrido-tarjeta: 32px;
+  --desfase-tarjeta: 110ms;
+  --retraso-texto-tarjeta: 120ms;
+  --dur-cambio-filtro: 700ms;
+}
+
+@keyframes tarjeta-sube { from { transform: translateY(var(--recorrido-tarjeta)); } }
+@keyframes tarjeta-aparece { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not([data-llegada='transicion']) .tarjetas > li {
+    animation:
+      tarjeta-sube var(--dur-asentar) var(--ease-asentar) both,
+      tarjeta-aparece var(--dur-fade) ease-out both;
+    animation-delay: calc(var(--i, 0) * var(--desfase-tarjeta));
+  }
+  /* El texto, un poco después que la imagen: la tarjeta se posa por capas. */
+  html.js:not([data-llegada='transicion']) .tarjetas > li > a > :not(:first-child) {
+    animation: tarjeta-sube var(--dur-asentar) var(--ease-asentar) both;
+    animation-delay: calc(var(--i, 0) * var(--desfase-tarjeta) + var(--retraso-texto-tarjeta));
+    animation-play-state: inherit;
+  }
+
+  @view-transition { navigation: auto; }
+  ::view-transition-group(*) {
+    animation-duration: var(--dur-cambio-filtro);
+    animation-timing-function: var(--ease-out);
+  }
+  /* El resto de la página (cabecera, filtros) se funde rápido y casi no se
+     nota: lo que se mueve son las tarjetas. */
+  ::view-transition-group(root) { animation-duration: 300ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .tarjetas > li {
+    animation: tarjeta-aparece var(--dur-fundido-reducido) linear both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+}

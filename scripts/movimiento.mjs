@@ -15,7 +15,8 @@
      sitio antes de 2 s.
    Lo mide en el navegador, con las animaciones reales (AGENTS.md §2.9).
    No recorre el resto de la web: el carrusel de la Home tiene su propia
-   comprobación (teclado), y cualquier bucle nuevo se añade aquí.
+   comprobación (teclado), y cualquier bucle nuevo se añade aquí. Desde el
+   14/10/2026 mide también la entrada de las tarjetas de los listados.
    --------------------------------------------------------------------------- */
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
@@ -107,6 +108,54 @@ for (const js of [false, true]) {
     await p.waitForTimeout(2100);
     g = await golpes(p);
     anota(g.quietos, `titular · ${n} · al terminar, todo en su sitio y opaco`);
+    await ctx.close();
+  }
+}
+
+/* ---- Listados de tarjetas: entrada y cambio de filtro (14/10/2026) ----
+   src/styles/listados.css y src/scripts/tarjetas.ts. Se comprueba:
+   · sin JS, ninguna animación y todas las tarjetas visibles;
+   · con JS, las de arriba entran solas, todo acaba antes de 2 s y al final
+     cada tarjeta está entera (opacidad 1, sin desplazamiento); las de abajo
+     esperan pausadas y entran al asomar;
+   · con reducir movimiento, solo fundido (ningún desplazamiento);
+   · el CSS declara la transición entre documentos de los filtros. */
+console.log('\n── Listados: entrada de las tarjetas ──\n');
+const estado = (p) => p.evaluate(() => {
+  const lis = [...document.querySelectorAll('.tarjetas > li')];
+  const anims = lis.flatMap((li) => li.getAnimations({ subtree: true }));
+  return {
+    tarjetas: lis.length,
+    animaciones: anims.length,
+    nombres: [...new Set(anims.map((a) => a.animationName))].sort().join(' '),
+    finMax: anims.map((a) => a.effect.getComputedTiming().endTime).reduce((a, b) => Math.max(a, b), 0),
+    pausadas: lis.filter((li) => li.getAnimations().some((a) => a.playState === 'paused')).length,
+    abajo: lis.filter((li) => li.getBoundingClientRect().top >= innerHeight * 0.92).length,
+    enteras: lis.filter((li) => getComputedStyle(li).opacity === '1' && ['none', 'matrix(1, 0, 0, 1, 0, 0)'].includes(getComputedStyle(li).transform)).length,
+    transicion: [...document.styleSheets].some((h) => { try { return [...h.cssRules].some((r) => r.cssText.includes('@view-transition') || (r.cssRules && [...r.cssRules].some((q) => q.cssText.includes('@view-transition')))); } catch { return false; } }),
+    nombresTransicion: lis.filter((li) => getComputedStyle(li).viewTransitionName.startsWith('t-')).length,
+  };
+});
+for (const url of ['/proyectos/', '/blog/']) {
+  for (const [n, opciones] of [['sin JS', { javaScriptEnabled: false }], ['con JS', {}], ['reducido', { reducedMotion: 'reduce' }]]) {
+    /* 700 de alto: así en Proyectos también queda una fila por debajo. */
+    const ctx = await navegador.newContext({ viewport: { width: 1440, height: 700 }, ...opciones });
+    const p = await ctx.newPage();
+    await p.goto(`http://localhost:${PUERTO}${url}`, { waitUntil: 'load' });
+    const a = await estado(p);
+    if (n === 'sin JS') {
+      anota(a.animaciones === 0 && a.enteras === a.tarjetas, `${url} · sin JS · quietas y enteras (${a.enteras} de ${a.tarjetas})`);
+    } else if (n === 'con JS') {
+      anota(a.animaciones > 0 && a.finMax < 2000, `${url} · con JS · entran solas y acaban antes de 2 s (${Math.round(a.finMax)} ms)`);
+      anota(a.pausadas === a.abajo, `${url} · con JS · las que quedan por debajo esperan (${a.pausadas} pausadas de ${a.abajo})`);
+      anota(a.transicion && a.nombresTransicion === a.tarjetas, `${url} · transición entre filtros declarada y ${a.nombresTransicion} de ${a.tarjetas} tarjetas con nombre`);
+      await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await p.waitForTimeout(2600);
+      const b = await estado(p);
+      anota(b.pausadas === 0 && b.enteras === b.tarjetas, `${url} · con JS · al bajar entran todas y quedan enteras (${b.enteras} de ${b.tarjetas})`);
+    } else {
+      anota(a.animaciones > 0 && a.nombres === 'tarjeta-aparece', `${url} · reducido · solo fundido (${a.nombres || 'nada'})`);
+    }
     await ctx.close();
   }
 }

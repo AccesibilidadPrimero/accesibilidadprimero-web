@@ -13,6 +13,7 @@ import HeroPagina from './HeroPagina.astro';
 import TarjetaArticulo from './TarjetaArticulo.astro';
 import { DEFAULT_LANG } from '../i18n/config';
 import { CATEGORIAS } from '../data/blog';
+import '../styles/listados.css';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -54,15 +55,20 @@ const nombre = categoria ? CATEGORIAS[categoria] : null;
       </ul>
     </nav>
 
-    <ul class="rejilla">
-      {articulos.map((a) => (
-        <li>
+    {/* `tarjetas`: entrada y cambio de categoría (src/styles/listados.css). */}
+    <ul class="rejilla tarjetas">
+      {articulos.map((a, n) => (
+        <li data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${a.id}`}>
           <TarjetaArticulo href={`/blog/${a.id}/`} titulo={a.data.titulo} fecha={a.data.fecha} imagen={a.data.imagen} />
         </li>
       ))}
     </ul>
   </div>
 </Base>
+
+<script>
+  import '../scripts/tarjetas';
+</script>
 
 <style>
   .listado {

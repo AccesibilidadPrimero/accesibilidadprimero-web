@@ -118,6 +118,16 @@ Están aquí porque ya han pasado, no en abstracto:
   Con reducir movimiento, fundido de 300 ms. Un elemento que trae su propia
   versión reducida lleva `data-mov-propio` para que la regla global de
   `base.css` no la deje en 0,01 ms. `npm run aparicion` lo comprueba.
+- **Tarjetas de los listados (Proyectos y Blog)** (Johnny, 14/10/2026: «que
+  aparezcan de una forma orgánica y amable»). Todo en `src/styles/listados.css`
+  y `src/scripts/tarjetas.ts`. Entran escalonadas: suben 32 px y aparecen, y
+  su texto llega 120 ms después que su imagen; las de abajo esperan a asomar.
+  Al cambiar de filtro, transición de vista entre documentos: las tarjetas que
+  siguen se deslizan a su sitio y el resto se funde. Al pasar el puntero, la
+  captura de Proyectos se eleva 6 px. Es la única excepción a «lo que ya se ve
+  al cargar no se mueve»: en un listado sin hero las tarjetas son la página.
+  Sin JS, quieto. Con reducir movimiento, solo fundido y sin transición.
+  `npm run movimiento` lo comprueba.
 - **Margen de página: 24 en todos los tamaños, igual que el hueco entre
   columnas** (Johnny, 09/10). Columna de 1392 a 1440 y tope de 1392 centrado
   por encima. Web y Figma alineados el mismo día.
@@ -346,7 +356,7 @@ npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS
 npm run aparicion    # aparición al hacer scroll y «Leer más»: sin JS, normal y reducido
-npm run movimiento   # 2.2.2: el bucle del emblema de Estudio (excepción declarada) se para con «reducir movimiento» y la Declaración lo nombra; el titular en golpes, entero y quieto en 2 s
+npm run movimiento   # 2.2.2: el bucle del emblema de Estudio (excepción declarada) se para con «reducir movimiento» y la Declaración lo nombra; el titular en golpes, entero y quieto en 2 s; la entrada de las tarjetas de los listados
 npm run verificar    # los cuatro anteriores, que es lo que corre el CI
 npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
                      # resto y comprueba tamaños

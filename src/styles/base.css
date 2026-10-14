@@ -137,8 +137,10 @@ a:active { text-decoration-thickness: var(--underline-hover); text-underline-off
    de los heros (`.apertura__texto`, 930, con sus cortes fijos) y cualquier
    componente que declare su propio ancho siguen mandando. Las listas, solo
    las de texto (sin clase, las del Markdown): un <li> con clase es una pieza
-   de maqueta (una lámina del carrusel, una tarjeta) y no se toca. */
-main :where(p, dd, blockquote, figcaption, ul:not([class]) > li, ol:not([class]) > li) { max-inline-size: var(--measure); }
+   de maqueta (una lámina del carrusel, una tarjeta) y no se toca. Y un <p>
+   que solo envuelve una imagen (así la deja el Markdown) tampoco: la imagen
+   llena la columna. */
+main :where(p:not(:has(> img, > picture, > video)), dd, blockquote, figcaption, ul:not([class]) > li, ol:not([class]) > li) { max-inline-size: var(--measure); }
 
 /* ------------------------------------------------- modo de alto contraste -- */
 /* Con forced-colors el navegador sustituye los colores del autor. Lo que se

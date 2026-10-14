@@ -54,6 +54,13 @@ for (const ruta of RUTAS) {
   ]) {
     const page = await navegador.newPage({ viewport });
     await page.goto(BASE + ruta, { waitUntil: 'load' });
+    /* axe mide el estado FINAL. A media entrada (las tarjetas de los listados
+       aparecen con un fundido, 14/10/2026) el texto aún no tiene su opacidad
+       y axe daría falsos fallos de contraste. Se adelantan al final las
+       animaciones que terminan; los bucles (el emblema) se dejan. */
+    await page.evaluate(() => document.getAnimations().forEach((a) => {
+      if (Number.isFinite(a.effect?.getComputedTiming().endTime)) { a.play(); a.finish(); }
+    }));
 
     await page.addScriptTag({ content: axeSource });
     const { violations } = await page.evaluate(async () =>

@@ -66,6 +66,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
          saltar después. Los scripts de los componentes la siguen poniendo
          también; repetirla no hace nada. -->
     <script is:inline>document.documentElement.classList.add('js');</script>
+    {/* Si se llega por una transición de vista (cambiar de filtro en los
+        listados), las tarjetas ya vienen moviéndose: su entrada no se repite
+        (src/styles/listados.css). Tiene que estar aquí, antes de pintar:
+        `pagereveal` salta con el primer fotograma. */}
+    <script is:inline>addEventListener('pagereveal', (e) => { if (e.viewTransition) document.documentElement.dataset.llegada = 'transicion'; });</script>
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

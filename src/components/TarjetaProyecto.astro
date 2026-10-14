@@ -69,6 +69,13 @@ const externo = /^https?:\/\//.test(href);
     transition: transform var(--dur-fast) var(--ease-out);
   }
   .tarjeta:is(:hover, :focus-visible) .tarjeta__flecha { transform: translate(3px, -3px); }
+  /* Al pasar o enfocar, la captura se eleva 6 px dentro de su color, despacio
+     y sin rebote: la tarjeta responde sin saltar (14/10/2026). Con reducir
+     movimiento no se mueve; queda el subrayado del nombre. */
+  @media (prefers-reduced-motion: no-preference) {
+    .tarjeta__superficie :global(img) { transition: transform var(--dur-fade) var(--ease-out); }
+    .tarjeta:is(:hover, :focus-visible) .tarjeta__superficie :global(img) { transform: translateY(-6px); }
+  }
   .tarjeta:hover .tarjeta__nombre {
     text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
   }
