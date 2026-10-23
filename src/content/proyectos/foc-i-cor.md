@@ -53,6 +53,7 @@ cifras:
     tipo: negocio
 caso:
   titular: Foc i Cor. Inclusión social a través de la cocina.
+  golpes: ['Foc i Cor.', 'Inclusión social', 'a través de la cocina.']
   entradilla: >-
     Foc i Cor es el restaurante escuela de la ONG Cesal en Catarroja, una de
     las zonas que la DANA se llevó por delante. Hasta abril de 2027 formará a
@@ -60,7 +61,9 @@ caso:
     y barra.
   anio: 2026
   queHicimos: Diseño, desarrollo y accesibilidad
-  conformidad: WCAG 2.2 nivel AA, parcialmente conforme
+  # Johnny, 23/10: sin «parcialmente conforme». La ficha lo presenta como
+  # el estándar de trabajo («Estándar»), como en el Figma de Archivo.
+  conformidad: WCAG 2.2 nivel AA
   reto:
     intro: >-
       Foc i Cor no es solo un restaurante con una web. Es un proyecto social

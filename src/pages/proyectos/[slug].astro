@@ -12,8 +12,7 @@
    · Tipografía: un solo titular grande, el h1 (regla del 08/10). Los h2 de
      sección y la cita del testimonio, a tamaño de texto.
    · Textos: los revisados el 11/10, no los del marco.
-   · Accesibilidad: el bloque corto de cuatro puntos y el enlace a la
-     declaración (decisión del 30/08), con el aspecto del Archivo. Sin tabla.
+   · Accesibilidad: solo el enlace a la declaración del cliente (23/10).
 
    Orden: hero con foto · ficha · entradilla · la portada sobre el color del
    proyecto · dos capturas · el reto · dos fotos · decisiones · el equipo
@@ -25,7 +24,6 @@ import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
-import { fechaLarga } from '../../data/blog';
 
 export async function getStaticPaths() {
   return (await getCollection('proyectos'))
@@ -71,6 +69,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
         (13/10). Con la foto del proyecto si la hay; si no, su color. */}
     <HeroPagina
       titulo={c.titular}
+      golpes={c.golpes}
       texto={['Caso de estudio']}
       foto={c.fotos.hero}
       superficie={c.fotos.hero ? undefined : { fondo: d.paleta.acento, foco: d.paleta.anilloFoco }}
@@ -84,7 +83,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
         <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>
         <div><dt>Año</dt><dd>{c.anio}</dd></div>
         <div><dt>Qué hicimos</dt><dd>{c.queHicimos}</dd></div>
-        <div><dt>Accesibilidad</dt><dd>{c.conformidad}</dd></div>
+        <div><dt>Estándar</dt><dd>{c.conformidad}</dd></div>
         {d.web && dominio && <div class="ficha__web"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
       </dl>
     </section>
@@ -171,18 +170,13 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
       </section>
     )}
 
-    <section class="seccion" aria-labelledby="accesibilidad">
-      <h2 id="accesibilidad" class="titular">Accesibilidad</h2>
-      <div class="pila">
-        <p>Medido sobre la web publicada el {fechaLarga(c.accesibilidad.medidoEl)}.</p>
-        <ul class="filas">
-          {c.accesibilidad.puntos.map((x) => <li class="fila">{x}</li>)}
-        </ul>
-        {c.accesibilidad.declaracion && (
-          <CtaLink href={c.accesibilidad.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
-        )}
-      </div>
-    </section>
+    {/* Accesibilidad: solo el enlace a la declaración del cliente (Johnny,
+        23/10). Los puntos medidos siguen en el contenido, sin pintarse. */}
+    {c.accesibilidad.declaracion && (
+      <p class="seccion declaracion">
+        <CtaLink href={c.accesibilidad.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
+      </p>
+    )}
   </div>
 </Base>
 
@@ -297,10 +291,10 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
   .testimonio { display: flex; flex-direction: column; gap: var(--space-32); }
   .testimonio figcaption span { display: block; }
 
-  /* Accesibilidad: corta, con filetes, como en las legales y en Estudio. */
-  .pila { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 888px; }
-  .pila > :not(a) { align-self: stretch; }
-  .filas { padding: 0; list-style: none; }
-  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
-  .fila:last-child { border-block-end: 1px solid var(--rule); }
+  /* El titular en dos líneas: el primer golpe («Foc i Cor.») va solo en la
+     suya y el resto entra detrás, como en Estudio. */
+  .caso :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
+
+  /* La declaración: un enlace solo, con el aire de una sección. */
+  .declaracion { display: block; }
 </style>

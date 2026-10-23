@@ -39,6 +39,22 @@ const PIEZAS: Array<[selector: string, orden: Orden]> = [
   ['.estudio > .cta', 2],
   // Contacto: el enlace. El pie no se mueve.
   ['.contacto > .cta', 1],
+  /* Caso de proyecto (/proyectos/<caso>/, 23/10/2026: «el gustito en la
+     navegación»). El mismo latido que la Home, en el orden de lectura: lo que
+     nombra, lo que explica y la imagen. Las piezas que van en fila (datos de
+     la ficha, tensiones, decisiones, pares de imágenes) se escalonan por su
+     sitio, de izquierda a derecha. */
+  ['.caso .ficha__datos > div', 'posicion'],
+  ['.caso .entradilla', 0],
+  ['.caso .banda', 0],
+  ['.caso .par > picture', 'posicion'],
+  ['.caso .seccion > h2', 0],
+  ['.caso .intro', 1],
+  ['.caso .tension', 'posicion'],
+  ['.caso .decision', 'posicion'],
+  ['.caso .banda-equipo > picture', 0],
+  ['.caso .testimonio', 1],
+  ['.caso .declaracion', 0],
 ];
 
 /* Las tres frases que abren bloque. Son el acento: entran renglón a renglón.

@@ -128,6 +128,10 @@ const proyectos = defineCollection({
         .object({
           /* El <h1>: un titular de resultado, no el nombre del cliente a secas. */
           titular: z.string(),
+          /* El titular en los golpes con los que entra, como en Estudio. El
+             primero va solo en su línea; unidos con un espacio tienen que dar
+             exactamente `titular` (HeroPagina lo comprueba). */
+          golpes: z.array(z.string()).min(2).optional(),
           entradilla: z.string(),
           anio: z.number().int(),
           queHicimos: z.string(),
