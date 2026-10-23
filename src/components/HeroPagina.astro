@@ -19,8 +19,16 @@
    el lector de pantalla lo lee de una vez. Sin JS no se anima nada (la clase
    `js` la pone Base.astro antes de pintar); con «reducir movimiento», fundido
    sin desplazamiento. Todo acaba antes de 2 s.
+
+   `foto` (casos de proyecto, 23/10/2026): la banda lleva la foto del
+   proyecto debajo, con el velo del Figma `Archivo · Caso Foc i Cor` (Ink al
+   55 % y, arriba, Ink al 40 % que se apaga al 26 % para la cabecera). El
+   texto, en el mismo sitio que en el resto de heros, pasa a Silk: sobre la
+   foto el negro no se leería. Es la única excepción de color de la web, y
+   la cabecera la acompaña mientras está encima de la foto.
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
 
 interface Props {
   ilustracion?: ImageMetadata;
@@ -40,8 +48,13 @@ interface Props {
   /** El titular, partido en los golpes con los que entra. Unidos con un
       espacio tienen que dar exactamente `titulo` (el build lo comprueba). */
   golpes?: string[];
+  /** Foto de ambiente debajo del texto (casos). Va con alt="": el titular
+      está encima y la foto no añade información. */
+  foto?: ImageMetadata;
 }
-const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes } = Astro.props;
+const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto } = Astro.props;
+/* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
+const anchosFoto = foto ? [640, 1024, 1440, 2048, 2880].filter((w) => w < foto.width).concat(foto.width) : [];
 if (golpes && golpes.join(' ') !== titulo) {
   throw new Error(`HeroPagina: los golpes «${golpes.join(' ')}» no son el titular «${titulo}».`);
 }
@@ -51,7 +64,22 @@ const conDibujo = Astro.slots.has('ilustracion');
 const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring: ${superficie.foco};` : undefined;
 ---
 
-<div class:list={['apertura', golpes && 'apertura--golpes']} style={estilo}>
+<div class:list={['apertura', golpes && 'apertura--golpes', foto && 'apertura--foto']} style={estilo}>
+  {
+    foto && (
+      <Picture
+        src={foto}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={anchosFoto}
+        sizes="100vw"
+        quality="high"
+        class="apertura__foto"
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
   {/* Lo que sobra de la pantalla. Con ilustración, la centra; sin ella, es
       el espacio en color que empuja el texto abajo. */}
   <div class="apertura__escena">
@@ -121,6 +149,48 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
     }
   }
   .apertura__escena { flex: 1 0 auto; display: grid; place-items: center; }
+
+  /* ---- Con foto ---- */
+  .apertura--foto {
+    isolation: isolate;
+    background: var(--ink);
+    color: var(--silk);
+    --text: var(--silk);
+    --link: var(--silk);
+    --focus-ring: var(--silk);
+  }
+  .apertura--foto .apertura__titulo { color: inherit; }
+  .apertura :global(.apertura__foto) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+  .apertura--foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* El velo del Figma más uno abajo, donde va el texto: con el del Figma
+       solo, «Caso de estudio» se quedaba en 3,86:1 sobre el blanco del plato
+       (23/10/2026). Hacía falta un 13 % más de Ink detrás del texto; este da
+       un 20 % a la altura del texto pequeño. */
+    background:
+      linear-gradient(to bottom, rgb(23 23 23 / 0.4), rgb(23 23 23 / 0) 26%),
+      linear-gradient(to top, rgb(23 23 23 / 0.4), rgb(23 23 23 / 0) 60%),
+      rgb(23 23 23 / 0.55);
+  }
+  /* La cabecera, encima de la foto: en Silk. Solo lo que se ve sobre la foto;
+     el panel del menú móvil es blanco y conserva sus colores (es hermano del
+     botón, las variables no le llegan). */
+  :global(body:has(.apertura--foto) :is(.header__logo, .header__nav, .header__lang, .menu__trigger)) {
+    --link: var(--silk);
+    --text: var(--silk);
+    --focus-ring: var(--silk);
+  }
 
   .apertura__texto-grupo { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-32); }
   .apertura__texto-grupo > :not(a) { align-self: stretch; }

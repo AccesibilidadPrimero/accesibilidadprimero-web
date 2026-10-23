@@ -81,25 +81,42 @@ caso:
           por la normativa, sino por la coherencia.
   fotos:
     portada:
-      archivo: ../../assets/proyectos/foc-i-cor/portada.png
+      archivo: ../../assets/proyectos/foc-i-cor/portada.jpg
+      # La misma portada en móvil (640 × 900): la que se ve en tablet y móvil.
+      vertical: ../../assets/proyectos/foc-i-cor/portada-vertical.jpg
       alt: >-
         La portada de focicor.es: una fotografía del embarcadero de la
         Albufera al atardecer con el lema «Cuina feta amb foc i Cor», el botón
         de reserva y, abajo, el horario y la dirección.
     par:
-      - archivo: ../../assets/proyectos/foc-i-cor/cocina.png
+      - archivo: ../../assets/proyectos/foc-i-cor/cocina.jpg
         alt: >-
           Parte del equipo trabaja de espaldas en la cocina del restaurante,
           entre fogones y campanas, durante un servicio.
-      - archivo: ../../assets/proyectos/foc-i-cor/retrato.png
+      - archivo: ../../assets/proyectos/foc-i-cor/retrato.jpg
         alt: >-
           Una mujer del equipo, con el delantal de Foc i Cor y los brazos
           cruzados, sonríe apoyada en la puerta del restaurante.
+    # Original de Johnny (2338 × 1067), sin EXIF ni XMP, 23/10/2026.
+    hero: ../../assets/proyectos/foc-i-cor/hero.jpg
+    capturas:
+      - archivo: ../../assets/proyectos/foc-i-cor/almuerzos.jpg
+        alt: >-
+          La página de los almuerzos de focicor.es: el titular «Almorzar de
+          verdad para tener energía durante todo el día», qué incluye cada
+          almuerzo y, al lado, la foto de un bocadillo con queso fundido.
+      # Captura de focicor.es/la-carta/ del 23/10/2026, a 2x, pestaña Principals.
+      - archivo: ../../assets/proyectos/foc-i-cor/carta.png
+        alt: >-
+          La carta de focicor.es: a la izquierda, las pestañas por categoría
+          con «Principals» activa; a la derecha, cinco platos con su precio y
+          los alérgenos de cada uno en etiquetas a la vista.
     cierre:
       archivo: ../../assets/proyectos/foc-i-cor/equipo.jpg
       alt: >-
         El equipo de Foc i Cor al completo, con delantales y gorros de cocina,
         delante del rótulo del restaurante.
+  bandaEquipo: '#9e3223'
   accesibilidad:
     medidoEl: 2026-10-11
     puntos:
@@ -109,6 +126,13 @@ caso:
       - 'Pendiente: los enlaces legales del pie miden 14 px de alto; el criterio pide 24.'
     declaracion: https://www.focicor.es/accessibilitat/
   cierre: Lo que vive dentro de un PDF no está al alcance de todo el mundo.
+  # Testimonio: PENDIENTE del texto literal y del permiso de Cesal. Al
+  # recibirlo, quitar los # de las cinco líneas y pegar la cita entre « ».
+  # testimonio:
+  #   cita: «…»
+  #   nombre: Marcos Nogales
+  #   cargo: Director de Comunicación y Alianzas de Cesal
+  #   # lang: ca   (solo si la cita llega en valenciano)
 imagenes:
   - archivo: foc-1
     alt: >-

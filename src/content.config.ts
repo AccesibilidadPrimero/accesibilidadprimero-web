@@ -138,10 +138,22 @@ const proyectos = defineCollection({
             tensiones: z.array(z.object({ titulo: z.string(), cuerpo: z.string() })).length(2),
           }),
           fotos: z.object({
-            portada: z.object({ archivo: image(), alt: z.string().min(20) }),
+            /* `vertical`: la misma portada vista en un móvil. Si está, es la
+               que se enseña en tablet y móvil, y la horizontal solo desde
+               1024 (23/10/2026). El `alt` sirve para las dos. */
+            portada: z.object({ archivo: image(), vertical: image().optional(), alt: z.string().min(20) }),
             par: z.array(z.object({ archivo: image(), alt: z.string().min(20) })).length(2),
             cierre: z.object({ archivo: image(), alt: z.string().min(20) }).optional(),
+            /* Composición del Archivo (Figma 2211:2, recuperada el 23/10/2026).
+               La foto del hero es ambiente: va con alt="" porque el titular
+               está encima y no añade información. */
+            hero: image().optional(),
+            /* Dos capturas de la web del cliente, mismo tamaño, 12:5. */
+            capturas: z.array(z.object({ archivo: image(), alt: z.string().min(20) })).length(2).optional(),
           }),
+          /* La banda de color detrás de la foto del equipo. Solo lleva la
+             foto encima, ni texto ni controles: no entra en 1.4.3 ni 1.4.11. */
+          bandaEquipo: z.string().regex(/^#[0-9a-f]{6}$/i).optional(),
           /* Medido sobre la web publicada, con fecha. Si cambia la web, se
              vuelve a medir antes de tocar el texto (decisión del 30/08). */
           accesibilidad: z.object({
@@ -151,6 +163,19 @@ const proyectos = defineCollection({
           }),
           /* El titular del cierre de Contacto en esta página. */
           cierre: z.string().optional(),
+          /* La voz del cliente (Figma `Bloque · Testimonio`, 23/10/2026), entre
+             la foto del equipo y la accesibilidad. Literal y con su permiso:
+             no se redacta ni se retoca. La cita va con sus comillas « ».
+             `lang` solo si la cita no está en el idioma de la página (WCAG
+             3.1.2), p. ej. 'ca' si Cesal la da en valenciano. */
+          testimonio: z
+            .object({
+              cita: z.string().regex(/^«[\s\S]+»$/, 'La cita va entre « ».'),
+              nombre: z.string(),
+              cargo: z.string(),
+              lang: z.string().optional(),
+            })
+            .optional(),
         })
         .optional(),
     })

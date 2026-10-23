@@ -1,23 +1,28 @@
 ---
 /* ---------------------------------------------------------------------------
-   Caso de un proyecto · Figma `Producción · Caso Foc i Cor`: Desktop 3344:658
-   · Tablet 3344:921 · Móvil 3344:1153 (11/10/2026).
+   Caso de un proyecto · Figma `Archivo · Caso Foc i Cor`: Desktop 2211:2 ·
+   Tablet 2444:231 · Móvil 2444:513. Recuperado el 23/10/2026 por decisión de
+   Johnny: la composición es la de ese marco, no la de `Producción · Caso Foc
+   i Cor` (3344:658), que queda como referencia.
 
-   El sistema de la Home con una excepción: la banda del hero lleva el color
-   del proyecto en vez del menta. La identidad la pone el proyecto (su paleta
-   en src/content/proyectos/), no la página; el build ya ha comprobado que el
-   texto y el foco rinden encima.
+   Lo que NO viene del Archivo, también decidido el 23/10:
+   · Cabecera, CTA, pie y márgenes: los del sitio (24 al borde, 09/10).
+   · Hero: el común (HeroPagina), con la foto debajo y el texto abajo a 24
+     del borde (regla del 13/10), no centrado como en el Archivo.
+   · Tipografía: un solo titular grande, el h1 (regla del 08/10). Los h2 de
+     sección y la cita del testimonio, a tamaño de texto.
+   · Textos: los revisados el 11/10, no los del marco.
+   · Accesibilidad: el bloque corto de cuatro puntos y el enlace a la
+     declaración (decisión del 30/08), con el aspecto del Archivo. Sin tabla.
 
-   Orden de la plantilla de casos (claude/plantilla-casos-de-estudio-web-v2.md):
-   portada, ficha, cifras, el reto, decisiones y, al final y corta, la
-   accesibilidad. «Menos»: sin tabla WCAG en el caso; la tabla vive en la
-   declaración del cliente, que es su sitio (decisión del 30/08).
+   Orden: hero con foto · ficha · entradilla · la portada sobre el color del
+   proyecto · dos capturas · el reto · dos fotos · decisiones · el equipo
+   sobre la banda de marca · testimonio · accesibilidad.
    --------------------------------------------------------------------------- */
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
-import Bloque from '../../components/Bloque.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
 import { fechaLarga } from '../../data/blog';
@@ -31,6 +36,27 @@ const { p } = Astro.props as { p: CollectionEntry<'proyectos'> };
 const d = p.data;
 const c = d.caso!;
 const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
+
+/* Los anchos que se generan, sin pasar del original: ampliar no añade
+   detalle, solo peso. */
+const anchos = (max: number, lista: number[]) => lista.filter((w) => w <= max).concat(lista.some((w) => w > max) ? [max] : []);
+/* La portada cambia de imagen según la pantalla: la horizontal desde 1024
+   y la vertical por debajo. <Picture> de Astro no hace dirección de arte,
+   así que los <source> se escriben a mano con getImage. Cada <source> lleva
+   su width y height: así el navegador reserva el hueco con la proporción
+   de la imagen que va a pintar y no hay salto al cargar. */
+const portada = c.fotos.portada;
+const fuentes = async (img: ImageMetadata, lista: number[]) => {
+  const ws = anchos(img.width, lista);
+  const de = async (format: 'avif' | 'webp') => (await Promise.all(ws.map(async (w) =>
+    `${(await getImage({ src: img, width: w, format, quality: 'high' })).src} ${w}w`))).join(', ');
+  return { avif: await de('avif'), webp: await de('webp'), w: img.width, h: img.height };
+};
+const portadaH = await fuentes(portada.archivo, [480, 860, 1440]);
+const portadaV = portada.vertical ? await fuentes(portada.vertical, [320, 480, 640]) : null;
+const portadaFallback = await getImage({ src: portada.vertical ?? portada.archivo, width: Math.min(640, (portada.vertical ?? portada.archivo).width), format: 'jpg', quality: 'high' });
+
+const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? d.paleta.acento};`;
 ---
 
 <Base
@@ -40,75 +66,113 @@ const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
   description={d.resumen}
   ctaTitulo={c.cierre}
 >
-  <HeroPagina
-    volver={{ href: '/proyectos/', texto: 'Proyectos' }}
-    titulo={c.titular}
-    texto={[c.entradilla]}
-    superficie={{ fondo: d.paleta.acento, foco: d.paleta.anilloFoco }}
-  />
-
-  <div class="caso">
-    <Picture
-      src={c.fotos.portada.archivo}
-      alt={c.fotos.portada.alt}
-      formats={['avif', 'webp']}
-      widths={[480, 960, 1440]}
-      sizes="(min-width: 1440px) 1392px, calc(100vw - 48px)"
-      class="caso__foto caso__foto--portada"
+  <div class="caso" style={fondo}>
+    {/* Hero común (HeroPagina): pantalla entera, texto abajo a 24 del borde
+        (13/10). Con la foto del proyecto si la hay; si no, su color. */}
+    <HeroPagina
+      titulo={c.titular}
+      texto={['Caso de estudio']}
+      foto={c.fotos.hero}
+      superficie={c.fotos.hero ? undefined : { fondo: d.paleta.acento, foco: d.paleta.anilloFoco }}
     />
 
-    <Bloque id="ficha" titulo="Ficha">
-      <dl class="filas">
-        <div class="fila"><dt>Cliente</dt><dd>{d.cliente}</dd></div>
-        <div class="fila"><dt>Año</dt><dd>{c.anio}</dd></div>
-        <div class="fila"><dt>Qué hicimos</dt><dd>{c.queHicimos}</dd></div>
-        <div class="fila"><dt>Accesibilidad</dt><dd>{c.conformidad}</dd></div>
-        {d.web && dominio && (
-          <div class="fila fila--enlace"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>
-        )}
+    {/* Ficha en franja. El <h2> no está en el Figma: es invisible y solo
+        sirve para saltar a la ficha por encabezados. */}
+    <section class="ficha" aria-labelledby="ficha">
+      <h2 id="ficha" class="sr-only">Ficha</h2>
+      <dl class="ficha__datos">
+        <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>
+        <div><dt>Año</dt><dd>{c.anio}</dd></div>
+        <div><dt>Qué hicimos</dt><dd>{c.queHicimos}</dd></div>
+        <div><dt>Accesibilidad</dt><dd>{c.conformidad}</dd></div>
+        {d.web && dominio && <div class="ficha__web"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
       </dl>
-    </Bloque>
+    </section>
 
-    <Bloque id="cifras" titulo="En cifras">
-      <dl class="filas">
-        {d.cifras!.map((x) => <div class="fila"><dt>{x.valor}</dt><dd>{x.descripcion}</dd></div>)}
-      </dl>
-    </Bloque>
+    <p class="entradilla">{c.entradilla}</p>
 
-    <Bloque id="reto" titulo="El reto">
-      <div class="pila">
-        <p>{c.reto.intro}</p>
+    <div class:list={['banda', portadaV && 'banda--vertical']}>
+      {portadaV ? (
+        <picture>
+          <source media="(min-width: 1024px)" type="image/avif" srcset={portadaH.avif} sizes="62vw" width={portadaH.w} height={portadaH.h} />
+          <source media="(min-width: 1024px)" type="image/webp" srcset={portadaH.webp} sizes="62vw" width={portadaH.w} height={portadaH.h} />
+          <source type="image/avif" srcset={portadaV.avif} sizes="(min-width: 768px) 360px, calc(100vw - 48px)" width={portadaV.w} height={portadaV.h} />
+          <source type="image/webp" srcset={portadaV.webp} sizes="(min-width: 768px) 360px, calc(100vw - 48px)" width={portadaV.w} height={portadaV.h} />
+          <img src={portadaFallback.src} width={portadaV.w} height={portadaV.h} alt={portada.alt} class="foto foto--portada" loading="lazy" decoding="async" />
+        </picture>
+      ) : (
+        <Picture
+          src={portada.archivo}
+          alt={portada.alt}
+          formats={['avif', 'webp']} quality="high"
+          widths={anchos(portada.archivo.width, [480, 860, 1440, 1720])}
+          sizes="(min-width: 1024px) 62vw, (min-width: 768px) 68vw, calc(100vw - 48px)"
+          class="foto foto--portada"
+          loading="lazy"
+        />
+      )}
+    </div>
+
+    {c.fotos.capturas && (
+      <div class="par par--capturas">
+        {c.fotos.capturas.map((f) => (
+          <Picture src={f.archivo} alt={f.alt} formats={['avif', 'webp']} quality="high" widths={anchos(f.archivo.width, [480, 720, 1024, 1440, 2048])} sizes="(min-width: 1024px) 50vw, calc(100vw - 48px)" class="foto foto--captura" loading="lazy" />
+        ))}
+      </div>
+    )}
+
+    <section class="seccion" aria-labelledby="reto">
+      <h2 id="reto" class="titular">El reto</h2>
+      <p class="intro">{c.reto.intro}</p>
+      <div class="tensiones">
         {c.reto.tensiones.map((t) => (
-          <div class="punto">
+          <div class="tension">
             <h3>{t.titulo}</h3>
             <p>{t.cuerpo}</p>
           </div>
         ))}
       </div>
-    </Bloque>
+    </section>
 
-    <div class="par">
+    <div class="par par--fotos">
       {c.fotos.par.map((f) => (
-        <Picture src={f.archivo} alt={f.alt} formats={['avif', 'webp']} widths={[400, 700, 900]} sizes="(min-width: 768px) 50vw, 100vw" class="caso__foto caso__foto--cuadrada" loading="lazy" />
+        <Picture src={f.archivo} alt={f.alt} formats={['avif', 'webp']} quality="high" widths={anchos(f.archivo.width, [400, 700, 900])} sizes="(min-width: 768px) 50vw, calc(100vw - 48px)" class="foto foto--par" loading="lazy" />
       ))}
     </div>
 
-    <Bloque id="decisiones" titulo="Decisiones de diseño">
-      <div class="pila">
+    <section class="seccion seccion--decisiones" aria-labelledby="decisiones">
+      <h2 id="decisiones" class="titular titular--filete">Decisiones de diseño</h2>
+      <ol class="decisiones">
         {d.decisiones!.map((x) => (
-          <div class="punto">
+          <li class="decision">
             <h3>{x.titulo}</h3>
             <p>{x.cuerpo}</p>
-          </div>
+          </li>
         ))}
-      </div>
-    </Bloque>
+      </ol>
+    </section>
 
     {c.fotos.cierre && (
-      <Picture src={c.fotos.cierre.archivo} alt={c.fotos.cierre.alt} formats={['avif', 'webp']} widths={[480, 960, 1440]} sizes="(min-width: 1440px) 1392px, calc(100vw - 48px)" class="caso__foto caso__foto--ancha" loading="lazy" />
+      <div class="banda-equipo">
+        <Picture src={c.fotos.cierre.archivo} alt={c.fotos.cierre.alt} formats={['avif', 'webp']} quality="high" widths={anchos(c.fotos.cierre.archivo.width, [480, 1060, 1440, 2120])} sizes="(min-width: 1440px) 1060px, (min-width: 1024px) 74vw, calc(100vw - 48px)" class="foto foto--equipo" loading="lazy" />
+      </div>
     )}
 
-    <Bloque id="accesibilidad" titulo="Accesibilidad">
+    {c.testimonio && (
+      <section class="seccion" aria-labelledby="testimonio">
+        <h2 id="testimonio">Testimonio</h2>
+        <figure class="testimonio">
+          <blockquote lang={c.testimonio.lang}><p>{c.testimonio.cita}</p></blockquote>
+          <figcaption>
+            <span>{c.testimonio.nombre}</span>
+            <span>{c.testimonio.cargo}</span>
+          </figcaption>
+        </figure>
+      </section>
+    )}
+
+    <section class="seccion" aria-labelledby="accesibilidad">
+      <h2 id="accesibilidad" class="titular">Accesibilidad</h2>
       <div class="pila">
         <p>Medido sobre la web publicada el {fechaLarga(c.accesibilidad.medidoEl)}.</p>
         <ul class="filas">
@@ -118,43 +182,125 @@ const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
           <CtaLink href={c.accesibilidad.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
         )}
       </div>
-    </Bloque>
+    </section>
   </div>
 </Base>
 
 <style>
-  /* Sin el padding-top del ritmo en el primer elemento: lo pone el gap, que
-     ya es el ritmo de sección (128). */
-  .caso { display: flex; flex-direction: column; gap: var(--ritmo-seccion); padding: var(--ritmo-seccion) var(--gutter-page) 0; }
-  .caso :global(.caso__foto) { display: block; width: 100%; height: auto; border-radius: var(--radio); object-fit: cover; }
-  .caso :global(.caso__foto--portada) { aspect-ratio: 16 / 10; }
-  .caso :global(.caso__foto--ancha) { aspect-ratio: 12 / 5; }
-  .caso :global(.caso__foto--cuadrada) { aspect-ratio: 1; }
+  p, h2, h3, dl, dd, ul, ol, figure, blockquote { margin: 0; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
 
-  .par { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
-  @media (min-width: 768px) { .par { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-  p, h3, dl, dd, ul { margin: 0; }
-  h3 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  .pila { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 888px; }
-  .pila > :not(a) { align-self: stretch; }
-  .punto { display: flex; flex-direction: column; gap: var(--space-8); }
-
-  /* Filas con filete, como en las legales y en Estudio. */
-  .filas { padding: 0; list-style: none; max-width: 888px; }
-  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
-  .fila:last-child { border-block-end: 1px solid var(--rule); }
-  dl .fila { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: var(--space-4); }
+  /* ---- Ficha en franja ---- */
+  .ficha { padding: var(--space-48) var(--gutter-page); }
+  .ficha__datos { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .ficha__datos > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  /* El enlace mide 44 de alto: se come el aire de su fila, no la estira. */
+  .ficha__web dd { margin-block: calc(var(--aire-control) * -1); }
   @media (min-width: 768px) {
-    dl .fila { grid-template-columns: 240px minmax(0, 1fr); column-gap: var(--space-24); }
+    .ficha__datos { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); }
   }
   @media (min-width: 1024px) {
-    dl .fila { grid-template-columns: 296px minmax(0, 1fr); }
+    /* Las proporciones del Figma de escritorio: 315 · 197 · 422 · 315 · el resto. */
+    .ficha__datos { grid-template-columns: 315fr 197fr 422fr 315fr minmax(max-content, 95fr); }
   }
-  /* La fila del enlace: el enlace mide 44 y la fila no crece por ello. */
-  .fila--enlace { padding-block: calc(var(--space-16) - var(--aire-control)); align-items: center; }
 
-  /* La cabecera va sobre el color del proyecto: su anillo de foco, el del
-     proyecto (que el build ha medido contra ese color). */
-  :global(.header) { --focus-ring: var(--text); }
+  /* ---- Entradilla ---- en una columna de 850, centrada. Con aire arriba y
+     abajo en escritorio; en tablet y móvil, el que dan sus vecinos. */
+  .entradilla { max-width: 850px; margin-inline: auto; padding-inline: var(--gutter-page); box-sizing: content-box; }
+  @media (min-width: 1024px) { .entradilla { padding-block: calc(var(--space-96) * 2); } }
+
+  /* ---- Fotos ---- */
+  .caso :global(.foto) { display: block; width: 100%; height: auto; object-fit: cover; border-radius: var(--radio); }
+
+  /* La portada de la web, sobre el color del proyecto. 62 % del ancho en
+     escritorio (860 de 1392) y 68 % en tablet; en móvil la ocupa entera. */
+  .banda {
+    display: grid;
+    place-items: center;
+    margin: var(--space-24) var(--gutter-page) 0;
+    background: var(--acento);
+  }
+  /* La portada, en su proporción (la captura de Johnny, 1440 × 748). */
+  /* El ancho va en el <picture>, que es lo que coloca la rejilla; la
+     imagen ocupa su <picture> entero. */
+  .banda :global(picture) { width: 100%; }
+  @media (min-width: 768px) {
+    .banda { aspect-ratio: 16 / 9; }
+    .banda :global(picture) { width: 68%; }
+    /* Con la portada vertical, en tablet la banda crece con ella: 64 de
+       aire arriba y abajo y la captura a 360, el ancho de un móvil grande. */
+    .banda--vertical { aspect-ratio: auto; padding-block: var(--space-64); }
+    .banda--vertical :global(picture) { width: 360px; }
+  }
+  @media (min-width: 1024px) {
+    .banda { aspect-ratio: 1392 / 690; }
+    .banda :global(picture) { width: 62%; }
+  }
+
+  /* Pares: dos del mismo tamaño. Las capturas, 12:5; las fotos, cuadradas
+     hasta tablet y 684 × 440 en escritorio. */
+  .par { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); padding: var(--space-24) var(--gutter-page); }
+  .par--capturas { padding-block: var(--space-48); }
+  .par :global(.foto--captura) { aspect-ratio: 12 / 5; }
+  .par :global(.foto--par) { aspect-ratio: 1; }
+  @media (min-width: 768px) { .par--fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) {
+    .par--capturas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .par :global(.foto--par) { aspect-ratio: 684 / 440; }
+  }
+
+  /* ---- Secciones de texto ---- 96 arriba y abajo (64 en móvil). */
+  .seccion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  @media (min-width: 768px) { .seccion { padding-block: var(--space-96); } }
+  .intro { max-width: 672px; }
+  h3 + p { margin: 0; }
+
+  /* El reto: dos tensiones, cada una bajo un filete de Ink. */
+  .tensiones { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48); }
+  .tension { display: flex; flex-direction: column; gap: var(--space-48); padding-block-start: 20px; border-block-start: 1px solid var(--text); }
+  @media (min-width: 1024px) { .tensiones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24); } }
+
+  /* Decisiones: el titular con su filete debajo y tres columnas numeradas. */
+  .titular--filete { padding-block-end: var(--space-24); border-block-end: 1px solid var(--text); }
+  .seccion--decisiones { gap: var(--space-24); }
+  .decisiones {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 0;
+    list-style: decimal inside;
+  }
+  @media (min-width: 768px) { .decisiones { gap: var(--space-48); } }
+  @media (min-width: 1024px) { .decisiones { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-24); } }
+  .decision h3 { display: inline; }
+  .decision p { margin-block-start: var(--space-48); }
+
+  /* El equipo sobre la banda de marca, de borde a borde. */
+  .banda-equipo { display: grid; place-items: center; padding: var(--space-24) var(--gutter-page); background: var(--banda-equipo); }
+  .banda-equipo :global(picture) { width: 100%; }
+  .banda-equipo :global(.foto--equipo) { aspect-ratio: 9 / 7; }
+  @media (min-width: 768px) { .banda-equipo :global(.foto--equipo) { aspect-ratio: 12 / 5; } }
+  @media (min-width: 1024px) {
+    .banda-equipo { padding-block: 85px; }
+    .banda-equipo :global(picture) { max-width: 1060px; }
+    .banda-equipo :global(.foto--equipo) { aspect-ratio: 1060 / 550; }
+  }
+
+  /* Testimonio: cita y firma, las dos a tamaño de texto (regla del 08/10:
+     un solo titular grande por página, el h1). */
+  .testimonio { display: flex; flex-direction: column; gap: var(--space-32); }
+  .testimonio figcaption span { display: block; }
+
+  /* Accesibilidad: corta, con filetes, como en las legales y en Estudio. */
+  .pila { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 888px; }
+  .pila > :not(a) { align-self: stretch; }
+  .filas { padding: 0; list-style: none; }
+  .fila { padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }
+  .fila:last-child { border-block-end: 1px solid var(--rule); }
 </style>

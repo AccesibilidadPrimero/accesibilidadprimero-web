@@ -205,7 +205,11 @@ console.log('\n── Un color: todo en negro ──\n');
          color calculado del propio campo en vez de contra una lista de hex, así
          que añadir un cuarto proyecto no obliga a tocar esta comprobación. */
       const campo = el.closest('.slider');
-      const toca = campo ? getComputedStyle(campo).color
+      /* Sobre la foto de un hero (casos, 23/10/2026) el negro no se lee: el
+         texto va en Silk, y la cabecera mientras está encima. Única excepción. */
+      const conFoto = document.querySelector('.apertura--foto');
+      const sobreFoto = el.closest('.apertura--foto') || (conFoto && el.closest('.header') && !el.closest('.menu__panel'));
+      const toca = sobreFoto ? 'rgb(247, 247, 244)' : campo ? getComputedStyle(campo).color
         : (enGris.length && el.closest(enGris.join(','))) ? GRIS : NEGRO;
       const color = getComputedStyle(el).color;
       if (color !== toca) fuera.push({ color, toca, texto: propio.slice(0, 36),
@@ -302,7 +306,10 @@ for (const ancho of [390, 768, 1440]) {
           ? '.' + el.className.trim().split(/\s+/)[0] : '');
         if (!permitidos.some((v) => Math.abs(px - v) <= 0.5)) mal.push(`${px} px · ${donde} · ${propio.slice(0, 30)}`);
         if (cs.fontWeight !== '400') mal.push(`peso ${cs.fontWeight} · ${donde}`);
-        const toca = el.closest('.boton') ? BLANCO : NEGRO;
+        /* La excepción de Silk sobre la foto del hero: ver arriba (23/10). */
+        const conFoto = document.querySelector('.apertura--foto');
+        const sobreFoto = el.closest('.apertura--foto') || (conFoto && el.closest('.header') && !el.closest('.menu__panel'));
+        const toca = sobreFoto ? 'rgb(247, 247, 244)' : el.closest('.boton') ? BLANCO : NEGRO;
         if (cs.color !== toca) mal.push(`color ${cs.color} · ${donde} · ${propio.slice(0, 30)}`);
       }
       return { mal, titular, errores: document.querySelectorAll('.campo__error:not([hidden])').length };
