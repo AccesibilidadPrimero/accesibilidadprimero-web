@@ -48,6 +48,7 @@ const RUTAS = [
   { nombre: 'Proyectos', url: '/proyectos/', minimo: 10 },
   { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', minimo: 4 },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', minimo: 40 },
+  { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', minimo: 30 },
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },
   { nombre: 'Blog · WCAG', url: '/blog/pero-que-es-la-wcag/', minimo: 60 },

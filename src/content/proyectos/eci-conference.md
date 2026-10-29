@@ -24,7 +24,8 @@ nota:
   valor: 87
   medidaEl: 2026-10-06
   declaracion: https://eciconference2027.com/accessibility/
-casoPublicado: false
+# Caso con maqueta propia: src/pages/proyectos/eci-conference.astro (29/10/2026).
+casoPublicado: true
 imagenes:
   - archivo: eci-1
     alt: >-

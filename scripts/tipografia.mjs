@@ -267,6 +267,7 @@ const INTERIORES = [
   { nombre: 'Proyectos', url: '/proyectos/', conErrores: false, sinTitular: true },
   { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', conErrores: false, sinTitular: true },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', conErrores: false },
+  { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', conErrores: false },
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
   { nombre: 'Blog · artículo con tablas', url: '/blog/pero-que-es-la-wcag/', conErrores: false },
@@ -309,7 +310,11 @@ for (const ancho of [390, 768, 1440]) {
         /* La excepción de Silk sobre la foto del hero: ver arriba (23/10). */
         const conFoto = document.querySelector('.apertura--foto');
         const sobreFoto = el.closest('.apertura--foto') || (conFoto && el.closest('.header') && !el.closest('.menu__panel'));
-        const toca = sobreFoto ? 'rgb(247, 247, 244)' : el.closest('.boton') ? BLANCO : NEGRO;
+        /* Dentro de una banda del color del proyecto (`data-campo-color`,
+           casos, 29/10/2026) manda el color que la banda declara, como en el
+           slider de la Home: la ficha valida en build que ese texto rinde. */
+        const campo = el.closest('[data-campo-color]');
+        const toca = sobreFoto ? 'rgb(247, 247, 244)' : campo ? getComputedStyle(campo).color : el.closest('.boton') ? BLANCO : NEGRO;
         if (cs.color !== toca) mal.push(`color ${cs.color} · ${donde} · ${propio.slice(0, 30)}`);
       }
       return { mal, titular, errores: document.querySelectorAll('.campo__error:not([hidden])').length };
