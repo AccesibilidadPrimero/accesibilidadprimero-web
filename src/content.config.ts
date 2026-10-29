@@ -110,6 +110,11 @@ const proyectos = defineCollection({
       /* Un caso se publica cuando tiene su página escrita. Mientras tanto el
          proyecto puede aparecer en la Home y en la rejilla sin ella. */
       casoPublicado: z.boolean().default(false),
+      /* Caso con página propia en src/pages/proyectos/<id>.astro, no la
+         plantilla de [slug].astro (ECI, 29/10/2026: «una maqueta por
+         proyecto»). Su contenido vive en esa página, así que aquí no se le
+         piden `caso`, decisiones ni cifras. */
+      maquetaPropia: z.boolean().default(false),
       decisiones: z.array(decision).optional(),
       cifras: z.array(cifra).optional(),
       imagenAlt: z.string().optional(),
@@ -252,7 +257,7 @@ const proyectos = defineCollection({
         );
       }
 
-      if (!d.casoPublicado) return;
+      if (!d.casoPublicado || d.maquetaPropia) return;
 
       if (!d.caso) err('Un caso publicado necesita su bloque `caso` (titular, ficha, reto, fotos y accesibilidad).', ['caso']);
       /* De 3 a 5 desde el 11/10/2026 (Johnny): el caso de Foc i Cor se sostiene

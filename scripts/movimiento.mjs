@@ -17,7 +17,7 @@
    No recorre el resto de la web: el carrusel de la Home tiene su propia
    comprobación (teclado), y cualquier bucle nuevo se añade aquí. Desde el
    14/10/2026 mide también la entrada de las tarjetas de los listados, y
-   desde el 29/10/2026 la portada en vídeo de los casos.
+   desde el 29/10/2026 los vídeos de los casos.
    --------------------------------------------------------------------------- */
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
@@ -161,78 +161,83 @@ for (const url of ['/proyectos/', '/blog/']) {
   }
 }
 
-/* ---- Portada en vídeo de los casos (29/10/2026) ----
-   [slug].astro: un vídeo por tamaño, en bucle, con botón de Pausar. Se mide
-   sobre el archivo SERVIDO (AGENTS.md §2.9):
+/* ---- Vídeos de los casos (VideoPausable, 29/10/2026) ----
+   Cada vídeo de cada caso: un archivo por tamaño, en bucle, con el control
+   del slider de la Home. Se mide sobre el archivo SERVIDO (AGENTS.md §2.9):
    · con JS, en cada tamaño carga SU archivo, arranca solo al verse, y si
-     dura más de 5 s o va en bucle tiene control visible de 44 de alto;
-   · el control lo para de verdad y cambia su texto;
+     dura más de 5 s o va en bucle tiene control visible de 44 de alto, con
+     nombre propio («Pausar · …»);
+   · el control lo para de verdad, cambia su nombre y su icono;
    · con reducir movimiento no arranca ni descarga nada, y Reproducir lo
      arranca igual (reducir no es eliminar);
    · sin JS, la imagen fija con su alternativa y sin botón. */
-console.log('\n── Casos: portada en vídeo ──\n');
-const CASO = '/proyectos/foc-i-cor/';
+console.log('\n── Casos: vídeos ──\n');
+const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/'];
 const TAMANOS = [['escritorio', 1440, 900], ['tableta', 820, 1180], ['movil', 390, 844]];
-const portadaVideo = (p) => p.evaluate(() => {
-  const raiz = document.querySelector('[data-portada-video]');
+const estadoVideo = (p, i) => p.evaluate((i) => {
+  const raiz = document.querySelectorAll('[data-video-pausable]')[i];
   if (!raiz) return null;
   const v = raiz.querySelector('video');
-  const b = raiz.querySelector('[data-portada-control]');
+  const b = raiz.querySelector('[data-vp-control]');
   const img = raiz.querySelector('img');
   const r = b.getBoundingClientRect();
+  const clave = innerWidth >= 1024 ? 'videoEscritorio' : innerWidth >= 768 ? 'videoTableta' : 'videoMovil';
   return {
     src: v.getAttribute('src'), paused: v.paused, t: v.currentTime, loop: v.loop, duracion: v.duration,
     listo: v.classList.contains('is-listo'), oculto: v.getAttribute('aria-hidden') === 'true',
-    boton: getComputedStyle(b).display !== 'none' ? b.textContent.trim() : null, alto: r.height,
-    alt: img?.alt ?? '', esperado: raiz.dataset[{ escritorio: 'videoEscritorio', tableta: 'videoTableta', movil: 'videoMovil' }[
-      innerWidth >= 1024 ? 'escritorio' : innerWidth >= 768 ? 'tableta' : 'movil']],
+    visible: getComputedStyle(b).display !== 'none', nombre: b.textContent.replace(/\s+/g, ' ').trim(),
+    alto: r.height, parado: raiz.hasAttribute('data-parado'),
+    alt: img?.alt ?? '', esperado: raiz.dataset[clave],
   };
-});
-const alBloque = (p) => p.evaluate(() => document.querySelector('[data-portada-video]')?.scrollIntoView({ block: 'center' }));
-for (const [n, w, h] of TAMANOS) {
-  { // con JS
-    const ctx = await navegador.newContext({ viewport: { width: w, height: h } });
-    const p = await ctx.newPage();
-    await p.goto(`http://localhost:${PUERTO}${CASO}`, { waitUntil: 'load' });
-    const antes = await portadaVideo(p);
-    if (!antes) { anota(false, `${n} · hay portada en vídeo en ${CASO}`); await ctx.close(); continue; }
-    anota(!antes.src, `${n} · fuera de pantalla no descarga el vídeo`);
-    await alBloque(p);
-    await p.waitForFunction(() => document.querySelector('[data-portada-video] video')?.classList.contains('is-listo'), null, { timeout: 15000 }).catch(() => {});
-    await p.waitForTimeout(600);
-    const a = await portadaVideo(p);
-    anota(a.src === a.esperado, `${n} · carga su archivo (${a.src})`);
-    anota(!a.paused && a.t > 0 && a.listo, `${n} · arranca solo al verse (${a.t.toFixed(2)} s)`);
-    anota(a.oculto && a.alt.length >= 20, `${n} · el vídeo va oculto y la imagen lleva la alternativa`);
-    const necesita = a.loop || !(a.duracion <= 5);
-    anota(!necesita || (a.boton === 'Pausar' && a.alto >= 44),
-      `${n} · ${a.duracion.toFixed(2)} s${a.loop ? ', en bucle' : ''}: control «${a.boton}» de ${Math.round(a.alto)} px (2.2.2)`);
-    await p.click('[data-portada-control]');
-    const t1 = (await portadaVideo(p)).t; await p.waitForTimeout(500);
-    const b = await portadaVideo(p);
-    anota(b.paused && b.t === t1 && b.boton === 'Reproducir', `${n} · Pausar lo para y el botón dice Reproducir`);
-    await ctx.close();
-  }
-  { // reducir movimiento
-    const ctx = await navegador.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' });
-    const p = await ctx.newPage();
-    await p.goto(`http://localhost:${PUERTO}${CASO}`, { waitUntil: 'load' });
-    await alBloque(p); await p.waitForTimeout(1200);
-    const a = await portadaVideo(p);
-    anota(a && a.paused && !a.src && a.boton === 'Reproducir', `${n} · reducido · quieto, sin descargar y con «Reproducir»`);
-    await p.click('[data-portada-control]');
-    await p.waitForFunction(() => { const v = document.querySelector('[data-portada-video] video'); return v && !v.paused && v.currentTime > 0; }, null, { timeout: 15000 }).catch(() => {});
-    const b = await portadaVideo(p);
-    anota(!b.paused && b.boton === 'Pausar', `${n} · reducido · Reproducir lo arranca`);
-    await ctx.close();
-  }
-  { // sin JS
-    const ctx = await navegador.newContext({ viewport: { width: w, height: h }, javaScriptEnabled: false });
-    const p = await ctx.newPage();
-    await p.goto(`http://localhost:${PUERTO}${CASO}`, { waitUntil: 'load' });
-    const a = await portadaVideo(p);
-    anota(a && !a.src && a.boton === null && a.alt.length >= 20, `${n} · sin JS · imagen fija con alternativa y sin botón`);
-    await ctx.close();
+}, i);
+const alVideo = (p, i) => p.evaluate((i) => document.querySelectorAll('[data-video-pausable]')[i]?.scrollIntoView({ block: 'center' }), i);
+const cuantos = async (url) => { const p = await navegador.newPage(); await p.goto(`http://localhost:${PUERTO}${url}`, { waitUntil: 'load' }); const n = await p.evaluate(() => document.querySelectorAll('[data-video-pausable]').length); await p.close(); return n; };
+for (const caso of CASOS) {
+  const n = await cuantos(caso);
+  anota(n > 0, `${caso} · ${n} vídeo(s)`);
+  for (const [tam, w, h] of TAMANOS) {
+    for (let i = 0; i < n; i++) {
+      const id = `${caso} · ${tam} · vídeo ${i + 1}`;
+      { // con JS
+        const ctx = await navegador.newContext({ viewport: { width: w, height: h } });
+        const p = await ctx.newPage();
+        await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
+        await alVideo(p, i);
+        await p.waitForFunction((i) => document.querySelectorAll('[data-video-pausable] video')[i]?.classList.contains('is-listo'), i, { timeout: 20000 }).catch(() => {});
+        await p.waitForTimeout(500);
+        const a = await estadoVideo(p, i);
+        const necesita = a.loop || !(a.duracion <= 5);
+        const ok = a.src === a.esperado && !a.paused && a.t > 0 && a.listo && a.oculto && a.alt.length >= 20
+          && (!necesita || (a.visible && a.alto >= 44 && a.nombre.startsWith('Pausar · ') && !a.parado));
+        anota(ok, `${id} · ${a.src} · arranca solo (${a.t.toFixed(2)} s de ${a.duracion.toFixed(1)}) · control «${a.nombre}» de ${Math.round(a.alto)} px`);
+        const boton = p.locator('[data-vp-control]').nth(i);
+        await boton.click();
+        const t1 = (await estadoVideo(p, i)).t; await p.waitForTimeout(400);
+        const b = await estadoVideo(p, i);
+        anota(b.paused && b.t === t1 && b.nombre.startsWith('Reproducir · ') && b.parado, `${id} · Pausar lo para y pasa a «Reproducir»`);
+        await ctx.close();
+      }
+      { // reducir movimiento
+        const ctx = await navegador.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' });
+        const p = await ctx.newPage();
+        await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
+        await alVideo(p, i); await p.waitForTimeout(900);
+        const a = await estadoVideo(p, i);
+        await p.locator('[data-vp-control]').nth(i).click();
+        await p.waitForFunction((i) => { const v = document.querySelectorAll('[data-video-pausable] video')[i]; return v && !v.paused && v.currentTime > 0; }, i, { timeout: 20000 }).catch(() => {});
+        const b = await estadoVideo(p, i);
+        anota(a.paused && !a.src && a.parado && !b.paused && !b.parado, `${id} · reducido · quieto y sin descargar; Reproducir lo arranca`);
+        await ctx.close();
+      }
+    }
+    { // sin JS: todos de una vez
+      const ctx = await navegador.newContext({ viewport: { width: w, height: h }, javaScriptEnabled: false });
+      const p = await ctx.newPage();
+      await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
+      const todos = await Promise.all([...Array(n).keys()].map((i) => estadoVideo(p, i)));
+      anota(todos.every((a) => a && !a.src && !a.visible && a.alt.length >= 20), `${caso} · ${tam} · sin JS · imágenes fijas con alternativa y sin botón`);
+      await ctx.close();
+    }
   }
 }
 
