@@ -24,6 +24,7 @@ import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
+import { t } from '../../i18n/ui';
 
 export async function getStaticPaths() {
   return (await getCollection('proyectos'))
@@ -54,7 +55,16 @@ const portadaH = await fuentes(portada.archivo, [480, 860, 1440]);
 const portadaV = portada.vertical ? await fuentes(portada.vertical, [320, 480, 640]) : null;
 const portadaFallback = await getImage({ src: portada.vertical ?? portada.archivo, width: Math.min(640, (portada.vertical ?? portada.archivo).width), format: 'jpg', quality: 'high' });
 
-const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? d.paleta.acento};`;
+/* La portada en vídeo (29/10/2026): un archivo por tamaño, y su primer
+   fotograma como imagen fija con la misma dirección de arte que arriba. */
+const pv = portada.video;
+const posterE = pv ? await fuentes(pv.escritorio.poster, [480, 860, 1440, 1920]) : null;
+const posterT = pv ? await fuentes(pv.tableta.poster, [360, 720]) : null;
+const posterM = pv ? await fuentes(pv.movil.poster, [280, 560, 780]) : null;
+const posterFallback = pv ? await getImage({ src: pv.movil.poster, width: 560, format: 'jpg', quality: 'high' }) : null;
+const ui = t(DEFAULT_LANG);
+
+const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`;
 ---
 
 <Base
@@ -90,8 +100,44 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 
     <p class="entradilla">{c.entradilla}</p>
 
-    <div class:list={['banda', portadaV && 'banda--vertical']}>
-      {portadaV ? (
+    <div class:list={['banda', (portadaV || pv) && 'banda--vertical', pv && 'banda--video']}>
+      {pv && posterE && posterT && posterM && posterFallback ? (
+        /* La portada en vídeo. La imagen fija va debajo y es la que lleva
+           el texto alternativo: sin JS, con «reducir movimiento» o mientras
+           carga, es lo que se ve. El vídeo se pone encima cuando ya está
+           reproduciendo.
+
+           `aria-hidden` en el <video> (AGENTS.md §1, ARIA justificada): es
+           la misma imagen en movimiento y su descripción ya la da el `alt`
+           de debajo. Sin él, un lector de pantalla encontraría un vídeo sin
+           nombre al lado de una imagen que dice lo mismo.
+
+           2.2.2: los tres vídeos duran más de 5 s y van en bucle, así que
+           llevan botón de Pausar (Johnny, 29/10/2026). No está en el
+           Figma; lo pide la regla de la casa, no el diseño. Con «reducir
+           movimiento» no arranca solo y el botón dice Reproducir: reducir
+           no es eliminar (AGENTS.md §2.3). `npm run movimiento` lo mide
+           sobre los archivos servidos, no sobre este comentario (§2.9). */
+        <div class="portada" data-portada-video
+             data-video-escritorio={pv.escritorio.archivo}
+             data-video-tableta={pv.tableta.archivo}
+             data-video-movil={pv.movil.archivo}>
+          <div class="portada__marco">
+            <picture>
+              <source media="(min-width: 1024px)" type="image/avif" srcset={posterE.avif} sizes="62vw" width={posterE.w} height={posterE.h} />
+              <source media="(min-width: 1024px)" type="image/webp" srcset={posterE.webp} sizes="62vw" width={posterE.w} height={posterE.h} />
+              <source media="(min-width: 768px)" type="image/avif" srcset={posterT.avif} sizes="360px" width={posterT.w} height={posterT.h} />
+              <source media="(min-width: 768px)" type="image/webp" srcset={posterT.webp} sizes="360px" width={posterT.w} height={posterT.h} />
+              <source type="image/avif" srcset={posterM.avif} sizes="280px" width={posterM.w} height={posterM.h} />
+              <source type="image/webp" srcset={posterM.webp} sizes="280px" width={posterM.w} height={posterM.h} />
+              <img src={posterFallback.src} width={posterM.w} height={posterM.h} alt={pv.alt} class="foto foto--portada" loading="lazy" decoding="async" />
+            </picture>
+            <video class="portada__video" aria-hidden="true" muted loop playsinline preload="none"></video>
+          </div>
+          <button type="button" class="portada__control" data-portada-control
+                  data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>{ui.carouselPause}</button>
+        </div>
+      ) : portadaV ? (
         <picture>
           <source media="(min-width: 1024px)" type="image/avif" srcset={portadaH.avif} sizes="62vw" width={portadaH.w} height={portadaH.h} />
           <source media="(min-width: 1024px)" type="image/webp" srcset={portadaH.webp} sizes="62vw" width={portadaH.w} height={portadaH.h} />
@@ -180,6 +226,53 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
   </div>
 </Base>
 
+<script>
+  /* La portada en vídeo. Elige el archivo por el ancho, lo carga solo cuando
+     el bloque se ve, y reproduce si se ve Y la persona no lo ha parado.
+     Con «reducir movimiento» empieza parado; Reproducir lo arranca igual. */
+  document.querySelectorAll<HTMLElement>('[data-portada-video]').forEach((raiz) => {
+    const video = raiz.querySelector<HTMLVideoElement>('video');
+    const control = raiz.querySelector<HTMLButtonElement>('[data-portada-control]');
+    if (!video || !control) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const escritorio = window.matchMedia('(min-width: 1024px)');
+    const tableta = window.matchMedia('(min-width: 768px)');
+    const pausar = control.dataset.labelPausar ?? 'Pausar';
+    const reproducir = control.dataset.labelReproducir ?? 'Reproducir';
+    let quiere = !reduce.matches;
+    let visible = false;
+
+    const archivo = () => (escritorio.matches ? raiz.dataset.videoEscritorio
+      : tableta.matches ? raiz.dataset.videoTableta : raiz.dataset.videoMovil) ?? '';
+
+    const sincronizar = () => {
+      control.textContent = quiere ? pausar : reproducir;
+      if (!visible || !quiere) { video.pause(); return; }
+      const src = archivo();
+      if (video.getAttribute('src') !== src) {
+        video.classList.remove('is-listo');
+        video.src = src;
+      }
+      // Si el navegador se niega (ahorro de energía), el botón dice la verdad.
+      video.play().catch(() => { quiere = false; control.textContent = reproducir; });
+    };
+
+    video.addEventListener('playing', () => video.classList.add('is-listo'));
+    control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
+    reduce.addEventListener('change', () => { if (reduce.matches) quiere = false; sincronizar(); });
+    // Al cambiar de tamaño se vuelve a la imagen fija hasta que el otro vídeo arranque.
+    [escritorio, tableta].forEach((m) => m.addEventListener('change', () => {
+      if (video.getAttribute('src') !== archivo()) { video.classList.remove('is-listo'); video.pause(); video.removeAttribute('src'); video.load(); }
+      sincronizar();
+    }));
+    new IntersectionObserver(
+      (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),
+      { threshold: 0.3 },
+    ).observe(raiz);
+    sincronizar();
+  });
+</script>
+
 <style>
   p, h2, h3, dl, dd, ul, ol, figure, blockquote { margin: 0; }
   h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
@@ -231,6 +324,51 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
     .banda { aspect-ratio: 1392 / 690; }
     .banda :global(picture) { width: 62%; }
   }
+
+  /* La portada en vídeo (29/10/2026). El ancho lo lleva .portada y la
+     imagen y el vídeo ocupan su marco entero: 280 en móvil (sin pasar del
+     ancho disponible a 320), 360 en tablet y el 62 % en escritorio, como
+     las imágenes. El botón, debajo y a la derecha. */
+  .banda--video { padding-block: var(--space-48); }
+  .portada {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-8);
+    width: min(280px, 100%);
+  }
+  .portada__marco { position: relative; width: 100%; }
+  .banda .portada :global(picture) { display: block; width: 100%; }
+  .portada__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radio);
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+  .portada__video.is-listo { opacity: 1; }
+  /* Un control suelto: sin subrayado en reposo y con él al pasar, como la
+     navegación (09/10). 44 de alto (objetivo táctil de AP); el margen
+     negativo deja el texto alineado con el borde del vídeo. */
+  .portada__control {
+    min-height: 44px;
+    padding-inline: var(--space-8);
+    margin-inline-end: calc(-1 * var(--space-8));
+    background: none;
+    border: 0;
+    color: var(--texto-acento);
+    cursor: pointer;
+    text-decoration-thickness: var(--underline-hover);
+    text-underline-offset: var(--underline-offset);
+    --focus-ring: var(--anillo-acento);
+  }
+  .portada__control:hover { text-decoration-line: underline; }
+  html:not(.js) .portada__control { display: none; }
+  @media (min-width: 768px) { .portada { width: 360px; } }
+  @media (min-width: 1024px) { .portada { width: 62%; } }
 
   /* Pares: dos del mismo tamaño. Las capturas, 12:5; las fotos, cuadradas
      hasta tablet y 684 × 440 en escritorio. */
