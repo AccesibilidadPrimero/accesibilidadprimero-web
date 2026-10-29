@@ -30,7 +30,7 @@ export async function getStaticPaths() {
   return (await getCollection('proyectos'))
     /* Solo los casos con la composición de esta plantilla (`caso`). Los que
        tienen maqueta propia (ECI, 29/10/2026) viven en su propia página. */
-    .filter((p) => p.data.casoPublicado && p.data.caso)
+    .filter((p) => p.data.casoPublicado && !p.data.maquetaPropia)
     .map((p) => ({ params: { slug: p.id }, props: { p } }));
 }
 const { p } = Astro.props as { p: CollectionEntry<'proyectos'> };

@@ -26,6 +26,7 @@ nota:
   declaracion: https://eciconference2027.com/accessibility/
 # Caso con maqueta propia: src/pages/proyectos/eci-conference.astro (29/10/2026).
 casoPublicado: true
+maquetaPropia: true
 imagenes:
   - archivo: eci-1
     alt: >-
