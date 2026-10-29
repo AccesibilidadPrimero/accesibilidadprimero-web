@@ -91,6 +91,24 @@ caso:
         La portada de focicor.es: una fotografía del embarcadero de la
         Albufera al atardecer con el lema «Cuina feta amb foc i Cor», el botón
         de reserva y, abajo, el horario y la dirección.
+      # La portada recorrida en vídeo (29/10/2026), un archivo por tamaño.
+      video:
+        escritorio:
+          archivo: /video/foc-i-cor/portada-escritorio.mp4
+          poster: ../../assets/proyectos/foc-i-cor/portada-video-escritorio.png
+        tableta:
+          archivo: /video/foc-i-cor/portada-tableta.mp4
+          poster: ../../assets/proyectos/foc-i-cor/portada-video-tableta.png
+        movil:
+          archivo: /video/foc-i-cor/portada-movil.mp4
+          poster: ../../assets/proyectos/foc-i-cor/portada-video-movil.png
+        alt: >-
+          Recorrido por la portada de focicor.es de arriba abajo: el
+          embarcadero de la Albufera con el lema «Cuina feta amb Foc i Cor»;
+          «Un restaurant per gaudir, un projecte per créixer» con sus tres
+          tarjetas; el restaurante con fotos del equipo en la cocina; el
+          proyecto de Cesal con sus cifras y sus financiadores; las noticias,
+          y el formulario de contacto.
     par:
       - archivo: ../../assets/proyectos/foc-i-cor/cocina.jpg
         alt: >-

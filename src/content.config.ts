@@ -145,7 +145,26 @@ const proyectos = defineCollection({
             /* `vertical`: la misma portada vista en un móvil. Si está, es la
                que se enseña en tablet y móvil, y la horizontal solo desde
                1024 (23/10/2026). El `alt` sirve para las dos. */
-            portada: z.object({ archivo: image(), vertical: image().optional(), alt: z.string().min(20) }),
+            portada: z.object({
+              archivo: image(),
+              vertical: image().optional(),
+              alt: z.string().min(20),
+              /* `video` (29/10/2026): la portada recorrida de arriba abajo,
+                 grabada a 60 fps en los tres tamaños. Si está, sustituye a
+                 las imágenes: escritorio desde 1024, tableta desde 768 y
+                 móvil por debajo. Cada vídeo trae su primer fotograma como
+                 `poster`, que es lo que se ve sin JS, con «reducir
+                 movimiento» y mientras carga. Los archivos van en
+                 public/video (URL fija, AGENTS.md §6). El `alt` describe el
+                 recorrido entero y lo lleva la imagen; el vídeo es la misma
+                 imagen en movimiento. */
+              video: z.object({
+                escritorio: z.object({ archivo: z.string().regex(/^\/video\/.+\.mp4$/), poster: image() }),
+                tableta: z.object({ archivo: z.string().regex(/^\/video\/.+\.mp4$/), poster: image() }),
+                movil: z.object({ archivo: z.string().regex(/^\/video\/.+\.mp4$/), poster: image() }),
+                alt: z.string().min(20),
+              }).optional(),
+            }),
             par: z.array(z.object({ archivo: image(), alt: z.string().min(20) })).length(2),
             cierre: z.object({ archivo: image(), alt: z.string().min(20) }).optional(),
             /* Composición del Archivo (Figma 2211:2, recuperada el 23/10/2026).
