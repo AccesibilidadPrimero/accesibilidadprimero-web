@@ -164,12 +164,11 @@ for (const url of ['/proyectos/', '/blog/']) {
 /* ---- Vídeos de los casos (VideoPausable, 29/10/2026) ----
    Cada vídeo de cada caso: un archivo por tamaño, en bucle, con el control
    del slider de la Home. Se mide sobre el archivo SERVIDO (AGENTS.md §2.9):
-   · con JS, en cada tamaño carga SU archivo, arranca solo al verse, y si
-     dura más de 5 s o va en bucle tiene control visible de 44 de alto, con
-     nombre propio («Pausar · …»);
-   · el control lo para de verdad, cambia su nombre y su icono;
-   · con reducir movimiento no arranca ni descarga nada, y Reproducir lo
-     arranca igual (reducir no es eliminar);
+   · empieza en pausa (Johnny, 29/10/2026), sin descargar nada, con el
+     control visible de 44 de alto y nombre propio («Reproducir · …»);
+   · Reproducir carga el archivo de SU tamaño y lo arranca; Pausar lo para
+     de verdad; nombre e icono cambian con el estado;
+   · igual con reducir movimiento;
    · sin JS, la imagen fija con su alternativa y sin botón. */
 console.log('\n── Casos: vídeos ──\n');
 const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/'];
@@ -198,35 +197,25 @@ for (const caso of CASOS) {
   for (const [tam, w, h] of TAMANOS) {
     for (let i = 0; i < n; i++) {
       const id = `${caso} · ${tam} · vídeo ${i + 1}`;
-      { // con JS
-        const ctx = await navegador.newContext({ viewport: { width: w, height: h } });
-        const p = await ctx.newPage();
-        await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
-        await alVideo(p, i);
-        await p.waitForFunction((i) => document.querySelectorAll('[data-video-pausable] video')[i]?.classList.contains('is-listo'), i, { timeout: 20000 }).catch(() => {});
-        await p.waitForTimeout(500);
-        const a = await estadoVideo(p, i);
-        const necesita = a.loop || !(a.duracion <= 5);
-        const ok = a.src === a.esperado && !a.paused && a.t > 0 && a.listo && a.oculto && a.alt.length >= 20
-          && (!necesita || (a.visible && a.alto >= 44 && a.nombre.startsWith('Pausar · ') && !a.parado));
-        anota(ok, `${id} · ${a.src} · arranca solo (${a.t.toFixed(2)} s de ${a.duracion.toFixed(1)}) · control «${a.nombre}» de ${Math.round(a.alto)} px`);
-        const boton = p.locator('[data-vp-control]').nth(i);
-        await boton.click();
-        const t1 = (await estadoVideo(p, i)).t; await p.waitForTimeout(400);
-        const b = await estadoVideo(p, i);
-        anota(b.paused && b.t === t1 && b.nombre.startsWith('Reproducir · ') && b.parado, `${id} · Pausar lo para y pasa a «Reproducir»`);
-        await ctx.close();
-      }
-      { // reducir movimiento
-        const ctx = await navegador.newContext({ viewport: { width: w, height: h }, reducedMotion: 'reduce' });
+      for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }]]) {
+        const ctx = await navegador.newContext({ viewport: { width: w, height: h }, ...opciones });
         const p = await ctx.newPage();
         await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
         await alVideo(p, i); await p.waitForTimeout(900);
+        // Empieza en pausa (Johnny, 29/10/2026): quieto, sin descargar nada y con el icono de reproducir.
         const a = await estadoVideo(p, i);
-        await p.locator('[data-vp-control]').nth(i).click();
-        await p.waitForFunction((i) => { const v = document.querySelectorAll('[data-video-pausable] video')[i]; return v && !v.paused && v.currentTime > 0; }, i, { timeout: 20000 }).catch(() => {});
+        anota(a.paused && !a.src && a.parado && a.visible && a.alto >= 44 && a.nombre.startsWith('Reproducir · ') && a.oculto && a.alt.length >= 20,
+          `${id} · ${modo} · empieza en pausa, sin descargar, con «${a.nombre}» de ${Math.round(a.alto)} px`);
+        const boton = p.locator('[data-vp-control]').nth(i);
+        await boton.click();
+        await p.waitForFunction((i) => { const v = document.querySelectorAll('[data-video-pausable] video')[i]; return v && !v.paused && v.currentTime > 0 && v.classList.contains('is-listo'); }, i, { timeout: 20000 }).catch(() => {});
         const b = await estadoVideo(p, i);
-        anota(a.paused && !a.src && a.parado && !b.paused && !b.parado, `${id} · reducido · quieto y sin descargar; Reproducir lo arranca`);
+        anota(b.src === b.esperado && !b.paused && !b.parado && b.nombre.startsWith('Pausar · '),
+          `${id} · ${modo} · Reproducir carga su archivo (${b.src}) y lo arranca (${b.duracion.toFixed(1)} s, ${b.loop ? 'en bucle' : 'una vez'})`);
+        await boton.click();
+        const t1 = (await estadoVideo(p, i)).t; await p.waitForTimeout(400);
+        const c = await estadoVideo(p, i);
+        anota(c.paused && c.t === t1 && c.parado && c.nombre.startsWith('Reproducir · '), `${id} · ${modo} · Pausar lo para`);
         await ctx.close();
       }
     }

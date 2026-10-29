@@ -14,15 +14,18 @@
      es la misma imagen en movimiento y su descripción ya la da el `alt`. Sin
      él, un lector de pantalla encontraría un vídeo sin nombre al lado de una
      imagen que dice lo mismo.
-   · Solo se descarga cuando el bloque se ve, y va en bucle.
-   · 2.2.2: todo lo que se mueve solo más de 5 s lleva control. Es el mismo
-     del slider de la Home (Johnny, 29/10/2026): icono en un círculo fino,
+   · EMPIEZA EN PAUSA (Johnny, 29/10/2026): se ve la imagen fija con el
+     icono de reproducir y es la persona quien decide. Nada se descarga
+     hasta que pulsa. Cuando arranca, va en bucle y se para sola si sale de
+     la pantalla.
+   · El control es el mismo
+     del slider de la Home: icono en un círculo fino,
      pausa o reproducir según el estado (lo lleva la forma, no el color,
      1.4.1), y la palabra para el lector de pantalla junto con el nombre del
      vídeo, para distinguir los controles de una misma página (2.4.4). El
      dibujo mide 32 y el botón 44.
-   · Con «reducir movimiento» no arranca solo y el icono es el de
-     reproducir, que lo arranca igual: reducir no es eliminar (§2.3).
+     Como nada se mueve sin que la persona lo pida, 2.2.2 se cumple de
+     sobra; el botón de pausa sigue ahí para pararlo.
    · Sin JS no hay botón, porque no haría nada.
    `npm run movimiento` lo mide sobre los archivos servidos (§2.9).
    --------------------------------------------------------------------------- */
@@ -62,7 +65,7 @@ const pM = await fuentes(movil.poster, [280, 560, 780]);
 const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.poster.width), format: 'jpg', quality: 'high' });
 ---
 
-<div class:list={['vp', clase]} data-video-pausable
+<div class:list={['vp', clase]} data-video-pausable data-parado
      data-video-escritorio={escritorio.archivo} data-video-tableta={tableta.archivo} data-video-movil={movil.archivo}>
   <div class="vp__marco">
     <picture>
@@ -82,7 +85,7 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
       <g class="vp__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
       <path class="vp__play" d="M1 0 10 6 1 12z" />
     </svg>
-    <span class="sr-only"><span data-vp-label>{ui.carouselPause}</span> · {nombre}</span>
+    <span class="sr-only"><span data-vp-label>{ui.carouselPlay}</span> · {nombre}</span>
   </button>
 </div>
 
@@ -92,12 +95,11 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
     const control = raiz.querySelector<HTMLButtonElement>('[data-vp-control]');
     const etiqueta = raiz.querySelector<HTMLElement>('[data-vp-label]');
     if (!video || !control || !etiqueta) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     const escritorio = window.matchMedia('(min-width: 1024px)');
     const tableta = window.matchMedia('(min-width: 768px)');
     const pausar = control.dataset.labelPausar ?? 'Pausar';
     const reproducir = control.dataset.labelReproducir ?? 'Reproducir';
-    let quiere = !reduce.matches;
+    let quiere = false;   // empieza en pausa: lo arranca la persona
     let visible = false;
 
     const archivo = () => (escritorio.matches ? raiz.dataset.videoEscritorio
@@ -117,7 +119,6 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
 
     video.addEventListener('playing', () => video.classList.add('is-listo'));
     control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
-    reduce.addEventListener('change', () => { if (reduce.matches) quiere = false; sincronizar(); });
     // Al cambiar de tamaño se vuelve a la imagen fija hasta que el otro vídeo arranque.
     [escritorio, tableta].forEach((m) => m.addEventListener('change', () => {
       if (video.getAttribute('src') !== archivo()) { video.classList.remove('is-listo'); video.pause(); video.removeAttribute('src'); video.load(); }

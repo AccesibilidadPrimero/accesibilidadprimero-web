@@ -25,16 +25,12 @@
    --------------------------------------------------------------------------- */
 import { getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
-import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
 import hero from '../../assets/proyectos/eci-conference/hero.jpg';
-import paso1 from '../../assets/proyectos/eci-conference/tarifas-1-weeztix.png';
-import paso2 from '../../assets/proyectos/eci-conference/tarifas-2-diseno.png';
-import paso3 from '../../assets/proyectos/eci-conference/tarifas-3-entrada.png';
 
 const p = (await getEntry('proyectos', 'eci-conference'))!;
 const d = p.data;
@@ -59,12 +55,6 @@ const datos = [
   ['Organizan', 'Eurlyaid y AEIPI'],
   ['Público', 'Profesionales, investigadores, familias'],
 ];
-
-const pasos = [
-  { img: paso1, alt: 'El panel de Weeztix con las catorce tarifas del congreso agrupadas por perfil: familia, profesional y estudiante, cada una con su precio y su estado de venta.' },
-  { img: paso2, alt: 'El editor de diseño de entradas de Weeztix, con la vista previa de la entrada del congreso y su logotipo «Growing Together».' },
-  { img: paso3, alt: 'La página pública del evento en Weeztix: el logotipo del congreso, las fechas del 31 de marzo al 2 de abril de 2027, la sede en el Colegio de Médicos de Madrid y el botón de entradas.' },
-];
 ---
 
 <Base
@@ -72,11 +62,12 @@ const pasos = [
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
-  ctaTitulo="Hacer simple lo complejo también es accesibilidad."
+  ctaTitulo={"Hacer simple lo complejo\ntambién es accesibilidad."}
 >
   <div class="eci" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina
       titulo="Hacer de la complejidad una experiencia intuitiva."
+      golpes={['Hacer de la complejidad', 'una experiencia intuitiva.']}
       texto={['ECI Conference Madrid 2027 · Caso de estudio']}
       foto={hero}
     />
@@ -115,10 +106,10 @@ const pasos = [
     <section class="bloque" aria-labelledby="reto">
       <p class="bloque__etiqueta">El reto</p>
       <div class="bloque__contenido">
-        <h2 id="reto">Mucha información. Muchos perfiles. Un solo sistema.</h2>
-        <p>Un congreso internacional empieza mucho antes de que se abran las puertas. Inscripciones, tarifas, abstracts, ponencias, horarios, espacios, información práctica, diferentes perfiles de asistentes y contenidos que van apareciendo a medida que se acerca la fecha.</p>
-        <p>El reto no era conseguir que todo cupiera en una web. Era conseguir que todo se entendiera.</p>
-        <p>Trabajamos primero en ordenar y simplificar la información. No para reducirla, sino para establecer jerarquías, crear recorridos claros y hacer que cada persona pudiera encontrar lo que necesita sin tener que entender antes cómo está organizado el congreso.</p>
+        <h2 id="reto">Mucha información. Muchos perfiles. Un sistema claro.</h2>
+        <p>Un congreso internacional empieza mucho antes de abrir sus puertas. Hay que reunir inscripciones, tarifas, abstracts, ponencias, horarios, espacios e información práctica. Y ofrecerla a personas con perfiles y necesidades diferentes, mientras los contenidos se actualizan a medida que se acerca la fecha.</p>
+        <p>El reto estaba en ayudar a cada persona a encontrar y comprender la información que necesita.</p>
+        <p>Por eso empezamos por ordenar los contenidos, definir jerarquías y crear recorridos claros. Así, cada persona puede orientarse por la web y acceder a la información del congreso de forma sencilla.</p>
       </div>
     </section>
 
@@ -131,7 +122,7 @@ const pasos = [
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
       />
-      <figcaption><p>Keynote speakers</p><p>Carrusel + modal</p></figcaption>
+      <figcaption>Keynote speakers</figcaption>
     </figure>
 
     <figure class="pieza pieza--centro">
@@ -143,7 +134,7 @@ const pasos = [
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 896px, 62vw', ...vertical }}
       />
-      <figcaption><p>Programme tracks</p><p>Modal</p></figcaption>
+      <figcaption>Programme tracks</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="simplificar">
@@ -167,7 +158,7 @@ const pasos = [
           lang={DEFAULT_LANG}
           sizes={{ escritorio: '(min-width: 1440px) 851px, 60vw', ...vertical }}
         />
-        <figcaption><p>Conference fee</p><p>Flujo + Weeztix</p></figcaption>
+        <figcaption>Conference fee</figcaption>
       </figure>
     </div>
 
@@ -181,19 +172,14 @@ const pasos = [
       </div>
     </section>
 
-    <ul class="pasos" aria-label="La inscripción en Weeztix">
-      {pasos.map((x) => (
-        <li><Picture src={x.img} alt={x.alt} formats={['avif', 'webp']} quality="high" widths={[480, 864, 1296].filter((w) => w < x.img.width)} sizes="(min-width: 1024px) 30vw, calc(100vw - 48px)" class="paso" loading="lazy" /></li>
-      ))}
-    </ul>
 
     <section class="bloque" aria-labelledby="abstracts">
       <p class="bloque__etiqueta">Abstracts</p>
       <div class="bloque__contenido">
-        <h2 id="abstracts">Creamos una plataforma accesible para la gestión de los abstracts del congreso.</h2>
-        <p>El envío y la gestión de abstracts forman parte de la experiencia del congreso tanto como consultar el programa o comprar una entrada.</p>
-        <p>Por eso trabajamos también en una plataforma de abstracts preparada específicamente para ECI, incorporando la accesibilidad al proceso y manteniendo la misma lógica de claridad y sencillez del resto del ecosistema.</p>
-        <p>Porque una experiencia no es accesible si solo lo es hasta el siguiente enlace.</p>
+        <h2 id="abstracts">Creamos «AA Accessible Abstracts», una plataforma accesible para enviar y gestionar los abstracts del congreso.</h2>
+        <p>Enviar un abstract y seguir su proceso forma parte de la experiencia del congreso, igual que consultar el programa o comprar una entrada.</p>
+        <p>Por eso desarrollamos una plataforma específica para ECI e incorporamos la accesibilidad en cada paso. Su diseño sigue la misma lógica que el resto del ecosistema: claridad, sencillez y una experiencia coherente.</p>
+        <p>La accesibilidad acompaña a las personas durante todo el recorrido, también cuando pasan de la web a otra plataforma.</p>
       </div>
     </section>
 
@@ -211,17 +197,17 @@ const pasos = [
     <section class="bloque" aria-labelledby="modular">
       <p class="bloque__etiqueta">Un sistema modular</p>
       <div class="bloque__contenido">
-        <h2 id="modular">Diseñar también para lo que todavía no existe.</h2>
-        <p>La web se publica mucho antes de que toda la información del congreso esté disponible. Ponentes, abstracts, contenidos y programa se incorporarán progresivamente.</p>
-        <p>Por eso construimos un sistema modular capaz de crecer sin tener que rediseñarse cada vez que aparece nueva información.</p>
-        <p>La web que se consulta meses antes del evento y la que se utilizará durante el congreso parten del mismo sistema, pero no tienen por qué ser exactamente la misma web.</p>
+        <h2 id="modular">Diseñamos para que la web pueda crecer con el congreso.</h2>
+        <p>La web se publica antes de que esté disponible toda la información. Los perfiles de ponentes, los abstracts, los contenidos y el programa se incorporan a medida que se confirman.</p>
+        <p>Por eso creamos un sistema modular que permite añadir y organizar nuevos contenidos sin rediseñar la web cada vez.</p>
+        <p>La experiencia puede evolucionar con el congreso: acompañar a quienes empiezan a planificar su participación meses antes y adaptarse a las necesidades de quienes consultan la información durante el evento, siempre desde una misma base.</p>
       </div>
     </section>
 
     {/* Accesibilidad: solo el enlace a la declaración del cliente (23/10). */}
     {d.nota?.declaracion && (
       <p class="declaracion">
-        <CtaLink href={d.nota.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
+        <CtaLink href={d.nota.declaracion}><span class="linea">Declaración de accesibilidad</span> <span class="linea">de {d.titulo}</span></CtaLink>
       </p>
     )}
   </div>
@@ -276,11 +262,12 @@ const pasos = [
     .banda--roja :global(.video--portada) { width: min(1148px, 85%); }
   }
 
-  /* ---- Los tres pasos en Weeztix ---- */
-  .pasos { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); margin: 0; padding: var(--space-48) var(--gutter-page) 0; list-style: none; }
-  .pasos :global(.paso) { display: block; width: 100%; height: auto; aspect-ratio: 432 / 235; object-fit: cover; object-position: top left; border-radius: var(--radio); background: #e1e1de; }
-  @media (min-width: 768px) { .pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  /* Centrada y en dos líneas (Johnny, 29/10/2026). */
+  .declaracion { display: block; max-width: none; padding: var(--space-64) var(--gutter-page); text-align: center; }
+  .declaracion :global(.linea) { display: block; }
 
-  .declaracion { display: block; padding: var(--space-64) var(--gutter-page); }
+  /* El titular en dos líneas: «Hacer de la complejidad / una experiencia
+     intuitiva.» (Johnny, 29/10/2026). */
+  .eci :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
   @media (min-width: 768px) { .declaracion { padding-block: var(--space-96); } }
 </style>
