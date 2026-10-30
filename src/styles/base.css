@@ -20,6 +20,10 @@ body {
   font-family: var(--font-sans);
   font-size: var(--texto-size);
   line-height: var(--texto-leading);
+  /* Una palabra más ancha que su columna (un correo, una URL) se parte en
+     vez de empujar la página: a 320 px, proyectos@accesibilidadprimero.com
+     mide 292 px y la columna 272 (1.4.10). Solo actúa si no cabe. */
+  overflow-wrap: break-word;
   font-weight: 400;              /* El ÚNICO peso del sistema. Sin negritas
                                     (Johnny, 23/08) y, desde el 08/10, sin
                                     Medium tampoco: la jerarquía descansa en la
