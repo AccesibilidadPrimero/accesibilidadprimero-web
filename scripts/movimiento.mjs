@@ -175,7 +175,9 @@ for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], 
     const ctx = await navegador.newContext({ viewport: { width: w, height: h }, ...opciones });
     const p = await ctx.newPage();
     await p.goto(`http://localhost:${PUERTO}/proyectos/eci-conference/`, { waitUntil: 'load' });
-    await p.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
+    /* addStyleTag espera al onload del <style>, que sin JS no llega nunca:
+       ahí colgaba el script. Sin JS tampoco se hace scroll, así que sobra. */
+    if (modo !== 'sin JS') await p.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     /* Sin JS no hay requestAnimationFrame que medir: se mira el estado tal
        cual llega en el HTML. */
     const r = modo === 'sin JS' ? await p.evaluate((sel) => {
