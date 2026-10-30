@@ -406,6 +406,12 @@ pausa (2.2.2) y en escritorio ocupa la columna central de tres;
 leve. Las capturas de la Home tienen versión de móvil (`<archivo>-movil`,
 588 × 1280) en ECI e Izaskun.
 
+**Caso Elogio de la línea (30/10/2026).** Maqueta propia, replanteada con
+la estructura de ECI e Izaskun y los textos del Figma. Título «Elogio de la
+línea», con la ele minúscula. Sin nota ni enlace a declaración: la de
+elogiodelalinea.com no está publicada. El testimonio de Pau va de
+`borrador`.
+
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla
 `PaginaLegal.astro`. Ese archivo es también la fuente del texto del Figma:
