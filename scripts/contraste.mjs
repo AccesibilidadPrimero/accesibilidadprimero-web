@@ -42,6 +42,21 @@ const RUTAS = [
   { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
     preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
   { nombre: 'Estudio', url: '/estudio/', minimo: 30 },
+  /* Servicios: la banda del hero cambia de color cada 3 s. Se para con su
+     botón y se mide en cada uno de los tres colores (30/10/2026). */
+  ...['var(--mint)', 'var(--rose-ap)', 'var(--yellow-ap)'].map((color) => ({
+    nombre: `Servicios · ${color.slice(6, -1)}`, url: '/servicios/', minimo: 40,
+    preparar: async (p) => {
+      /* Con «reducir movimiento» (así se mide aquí) el botón no se pinta y
+         el color ya no cambia: basta con ponerlo. */
+      await p.evaluate((c) => {
+        const b = document.querySelector('[data-fondos-control]');
+        if (b && !b.hidden) b.click();
+        document.querySelector('[data-fondos]').style.setProperty('--surface-accent', c);
+      }, color);
+      await p.waitForTimeout(1000);
+    },
+  })),
   { nombre: 'Privacidad', url: '/privacidad/', minimo: 30 },
   { nombre: 'Cookies', url: '/cookies/', minimo: 15 },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', minimo: 25 },
@@ -49,6 +64,7 @@ const RUTAS = [
   { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', minimo: 4 },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', minimo: 40 },
   { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', minimo: 30 },
+  { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', minimo: 20 },
   { nombre: 'Caso Elogio de la línea', url: '/proyectos/elogio-de-la-linea/', minimo: 20 },
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },

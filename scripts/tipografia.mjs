@@ -259,6 +259,7 @@ console.log('\n── Un color: todo en negro ──\n');
 const INTERIORES = [
   { nombre: 'Contacto', url: '/contacto/', conErrores: true },
   { nombre: 'Estudio', url: '/estudio/', conErrores: false },
+  { nombre: 'Servicios', url: '/servicios/', conErrores: false },
   { nombre: 'Privacidad', url: '/privacidad/', conErrores: false },
   { nombre: 'Cookies', url: '/cookies/', conErrores: false },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', conErrores: false },
@@ -268,6 +269,7 @@ const INTERIORES = [
   { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', conErrores: false, sinTitular: true },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', conErrores: false },
   { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', conErrores: false },
+  { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', conErrores: false },
   { nombre: 'Caso Elogio de la línea', url: '/proyectos/elogio-de-la-linea/', conErrores: false },
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },

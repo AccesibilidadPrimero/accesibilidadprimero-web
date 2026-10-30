@@ -80,6 +80,10 @@ check('Esc cierra el panel', cerrado === 'false', `aria-expanded="${cerrado}"`);
 check('Al cerrar, el foco vuelve al botón', vuelve);
 
 // 7. El carrusel: pausar detiene de verdad, y la etiqueta pasa a Reproducir.
+//    A 1440: desde el 30/10/2026, en móvil el hero es un slider sin este
+//    control (lo comprueba `npm run movimiento`).
+await page.setViewportSize({ width: 1440, height: 900 });
+await page.waitForTimeout(400);
 const titularInicial = (await page.textContent('h1'))?.trim();
 await page.evaluate(() => document.querySelector('[data-carrusel-control]')?.scrollIntoView());
 await page.waitForTimeout(400);
