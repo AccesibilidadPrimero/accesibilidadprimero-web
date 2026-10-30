@@ -106,18 +106,19 @@ const columnas = Array.from({ length: 12 }, (_, i) => i);
   .r-texto--dialogo { top: 67%; height: 14%; left: auto; right: 4%; width: 34%; }
 
   /* ---- La animación: 9 s en bucle, cinco tiempos y una espera ---- */
-  :global(html.js) [data-anima] .r-columnas span { animation: r-columna 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-columnas span { animation: r-columna 9s var(--ease-out) infinite both; animation-play-state: var(--reproduccion, running); }
   :global(html.js) [data-anima] .r-cabecera,
-  :global(html.js) [data-anima] .r-banda { animation: r-baja 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-banda { animation: r-baja 9s var(--ease-out) infinite both; animation-play-state: var(--reproduccion, running); }
   :global(html.js) [data-anima] .r-texto--1 .r-linea,
   :global(html.js) [data-anima] .r-texto--2 .r-linea,
-  :global(html.js) [data-anima] .r-texto--3 .r-linea { animation: r-escribe 9s var(--ease-out) infinite both; transform-origin: left center; }
+  :global(html.js) [data-anima] .r-texto--3 .r-linea { animation: r-escribe 9s var(--ease-out) infinite both; transform-origin: left center; animation-play-state: var(--reproduccion, running); }
   :global(html.js) [data-anima] .r-texto--2 .r-linea { animation-name: r-escribe-2; }
   :global(html.js) [data-anima] .r-texto--3 .r-linea { animation-name: r-escribe-3; }
-  :global(html.js) [data-anima] .r-panoramica { animation: r-desliza 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-panoramica { animation: r-desliza 9s var(--ease-out) infinite both; animation-play-state: var(--reproduccion, running); }
   :global(html.js) [data-anima] .r-imagen,
-  :global(html.js) [data-anima] .r-texto--dialogo { animation: r-dialogo 9s var(--ease-out) infinite both; }
-  :global(html.js) [data-anima][data-parado] :is(.r-columnas span, .r, .r-linea) { animation-play-state: paused; }
+  :global(html.js) [data-anima] .r-texto--dialogo { animation: r-dialogo 9s var(--ease-out) infinite both; animation-play-state: var(--reproduccion, running); }
+  /* Pausa: cada regla de animación lee esta variable, así gana siempre. */
+  [data-parado] { --reproduccion: paused; }
 
   /* Cada tiempo ocupa ~1,2 s; del 80 % al 95 % se queda completo y al final
      se desvanece para volver a empezar. */

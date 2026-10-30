@@ -268,6 +268,7 @@ const INTERIORES = [
   { nombre: 'Proyectos · Aplicaciones', url: '/proyectos/tipo/aplicaciones/', conErrores: false, sinTitular: true },
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', conErrores: false },
   { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', conErrores: false },
+  { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', conErrores: false },
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
   { nombre: 'Blog · artículo con tablas', url: '/blog/pero-que-es-la-wcag/', conErrores: false },

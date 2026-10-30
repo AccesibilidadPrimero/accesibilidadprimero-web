@@ -406,6 +406,12 @@ pausa (2.2.2) y en escritorio ocupa la columna central de tres;
 leve. Las capturas de la Home tienen versión de móvil (`<archivo>-movil`,
 588 × 1280) en ECI e Izaskun.
 
+**Caso Izaskun (30/10/2026).** Maqueta propia, con la estructura de ECI y
+los textos del Figma. La retícula editorial (`ReticulaEditorial.astro`) es
+CSS en bucle con botón de pausa; la pausa va por la variable
+`--reproduccion`, que leen todas sus reglas de animación (una regla de
+pausa aparte perdía por especificidad). `npm run movimiento` lo comprueba.
+
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla
 `PaginaLegal.astro`. Ese archivo es también la fuente del texto del Figma:
