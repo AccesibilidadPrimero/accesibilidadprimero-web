@@ -396,6 +396,14 @@ Declaración de accesibilidad lo nombra como incumplimiento conocido, y con
 «reducir movimiento» se para. Quitar el bucle obliga a quitarlo de la
 Declaración, y al revés; `npm run movimiento` vigila las dos cosas.
 
+**Servicios (30/10/2026).** `/servicios/`, con HeroPagina y Bloque como
+Estudio; el contenido vive en `src/data/servicios.ts`. La banda del hero
+cambia de color cada 3 s (`fondos`): menta, rosa y amarillo. Dura más de 5 s,
+así que lleva botón de pausa; con «reducir movimiento» y sin JS no cambia y
+el botón no se pinta. `npm run movimiento` lo comprueba y `npm run contraste`
+mide la página en los tres colores. No hay frame en el Figma todavía: la
+página nace del código (Johnny, 30/10/2026).
+
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla
 `PaginaLegal.astro`. Ese archivo es también la fuente del texto del Figma:

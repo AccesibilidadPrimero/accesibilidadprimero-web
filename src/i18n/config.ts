@@ -38,6 +38,7 @@ export const LANG_NAME: Record<Lang, string> = {
 export type RouteKey =
   | 'home'
   | 'proyectos'
+  | 'servicios'
   | 'estudio'
   | 'blog'
   | 'contacto'
@@ -45,9 +46,11 @@ export type RouteKey =
   | 'cookies'
   | 'accesibilidad';
 
-/** Los cuatro destinos del menú principal, en orden. Productos salió el
-    14/10/2026: los productos propios viven dentro de Proyectos, con su filtro. */
-export const NAV: RouteKey[] = ['proyectos', 'estudio', 'blog', 'contacto'];
+/** Los destinos del menú principal, en orden. Productos salió el 14/10/2026:
+    los productos propios viven dentro de Proyectos, con su filtro. Servicios
+    entró el 30/10/2026, detrás de Proyectos: primero lo hecho, después lo que
+    ofrecemos. */
+export const NAV: RouteKey[] = ['proyectos', 'servicios', 'estudio', 'blog', 'contacto'];
 
 /** Las tres del pie. */
 export const NAV_LEGAL: RouteKey[] = ['privacidad', 'cookies', 'accesibilidad'];
@@ -58,6 +61,7 @@ export const NAV_LEGAL: RouteKey[] = ['privacidad', 'cookies', 'accesibilidad'];
 const SEGMENT: Record<RouteKey, Record<Lang, string>> = {
   home:          { es: '',                          ca: '',                          en: '' },
   proyectos:     { es: 'proyectos',                 ca: 'projectes',                 en: 'projects' },
+  servicios:     { es: 'servicios',                 ca: 'serveis',                   en: 'services' },
   estudio:       { es: 'estudio',                   ca: 'estudi',                    en: 'studio' },
   blog:          { es: 'blog',                      ca: 'blog',                      en: 'blog' },
   contacto:      { es: 'contacto',                  ca: 'contacte',                  en: 'contact' },

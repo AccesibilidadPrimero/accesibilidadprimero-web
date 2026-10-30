@@ -1,0 +1,143 @@
+---
+/* ---------------------------------------------------------------------------
+   Servicios (Johnny, 30/10/2026). Página nueva, sin frame en el Figma todavía:
+   la estructura es la de Estudio (HeroPagina + Bloque) para que la geometría
+   viva en un solo sitio (AGENTS.md §8, «Páginas interiores»).
+
+   Hero: el planeta (arte/servicios/planeta.svg), el titular en tres líneas y
+   el fondo que cambia de color cada 3 s, uno por servicio, con fundido. Ese
+   cambio dura más de 5 s, así que lleva botón de pausa (2.2.2); con «reducir
+   movimiento» no cambia (lo resuelve HeroPagina).
+
+   Orden de los servicios: Diseño y desarrollo, Auditoría, Formación. El
+   contenido está en src/data/servicios.ts.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import CtaLink from '../components/CtaLink.astro';
+import { DEFAULT_LANG, path } from '../i18n/config';
+import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
+import planeta from '../assets/servicios/planeta.svg';
+
+const lang = DEFAULT_LANG;
+---
+<Base
+  lang={lang}
+  current="servicios"
+  title="Servicios · Accesibilidad Primero"
+  description="Diseño y desarrollo, auditoría de accesibilidad y formación: un ecosistema para garantizar experiencias digitales accesibles e inclusivas."
+>
+  <HeroPagina
+    ilustracion={planeta}
+    alt="Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde."
+    titulo="Diseño, auditoría y formación."
+    golpes={['Diseño,', 'auditoría', 'y formación.']}
+    enLineas
+    texto={['Un ecosistema para garantizar experiencias digitales accesibles e inclusivas.']}
+    fondos={['var(--mint)', 'var(--rose-ap)', 'var(--yellow-ap)']}
+    fondosNombre="el color del fondo"
+  />
+
+  <Bloque id="diseno" titulo="Diseño y desarrollo">
+    <div class="pila">
+      <p>{DISENO.intro}</p>
+      <ul class="puntos">
+        {DISENO.puntos.map((p) => (
+          <li>
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <CtaLink href={path('proyectos', lang)}>Ver proyectos</CtaLink>
+    </div>
+  </Bloque>
+
+  <Bloque id="auditoria" titulo="Auditoría de accesibilidad">
+    <div class="pila">
+      <p>{AUDITORIA.intro}</p>
+      <ul class="puntos">
+        {AUDITORIA.revisamos.map((p) => (
+          <li>
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <p>{AUDITORIA.entregamos}</p>
+    </div>
+    {/* Las tarifas: una lista bajo su <h3>, cada una con su nombre como <h4>.
+        El precio y lo que incluye van debajo, en el orden en que se leen. */}
+    <h3 class="punto__nombre tarifas__titulo">Tarifas</h3>
+    <ul class="tarifas">
+      {AUDITORIA.tarifas.map((t) => (
+        <li class="tarifa">
+          <h4 class="tarifa__nombre">{t.nombre}</h4>
+          <p class="tarifa__para">{t.para}</p>
+          <p class="tarifa__precio">{t.precio}</p>
+          <ul class="tarifa__incluye">
+            {t.incluye.map((i) => <li>{i}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ul>
+    <p class="tarifas__nota">{AUDITORIA.nota}</p>
+  </Bloque>
+
+  <Bloque id="formacion" titulo="Formación">
+    <div class="pila">
+      <p>{FORMACION.intro}</p>
+      <ul class="puntos">
+        {FORMACION.puntos.map((p) => (
+          <li>
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Bloque>
+</Base>
+
+<style>
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* Como en Estudio: 24 entre las piezas de un bloque. */
+  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; align-items: flex-start; }
+  .pila > :not(a) { align-self: stretch; }
+
+  /* Como los servicios de Estudio: 16 entre el nombre y su texto y 48 entre
+     punto y punto (AGENTS.md §4). El nombre es un <h3> al cuerpo del texto. */
+  .puntos { display: flex; flex-direction: column; gap: var(--space-48); padding-block: var(--space-24); }
+  .puntos li { display: flex; flex-direction: column; gap: var(--space-16); }
+  .punto__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* Tarifas: tres columnas desde 1024, una debajo de otra por debajo. Cada
+     una en su caja con filete, sin color: el color de la página es el del
+     hero. */
+  .tarifas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    margin-block-start: var(--space-16);
+  }
+  .tarifas__titulo { margin-block-start: var(--space-64); }
+  @media (min-width: 1024px) { .tarifas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tarifa {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-24);
+    border: 1px solid var(--rule);
+    border-radius: var(--radio);
+  }
+  .tarifa__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  /* El precio al cuerpo del texto, como todo (la escala tiene dos tamaños):
+     lo separa el aire. */
+  .tarifa__precio { margin-block: var(--space-16); }
+  .tarifa__incluye { display: flex; flex-direction: column; }
+  .tarifa__incluye li { padding-block: var(--space-8); border-block-start: 1px solid var(--rule); }
+  .tarifas__nota { margin-block-start: var(--space-24); max-width: 888px; }
+</style>

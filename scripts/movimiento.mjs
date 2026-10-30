@@ -284,6 +284,39 @@ for (const caso of CASOS) {
   }
 }
 
+/* ---- Servicios: la banda del hero cambia de color (30/10/2026) ------------
+   Se mueve más de 5 s, así que lleva botón (2.2.2). Se comprueba:
+   · con JS: el color cambia antes de 3,5 s; el botón se llama «Pausar · …»
+     y mide 44; al pulsarlo pasa a «Reproducir» y el color no vuelve a cambiar;
+   · reducir movimiento: el color no cambia y el botón no se pinta;
+   · sin JS: ni cambia ni hay botón. */
+console.log('\n── Servicios: fondo del hero ──\n');
+for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 }, ...opciones });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/servicios/`, { waitUntil: 'load' });
+  const color = () => p.$eval('[data-fondos]', (e) => getComputedStyle(e).getPropertyValue('--surface-accent').trim());
+  const boton = () => p.$eval('[data-fondos-control]', (b) => ({
+    visible: !!b.offsetParent, nombre: b.textContent.replace(/\s+/g, ' ').trim(), alto: b.getBoundingClientRect().height,
+  }));
+  const c0 = await color();
+  await p.waitForTimeout(3500);
+  const c1 = await color();
+  const b0 = await boton();
+  if (modo === 'con JS') {
+    anota(c1 !== c0, `con JS · el color cambia solo (${c0} → ${c1})`);
+    anota(b0.visible && /^Pausar · /.test(b0.nombre) && b0.alto >= 44, `con JS · botón «${b0.nombre}» de ${b0.alto} px`);
+    await p.click('[data-fondos-control]');
+    const c2 = await color();
+    await p.waitForTimeout(3500);
+    const b1 = await boton();
+    anota(c2 === await color() && /^Reproducir · /.test(b1.nombre), `con JS · «Pausar» lo para y el botón pasa a «${b1.nombre}»`);
+  } else {
+    anota(c1 === c0 && !b0.visible, `${modo} · el color no cambia y no hay botón`);
+  }
+  await ctx.close();
+}
+
 await navegador.close();
 servidor.close();
 if (fallos) { console.error(`\n${fallos} comprobaciones fallan.`); process.exit(1); }
