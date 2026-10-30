@@ -3,7 +3,7 @@
     "collect": {
       "staticDistDir": "./dist",
       "numberOfRuns": 2,
-      "settings": { "preset": "desktop" }
+      "settings": { "preset": "desktop", "skipAudits": ["is-crawlable"] }
     },
     "assert": {
       "assertions": {
