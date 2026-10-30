@@ -26,12 +26,14 @@
 /manifiesto-accesibilidad-primero/  /estudio/  301
 /nuestros-principios/  /estudio/  301
 /sobre-nuestro-contenido/  /estudio/  301
-/servicios/  /estudio/  301
-/diseno-y-tecnologia/  /estudio/  301
 /comunicacion-inclusiva/  /estudio/  301
-/formacion/  /estudio/  301
-/auditoria-de-accesibilidad-wcag/  /estudio/  301
-/auditoria-express-de-accesibilidad-en-tiempo-real/  /estudio/  301
+
+# ── Páginas de servicios: a /servicios/ desde el 30/10/2026 ──
+# (/servicios/ ya no se redirige: desde ese día es una página propia.)
+/diseno-y-tecnologia/  /servicios/  301
+/formacion/  /servicios/  301
+/auditoria-de-accesibilidad-wcag/  /servicios/  301
+/auditoria-express-de-accesibilidad-en-tiempo-real/  /servicios/  301
 /accesibilidad-web-valencia/  /estudio/  301
 
 # ── Legales y contacto ──
