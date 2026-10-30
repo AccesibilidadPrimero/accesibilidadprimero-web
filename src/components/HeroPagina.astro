@@ -26,9 +26,17 @@
    texto, en el mismo sitio que en el resto de heros, pasa a Silk: sobre la
    foto el negro no se leería. Es la única excepción de color de la web, y
    la cabecera la acompaña mientras está encima de la foto.
+   `fondos` (Servicios, 30/10/2026): la banda cambia de color cada 3 s, con
+   fundido, recorriendo la lista. Como se mueve más de 5 s, lleva botón de
+   pausa (2.2.2), el del slider de la Home, arriba a la derecha bajo la
+   cabecera. Sin JS no cambia y el botón no se pinta (AGENTS.md §5); con
+   «reducir movimiento» tampoco cambia, y el botón no se pinta porque no
+   habría nada que pausar. Fuera de pantalla se para solo.
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
+import { t } from '../i18n/ui';
+import { DEFAULT_LANG } from '../i18n/config';
 
 interface Props {
   ilustracion?: ImageMetadata;
@@ -56,8 +64,14 @@ interface Props {
   /** Cada línea del texto en su propio párrafo, con aire entre ellos
       (Estudio, 30/10/2026). Sin esto, las líneas forman una sola frase. */
   enParrafos?: boolean;
+  /** Colores por los que pasa la banda, cada 3 s (Servicios, 30/10/2026).
+      Tienen que rendir con Ink encima y con el anillo de foco. */
+  fondos?: string[];
+  /** Lo que se pausa, para el nombre del botón: «Pausar · <esto>». */
+  fondosNombre?: string;
 }
-const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false } = Astro.props;
+const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo' } = Astro.props;
+const ui = t(DEFAULT_LANG);
 /* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
 const anchosFoto = foto ? [640, 1024, 1440, 2048, 2880].filter((w) => w < foto.width).concat(foto.width) : [];
 if (golpes && golpes.join(' ') !== titulo) {
@@ -69,7 +83,23 @@ const conDibujo = Astro.slots.has('ilustracion');
 const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring: ${superficie.foco};` : undefined;
 ---
 
-<div class:list={['apertura', golpes && 'apertura--golpes', foto && 'apertura--foto']} style={estilo}>
+<div
+  class:list={['apertura', golpes && 'apertura--golpes', foto && 'apertura--foto', fondos && 'apertura--fondos']}
+  style={fondos ? `--surface-accent: ${fondos[0]};` : estilo}
+  data-fondos={fondos ? JSON.stringify(fondos) : undefined}
+>
+  {
+    fondos && (
+      <button type="button" class="apertura__pausa" data-fondos-control hidden
+              data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
+        <svg class="apertura__pausa-icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+          <g class="apertura__pausa-pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+          <path class="apertura__pausa-play" d="M1 0 10 6 1 12z" />
+        </svg>
+        <span class="sr-only"><span data-fondos-label>{ui.carouselPause}</span> · {fondosNombre}</span>
+      </button>
+    )
+  }
   {
     foto && (
       <Picture
@@ -137,6 +167,43 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
   </div>
 </div>
 
+<script>
+  /* La banda que cambia de color (prop `fondos`). Un temporizador, no una
+     animación CSS en bucle: así «Pausar» para el cambio de verdad y el color
+     se queda donde estaba. */
+  document.querySelectorAll<HTMLElement>('[data-fondos]').forEach((raiz) => {
+    const fondos: string[] = JSON.parse(raiz.dataset.fondos ?? '[]');
+    const control = raiz.querySelector<HTMLButtonElement>('[data-fondos-control]');
+    const etiqueta = raiz.querySelector<HTMLElement>('[data-fondos-label]');
+    if (fondos.length < 2 || !control || !etiqueta) return;
+    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const pausar = control.dataset.labelPausar ?? 'Pausar';
+    const reproducir = control.dataset.labelReproducir ?? 'Reproducir';
+    let i = 0;
+    let quiere = true;     // se mueve hasta que la persona lo pare
+    let visible = true;
+    let reloj: number | undefined;
+
+    const sincronizar = () => {
+      control.hidden = reducido.matches;
+      etiqueta.textContent = quiere ? pausar : reproducir;
+      raiz.toggleAttribute('data-parado', !quiere);
+      window.clearInterval(reloj);
+      reloj = undefined;
+      if (!quiere || !visible || reducido.matches) return;
+      reloj = window.setInterval(() => {
+        i = (i + 1) % fondos.length;
+        raiz.style.setProperty('--surface-accent', fondos[i]);
+      }, 3000);
+    };
+
+    control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
+    reducido.addEventListener('change', sincronizar);
+    new IntersectionObserver((es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); })).observe(raiz);
+    sincronizar();
+  });
+</script>
+
 <style>
   /* Pantalla entera, como la Home (HeroCarousel): 100svh, y 100lvh donde se
      sepa, para que en el iPhone el color llegue al borde bajo la barra del
@@ -161,6 +228,44 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
       padding-block-end: calc(var(--space-24) + 100lvh - 100svh);
     }
   }
+  /* ---- Con fondos que cambian ---- */
+  .apertura--fondos { transition: background-color var(--dur-fondos, 800ms) ease-in-out; }
+  /* El control del slider de la Home (VideoPausable): 44 de zona y un círculo
+     de 32 dentro. Arriba a la derecha, justo bajo la cabecera, a plomo con
+     el margen. */
+  .apertura__pausa {
+    position: absolute;
+    inset-block-start: var(--header-height);
+    inset-inline-end: calc(var(--gutter-page) - 6px);
+    display: grid;
+    place-items: center;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .apertura__pausa[hidden] { display: none; }
+  .apertura__pausa::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .apertura__pausa:hover::before { transform: scale(1.1); }
+  .apertura__pausa:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .apertura__pausa-icono { fill: currentColor; }
+  .apertura__pausa-play { display: none; }
+  [data-parado] .apertura__pausa-pausa { display: none; }
+  [data-parado] .apertura__pausa-play { display: inline; }
+  @media (prefers-reduced-motion: reduce) {
+    .apertura--fondos, .apertura__pausa::before { transition: none; }
+  }
+
   .apertura__escena { flex: 1 0 auto; display: grid; place-items: center; }
 
   /* ---- Con foto ---- */
