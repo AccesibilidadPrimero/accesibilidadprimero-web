@@ -284,6 +284,45 @@ for (const caso of CASOS) {
   }
 }
 
+/* ---- Home en móvil: el slider del hero (30/10/2026) ----------------------
+   Pasa una lámina cada 3 s, con botón de pausa (2.2.2):
+   · con JS: avanza solo antes de 3,5 s; el botón «Pausar · …» mide 44 y lo
+     para; tocar la fila también lo para;
+   · reducir movimiento: no avanza solo y no hay botón;
+   · sin JS: la fila se ve entera, sin botón. */
+console.log('\n── Home en móvil: slider del hero ──\n');
+for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
+  const ctx = await navegador.newContext({ viewport: { width: 390, height: 844 }, ...opciones });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const x = () => p.$eval('.hero__pila', (f) => Math.round(f.scrollLeft));
+  const boton = () => p.$eval('[data-slider-control]', (b) => ({
+    visible: !!b.offsetParent, nombre: b.textContent.replace(/\s+/g, ' ').trim(), alto: b.getBoundingClientRect().height,
+  }));
+  const x0 = await x();
+  await p.waitForTimeout(3700);
+  const x1 = await x();
+  const b0 = await boton();
+  if (modo === 'con JS') {
+    anota(x1 > x0, `con JS · pasa sola a la siguiente (${x0} → ${x1} px)`);
+    anota(b0.visible && /^Pausar · /.test(b0.nombre) && b0.alto >= 44, `con JS · botón «${b0.nombre}» de ${b0.alto} px`);
+    await p.click('[data-slider-control]');
+    await p.waitForTimeout(800);
+    const x2 = await x();
+    await p.waitForTimeout(3500);
+    const b1 = await boton();
+    anota(x2 === await x() && /^Reproducir · /.test(b1.nombre), `con JS · «Pausar» la para y el botón pasa a «${b1.nombre}»`);
+    await p.click('[data-slider-control]');
+    await p.dispatchEvent('.hero__pila', 'pointerdown');
+    const x3 = await x();
+    await p.waitForTimeout(3500);
+    anota(x3 === await x(), 'con JS · tocar la fila también la para');
+  } else {
+    anota(x1 === x0 && !b0.visible, `${modo} · no pasa sola y no hay botón`);
+  }
+  await ctx.close();
+}
+
 /* ---- Servicios: la banda del hero cambia de color (30/10/2026) ------------
    Se mueve más de 5 s, así que lleva botón (2.2.2). Se comprueba:
    · con JS: el color cambia antes de 3,5 s; el botón se llama «Pausar · …»

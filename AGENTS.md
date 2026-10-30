@@ -396,6 +396,15 @@ Declaración de accesibilidad lo nombra como incumplimiento conocido, y con
 «reducir movimiento» se para. Quitar el bucle obliga a quitarlo de la
 Declaración, y al revés; `npm run movimiento` vigila las dos cosas.
 
+**Hero de la Home en móvil (30/10/2026).** Por debajo de 768 no hay
+animación: las láminas van en fila, con su frase escrita debajo, y se pasan
+con el dedo; la siguiente asoma por la derecha. Avanzan solas cada 3 s, con
+botón de pausa visible (2.2.2); tocar la fila también las para. Con «reducir
+movimiento» no avanzan y el botón no se pinta; sin JS, la fila se desliza
+igual. El control transparente del escritorio no se pinta en móvil.
+`npm run geometria` mide el slider a 390 y `npm run movimiento` el avance y
+la pausa.
+
 **Servicios (30/10/2026).** `/servicios/`, con HeroPagina y Bloque como
 Estudio; el contenido vive en `src/data/servicios.ts`. La banda del hero
 cambia de color cada 3 s (`fondos`): menta, rosa y amarillo. Dura más de 5 s,
