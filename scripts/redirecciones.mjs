@@ -29,6 +29,10 @@ for (const [origen, destino, codigo] of reglas) {
   if (origen === destino) mal(`${origen} se redirige a sí misma`);
   const pagina = join(RAIZ, 'dist', destino, 'index.html');
   if (!existsSync(pagina)) mal(`${origen} → ${destino}: esa página no existe en dist/`);
+  /* Y al revés: una redirección no puede tapar una página que existe. Pasó el
+     30/10/2026: /servicios/ seguía redirigiendo a /estudio/ (de la web de
+     WordPress) y la página nueva de Servicios no se veía en producción. */
+  if (existsSync(join(RAIZ, 'dist', origen, 'index.html'))) mal(`${origen} → ${destino}: ${origen} es una página de la web y la redirección la tapa`);
 }
 
 const dir = join(RAIZ, 'src/content/blog');
