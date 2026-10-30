@@ -65,6 +65,7 @@ export const UI: Record<Lang, Dict> = {
     nav: {
       home: 'Inicio',
       proyectos: 'Proyectos',
+      servicios: 'Servicios',
       estudio: 'Estudio',
       blog: 'Blog',
       contacto: 'Contacto',
@@ -108,6 +109,7 @@ export const UI: Record<Lang, Dict> = {
     nav: {
       home: 'Inici',
       proyectos: 'Projectes',
+      servicios: 'Serveis',
       estudio: 'Estudi',
       blog: 'Blog',
       contacto: 'Contacte',
@@ -151,6 +153,7 @@ export const UI: Record<Lang, Dict> = {
     nav: {
       home: 'Home',
       proyectos: 'Projects',
+      servicios: 'Services',
       estudio: 'Studio',
       blog: 'Blog',
       contacto: 'Contact',

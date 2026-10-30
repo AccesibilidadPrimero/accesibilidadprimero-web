@@ -11,6 +11,9 @@
 import Base from '../layouts/Base.astro';
 import HeroPagina from './HeroPagina.astro';
 import TarjetaArticulo from './TarjetaArticulo.astro';
+/* La ilustración del hero (Johnny, 30/10/2026). La compila `npm run arte`
+   desde arte/blog/hero.svg. */
+import ilustracionBlog from '../assets/blog/hero.svg';
 import { DEFAULT_LANG } from '../i18n/config';
 import { CATEGORIAS } from '../data/blog';
 import '../styles/listados.css';
@@ -40,6 +43,8 @@ const nombre = categoria ? CATEGORIAS[categoria] : null;
   description="Lo que aprendemos diseñando webs accesibles: normativa, tipografía, herramientas y decisiones de diseño, contado sin tecnicismos de más."
 >
   <HeroPagina
+    ilustracion={ilustracionBlog}
+    alt="Una garza rosa mira una jaula de pájaro con dos personas diminutas dentro."
     titulo={nombre ? `Blog · ${nombre}` : 'Blog'}
     texto={['Lo que aprendemos diseñando webs accesibles, contado sin tecnicismos de más.']}
   />

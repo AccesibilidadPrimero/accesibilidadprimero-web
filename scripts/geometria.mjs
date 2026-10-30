@@ -44,7 +44,9 @@ const TOLERANCIA = 2;   // px. Por debajo de esto es redondeo del navegador.
    —las mesas de trabajo de Illustrator miden 400 px de alto y el ancho que
    cada dibujo necesite—, así que el ancho es el del contenedor y medirlo no
    dice nada. Se comprueba el alto aparte, abajo. */
-const ALTO_ESCENARIO = { 1440: 558, 768: 500, 390: 305 };   // 768: 56 + 388 + 56 (10/10)
+const ALTO_ESCENARIO = { 1440: 558, 768: 500 };   // 768: 56 + 388 + 56 (10/10)
+/* 390 salió el 30/10/2026: en móvil el hero es un slider (HeroCarousel) y su
+   alto depende de la frase más larga. Se mide aparte, más abajo. */
 
 const PUERTO = 4391;
 const servidor = await servir(PUERTO);
@@ -297,6 +299,35 @@ console.log('\n── Texto a 24 del borde, a 1440 ──\n');
   } }
 }
 
+/* ---- El slider del hero en móvil (Johnny, 30/10/2026) ---------------------
+   A 390: cada lámina mide la columna menos 48 (342 − 48 = 294), la ilustración
+   225 de alto, la siguiente asoma por la derecha y la fila no ensancha la
+   página. El botón de pausa mide 44. */
+console.log('\n── El slider del hero a 390 ──\n');
+{
+  const p = await nav.newPage({ viewport: { width: 390, height: 844 } });
+  await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
+  const m = await p.evaluate(() => {
+    const l = [...document.querySelectorAll('.hero__lamina')];
+    const b = document.querySelector('[data-slider-control]').getBoundingClientRect();
+    return {
+      'Lámina · ancho': [294, l[0].getBoundingClientRect().width],
+      'Ilustración · alto': [225, l[1].querySelector('img').getBoundingClientRect().height],
+      'La siguiente asoma (borde izquierdo < 390)': [1, l[1].getBoundingClientRect().left < 390 ? 1 : 0],
+      'Página sin scroll horizontal': [390, document.documentElement.scrollWidth],
+      'Botón de pausa · alto': [44, b.height],
+    };
+  });
+  await p.close();
+  esperadas += Object.keys(m).length;
+  for (const [n, [esp, real]] of Object.entries(m)) {
+    medidos++;
+    const bien = Math.abs(real - esp) <= TOLERANCIA;
+    if (!bien) fallos++;
+    console.log(`  ${bien ? '✓' : '✗'} ${n.padEnd(44)} ${String(esp).padStart(4)} → ${real.toFixed(1).padStart(6)}`);
+  }
+}
+
 /* El alto del escenario en los tres anchos. */
 console.log('\n── Alto del Carousel Stage en los tres anchos ──\n');
 esperadas += Object.keys(ALTO_ESCENARIO).length;
@@ -324,8 +355,10 @@ for (const [ancho, esperado] of Object.entries(ALTO_ESCENARIO)) {
    apaisado dentro de una caja más alta —la trompeta a 390 px pinta 342 × 178
    dentro de un <img> de 342 × 225— y el botón tiene que seguir al dibujo, no
    al hueco. Se recorren las ocho a mano porque el ancho lo manda cada una. */
-console.log('\n── El control calca el dibujo · ocho ilustraciones × tres anchos ──\n');
-for (const ancho of [390, 768, 1440]) {
+console.log('\n── El control calca el dibujo · ocho ilustraciones × 768 y 1440 ──\n');
+/* 390 no: en móvil el control transparente no se pinta (el slider se desliza
+   con el dedo y lleva su propio botón de pausa). */
+for (const ancho of [768, 1440]) {
   const p = await nav.newPage({ viewport: { width: ancho, height: 900 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   /* Enfocar el control lo para: si no, se mide el fundido a medias y el ancho
@@ -565,7 +598,7 @@ for (const ancho of [1440, 768, 390]) {
 {
   /* /proyectos/ salió de la lista el 14/10/2026: ya no lleva hero (ver el
      bloque siguiente). */
-  const PAGINAS = ['/estudio/', '/contacto/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/blog/',
+  const PAGINAS = ['/estudio/', '/servicios/', '/contacto/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/blog/',
     '/blog/categoria/diseno/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/'];
   const art = (await (await fetch(`http://localhost:${PUERTO}/blog/`)).text()).match(/href="(\/blog\/(?!categoria)[^"]+\/)"/);
   if (art) PAGINAS.push(art[1]);
