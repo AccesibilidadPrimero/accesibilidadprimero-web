@@ -108,10 +108,28 @@ Están aquí porque ya han pasado, no en abstracto:
 
 ## 4. CSS
 
-- Los tokens viven en `src/styles/tokens.css` y salen del Figma. **No se
-  inventa un valor nuevo aquí**: se crea primero en Figma y después se trae.
-  **Excepción: el movimiento** (duraciones, curvas, recorridos) vive solo en
-  `tokens.css`, no en el Figma (Johnny, 09/10).
+- **El código manda** (Johnny, 29/10/2026; hasta ese día era al revés). Los
+  tokens viven en `src/styles/` y la Librería AP de Figma se genera a partir
+  de ellos, con los mismos nombres: `--tipo-h3-size` es la variable
+  `tipo/h3/size`. Un cambio que nazca en Figma se anota y se aplica primero
+  aquí; después se vuelve a llevar a Figma. Nada se cambia solo en uno de los
+  dos lados. El movimiento (duraciones, curvas, recorridos) sigue viviendo
+  solo en `tokens.css` (Johnny, 09/10).
+- **Dos capas** (29/10/2026). `escala.css` (y `escala-elementos.css`) es el
+  **stack**: lo que hereda cualquier web que haga el estudio. `tokens.css` y
+  `base.css` son el **tema de la web de AP**. La web de AP importa los tokens
+  de la escala pero no `escala-elementos.css`: su lenguaje de un peso y dos
+  tamaños es una decisión de su tema y no se exporta. Un proyecto nuevo
+  importa los dos archivos de la escala y su propio tema encima.
+- **Escala del stack: por roles y con dos pesos reales, 400 y 600.** Etiqueta
+  14 · texto 17→18 · entradilla 20→22 · h4 20→22 · h3 24→28 · h2 28→36 · h1
+  34→48 · display 40→60, una recta entre 390 y 1440 en rem + vw. Nada por
+  debajo de 14, nunca menos de 400 en texto corrido, medida de ~68
+  caracteres. El 600 tiene que ser el de la tipografía, nunca uno sintético.
+  Un tema solo puede cambiar el peso de h2, h1 y display (`--peso-titular`).
+  El 600 NO cuenta como negrita para el umbral de texto grande: solo es
+  grande lo que mide 24 o más (h3 en adelante). `npm run escala` lo mide todo
+  y falla si la tabla de `escala.css` y el render no coinciden.
 - **Aparición al hacer scroll:** lo que se mueve está listado en
   `src/scripts/aparicion.ts` y lo marca el JS al arrancar; sin JS no se marca
   nada. En movimiento normal el bloque no se oculta nunca, solo sube 16 px.
@@ -136,7 +154,8 @@ Están aquí porque ya han pasado, no en abstracto:
   el de escritorio NO vale: las pendientes de los dos tramos son distintas y el
   valor intermedio sale mal. Ya pasó: el cuerpo se quedaba en 27 px a 1440 en
   vez de 30. `npm run tipografia` lo comprueba midiendo el render.
-- **Un solo peso en toda la web: 400.** Sin negritas (Johnny, 23/08) y sin
+- **Web de AP (tema): un solo peso en toda la web, 400.** No rige para el
+  stack, que usa 400 y 600 (ver arriba). Sin negritas (Johnny, 23/08) y sin
   Medium (Johnny, 08/10). El `Display/H3` del Figma viene en Medium y aquí se
   pinta en Regular a propósito. `npm run tipografia` recorre la página
   nodo a nodo en los tres anchos y **falla si encuentra cualquier peso distinto
@@ -352,6 +371,9 @@ npm run build        # build de producción. Las reglas del punto 6 viven en el
 npm run check        # tipos y plantillas Astro
 npm run tipografia   # mide el tamaño y el interlineado QUE PINTA EL NAVEGADOR
                      # contra los estilos del Figma en 390, 768 y 1440
+npm run escala       # la escala del STACK (escala.css) medida en el navegador:
+                     # tamaños, suelo de 14, pesos reales, texto grande y zoom.
+                     # Con `-- --json` saca la tabla para las variables de Figma
 npm run a11y         # axe-core + objetivos de 44 px + reflow a 320 px
 npm run teclado      # el recorrido de teclado del menú y del carrusel, de verdad
 npm run contraste    # contraste medido POR PÍXEL, no leído del CSS

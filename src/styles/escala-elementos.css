@@ -1,0 +1,44 @@
+/* ---------------------------------------------------------------------------
+   Escala del stack aplicada a los elementos HTML · STACK AP
+
+   Lo importa cada proyecto del stack DESPUÉS de escala.css. La web de AP no lo
+   importa: es el tema que se queda con su propio lenguaje (tokens.css y
+   base.css).
+
+   Todo va en `@layer stack`: cualquier regla del tema o de un componente, que
+   no lleva capa, gana sin pelear por especificidad. El nivel semántico y el
+   tamaño visual siguen siendo independientes (AGENTS.md §3): un componente
+   puede pintar un <h2> con el rol h3; lo que no puede es saltarse niveles.
+   --------------------------------------------------------------------------- */
+
+@layer stack {
+  body {
+    font-size: var(--tipo-texto-size);
+    line-height: var(--tipo-texto-leading);
+    font-weight: var(--tipo-texto-peso);
+  }
+
+  h1 { font-size: var(--tipo-h1-size); line-height: var(--tipo-h1-leading); font-weight: var(--tipo-h1-peso); letter-spacing: var(--tipo-titular-track); }
+  h2 { font-size: var(--tipo-h2-size); line-height: var(--tipo-h2-leading); font-weight: var(--tipo-h2-peso); letter-spacing: var(--tipo-titular-track); }
+  h3 { font-size: var(--tipo-h3-size); line-height: var(--tipo-h3-leading); font-weight: var(--tipo-h3-peso); }
+  /* h5 y h6 no tienen rol propio: el CMS no deja bajar de «subsección», y si
+     un texto heredado los trae, se pintan como h4 en vez de encoger. */
+  h4, h5, h6 { font-size: var(--tipo-h4-size); line-height: var(--tipo-h4-leading); font-weight: var(--tipo-h4-peso); }
+
+  h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+  p, li, dd, figcaption, blockquote, td, th { text-wrap: pretty; }
+
+  /* El énfasis fuerte usa el 600 REAL de la tipografía, nunca una negrita
+     sintética. `npm run escala` comprueba que el archivo lo trae. */
+  strong, b, th, dt { font-weight: var(--peso-fuerte); }
+
+  /* <small> nunca baja del suelo de la escala, aunque esté dentro de un texto
+     que ya es pequeño. */
+  small { font-size: max(var(--tipo-etiqueta-size), 0.875em); }
+
+  /* La medida va en el texto, no en la columna (como en la web de AP): las
+     imágenes llenan la columna y los párrafos se paran en ~68 caracteres. */
+  main :where(p:not(:has(> img, > picture, > video)), dd, blockquote, figcaption, ul:not([class]) > li, ol:not([class]) > li) {
+    max-inline-size: var(--tipo-medida);
+  }
+}

@@ -10,12 +10,16 @@
    2. Velocidad. Sin conexión a otro dominio, sin DNS, sin TLS de terceros. En
       Cloudflare los dos archivos salen del mismo borde que el HTML.
 
-   Es una tipografía variable. El descriptor declara el tramo 400–500 porque
-   es lo que el archivo trae, pero **el sistema usa solo el 400** desde el
-   08/10/2026: ni negritas ni Medium. El tramo se deja declarado para que un
-   `font-weight: 500` escrito por error no acabe en negrita sintética, que es
-   peor; quien lo impide de verdad es `npm run tipografia`, que falla si
-   encuentra cualquier peso distinto de 400 pintado en la página. 41 KB.
+   Es una tipografía variable con el eje de peso entero, 400–700 (medido con
+   fontTools el 29/10/2026: hasta ese día el descriptor decía 400–500 y el
+   comentario sostenía que era lo que el archivo traía; no lo era). Se declara
+   el tramo completo para que el 600 de la escala del stack (escala.css) sea
+   un 600 de verdad y no una negrita sintética.
+
+   La WEB DE AP sigue usando solo el 400 desde el 08/10/2026: ni negritas ni
+   Medium. Eso es una decisión del tema, no de la tipografía, y quien la hace
+   cumplir es `npm run tipografia`, que falla si encuentra cualquier peso
+   distinto de 400 pintado en la página. 41 KB.
 
    Licencia: SIL Open Font License 1.1, que permite servirla así.
    --------------------------------------------------------------------------- */
@@ -23,7 +27,7 @@
 @font-face {
   font-family: 'Instrument Sans';
   font-style: normal;
-  font-weight: 400 500;
+  font-weight: 400 700;
   font-stretch: 100%;
   /* swap: el texto se ve desde el primer momento con la tipografía de
      respaldo y se sustituye al llegar la buena. Nunca hay texto invisible. */
@@ -37,7 +41,7 @@
 @font-face {
   font-family: 'Instrument Sans';
   font-style: normal;
-  font-weight: 400 500;
+  font-weight: 400 700;
   font-stretch: 100%;
   font-display: swap;
   src: url('/fonts/instrument-sans-latin-ext.woff2') format('woff2');
