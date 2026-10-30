@@ -37,7 +37,7 @@ export const DISENO = {
     {
       nombre: 'Un gestor de contenidos propio.',
       texto:
-        'Tu equipo actualiza textos, imágenes y artículos sin tocar código y sin romper la accesibilidad. Lo estamos terminando: las primeras webs lo usarán a principios de 2027.',
+        'Tu equipo actualiza textos, imágenes y artículos sin tocar código y sin romper la accesibilidad.',
     },
     {
       nombre: 'Rápidas y sin plugins que mantener.',
@@ -75,7 +75,7 @@ export const AUDITORIA = {
     {
       nombre: 'Express',
       para: 'Webs pequeñas',
-      precio: '590 a 790 €',
+      precio: '590 a 790 € + IVA',
       incluye: [
         'Hasta 10 páginas',
         'Revisión automática y manual',
@@ -88,7 +88,7 @@ export const AUDITORIA = {
     {
       nombre: 'Completa',
       para: 'Webs medianas',
-      precio: '1.200 a 1.800 €',
+      precio: '1.200 a 1.800 € + IVA',
       incluye: [
         'Hasta 25 páginas y los recorridos críticos',
         'NVDA y VoiceOver',
@@ -102,7 +102,7 @@ export const AUDITORIA = {
     {
       nombre: 'Institucional',
       para: 'Sector público y grandes empresas',
-      precio: 'Desde 2.500 €',
+      precio: 'Desde 2.500 € + IVA',
       incluye: [
         'Sin límite de páginas',
         'WCAG 2.2 y EN 301 549',
@@ -113,7 +113,6 @@ export const AUDITORIA = {
       ],
     },
   ] satisfies Tarifa[],
-  nota: 'Si después nos encargas las mejoras, la auditoría no se cobra.',
 };
 
 export const FORMACION = {
