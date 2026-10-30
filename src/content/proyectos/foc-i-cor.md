@@ -61,8 +61,8 @@ caso:
     y barra.
   anio: 2026
   queHicimos: Diseño, desarrollo y accesibilidad
-  # Johnny, 23/10: sin «parcialmente conforme». La ficha lo presenta como
-  # el estándar de trabajo («Estándar»), como en el Figma de Archivo.
+  # Johnny, 23/10: sin “parcialmente conforme”. La ficha lo presenta como
+  # el estándar de trabajo (“Estándar”), como en el Figma de Archivo.
   conformidad: WCAG 2.2 nivel AA
   reto:
     intro: >-
@@ -89,7 +89,7 @@ caso:
       vertical: ../../assets/proyectos/foc-i-cor/portada-vertical.jpg
       alt: >-
         La portada de focicor.es: una fotografía del embarcadero de la
-        Albufera al atardecer con el lema «Cuina feta amb foc i Cor», el botón
+        Albufera al atardecer con el lema “Cuina feta amb foc i Cor”, el botón
         de reserva y, abajo, el horario y la dirección.
       # La portada recorrida en vídeo (29/10/2026), un archivo por tamaño.
       video:
@@ -104,8 +104,8 @@ caso:
           poster: ../../assets/proyectos/foc-i-cor/portada-video-movil.png
         alt: >-
           Recorrido por la portada de focicor.es de arriba abajo: el
-          embarcadero de la Albufera con el lema «Cuina feta amb Foc i Cor»;
-          «Un restaurant per gaudir, un projecte per créixer» con sus tres
+          embarcadero de la Albufera con el lema “Cuina feta amb Foc i Cor”;
+          “Un restaurant per gaudir, un projecte per créixer” con sus tres
           tarjetas; el restaurante con fotos del equipo en la cocina; el
           proyecto de Cesal con sus cifras y sus financiadores; las noticias,
           y el formulario de contacto.
@@ -123,14 +123,14 @@ caso:
     capturas:
       - archivo: ../../assets/proyectos/foc-i-cor/almuerzos.jpg
         alt: >-
-          La página de los almuerzos de focicor.es: el titular «Almorzar de
-          verdad para tener energía durante todo el día», qué incluye cada
+          La página de los almuerzos de focicor.es: el titular “Almorzar de
+          verdad para tener energía durante todo el día”, qué incluye cada
           almuerzo y, al lado, la foto de un bocadillo con queso fundido.
       # Captura de focicor.es/la-carta/ del 23/10/2026, a 2x, pestaña Principals.
       - archivo: ../../assets/proyectos/foc-i-cor/carta.png
         alt: >-
           La carta de focicor.es: a la izquierda, las pestañas por categoría
-          con «Principals» activa; a la derecha, cinco platos con su precio y
+          con “Principals” activa; a la derecha, cinco platos con su precio y
           los alérgenos de cada uno en etiquetas a la vista.
     cierre:
       archivo: ../../assets/proyectos/foc-i-cor/equipo.jpg
@@ -148,9 +148,9 @@ caso:
     declaracion: https://www.focicor.es/accessibilitat/
   cierre: Lo que vive dentro de un PDF no está al alcance de todo el mundo.
   # Testimonio: PENDIENTE del texto literal y del permiso de Cesal. Al
-  # recibirlo, quitar los # de las cinco líneas y pegar la cita entre « ».
+  # recibirlo, quitar los # de las cinco líneas y pegar la cita entre “ ”.
   # testimonio:
-  #   cita: «…»
+  #   cita: “…”
   #   nombre: Marcos Nogales
   #   cargo: Director de Comunicación y Alianzas de Cesal
   #   # lang: ca   (solo si la cita llega en valenciano)
@@ -158,11 +158,11 @@ imagenes:
   - archivo: foc-1
     alt: >-
       Portada en móvil sobre una fotografía del embarcadero de la Albufera al
-      atardecer, con el claim «Cuina feta amb foc i Cor», el botón de reserva,
+      atardecer, con el claim “Cuina feta amb foc i Cor”, el botón de reserva,
       el enlace a la carta y, abajo, el horario y la dirección.
   - archivo: foc-2
     alt: >-
-      Página del proyecto: «CESAL i la cuina com a eina de canvi», tres
+      Página del proyecto: “CESAL i la cuina com a eina de canvi”, tres
       párrafos sobre la escuela-restaurante y, debajo, fichas de color con las
       cifras del programa.
   - archivo: foc-3

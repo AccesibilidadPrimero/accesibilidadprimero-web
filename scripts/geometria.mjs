@@ -198,8 +198,9 @@ console.log('\n── Las tres composiciones de proyecto a 1440 (Figma → medid
 /* ---- El símbolo de Estudio ------------------------------------------------
    Figma `2080:531`: un marco de 60 × 60 con el símbolo dentro. Medido sobre el
    render del documento, el dibujo ocupa 50,25 × 44,5 y está centrado. Se
-   comprueba el marco, el ancho del dibujo y que esté centrado en la página,
-   porque la sección entera va centrada y no a la columna de 48. */
+   comprueba el marco, el ancho del dibujo y que arranque en el margen de 24:
+   desde el 30/10/2026 la sección va a la izquierda (Johnny); antes, centrada
+   en la página. */
 console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n');
 {
   const p3 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
@@ -216,7 +217,7 @@ console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n'
       /* El alto no se escribe a mano: sale de la proporción del archivo. */
       'Símbolo · alto': [50 / (338.4 / 299.43), i.height],
       'Símbolo · centrado en el marco': [0, (i.left + i.width / 2) - (c.left + c.width / 2)],
-      'Marco · centrado en la página': [0, (c.left + c.width / 2) - 720],
+      'Marco · en el margen de 24': [24, c.left],
     };
   });
   await p3.close();

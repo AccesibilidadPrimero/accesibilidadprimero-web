@@ -204,7 +204,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
       titulo: 'Grado de conformidad',
       piezas: [
         { p: 'Este sitio es parcialmente conforme con las Pautas de Accesibilidad para el Contenido Web (WCAG) 2.2, nivel AA.' },
-        { p: 'Parcialmente por dos razones: todavía no está hecha la revisión manual completa, lo explicamos en «Cómo se ha comprobado», y hay un incumplimiento que conocemos y hemos decidido mantener, lo explicamos en «Contenido no accesible».' },
+        { p: 'Parcialmente por dos razones: todavía no está hecha la revisión manual completa, lo explicamos en “Cómo se ha comprobado”, y hay un incumplimiento que conocemos y hemos decidido mantener, lo explicamos en “Contenido no accesible”.' },
         { p: 'Además, nos ponemos una regla más exigente que la norma: todo lo que se pulsa mide al menos 44 píxeles. WCAG pide 24.' },
       ],
     },
@@ -223,7 +223,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
           lista: [
             'El formulario de contacto necesita JavaScript, porque la protección contra envíos automáticos lo necesita. Sin JavaScript no aparece, y en su lugar se ofrece el correo.',
             'Si esa protección no puede comprobar el envío, por ejemplo con algunos bloqueadores, el formulario no se envía. Lo decimos en pantalla y damos el correo como alternativa.',
-            'Las imágenes de «Sobre la mesa» vienen de nuestras publicaciones en Mastodon. Solo aparecen las que tienen texto alternativo, pero su calidad se revisa al publicarlas, no aquí.',
+            'Las imágenes de “Sobre la mesa” vienen de nuestras publicaciones en Mastodon. Solo aparecen las que tienen texto alternativo, pero su calidad se revisa al publicarlas, no aquí.',
           ],
         },
       ],

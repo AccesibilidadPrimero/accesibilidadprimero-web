@@ -8,17 +8,17 @@ imagenAlt: "Logotipo del World Wide Web Consortium (W3C), en azul sobre fondo am
 urlAntigua: /pero-que-es-la-wcag/
 ---
 
-Hay un documento que está detrás de casi todo lo que consideramos «buenas prácticas» en accesibilidad digital. No es un manifiesto ni una ley. Es un conjunto de recomendaciones técnicas que lleva décadas actualizándose y siendo la referencia que, si trabajas con lo digital necesitas conocer.
+Hay un documento que está detrás de casi todo lo que consideramos “buenas prácticas” en accesibilidad digital. No es un manifiesto ni una ley. Es un conjunto de recomendaciones técnicas que lleva décadas actualizándose y siendo la referencia que, si trabajas con lo digital necesitas conocer.
 
 Se llama WCAG. Y este post va de eso.
 
-![La página «WCAG 2 de un vistazo» de la Iniciativa de Accesibilidad Web (WAI) del W3C, en su traducción al castellano, con los principios Perceptible y Operable y sus pautas.](../../assets/blog/pero-que-es-la-wcag/5817.png)
+![La página “WCAG 2 de un vistazo” de la Iniciativa de Accesibilidad Web (WAI) del W3C, en su traducción al castellano, con los principios Perceptible y Operable y sus pautas.](../../assets/blog/pero-que-es-la-wcag/5817.png)
 
 ## ¿Qué es la WCAG?
 
 WCAG son las siglas de _Web Content Accessibility Guidelines_, las Pautas de Accesibilidad para el Contenido Web. Las publica el W3C, el consorcio que define los estándares de la web, a través de su grupo de trabajo sobre accesibilidad, el WAI.
 
-La primera versión apareció en 1999. La más usada hoy es la WCAG 2.1, publicada en 2018. Y en 2023 llegó la WCAG 2.2, que añade criterios nuevos especialmente pensados para personas con discapacidad cognitiva y usuarias de dispositivos móviles. No son una ley en sí mismas. Son recomendaciones técnicas. Pero se han convertido en la referencia global que adoptan legislaciones, contratos públicos y estándares de calidad en todo el mundo — incluyendo la normativa española y europea.
+La primera versión apareció en 1999. La más usada hoy es la WCAG 2.1, publicada en 2018. Y en 2023 llegó la WCAG 2.2, que añade criterios nuevos especialmente pensados para personas con discapacidad cognitiva y usuarias de dispositivos móviles. No son una ley en sí mismas. Son recomendaciones técnicas. Pero se han convertido en la referencia global que adoptan legislaciones, contratos públicos y estándares de calidad en todo el mundo, incluyendo la normativa española y europea.
 
 > Las WCAG no te dicen cómo tiene que ser tu web. Te dicen qué tiene que conseguir. La diferencia importa.
 
@@ -70,7 +70,7 @@ Ejemplo concreto:
 
 Porque llevan décadas de trabajo real detrás. Cada criterio ha sido debatido, probado y validado por investigadores, personas con discapacidad, desarrolladores y diseñadores de todo el mundo. No son opiniones: son evidencia acumulada sobre qué funciona y qué no.
 
-Además, son tecnológicamente neutras. No te dicen «usa este framework» ni «escribe el código así». Te dicen qué tiene que conseguir tu implementación, sea cual sea la tecnología que uses. Y son versionadas. Cuando la web cambia,y cambia constantemente, las WCAG se actualizan. La versión 2.2 añadió criterios nuevos precisamente porque la web de 2023 no es la web de 2008.Cuando la normativa española o europea habla de accesibilidad web, el nivel exigido es el AA.  
+Además, son tecnológicamente neutras. No te dicen “usa este framework” ni “escribe el código así”. Te dicen qué tiene que conseguir tu implementación, sea cual sea la tecnología que uses. Y son versionadas. Cuando la web cambia,y cambia constantemente, las WCAG se actualizan. La versión 2.2 añadió criterios nuevos precisamente porque la web de 2023 no es la web de 2008.Cuando la normativa española o europea habla de accesibilidad web, el nivel exigido es el AA.  
 Es el punto de referencia real para la mayoría de proyectos.
 
 Ejemplo concreto:
@@ -83,9 +83,9 @@ Ejemplo concreto:
 
 ### Qué te obliga y qué no
 
-En España, el «Real Decreto 1112/2018·» transpone la Directiva Europea de Accesibilidad Web y obliga a los organismos del sector público a cumplir el nivel AA de las WCAG 2.1. Esto incluye administraciones, universidades públicas, organismos oficiales y entidades financiadas con fondos públicos.
+En España, el “Real Decreto 1112/2018·” transpone la Directiva Europea de Accesibilidad Web y obliga a los organismos del sector público a cumplir el nivel AA de las WCAG 2.1. Esto incluye administraciones, universidades públicas, organismos oficiales y entidades financiadas con fondos públicos.
 
-Para el sector privado, la situación está cambiando. La «Ley Europea de Accesibilidad» (European Accessibility Act), cuya implementación en España está en proceso, amplía las obligaciones a empresas que ofrezcan determinados productos y servicios digitales.
+Para el sector privado, la situación está cambiando. La “Ley Europea de Accesibilidad” (European Accessibility Act), cuya implementación en España está en proceso, amplía las obligaciones a empresas que ofrezcan determinados productos y servicios digitales.
 
 En resumen:
 
@@ -104,7 +104,7 @@ En resumen:
 
 Este es uno de los puntos que más sorprende a quien se acerca a las WCAG por primera vez: cumplir las pautas de accesibilidad y mejorar el posicionamiento en buscadores van casi siempre de la mano.
 
-¿Por qué? Porque Google funciona de forma parecida a un lector de pantalla. No «ve» tu web: la lee, la interpreta, analiza su estructura. Y valora exactamente las mismas cosas que valoran las personas que usan tecnologías de asistencia.
+¿Por qué? Porque Google funciona de forma parecida a un lector de pantalla. No “ve” tu web: la lee, la interpreta, analiza su estructura. Y valora exactamente las mismas cosas que valoran las personas que usan tecnologías de asistencia.
 
 > Ejemplos concretos de cómo la accesibilidad mejora el SEO
 
@@ -113,12 +113,12 @@ Este es uno de los puntos que más sorprende a quien se acerca a las WCAG por pr
 | Textos alternativos en imágenes (1.1.1) | Personas ciegas pueden entender las imágenes | Google indexa el contenido de las imágenes |
 | Jerarquía de encabezados (1.3.1) | Facilita la navegación con lector de pantalla | Estructura el contenido para los rastreadores |
 | Títulos de página descriptivos (2.4.2) | Orientan a quien llega a la página | Son el primer elemento que Google evalúa |
-| Texto de enlaces descriptivo (2.4.4) | «Descargar informe» en vez de «clic aquí» | Palabras clave en los textos de enlace mejoran el posicionamiento |
+| Texto de enlaces descriptivo (2.4.4) | “Descargar informe” en vez de “clic aquí” | Palabras clave en los textos de enlace mejoran el posicionamiento |
 | Velocidad y código limpio (robusto) | Mejor experiencia para todos | Factor de posicionamiento directo |
 
 Una web construida siguiendo las WCAG es, casi por definición, una web con código semántico, bien estructurada y fácil de interpretar. Eso no solo ayuda a las personas: también le habla con claridad a Google.
 
-Al contrario también es verdad: una web llena de imágenes sin texto alternativo, con encabezados desordenados y enlaces genéricos tipo «más información» está perjudicando a sus usuarias y a su posicionamiento al mismo tiempo.
+Al contrario también es verdad: una web llena de imágenes sin texto alternativo, con encabezados desordenados y enlaces genéricos tipo “más información” está perjudicando a sus usuarias y a su posicionamiento al mismo tiempo.
 
 ## WCAG y responsabilidad:
 
@@ -126,9 +126,9 @@ Al contrario también es verdad: una web llena de imágenes sin texto alternativ
 
 Cumplir las WCAG es el paso más tangible para demostrar que el compromiso con la inclusión no se queda en las palabras.
 
-Hay organizaciones que hablan de diversidad en su comunicación pero tienen una web que excluye a personas con discapacidad. Eso es una contradicción visible. Y las personas que la perciben — usuarias, aliadas, comunidades — lo notan.
+Hay organizaciones que hablan de diversidad en su comunicación pero tienen una web que excluye a personas con discapacidad. Eso es una contradicción visible. Y las personas que la perciben (usuarias, aliadas, comunidades) lo notan.
 
-La accesibilidad web es la única forma de garantizar que el mensaje de «somos una organización inclusiva» se traduzca en algo concreto. Un sitio que cumple las WCAG elimina barreras reales. No es un gesto: es una decisión estructural.
+La accesibilidad web es la única forma de garantizar que el mensaje de “somos una organización inclusiva” se traduzca en algo concreto. Un sitio que cumple las WCAG elimina barreras reales. No es un gesto: es una decisión estructural.
 
 Esto tiene impacto en varios niveles:
 
@@ -152,7 +152,7 @@ La accesibilidad es cada vez más un criterio de calidad visible. Organizaciones
 
 ### Accesibilidad Primero
 
-El error más habitual que vemos en proyectos digitales es usar las WCAG solo como lista de verificación al final del proceso. «Hemos terminado el proyecto, ahora hacemos la auditoría de accesibilidad.»
+El error más habitual que vemos en proyectos digitales es usar las WCAG solo como lista de verificación al final del proceso. “Hemos terminado el proyecto, ahora hacemos la auditoría de accesibilidad.”
 
 Ese enfoque es el más costoso. Detectar problemas de accesibilidad cuando el diseño ya está cerrado y el código ya está escrito significa rehacerlo. Y eso tiene un coste económico real, además de uno reputacional si el problema se detecta desde fuera.
 
@@ -194,7 +194,7 @@ Hay muchas herramientas para auditar accesibilidad web. WAVE, axe, Lighthouse…
 
 Ninguna se ajustaba exactamente a lo que necesitábamos en el día a día. Así que construimos la nuestra.
 
-Junto a Claude, llevamos meses desarrollando «A11y Primero», una extensión propia para Chrome que audita accesibilidad web pensada desde dentro para responder a dos situaciones que vivimos en cada proyecto, (puedes leer el proceso de la extensión [aquí](/blog/a11yprimero/)):
+Junto a Claude, llevamos meses desarrollando “A11y Primero”, una extensión propia para Chrome que audita accesibilidad web pensada desde dentro para responder a dos situaciones que vivimos en cada proyecto, (puedes leer el proceso de la extensión [aquí](/blog/a11yprimero/)):
 
 ### En la reunión con cliente
 
@@ -206,7 +206,7 @@ Necesitamos precisar qué falla, dónde y cómo corregirlo. Criterios WCAG, nive
 
 Lo que no encontrábamos en ninguna otra herramienta era esto: que ambas cosas estuvieran juntas, en el mismo sitio, y con historial para poder comparar las mejoras de accesibilidad después de aplicarlas.
 
-> _Diseñar accesibilidad también es diseñar cómo se comunica la accesibilidad. Y «A11y Primero» nace justo ahí._
+> _Diseñar accesibilidad también es diseñar cómo se comunica la accesibilidad. Y “A11y Primero” nace justo ahí._
 
 Estamos en la v1.7 y seguimos desarrollando. Pronto la tendrás disponible en la Chrome Web Store.
 

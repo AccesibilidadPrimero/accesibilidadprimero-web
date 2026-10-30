@@ -51,7 +51,7 @@ Su traducción en bases de convocatoria es cuestión de tiempo, y en algunos cas
 
 La Generalitat financia proyectos con fondos europeos. Los fondos europeos exigen accesibilidad. La cadena de obligaciones ya llega hasta aquí.
 
-![El argumento que nadie menciona: una persona técnica de la administración entra en tu web para revisar tu solicitud. Si la web no es accesible (imágenes sin descripción, contraste insuficiente, formularios que fallan) piensa «esta entidad no cuida lo que publica». Si lo es, «esta entidad es seria y cuida su trabajo». En convocatorias competitivas, donde la diferencia es mínima, esa impresión pesa.](../../assets/blog/me-pueden-rechazar-una-subvencion-si-mi-web-no-es-accesible/6041.png)
+![El argumento que nadie menciona: una persona técnica de la administración entra en tu web para revisar tu solicitud. Si la web no es accesible (imágenes sin descripción, contraste insuficiente, formularios que fallan) piensa “esta entidad no cuida lo que publica”. Si lo es, “esta entidad es seria y cuida su trabajo”. En convocatorias competitivas, donde la diferencia es mínima, esa impresión pesa.](../../assets/blog/me-pueden-rechazar-una-subvencion-si-mi-web-no-es-accesible/6041.png)
 
 Más allá de lo legal, hay algo que afecta directamente a cómo te valoran cuando pides una subvención.
 

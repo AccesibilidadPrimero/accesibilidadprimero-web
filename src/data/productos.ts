@@ -67,9 +67,9 @@ export const PRODUCTOS: Producto[] = [
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
     alt:
-      'El panel de la extensión A11y Primero: la nota 72 marcada como «mejorable» sobre ' +
-      'accesibilidadprimero.com, cuatro barras por apartado —imágenes 85, estructura 60, ' +
-      'formularios 50 y contraste 45—, el recuento de encabezados y un resumen para el ' +
+      'El panel de la extensión A11y Primero: la nota 72 marcada como “mejorable” sobre ' +
+      'accesibilidadprimero.com, cuatro barras por apartado (imágenes 85, estructura 60, ' +
+      'formularios 50 y contraste 45), el recuento de encabezados y un resumen para el ' +
       'cliente con los cuatro problemas principales en lenguaje claro.',
     tarjeta: {
       captura: 'a11y-primero',
@@ -92,8 +92,8 @@ export const PRODUCTOS: Producto[] = [
     clase: 'producto--aa',
     imagen: 'accessible-abstracts',
     alt:
-      'La plataforma Accessible Abstracts en un móvil: el titular «Abstract management ' +
-      'that everyone can actually use», los botones de demostración y un panel con ' +
+      'La plataforma Accessible Abstracts en un móvil: el titular “Abstract management ' +
+      'that everyone can actually use”, los botones de demostración y un panel con ' +
       'cuatro abstracts enviados y su estado de revisión.',
     tarjeta: {
       captura: 'accessible-abstracts',

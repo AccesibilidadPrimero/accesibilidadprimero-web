@@ -51,12 +51,17 @@ interface Props {
   /** Foto de ambiente debajo del texto (casos). Va con alt="": el titular
       está encima y la foto no añade información. */
   foto?: ImageMetadata;
+  /** Cada golpe en su línea, en todos los anchos (Estudio, 30/10/2026). */
+  enLineas?: boolean;
+  /** Cada línea del texto en su propio párrafo, con aire entre ellos
+      (Estudio, 30/10/2026). Sin esto, las líneas forman una sola frase. */
+  enParrafos?: boolean;
 }
-const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto } = Astro.props;
+const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false } = Astro.props;
 /* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
 const anchosFoto = foto ? [640, 1024, 1440, 2048, 2880].filter((w) => w < foto.width).concat(foto.width) : [];
 if (golpes && golpes.join(' ') !== titulo) {
-  throw new Error(`HeroPagina: los golpes «${golpes.join(' ')}» no son el titular «${titulo}».`);
+  throw new Error(`HeroPagina: los golpes “${golpes.join(' ')}” no son el titular “${titulo}”.`);
 }
 /* En vez de una imagen, un dibujo en línea (el símbolo animado de Estudio,
    13/10/2026). Lleva la clase `apertura__ilustracion` y mide lo mismo. */
@@ -108,7 +113,7 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
     }
     {
       golpes ? (
-        <h1 class="apertura__titulo">
+        <h1 class:list={['apertura__titulo', enLineas && 'apertura__titulo--lineas']}>
           {golpes.map((g, i) => <>{i > 0 && ' '}<span class="golpe"><span class="golpe__dentro" style={`--i:${i}`} data-mov-propio>{g}</span></span></>)}
         </h1>
       ) : (
@@ -117,9 +122,17 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
     }
     {/* data-mov-propio: con «reducir movimiento» trae su propio fundido de
         300 ms, y base.css no debe dejarlo en 0,01 ms (modo de fallo n.º 3). */}
-    <p class="apertura__texto" data-mov-propio={golpes ? '' : undefined}>
-      {texto.map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
-    </p>
+    {
+      enParrafos ? (
+        <div class="apertura__texto apertura__parrafos" data-mov-propio={golpes ? '' : undefined}>
+          {texto.map((l) => <p>{l}</p>)}
+        </div>
+      ) : (
+        <p class="apertura__texto" data-mov-propio={golpes ? '' : undefined}>
+          {texto.map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
+        </p>
+      )
+    }
     {nota && <p class="apertura__texto">{nota}</p>}
   </div>
 </div>
@@ -220,6 +233,13 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
   /* 930 en el Figma de escritorio. Como tope: por debajo ocupa lo que haya. */
   .apertura__texto { margin: 0; max-width: 930px; }
   .apertura__texto .linea { display: block; }
+  /* Párrafos separados: 16 entre ellos, el hueco mínimo que se distingue del
+     interlineado (AGENTS.md §4, «Título y texto al mismo cuerpo»). */
+  .apertura__parrafos { display: flex; flex-direction: column; gap: var(--space-16); }
+  .apertura__parrafos p { margin: 0; max-width: none; }
+  /* Un golpe por línea: el espacio entre ellos sigue en el HTML, así que el
+     lector de pantalla lee el titular de corrido. */
+  .apertura__titulo--lineas .golpe { display: block; inline-size: fit-content; }
 
   /* ---- Entrada en golpes (Estudio) ----
      Cada golpe es una ventana del alto de su línea, con un poco de aire
