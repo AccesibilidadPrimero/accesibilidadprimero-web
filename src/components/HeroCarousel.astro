@@ -37,6 +37,16 @@
       que esté delante: lo que se ve es el dibujo, y el dibujo es la zona que
       responde. Tiene nombre accesible propio y anillo de foco visible.
 
+   MÓVIL (< 768): SIN ANIMACIÓN, UN SLIDER (Johnny, 30/10/2026)
+   -----------------------------------------------------------
+   En móvil no hay fundidos ni frase escrita carácter a carácter. Las mismas
+   láminas se ponen en fila, cada una con su frase debajo, y se pasan con el
+   dedo; la siguiente asoma por la derecha para que se vea que hay más. Pasan
+   solas cada 3 s. Como eso dura más de 5 s, hay un botón de pausa visible
+   (2.2.2), el de los vídeos de los casos; tocar el slider también lo para.
+   Con «reducir movimiento» no pasa solo y el botón no se pinta: se pasa con
+   el dedo. Sin JS, la fila se desliza igual con el dedo, sin avance.
+
    Decisión de Johnny sobre el lector de pantalla: las ilustraciones llevan
    `alt` con su frase y las siete están siempre en el árbol de accesibilidad.
    Quien use lector oye los siete principios seguidos, como una lista, sin
@@ -127,7 +137,10 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       salto en cuanto arranca el script. Luego la actualiza `mostrar()`. */}
   <div class="hero__escenario" data-carrusel
        style={`--ratio-activa:${(meta(ACTIVAS[0].archivo).width / meta(ACTIVAS[0].archivo).height).toFixed(4)}`}>
-    <ul class="hero__pila">
+    {/* `aria-label`: en móvil la fila se desliza y recibe el foco para que se
+        pueda recorrer con el teclado (2.1.1); al llegar, el lector dice qué
+        es, no solo «lista, 8 elementos». En escritorio no es enfocable. */}
+    <ul class="hero__pila" aria-label={ui.carouselRegion}>
       {
         ACTIVAS.map((il, i) => (
           <li class="hero__lamina" data-indice={i} data-activa={i === 0 ? '' : undefined}
@@ -140,6 +153,12 @@ const meta = (nombre: string) => buscar(nombre)!.default;
             <img src={meta(il.archivo).src} alt={il.alt}
                  width={meta(il.archivo).width} height={meta(il.archivo).height}
                  loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+            {/* La frase escrita debajo: solo se pinta en el slider de móvil.
+                En escritorio va `display: none` y no se lee: allí la frase la
+                dice la banda cuando el carrusel se para. */}
+            {il.frase && (
+              <p class="hero__lamina-frase" lang={il.fraseLang && il.fraseLang !== lang ? il.fraseLang : undefined}>{il.frase}</p>
+            )}
           </li>
         ))
       }
@@ -166,6 +185,16 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     <button type="button" class="hero__control" data-carrusel-control
             data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
       <span class="sr-only" data-carrusel-control-label>{ui.carouselPause}</span>
+    </button>
+    {/* El botón de pausa del slider de móvil. Lo enseña el script solo en
+        móvil, con JS y sin «reducir movimiento». */}
+    <button type="button" class="hero__pausa-movil" data-slider-control hidden
+            data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
+      <svg class="hero__pausa-icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+        <g class="hero__pausa-pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+        <path class="hero__pausa-play" d="M1 0 10 6 1 12z" />
+      </svg>
+      <span class="sr-only"><span data-slider-label>{ui.carouselPause}</span> · {ui.carouselRegion}</span>
     </button>
   </div>
 
@@ -415,6 +444,79 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     .hero__textos { max-width: 55ch; }
   }
 
+  /* ---- Móvil: el slider (Johnny, 30/10/2026) ----------------------------
+     La pila se convierte en una fila que se desliza con el dedo y encaja
+     lámina a lámina. Cada lámina mide el ancho de la columna menos 48, así
+     que la siguiente asoma por la derecha. Sin fundidos: todas se ven. */
+  .hero__lamina-frase { display: none; }
+  @media (max-width: 767px) {
+    .hero__escenario { padding-block: var(--space-24); justify-items: stretch; }
+    .hero__pila {
+      display: flex;
+      gap: var(--space-16);
+      height: auto;
+      width: auto;
+      margin-inline: calc(var(--gutter-page) * -1);
+      padding-inline: var(--gutter-page);
+      scroll-padding-inline: var(--gutter-page);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+    }
+    .hero__pila::-webkit-scrollbar { display: none; }
+    .hero__pila:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 4px; }
+    .hero__lamina {
+      position: static;
+      flex: 0 0 calc(100% - var(--space-48));
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-16);
+      opacity: 1;
+      scroll-snap-align: start;
+      transition: none;
+    }
+    .hero__lamina img { height: var(--ilustracion); max-width: 100%; }
+    .hero__lamina-frase { display: block; margin: 0; }
+    /* El control transparente del escritorio no tiene sentido aquí: en móvil
+       el carrusel no se para tocando el dibujo, se desliza. */
+    .hero__control { display: none; }
+    /* El claim sigue abajo y la frase del principio no se escribe. */
+    .hero__frase--principio { display: none; }
+    [data-parado][data-con-frase] .hero__frase--base { opacity: 1; }
+  }
+  /* El botón de los vídeos de los casos (VideoPausable): 44 de zona y un
+     círculo de 32 dentro, a la derecha, bajo la fila. */
+  .hero__pausa-movil {
+    position: relative;
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    margin-block-start: var(--space-8);
+    margin-inline-end: -6px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .hero__pausa-movil[hidden] { display: none; }
+  .hero__pausa-movil::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+  }
+  .hero__pausa-movil:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .hero__pausa-icono { fill: currentColor; }
+  .hero__pausa-play { display: none; }
+  .hero__pausa-movil[data-parado] .hero__pausa-pausa { display: none; }
+  .hero__pausa-movil[data-parado] .hero__pausa-play { display: inline; }
+
   /* EL MENTA HASTA EL BORDE FÍSICO DE LA PANTALLA (Johnny, 09/10, en iPhone).
      `100svh` es la pantalla MENOS la barra del navegador. En Safari de iPhone
      esa barra flota encima de la página, así que por debajo del hero asomaba
@@ -462,6 +564,9 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     if (!laminas.length || !frase || !control || !etiqueta) return;
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    /* En móvil manda el slider (abajo): este carrusel no rota. */
+    const movil = window.matchMedia('(max-width: 767px)');
+    movil.addEventListener('change', () => { detener(); sincronizar(); });
     let indice = 0;
     let temporizador: number | null = null;
     /* Un conjunto de motivos, no un booleano: el puntero no puede reanudar
@@ -511,7 +616,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     }
 
     function arrancar() {
-      if (temporizador !== null || reduce.matches) return;
+      if (temporizador !== null || reduce.matches || movil.matches) return;
       temporizador = window.setInterval(() => mostrar(indice + 1), INTERVALO);
     }
 
@@ -579,5 +684,64 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     };
     reduce.addEventListener('change', aplicarReduce);
     aplicarReduce();
+  });
+
+  /* ---- El slider de móvil (30/10/2026) -------------------------------------
+     Avanza una lámina cada 3 s haciendo scroll en la fila; al llegar al final
+     vuelve a la primera. Para con el botón, al tocar la fila o al salir de
+     pantalla, y no avanza con «reducir movimiento». Un conjunto de motivos,
+     como el carrusel: el botón manda sobre el resto. */
+  const PASO = 3000;
+  document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((raiz) => {
+    const fila = raiz.querySelector<HTMLElement>('.hero__pila');
+    const laminas = Array.from(raiz.querySelectorAll<HTMLElement>('.hero__lamina'));
+    const control = raiz.querySelector<HTMLButtonElement>('[data-slider-control]');
+    const etiqueta = raiz.querySelector<HTMLElement>('[data-slider-label]');
+    if (!fila || laminas.length < 2 || !control || !etiqueta) return;
+    const movil = window.matchMedia('(max-width: 767px)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const motivos = new Set<string>();
+    let visible = false;
+    let reloj: number | undefined;
+
+    /* La lámina que está delante: la más cercana al borde izquierdo de la fila. */
+    const actual = () => {
+      const x = fila.scrollLeft;
+      let mejor = 0;
+      laminas.forEach((l, i) => {
+        if (Math.abs(l.offsetLeft - fila.offsetLeft - x) < Math.abs(laminas[mejor].offsetLeft - fila.offsetLeft - x)) mejor = i;
+      });
+      return mejor;
+    };
+    const ir = (i: number) => {
+      const destino = laminas[(i + laminas.length) % laminas.length];
+      fila.scrollTo({ left: destino.offsetLeft - fila.offsetLeft - (laminas[0].offsetLeft - fila.offsetLeft), behavior: reduce.matches ? 'auto' : 'smooth' });
+    };
+
+    const sincronizar = () => {
+      // En móvil la fila es una zona con scroll: entra en el orden de tabulación.
+      if (movil.matches) fila.tabIndex = 0; else fila.removeAttribute('tabindex');
+      const activo = movil.matches && !reduce.matches;
+      control.hidden = !activo;
+      const pausado = motivos.size > 0;
+      etiqueta.textContent = pausado ? (control.dataset.labelReproducir ?? 'Reproducir') : (control.dataset.labelPausar ?? 'Pausar');
+      control.toggleAttribute('data-parado', pausado);
+      window.clearInterval(reloj);
+      reloj = undefined;
+      if (activo && visible && !pausado) reloj = window.setInterval(() => ir(actual() + 1), PASO);
+    };
+
+    control.addEventListener('click', () => {
+      if (motivos.size) motivos.clear(); else motivos.add('usuario');
+      sincronizar();
+    });
+    // Quien toca la fila quiere mirar: se para y no vuelve a arrancar solo.
+    fila.addEventListener('pointerdown', () => { motivos.add('usuario'); sincronizar(); }, { passive: true });
+    // Y quien llega con el teclado, igual.
+    fila.addEventListener('focus', () => { motivos.add('usuario'); sincronizar(); });
+    new IntersectionObserver((es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }), { threshold: 0.3 }).observe(raiz);
+    movil.addEventListener('change', sincronizar);
+    reduce.addEventListener('change', sincronizar);
+    sincronizar();
   });
 </script>
