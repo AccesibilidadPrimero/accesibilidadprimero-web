@@ -406,6 +406,12 @@ pausa (2.2.2) y en escritorio ocupa la columna central de tres;
 leve. Las capturas de la Home tienen versión de móvil (`<archivo>-movil`,
 588 × 1280) en ECI e Izaskun.
 
+**Caso Elogio de la línea (30/10/2026).** Maqueta propia, replanteada con
+la estructura de ECI e Izaskun y los textos del Figma. Título «Elogio de la
+línea», con la ele minúscula. Sin nota ni enlace a declaración: la de
+elogiodelalinea.com no está publicada. El testimonio de Pau va de
+`borrador`.
+
 **Caso Izaskun (30/10/2026).** Maqueta propia, con la estructura de ECI y
 los textos del Figma. La retícula editorial (`ReticulaEditorial.astro`) es
 CSS en bucle con botón de pausa; la pausa va por la variable
