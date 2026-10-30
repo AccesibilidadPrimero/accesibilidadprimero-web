@@ -24,18 +24,18 @@ casoPublicado: false
 imagenes:
   - archivo: izaskun-1
     alt: >-
-      Sala de exposición con una pieza de líneas amarillas dibujada sobre la
-      pared, una retícula de obra pequeña enmarcada y cuatro cuadros grandes
-      de paisajes construidos.
+      La portada de izaskunetxebarria.com: una pieza circular de metal sobre
+      la hierba de un acantilado junto al mar, con el nombre de la artista y
+      el menú en una barra clara arriba.
   - archivo: izaskun-2
     alt: >-
-      Página de la serie “Agujeros de Tiempo”, con una banda roja de título,
-      el texto de la artista a tres columnas y una fotografía de cielo
-      asomando debajo.
+      La página de la serie “Agujeros de Tiempo”, con una banda roja de
+      título, el texto de la artista a tres columnas y una fotografía
+      panorámica de cielo debajo.
   - archivo: izaskun-3
     alt: >-
-      Una pieza circular de metal apoyada en un prado junto al mar, con tres
-      fotografías más de la misma pieza en otros encuadres debajo.
+      La página de comisariado: dos hombres miran de cerca unos libros
+      antiguos expuestos en una vitrina iluminada.
 ---
 
 Diseñamos su web con el mismo propósito: dejar espacio a la obra.

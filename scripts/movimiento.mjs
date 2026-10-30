@@ -162,56 +162,62 @@ for (const url of ['/proyectos/', '/blog/']) {
 }
 
 /* ---- Esquema del sistema modular · caso ECI (30/10/2026) ----
-   EsquemaModular.astro no lleva control de pausa porque se mueve MENOS de
-   5 s (2.2.2). Eso se mide aquí, no se escribe al lado (AGENTS.md §2.9):
-   · con JS: arranca al llegar a la zona de lectura, termina antes de 5 s
-     contados desde que el bloque llega, acaba en el último tiempo y no
-     vuelve a moverse (una sola vez, sin bucle);
-   · reducir movimiento: nada viaja; solo un fundido y el último tiempo;
-   · sin JS: el último tiempo, completo y quieto. */
+   Desde la tarde del 30/10 va EN BUCLE con botón de pausa (Johnny: «poner
+   la animación con Play/pause»). Se mide sobre la página servida (§2.9):
+   · con JS: al llegar a la zona de lectura se mueve; el botón «Pausar · …»
+     mide 44; pulsarlo lo para de verdad (nada se mueve en 3 s y el tiempo
+     no cambia) y pasa a «Reproducir»; el lienzo sigue aria-hidden;
+   · reducir movimiento: nada viaja, se queda en el último tiempo y no hay
+     botón;
+   · sin JS: el último tiempo, completo y quieto, sin botón. */
 console.log('\n── Caso ECI: esquema del sistema modular ──\n');
 for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], ['movil', 390, 844, '.esquema--linea']]) {
   for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
     const ctx = await navegador.newContext({ viewport: { width: w, height: h }, ...opciones });
     const p = await ctx.newPage();
     await p.goto(`http://localhost:${PUERTO}/proyectos/eci-conference/`, { waitUntil: 'load' });
-    /* addStyleTag espera al onload del <style>, que sin JS no llega nunca:
-       ahí colgaba el script. Sin JS tampoco se hace scroll, así que sobra. */
-    if (modo !== 'sin JS') await p.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
-    /* Sin JS no hay requestAnimationFrame que medir: se mira el estado tal
-       cual llega en el HTML. */
-    const r = modo === 'sin JS' ? await p.evaluate((sel) => {
-      const e = document.querySelector(sel);
-      return e && { primero: e.getAnimations({ subtree: true }).length ? 0 : null, ultimo: null, estado: e.dataset.estado, oculto: e.getAttribute('aria-hidden') === 'true', nombres: [], modulos: e.querySelectorAll('.modulo').length };
-    }, sel) : await p.evaluate((sel) => new Promise((res) => {
-      const e = document.querySelector(sel);
-      if (!e) return res(null);
-      e.closest('section').scrollIntoView({ block: 'center' });
-      const t0 = performance.now(); let primero = null, ultimo = null; const nombres = new Set();
+    const id = `${tam} · ${modo}`;
+    const estado = () => p.$eval(sel, (e) => ({
+      estado: e.dataset.estado,
+      moviendo: e.getAnimations({ subtree: true }).length,
+      oculto: e.querySelector('.esquema__lienzo')?.getAttribute('aria-hidden') === 'true',
+      modulos: e.querySelectorAll('.modulo').length,
+      boton: (() => { const b = e.querySelector('[data-esquema-control]'); return { visible: !!b?.offsetParent, nombre: b?.textContent.replace(/\s+/g, ' ').trim() ?? '', alto: b?.getBoundingClientRect().height ?? 0 }; })(),
+    }));
+    if (modo === 'sin JS') {
+      const r = await estado();
+      anota(r.estado === '5' && r.moviendo === 0 && r.modulos > 0 && !r.boton.visible, `${id} · el último tiempo, completo y quieto (${r.modulos} módulos), sin botón`);
+      await ctx.close();
+      continue;
+    }
+    await p.$eval(sel, (e) => e.closest('section').scrollIntoView({ block: 'center' }));
+    /* Se mira durante 2,5 s si algo viaja y qué. */
+    const visto = await p.$eval(sel, (e) => new Promise((res) => {
+      const t0 = performance.now(); const nombres = new Set(); let mov = 0;
       const tick = () => {
-        const a = e.getAnimations({ subtree: true }); const t = performance.now() - t0;
+        const a = e.getAnimations({ subtree: true });
+        if (a.length) mov++;
         a.forEach((x) => nombres.add(x.transitionProperty ?? x.animationName));
-        if (a.length) { if (primero === null) primero = t; ultimo = t; }
-        // Fin: 1,5 s seguidos sin nada moviéndose (y al menos 7 s de margen total).
-        if ((primero !== null && t - ultimo > 1500) || t > 9000) {
-          return res({ primero, ultimo, estado: e.dataset.estado, oculto: e.getAttribute('aria-hidden') === 'true', nombres: [...nombres], modulos: e.querySelectorAll('.modulo').length });
-        }
+        if (performance.now() - t0 > 2500) return res({ mov, nombres: [...nombres] });
         requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
-    }), sel);
-    await ctx.close();
-    if (!r) { anota(false, `${tam} · ${modo} · hay esquema (${sel})`); continue; }
-    const id = `${tam} · ${modo}`;
+    }));
+    const r = await estado();
     if (modo === 'con JS') {
-      anota(r.primero !== null && r.ultimo < LIMITE_MS && r.estado === '5' && r.oculto,
-        `${id} · se mueve ${r.primero !== null ? Math.round(r.ultimo - r.primero) : 0} ms y termina a los ${Math.round(r.ultimo ?? 0)} ms de llegar (límite ${LIMITE_MS}), en el último tiempo, una vez`);
-    } else if (modo === 'reducido') {
-      const viaja = r.nombres.some((n) => ['left', 'top', 'width', 'height', 'transform'].includes(n));
-      anota(!viaja && r.estado === '5', `${id} · nada viaja (${r.nombres.join(', ') || 'nada'}) y acaba en el último tiempo`);
+      anota(visto.mov > 0 && r.oculto, `${id} · se mueve solo al llegar y el lienzo va aria-hidden`);
+      anota(r.boton.visible && /^Pausar · /.test(r.boton.nombre) && r.boton.alto >= 44, `${id} · botón «${r.boton.nombre}» de ${r.boton.alto} px`);
+      await p.click(`${sel} [data-esquema-control]`);
+      await p.waitForTimeout(800);   // lo que estuviera a medio camino acaba
+      const t1 = (await estado()).estado;
+      await p.waitForTimeout(3000);
+      const r2 = await estado();
+      anota(r2.estado === t1 && r2.moviendo === 0 && /^Reproducir · /.test(r2.boton.nombre), `${id} · «Pausar» lo para en el tiempo ${t1} y el botón pasa a «${r2.boton.nombre}»`);
     } else {
-      anota(r.primero === null && r.estado === '5' && r.modulos > 0, `${id} · el último tiempo, completo y quieto (${r.modulos} módulos)`);
+      const viaja = visto.nombres.some((n) => ['left', 'top', 'width', 'height', 'transform'].includes(n));
+      anota(!viaja && r.estado === '5' && !r.boton.visible, `${id} · nada viaja (${visto.nombres.join(', ') || 'nada'}), último tiempo y sin botón`);
     }
+    await ctx.close();
   }
 }
 

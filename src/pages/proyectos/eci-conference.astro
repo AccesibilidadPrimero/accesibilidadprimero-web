@@ -28,6 +28,7 @@ import type { ImageMetadata } from 'astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
+import Testimonio from '../../components/Testimonio.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
 import EsquemaModular from '../../components/EsquemaModular.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
@@ -177,11 +178,11 @@ const datos = [
     </div>
 
     {/* Con la microanimación del sistema modular (Johnny, 30/10/2026): en
-        escritorio, fija en la columna de la etiqueta mientras se lee; en
-        tablet y móvil, entre el titular y los párrafos. */}
+        escritorio, tres columnas, con la animación en la central, fija
+        mientras se lee; en tablet y móvil, entre el titular y los párrafos. */}
     <section class="bloque bloque--esquema" aria-labelledby="modular">
-      <div class="bloque__etiqueta">
-        <p>Un sistema modular</p>
+      <p class="bloque__etiqueta">Un sistema modular</p>
+      <div class="bloque__esquema">
         <EsquemaModular class="esquema--columna" />
       </div>
       <div class="bloque__contenido">
@@ -192,6 +193,19 @@ const datos = [
         <p>La experiencia puede evolucionar con el congreso: acompañar a quienes empiezan a planificar su participación meses antes y adaptarse a las necesidades de quienes consultan la información durante el evento, siempre desde una misma base.</p>
       </div>
     </section>
+
+    {/* Testimonio (Johnny, 30/10/2026: «pon uno simulado» hasta que llegue
+        el de verdad). `borrador`: solo se ve en `npm run dev`. Cuando llegue
+        el texto, se sustituye y se quita `borrador`. */}
+    <Testimonio
+      borrador
+      cita="Texto del testimonio pendiente de recibir de AEIPI. Lo dejamos con su extensión aproximada, unas treinta palabras, para ver cómo respira el bloque en la página."
+      nombre="Nombre y apellidos"
+      cargo="Cargo, AEIPI"
+      fondo={d.paleta.acento}
+      texto={d.paleta.textoSobreAcento}
+      foco={d.paleta.anilloFoco}
+    />
 
     {/* Accesibilidad: solo el enlace a la declaración del cliente (23/10). */}
     {d.nota?.declaracion && (
@@ -227,14 +241,23 @@ const datos = [
   @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
 
   /* ---- El esquema del sistema modular ---- */
-  .bloque--esquema .bloque__etiqueta { display: flex; flex-direction: column; gap: var(--space-32); }
-  .bloque--esquema :global(.esquema--columna) { display: none; }
+  /* Tres columnas desde 1024 (Johnny, 30/10/2026): etiqueta, esquema y
+     texto, con 96 entre ellas, como el resto de bloques. */
+  .bloque__esquema { display: none; }
   @media (min-width: 1024px) {
-    .bloque--esquema :global(.esquema--columna) { display: block; position: sticky; top: var(--space-24); }
+    .bloque--esquema { grid-template-columns: 280px 280px minmax(0, 1fr); }
+    .bloque--esquema .bloque__esquema { display: block; }
+    .bloque--esquema :global(.esquema--columna) { position: sticky; top: var(--space-24); }
     .bloque--esquema :global(.esquema--linea) { display: none; }
   }
 
   /* ---- Vídeos ---- */
+  /* Sobre el blanco, una sombra leve los despega del papel (Johnny,
+     30/10/2026). Sobre las bandas de color no hace falta. */
+  .pieza:not(.pieza--banda) :global(.vp__marco) {
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
   .eci :global(.video) { width: min(280px, 100%); }
   @media (min-width: 768px) { .eci :global(.video) { width: 360px; } }
   .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }

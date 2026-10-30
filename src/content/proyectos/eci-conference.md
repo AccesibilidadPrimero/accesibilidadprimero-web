@@ -29,19 +29,20 @@ maquetaPropia: true
 imagenes:
   - archivo: eci-1
     alt: >-
-      Portada del congreso sobre una fotografía nocturna de la Gran Vía de
-      Madrid, con el titular “Growing together: innovation, equity and
-      community”, los botones de inscripción anticipada y de envío de
-      abstracts, y la fecha y la sede.
+      La portada de eciconference2027.com: una foto nocturna de la Gran Vía de
+      Madrid con el titular “Growing together: innovation, equity and
+      community” en amarillo y blanco, la fecha y la sede del congreso y los
+      botones de inscripción y de envío de abstracts.
   - archivo: eci-2
     alt: >-
-      Ventana de inscripción con las tres tarifas (anticipada 380 €, general
-      440 € y talleres previos 65 €), dos avisos que explican qué incluye cada
-      una y el botón para continuar.
+      La página de ponentes: el título “Speakers” en amarillo sobre la foto de
+      unas personas conversando en un congreso, con la frase que presenta las
+      ponencias principales y los talleres.
   - archivo: eci-3
     alt: >-
-      Página “Why attend” a toda pantalla en naranja, con el ítem del menú
-      marcado y dos columnas que explican qué supone asistir al congreso.
+      La página “Welcome to Madrid”: una plaza de Madrid con gente paseando
+      bajo un árbol de otoño, el titular en amarillo, un texto de bienvenida a
+      la ciudad y el botón “Discover Madrid”.
 ---
 
 Un congreso sobre inclusión necesita una web inclusiva.
