@@ -1,0 +1,257 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Izaskun Etxebarria · Figma `Producción · Caso Izaskun Etxebarria`:
+   Desktop 2539:2 · Tablet 2625:290 · Móvil 2625:443. Montado el 30/10/2026
+   con la estructura del caso ECI (maqueta propia).
+
+   El proyecto va de dejar espacio a la obra, así que el caso también: mucho
+   aire, la web en vídeo y una sola animación, la de la retícula editorial,
+   que es la idea de diseño del proyecto (Johnny, 30/10/2026).
+
+   Lo que NO viene del Figma, por las reglas del sitio:
+   · Cabecera, CTA, pie y márgenes: los del sitio (24 al borde, 09/10).
+   · Hero: el común (HeroPagina) con la foto de sala de la web de Izaskun.
+   · Tipografía: un solo titular grande, el h1 (08/10). Los h2, a tamaño de
+     texto.
+   · Accesibilidad: solo el enlace a la declaración del cliente (23/10). La
+     tabla WCAG del Figma no se monta.
+   · Los gifs del Figma son vídeos: grabaciones de izaskunetxebarria.com
+     hechas el 30/10/2026, una por tamaño, cada una con su control
+     (VideoPausable).
+   --------------------------------------------------------------------------- */
+import { getEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import VideoPausable from '../../components/VideoPausable.astro';
+import ReticulaEditorial from '../../components/ReticulaEditorial.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+import hero from '../../assets/proyectos/izaskun-etxebarria/hero.jpg';
+import sala from '../../assets/proyectos/izaskun-etxebarria/comisariado.jpg';
+
+const p = (await getEntry('proyectos', 'izaskun-etxebarria'))!;
+const d = p.data;
+
+/* Los primeros fotogramas de cada grabación, uno por tamaño. */
+const posters = import.meta.glob<{ default: ImageMetadata }>('../../assets/proyectos/izaskun-etxebarria/video-*.png', { eager: true });
+const video = (escena: string) => {
+  const f = (formato: string) => {
+    const poster = posters[`../../assets/proyectos/izaskun-etxebarria/video-${escena}-${formato}.png`]?.default;
+    if (!poster) throw new Error(`Caso Izaskun: falta el póster video-${escena}-${formato}.png`);
+    return { archivo: `/video/izaskun-etxebarria/${escena}-${formato}.mp4`, poster };
+  };
+  return { escritorio: f('escritorio'), tableta: f('tableta'), movil: f('movil') };
+};
+const vertical = { tableta: '360px', movil: '280px' };
+const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
+
+const datos = [
+  ['Cliente', 'Izaskun Etxebarria, artista y comisaria'],
+  ['Año', '2026'],
+  ['Qué hicimos', 'Diseño y desarrollo web'],
+  ['Estándar', 'WCAG 2.2 nivel AA'],
+];
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
+  description={d.resumen.replace(/\s+/g, ' ')}
+  ctaTitulo={"Una web que deja hablar a la obra\ny le da el espacio que necesita."}
+>
+  <div class="izaskun" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
+    <HeroPagina
+      titulo="Dejar espacio a la obra."
+      golpes={['Dejar espacio', 'a la obra.']}
+      texto={['Izaskun Etxebarria · Caso de estudio']}
+      foto={hero}
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        {d.web && dominio && <div><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
+      </dl>
+    </section>
+
+    {/* La portada de la web, recorrida de arriba abajo, sobre el carmesí del
+        proyecto (Silk encima, validado en el build). */}
+    <div class="banda banda--acento">
+      <VideoPausable
+        class="video video--portada"
+        {...video('portada')}
+        alt="Recorrido por la portada de izaskunetxebarria.com: una pieza circular de metal sobre la hierba de un acantilado junto al mar, y debajo fotografías a todo el ancho de exposiciones y de obra, una detrás de otra, con el menú en una barra clara arriba."
+        nombre="portada de izaskunetxebarria.com"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
+      />
+    </div>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <div class="bloque__contenido">
+        <p>Izaskun Etxebarria es artista y comisaria. Su trabajo se mueve entre la instalación y el dibujo, con una práctica donde materia, espacio y gesto tienen tanto peso como la propia imagen.</p>
+      </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">El reto</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">Acompañar la obra sin competir con ella.</h2>
+        <p>La web tenía que resolver dos cosas a la vez: acompañar una obra muy visual sin competir con ella, y ordenar un archivo de proyectos, exposiciones y textos sin convertirlo en un catálogo frío.</p>
+        <h3>La presencia.</h3>
+        <p>La obra necesitaba espacio, escala y silencio. La interfaz tenía que desaparecer lo suficiente para dejarla respirar, pero seguir dando contexto y orientación.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <VideoPausable
+        class="video"
+        {...video('comisariado')}
+        alt="La página de comisariado: fotografías de exposiciones a todo el ancho, una debajo de otra, con el título de cada proyecto y su texto."
+        nombre="Comisariado"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
+      />
+      <figcaption>Comisariado</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">La estructura</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">Una práctica compleja, sin simplificarla de más.</h2>
+        <p>Había que hacer accesible una práctica compleja sin simplificarla de más. Encontrar una forma clara de recorrer trabajos, información y contenido sin perder el carácter del proyecto.</p>
+        <p>Las series se navegan como lo que son: conjuntos, no imágenes sueltas. En “Agujeros de tiempo”, las panorámicas se recorren de lado a lado con el puntero.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <VideoPausable
+        class="video"
+        {...video('panoramicas')}
+        alt="La serie “Agujeros de tiempo”: bajo la banda carmesí con el título, una panorámica de campos de cereal bajo un cielo de nubes se desplaza de lado a lado al mover el puntero; después, la siguiente."
+        nombre="Agujeros de tiempo"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '(min-width: 1440px) 896px, 62vw', ...vertical }}
+      />
+      <figcaption>Agujeros de tiempo</figcaption>
+    </figure>
+
+    {/* Decisiones de diseño, con la microanimación de la retícula: en
+        escritorio, en la columna del enunciado; en tablet y móvil, entre el
+        enunciado y las decisiones. */}
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">Decisiones de diseño</h2>
+        <p>El proyecto se construyó desde una idea sencilla: reducir la interfaz para aumentar la presencia de la obra.</p>
+        <ReticulaEditorial acento={d.paleta.acento} />
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <h3>Una estructura editorial contenida.</h3>
+          <p>Tipografía, márgenes y jerarquías se usan para ordenar, no para decorar. Todo se coloca sobre una retícula de doce columnas muy marcada.</p>
+        </li>
+        <li>
+          <h3>Las imágenes por delante.</h3>
+          <p>Algunas piezas ocupan toda la anchura y otras entran en diálogo con el texto, creando un ritmo más cercano a una publicación que a una web de portafolio convencional.</p>
+        </li>
+        <li>
+          <h3>Una navegación directa y previsible.</h3>
+          <p>Pocas opciones, recorridos claros y una arquitectura que permite moverse por el trabajo sin perder contexto.</p>
+        </li>
+      </ul>
+    </section>
+
+    {/* La obra, en sala, sobre el carmesí. */}
+    <div class="banda banda--acento">
+      <Picture
+        src={sala}
+        formats={['avif', 'webp']}
+        widths={[480, 960, 1440, sala.width].filter((w, i, a) => w <= sala.width && a.indexOf(w) === i)}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt="Dos hombres miran de cerca unos libros antiguos expuestos en una vitrina iluminada, en una sala en penumbra."
+        class="foto foto--sala"
+        loading="lazy"
+      />
+    </div>
+
+    {d.nota?.declaracion && (
+      <p class="declaracion">
+        <CtaLink href={d.nota.declaracion}><span class="linea">Declaración de accesibilidad</span> <span class="linea">de {d.titulo}</span></CtaLink>
+      </p>
+    )}
+  </div>
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en ECI. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- como en ECI: la etiqueta en su columna de
+     280 desde 1024; encima en tablet y móvil. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  /* El h3 al cuerpo del texto: lo separa el aire de antes (AGENTS.md §4). */
+  .bloque__contenido h3 { margin-block-start: var(--space-24); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en el Figma: el
+     enunciado y la retícula a la izquierda, las tres decisiones a la
+     derecha (16 entre nombre y texto, 48 entre decisiones). */
+  .bloque--decisiones { gap: var(--space-48); }
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado :global(.reticula) { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-16); }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-64); }
+    .decisiones__enunciado :global(.reticula) { position: sticky; top: var(--space-24); }
+  }
+
+  /* ---- Vídeos ---- como en ECI. Sobre el blanco, una sombra leve. */
+  .pieza:not(.pieza--banda) :global(.vp__marco) {
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .izaskun :global(.video) { width: min(280px, 100%); }
+  @media (min-width: 768px) { .izaskun :global(.video) { width: 360px; } }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { display: flex; flex-direction: column; width: min(280px, 100%); }
+  @media (min-width: 768px) { .pieza figcaption { width: 360px; } }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--derecha :global(.video), .pieza--derecha figcaption { width: 100%; }
+    .pieza--centro :global(.video), .pieza--centro figcaption { width: min(1100px, 100%); }
+  }
+
+  /* Las bandas carmesí, de borde a borde. */
+  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
+  @media (min-width: 1024px) {
+    .banda { padding-block: var(--space-96); }
+    .banda :global(.video--portada) { width: min(1148px, 85%); }
+  }
+  .izaskun :global(.foto--sala) { display: block; width: min(1100px, 100%); height: auto; border-radius: var(--radio); }
+
+  .declaracion { display: block; max-width: none; padding: var(--space-64) var(--gutter-page); text-align: center; }
+  .declaracion :global(.linea) { display: block; }
+  @media (min-width: 768px) { .declaracion { padding-block: var(--space-96); } }
+</style>

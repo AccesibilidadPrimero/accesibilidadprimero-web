@@ -1,0 +1,145 @@
+---
+/* ---------------------------------------------------------------------------
+   Retícula editorial · caso Izaskun Etxebarria (Johnny, 30/10/2026: «una
+   microanimación sobre el layout, la cuadrícula y la estructura editorial.
+   El diseño es muy editorial, con grids muy marcados»).
+
+   Una página de obra en miniatura que se construye sobre su retícula, en
+   cinco tiempos, y vuelve a empezar:
+     1 · aparecen las doce columnas;
+     2 · la cabecera y la banda carmesí con el título de la serie;
+     3 · el texto, en tres columnas de cuatro;
+     4 · la panorámica, a todo el ancho;
+     5 · imagen y texto en diálogo, siete y cinco columnas.
+
+   · Ilustra lo que dice el texto de al lado: el dibujo va aria-hidden
+     (AGENTS.md §1, ARIA justificada).
+   · Es CSS: una sola línea de tiempo de 9 s en bucle. Como se mueve más de
+     5 s, lleva el botón de pausa de los vídeos (2.2.2), que congela la
+     animación donde esté (`animation-play-state`).
+   · Solo se anima con JS (`html.js`), porque sin JS no habría botón. Sin JS
+     y con «reducir movimiento» se ve el último tiempo, completo y quieto, y
+     el botón no se pinta. `npm run movimiento` lo comprueba.
+   --------------------------------------------------------------------------- */
+import { t } from '../i18n/ui';
+import { DEFAULT_LANG } from '../i18n/config';
+interface Props { class?: string; acento: string }
+const { class: clase, acento } = Astro.props;
+const ui = t(DEFAULT_LANG);
+const columnas = Array.from({ length: 12 }, (_, i) => i);
+---
+<div class:list={['reticula', clase]} data-reticula style={`--acento-r: ${acento}`}>
+  <div class="reticula__lienzo" aria-hidden="true">
+    <div class="r-columnas">{columnas.map(() => <span />)}</div>
+    <div class="r r-cabecera"><span class="r-linea" style="width:22%" /><span class="r-puntos"><i /><i /><i /></span></div>
+    <div class="r r-banda"><span class="r-linea r-linea--clara" style="width:30%" /><span class="r-linea r-linea--clara" style="width:34%;margin-inline-start:auto" /></div>
+    <div class="r r-texto r-texto--1">{[90, 100, 80, 95, 60].map((w) => <span class="r-linea" style={`width:${w}%`} />)}</div>
+    <div class="r r-texto r-texto--2">{[100, 85, 95, 70, 90].map((w) => <span class="r-linea" style={`width:${w}%`} />)}</div>
+    <div class="r r-texto r-texto--3">{[95, 100, 75, 88, 50].map((w) => <span class="r-linea" style={`width:${w}%`} />)}</div>
+    <div class="r r-panoramica"><span class="r-horizonte" /></div>
+    <div class="r r-imagen"><span class="r-horizonte" /></div>
+    <div class="r r-texto r-texto--dialogo">{[100, 90, 96, 70].map((w) => <span class="r-linea" style={`width:${w}%`} />)}</div>
+  </div>
+  <button type="button" class="reticula__control" data-reticula-control hidden
+          data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
+    <svg class="reticula__icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+      <g class="reticula__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+      <path class="reticula__play" d="M1 0 10 6 1 12z" />
+    </svg>
+    <span class="sr-only"><span data-reticula-label>{ui.carouselPause}</span> · retícula editorial</span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-reticula]').forEach((raiz) => {
+    const control = raiz.querySelector<HTMLButtonElement>('[data-reticula-control]')!;
+    const etiqueta = raiz.querySelector<HTMLElement>('[data-reticula-label]')!;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let quiere = true;
+    let visible = false;
+    const sincronizar = () => {
+      control.hidden = reduce.matches;
+      raiz.toggleAttribute('data-anima', !reduce.matches);
+      // Fuera de pantalla también se congela: no gasta y no se pierde nada.
+      raiz.toggleAttribute('data-parado', !quiere || !visible);
+      control.toggleAttribute('data-pausado', !quiere);
+      etiqueta.textContent = quiere ? (control.dataset.labelPausar ?? 'Pausar') : (control.dataset.labelReproducir ?? 'Reproducir');
+    };
+    control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
+    reduce.addEventListener('change', sincronizar);
+    new IntersectionObserver((es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }), { threshold: 0.2 }).observe(raiz);
+    sincronizar();
+  });
+</script>
+
+<style>
+  .reticula { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-8); }
+  /* La página en miniatura: 12 columnas con un 2 % de calle. Todo se coloca
+     por columnas, como en la web de Izaskun. */
+  .reticula__lienzo {
+    position: relative;
+    align-self: stretch;
+    aspect-ratio: 4 / 5;
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .r-columnas { position: absolute; inset: 0 4%; display: grid; grid-template-columns: repeat(12, 1fr); gap: 2%; }
+  .r-columnas span { background: color-mix(in srgb, var(--acento-r) 9%, transparent); border-inline: 1px solid color-mix(in srgb, var(--acento-r) 30%, transparent); }
+  .r { position: absolute; left: 4%; right: 4%; }
+  .r-linea { display: block; height: 1.5px; background: var(--ink); }
+  .r-linea--clara { background: var(--white); }
+  .r-cabecera { top: 3%; height: 5%; display: flex; align-items: center; justify-content: space-between; }
+  .r-puntos { display: flex; gap: 6px; }
+  .r-puntos i { width: 4px; height: 4px; border-radius: 50%; background: var(--ink); }
+  .r-banda { top: 10%; height: 7%; background: var(--acento-r); display: flex; align-items: center; gap: 4%; padding-inline: 3%; }
+  .r-texto { top: 21%; height: 18%; display: flex; flex-direction: column; justify-content: space-between; }
+  /* Tres columnas de cuatro: 0–3, 4–7, 8–11 (92 % de ancho, calle de 2 %). */
+  .r-texto--1, .r-texto--2, .r-texto--3 { right: auto; width: 29.33%; }
+  .r-texto--2 { left: 35.33%; }
+  .r-texto--3 { left: 66.67%; }
+  .r-panoramica { top: 43%; height: 17%; border: 1.5px solid var(--ink); border-radius: 2px; overflow: hidden; }
+  .r-horizonte { position: absolute; left: 0; right: 0; top: 62%; height: 1.5px; background: var(--ink); }
+  /* Diálogo: imagen en siete columnas, texto en cinco. */
+  .r-imagen { top: 65%; height: 29%; right: auto; width: 56%; border: 1.5px solid var(--ink); border-radius: 2px; overflow: hidden; }
+  .r-texto--dialogo { top: 67%; height: 14%; left: auto; right: 4%; width: 34%; }
+
+  /* ---- La animación: 9 s en bucle, cinco tiempos y una espera ---- */
+  :global(html.js) [data-anima] .r-columnas span { animation: r-columna 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-cabecera,
+  :global(html.js) [data-anima] .r-banda { animation: r-baja 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-texto--1 .r-linea,
+  :global(html.js) [data-anima] .r-texto--2 .r-linea,
+  :global(html.js) [data-anima] .r-texto--3 .r-linea { animation: r-escribe 9s var(--ease-out) infinite both; transform-origin: left center; }
+  :global(html.js) [data-anima] .r-texto--2 .r-linea { animation-name: r-escribe-2; }
+  :global(html.js) [data-anima] .r-texto--3 .r-linea { animation-name: r-escribe-3; }
+  :global(html.js) [data-anima] .r-panoramica { animation: r-desliza 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima] .r-imagen,
+  :global(html.js) [data-anima] .r-texto--dialogo { animation: r-dialogo 9s var(--ease-out) infinite both; }
+  :global(html.js) [data-anima][data-parado] :is(.r-columnas span, .r, .r-linea) { animation-play-state: paused; }
+
+  /* Cada tiempo ocupa ~1,2 s; del 80 % al 95 % se queda completo y al final
+     se desvanece para volver a empezar. */
+  @keyframes r-columna { 0% { opacity: 0; transform: scaleY(0); } 10%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes r-baja { 0%, 12% { opacity: 0; transform: translateY(-30%); } 24%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes r-escribe { 0%, 26% { transform: scaleX(0); } 38%, 90% { transform: scaleX(1); opacity: 1; } 100% { opacity: 0; } }
+  @keyframes r-escribe-2 { 0%, 30% { transform: scaleX(0); } 42%, 90% { transform: scaleX(1); opacity: 1; } 100% { opacity: 0; } }
+  @keyframes r-escribe-3 { 0%, 34% { transform: scaleX(0); } 46%, 90% { transform: scaleX(1); opacity: 1; } 100% { opacity: 0; } }
+  @keyframes r-desliza { 0%, 48% { opacity: 0; transform: translateX(-12%); } 60%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes r-dialogo { 0%, 62% { opacity: 0; transform: translateY(12%); } 76%, 90% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+
+  /* El botón de los vídeos: 44 de zona y un círculo de 32 dentro. */
+  .reticula__control {
+    position: relative; display: grid; place-items: center;
+    width: var(--touch-min); height: var(--touch-min); margin-inline-end: -6px;
+    padding: 0; background: none; border: 0; color: inherit; cursor: pointer;
+  }
+  .reticula__control[hidden] { display: none; }
+  .reticula__control::before { content: ''; position: absolute; inset: 6px; border: 1.5px solid currentColor; border-radius: 50%; }
+  .reticula__control:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .reticula__icono { fill: currentColor; }
+  .reticula__play { display: none; }
+  [data-pausado] .reticula__pausa { display: none; }
+  [data-pausado] .reticula__play { display: inline; }
+</style>
