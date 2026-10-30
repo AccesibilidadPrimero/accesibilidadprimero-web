@@ -231,7 +231,7 @@ for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], 
    · igual con reducir movimiento;
    · sin JS, la imagen fija con su alternativa y sin botón. */
 console.log('\n── Casos: vídeos ──\n');
-const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/'];
+const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/elogio-de-la-linea/'];
 const TAMANOS = [['escritorio', 1440, 900], ['tableta', 820, 1180], ['movil', 390, 844]];
 const estadoVideo = (p, i) => p.evaluate((i) => {
   const raiz = document.querySelectorAll('[data-video-pausable]')[i];
