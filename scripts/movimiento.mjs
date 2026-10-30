@@ -221,6 +221,42 @@ for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], 
   }
 }
 
+/* ---- Retícula editorial · caso Izaskun (30/10/2026) ----
+   CSS en bucle de 9 s con botón de pausa (2.2.2):
+   · con JS: se anima; el botón «Pausar · …» mide 44; pulsarlo deja las
+     animaciones en pausa y pasa a «Reproducir»; el dibujo va aria-hidden;
+   · reducir movimiento y sin JS: nada se anima y no hay botón. */
+console.log('\n── Caso Izaskun: retícula editorial ──\n');
+for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 }, ...opciones });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/proyectos/izaskun-etxebarria/`, { waitUntil: 'load' });
+  if (modo !== 'sin JS') await p.$eval('[data-reticula]', (e) => e.scrollIntoView({ block: 'center' }));
+  await p.waitForTimeout(800);
+  const estado = () => p.$eval('[data-reticula]', (e) => {
+    const an = e.getAnimations({ subtree: true });
+    const b = e.querySelector('[data-reticula-control]');
+    return {
+      corriendo: an.filter((a) => a.playState === 'running').length,
+      pausadas: an.filter((a) => a.playState === 'paused').length,
+      oculto: e.querySelector('.reticula__lienzo').getAttribute('aria-hidden') === 'true',
+      boton: { visible: !!b.offsetParent, nombre: b.textContent.replace(/\s+/g, ' ').trim(), alto: b.getBoundingClientRect().height },
+    };
+  });
+  const r = await estado();
+  if (modo === 'con JS') {
+    anota(r.corriendo > 0 && r.oculto, `con JS · se anima (${r.corriendo} animaciones) y el dibujo va aria-hidden`);
+    anota(r.boton.visible && /^Pausar · /.test(r.boton.nombre) && r.boton.alto >= 44, `con JS · botón «${r.boton.nombre}» de ${r.boton.alto} px`);
+    await p.click('[data-reticula-control]');
+    await p.waitForTimeout(300);
+    const r2 = await estado();
+    anota(r2.corriendo === 0 && r2.pausadas > 0 && /^Reproducir · /.test(r2.boton.nombre), `con JS · «Pausar» la congela (${r2.pausadas} en pausa) y el botón pasa a «${r2.boton.nombre}»`);
+  } else {
+    anota(r.corriendo === 0 && r.pausadas === 0 && !r.boton.visible, `${modo} · quieta, en su último tiempo, y sin botón`);
+  }
+  await ctx.close();
+}
+
 /* ---- Vídeos de los casos (VideoPausable, 29/10/2026) ----
    Cada vídeo de cada caso: un archivo por tamaño, en bucle, con el control
    del slider de la Home. Se mide sobre el archivo SERVIDO (AGENTS.md §2.9):
@@ -231,7 +267,7 @@ for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], 
    · igual con reducir movimiento;
    · sin JS, la imagen fija con su alternativa y sin botón. */
 console.log('\n── Casos: vídeos ──\n');
-const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/'];
+const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/'];
 const TAMANOS = [['escritorio', 1440, 900], ['tableta', 820, 1180], ['movil', 390, 844]];
 const estadoVideo = (p, i) => p.evaluate((i) => {
   const raiz = document.querySelectorAll('[data-video-pausable]')[i];

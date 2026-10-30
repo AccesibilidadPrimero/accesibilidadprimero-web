@@ -20,7 +20,9 @@ nota:
   valor: 86
   medidaEl: 2026-10-06
   declaracion: https://izaskunetxebarria.com/declaracion-de-accesibilidad/
-casoPublicado: false
+casoPublicado: true
+# Caso con maqueta propia: src/pages/proyectos/izaskun-etxebarria.astro (30/10/2026).
+maquetaPropia: true
 imagenes:
   - archivo: izaskun-1
     alt: >-
