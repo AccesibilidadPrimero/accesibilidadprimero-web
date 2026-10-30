@@ -13,6 +13,8 @@
    A11y Primero. Si el enlace sale de la web, hace lo que CtaLink: la flecha ↗
    detrás del nombre, otra pestaña, y el aviso escrito para quien no la ve
    abrirse (3.2.5). Un enlace interno no lleva flecha, como hasta ahora.
+   SOLO EL TÍTULO (Johnny, 30/10/2026): el listado de Proyectos enseña el
+   nombre y nada más. `linea` queda opcional por si otra página la quiere.
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -20,7 +22,7 @@ import type { ImageMetadata } from 'astro';
 interface Props {
   href: string;
   nombre: string;
-  linea: string;
+  linea?: string;
   captura: ImageMetadata;
   color: string;
   /** La ® de los productos: se ve, pero no se oye (src/i18n/marca.ts). */
@@ -46,7 +48,7 @@ const externo = /^https?:\/\//.test(href);
       <svg class="tarjeta__flecha" aria-hidden="true" focusable="false" viewBox="0 0 14 14" width="14" height="14"><path d="M1.5 12.5 12 2M4.5 2H12v7.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
     )}
   </h2>
-  <p class="tarjeta__linea">{linea}</p>
+  {linea && <p class="tarjeta__linea">{linea}</p>}
   {externo && <span class="sr-only"> (se abre en una ventana nueva)</span>}
 </a>
 

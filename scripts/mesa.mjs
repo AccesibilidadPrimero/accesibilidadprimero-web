@@ -66,11 +66,21 @@ const desescapar = (s) => s.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, e) => {
   return m;
 });
 
+/* Comillas y rayas de la casa (Johnny, 30/10/2026): en toda la web, comillas
+   curvas “ ” y guiones cortos. Lo que llega de Mastodon se escribe como se
+   escribe, así que se normaliza aquí, al congelar, y no en cada build.
+   `npm run renglones` falla si algo se cuela por otra puerta. */
+export function deLaCasa(t) {
+  return t
+    .replace(/«/g, '“').replace(/»/g, '”')
+    .replace(/\s*[—–]\s*/g, (m) => (/\s/.test(m) ? ' - ' : '-'));
+}
+
 /* El HTML de Mastodon a texto con sus saltos. Los hashtags se van enteros: un
    lector de pantalla lee «#WIP» como «almohadilla u i pe» y no aporta nada a
    quien lee la portada. Las menciones también. */
 export function aTexto(html) {
-  return desescapar(
+  return deLaCasa(desescapar(
     html
       .replace(/<a[^>]*class="[^"]*\bmention\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
       .replace(/<a[^>]*class="[^"]*\bhashtag\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
@@ -80,7 +90,7 @@ export function aTexto(html) {
       .replace(/<[^>]+>/g, ''),
   )
     .split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n')
-    .trim();
+    .trim());
 }
 
 /* Abreviaturas que llevan punto y NO terminan frase. Sin esto, «Sr. García»
@@ -96,7 +106,7 @@ export function titular(texto, max = CONFIG.maxTitular) {
   const renglon = texto.split('\n')[0].trim();
 
   let frase = renglon;
-  const corte = /([.!?])(\s+)(?=[«"¿¡A-ZÁÉÍÓÚÜÑ])/g;
+  const corte = /([.!?])(\s+)(?=[«“"¿¡A-ZÁÉÍÓÚÜÑ])/g;
   let m;
   while ((m = corte.exec(renglon)) !== null) {
     const hasta = renglon.slice(0, m.index + 1);
@@ -172,7 +182,7 @@ export function cribar(crudos, cfg = CONFIG, ahora = new Date()) {
       id: s.id, url: s.url, fijado: !!s.fijado,
       fecha: s.created_at, idioma: s.language || 'es',
       titular: t.texto, regla: t.regla, largoOriginal: texto.length,
-      imagen: { remota: imagenes[0].url, alt: imagenes[0].description.trim(),
+      imagen: { remota: imagenes[0].url, alt: deLaCasa(imagenes[0].description.trim()),
                 ancho: imagenes[0].meta?.original?.width ?? null,
                 alto: imagenes[0].meta?.original?.height ?? null },
     });

@@ -9,7 +9,7 @@ urlAntigua: /bienvenido-sr-only/
 ---
 
 Hubo un tiempo cuando trabajaba en Avantio que teníamos un problema y no sabíamos que tenía solución.  
-Eric, el responsable de marketing digital, insistía: los botones tienen que ser descriptivos. «Ver detalles» no posiciona. «Ver detalles del informe de accesibilidad 2024» sí.  
+Eric, el responsable de marketing digital, insistía: los botones tienen que ser descriptivos. “Ver detalles” no posiciona. “Ver detalles del informe de accesibilidad 2024” sí.  
 Tenía razón.  
 Yo le respondía que eso rompía el diseño. Una interfaz limpia no puede tener botones con tres líneas de texto. La coherencia visual importa.
 
@@ -23,11 +23,11 @@ Bienvenido, `sr-only`.
 
 Imagina una tabla con varios perfiles. Cada fila tiene su nombre y un botón de acción.
 
-![Una tabla con tres filas: Tim Moore, Sara López y Alex Kim, cada una con un botón «Ver detalles». A la derecha, lo que oye un lector de pantalla: «Ver detalles», «Ver detalles», «Ver detalles» y la pregunta «¿Cuál es cuál?». Debajo: visualmente hay contexto; para el lector de pantalla, no.](../../assets/blog/bienvenido-sr-only/botones.png)
+![Una tabla con tres filas: Tim Moore, Sara López y Alex Kim, cada una con un botón “Ver detalles”. A la derecha, lo que oye un lector de pantalla: “Ver detalles”, “Ver detalles”, “Ver detalles” y la pregunta “¿Cuál es cuál?”. Debajo: visualmente hay contexto; para el lector de pantalla, no.](../../assets/blog/bienvenido-sr-only/botones.png)
 
 Tres botones idénticos: el contexto visual no llega al lector de pantalla.
 
-Visualmente, cada botón tiene contexto porque está al lado del nombre. Un lector de pantalla que navega solo por botones escucha tres veces lo mismo: «Ver detalles. Ver detalles. Ver detalles.»
+Visualmente, cada botón tiene contexto porque está al lado del nombre. Un lector de pantalla que navega solo por botones escucha tres veces lo mismo: “Ver detalles. Ver detalles. Ver detalles.”
 
 No sabe cuál es cuál. No puede elegir con información.
 

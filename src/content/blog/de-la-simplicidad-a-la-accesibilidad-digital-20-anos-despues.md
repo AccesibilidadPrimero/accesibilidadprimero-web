@@ -4,7 +4,7 @@ descripcion: "Hace 20 años, John Maeda publicó The Laws of Simplicity. No habl
 fecha: 2026-04-08
 categorias: [accesibilidad-digital, diseno]
 imagen: ../../assets/blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues.png
-imagenAlt: "Rótulo sobre fondo rosa: «20 aniversario. The Laws of Simplicity. John Maeda»."
+imagenAlt: "Rótulo sobre fondo rosa: “20 aniversario. The Laws of Simplicity. John Maeda”."
 urlAntigua: /de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/
 ---
 
@@ -79,9 +79,9 @@ El WCAG lo recoge en el criterio 2.2.1, pero la idea de fondo es mucho más senc
 
 _Lo que rodea a algo es parte de algo._
 
-Un botón que dice «Leer más» tiene sentido junto a un titular y una imagen. Visualmente, el contexto lo hace comprensible.
+Un botón que dice “Leer más” tiene sentido junto a un titular y una imagen. Visualmente, el contexto lo hace comprensible.
 
-Pero para quien navega tabulando por los elementos interactivos de la página, ese botón dice simplemente «Leer más». Sin contexto. Sin significado.
+Pero para quien navega tabulando por los elementos interactivos de la página, ese botón dice simplemente “Leer más”. Sin contexto. Sin significado.
 
 A veces añadir contexto hace que algo parezca más simple, no más complejo. Un campo de formulario con una etiqueta bien escrita y un mensaje de error que explica qué ha fallado y cómo corregirlo reduce la carga cognitiva aunque técnicamente tenga más elementos.
 
@@ -97,9 +97,9 @@ Simple no es vacío.
 Simple no es minimalista por obligación.  
 Simple es quitar lo que no tiene función, y articular bien lo que sí la tiene.
 
-![Campaña de Nothing: una mujer con flequillo que se acerca a la cara unos auriculares transparentes, junto al lema «Adiós al ruido».](../../assets/blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/5858.png)
+![Campaña de Nothing: una mujer con flequillo que se acerca a la cara unos auriculares transparentes, junto al lema “Adiós al ruido”.](../../assets/blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/5858.png)
 
-![Web de Nothing: tres teléfonos Phone (4a) Pro, rosa, plata y negro, sobre fondo blanco con el lema «It’s metal now».](../../assets/blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/5860.png)
+![Web de Nothing: tres teléfonos Phone (4a) Pro, rosa, plata y negro, sobre fondo blanco con el lema “It’s metal now”.](../../assets/blog/de-la-simplicidad-a-la-accesibilidad-digital-20-anos-despues/5860.png)
 
 ## Un ejemplo contemporáneo:
 

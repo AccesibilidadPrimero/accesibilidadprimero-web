@@ -29,7 +29,7 @@ imagenes:
       de paisajes construidos.
   - archivo: izaskun-2
     alt: >-
-      Página de la serie «Agujeros de Tiempo», con una banda roja de título,
+      Página de la serie “Agujeros de Tiempo”, con una banda roja de título,
       el texto de la artista a tres columnas y una fotografía de cielo
       asomando debajo.
   - archivo: izaskun-3

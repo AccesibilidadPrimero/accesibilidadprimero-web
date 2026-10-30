@@ -24,13 +24,13 @@ Cuando trabajamos en Accesibilidad Primero nos encontramos siempre ante dos situ
 
 Ninguna herramienta existente resolvía estas dos necesidades en el mismo sitio. Así que decidimos construir la nuestra.
 
-![Esquema «El hueco que ninguna herramienta cubría». A la izquierda, las herramientas existentes (WAVE, axe, Lighthouse): detectan errores, con lenguaje técnico y para desarrolladores, sin resumen para cliente, sin historial y sin PDF. A la derecha, A11y Primero, dos modos en una sola herramienta: resumen para el cliente con puntuación y semáforo, historial comparativo, auditoría WCAG con criterio, nivel y selector CSS, e informe PDF. Todo en el mismo sitio, sin salir de la página.](../../assets/blog/a11yprimero/5510.png)
+![Esquema “El hueco que ninguna herramienta cubría”. A la izquierda, las herramientas existentes (WAVE, axe, Lighthouse): detectan errores, con lenguaje técnico y para desarrolladores, sin resumen para cliente, sin historial y sin PDF. A la derecha, A11y Primero, dos modos en una sola herramienta: resumen para el cliente con puntuación y semáforo, historial comparativo, auditoría WCAG con criterio, nivel y selector CSS, e informe PDF. Todo en el mismo sitio, sin salir de la página.](../../assets/blog/a11yprimero/5510.png)
 
-![Esquema «Cómo fue la colaboración» en tres columnas. Accesibilidad Primero aporta el conocimiento: criterios WCAG, flujo de trabajo real, necesidades del cliente y decisiones de diseño. Claude aporta la implementación: código JS, CSS y HTML, diagnóstico de errores, propuestas de mejora y esquemas. El resultado es una iteración continua: probar en Chrome, detectar el problema, pedir la corrección y tener una nueva versión lista.](../../assets/blog/a11yprimero/5526.png)
+![Esquema “Cómo fue la colaboración” en tres columnas. Accesibilidad Primero aporta el conocimiento: criterios WCAG, flujo de trabajo real, necesidades del cliente y decisiones de diseño. Claude aporta la implementación: código JS, CSS y HTML, diagnóstico de errores, propuestas de mejora y esquemas. El resultado es una iteración continua: probar en Chrome, detectar el problema, pedir la corrección y tener una nueva versión lista.](../../assets/blog/a11yprimero/5526.png)
 
 No somos desarrolladores de formación. Pero llevamos tiempo explorando cómo la IA puede actuar como un colaborador técnico que amplía lo que somos capaces de hacer.
 
-La propuesta fue clara: usar Claude (el modelo de IA de Anthropic) como compañero de desarrollo. Nosotros aportaríamos el conocimiento de dominio —qué debe hacer la herramienta, cómo debe comunicarse, qué criterios WCAG importan y por qué— y Claude aportaría la implementación técnica.
+La propuesta fue clara: usar Claude (el modelo de IA de Anthropic) como compañero de desarrollo. Nosotros aportaríamos el conocimiento de dominio (qué debe hacer la herramienta, cómo debe comunicarse, qué criterios WCAG importan y por qué) y Claude aportaría la implementación técnica.
 
 > _No estamos inventando nada nuevo. Pero ninguna herramienta existente era exactamente lo que necesitábamos para nuestro flujo diario de trabajo._
 
@@ -55,7 +55,7 @@ Una de las decisiones más importantes fue priorizar la usabilidad por encima de
 - Historial: guarda las tres últimas auditorías por dominio, con comparativa lado a lado.
 - Ver como…: simulaciones de visión (daltonismo, baja visión, alto contraste).
 
-![Esquema «Anatomía de A11y Primero», una extensión de Chrome con cuatro pestañas: Resumen, WCAG, Historial y Ver como. La pestaña Resumen, para el cliente: puntuación global de 0 a 100, cuatro categorías con semáforo (imágenes, estructura, formularios y contraste), recuento de H1, H2 y H3 y resumen en lenguaje sencillo. La pestaña WCAG, para el equipo técnico: criterio exacto, nivel de conformidad A, AA o AAA, selector CSS del elemento afectado e instrucción de corrección.](../../assets/blog/a11yprimero/5529.png)
+![Esquema “Anatomía de A11y Primero”, una extensión de Chrome con cuatro pestañas: Resumen, WCAG, Historial y Ver como. La pestaña Resumen, para el cliente: puntuación global de 0 a 100, cuatro categorías con semáforo (imágenes, estructura, formularios y contraste), recuento de H1, H2 y H3 y resumen en lenguaje sencillo. La pestaña WCAG, para el equipo técnico: criterio exacto, nivel de conformidad A, AA o AAA, selector CSS del elemento afectado e instrucción de corrección.](../../assets/blog/a11yprimero/5529.png)
 
 Durante este proceso Claude generó wireframes comparativos que nos ayudaron a visualizar las propuestas antes de implementarlas. Ver el estado actual frente a la propuesta mejorada en un mismo diagrama aceleró mucho la toma de decisiones.
 
@@ -110,7 +110,7 @@ En el mismo momento, los errores se marcan visualmente en la página con etiquet
 
 La auditoría WCAG muestra cada violación como un bloque expandible que incluye el criterio exacto (1.1.1, 2.4.4, 3.1.1…), el nivel de conformidad (A o AA), una descripción del problema, la instrucción de corrección, y los selectores CSS de los elementos afectados.
 
-![La extensión A11y Primero abierta sobre accesibilidadprimero.com, con anotaciones: cuatro pestañas especializadas; una puntuación global animada de 72 sobre 100, «mejorable»; un semáforo con minibarra por categoría (imágenes 85, estructura 60, formularios 50, contraste 45); el recuento de encabezados; un resumen para el cliente en lenguaje sencillo («19 imágenes sin descripción visual», «La página no tiene título H1»); y los botones para evaluar y para descargar un informe PDF de dos páginas.](../../assets/blog/a11yprimero/5608.png)
+![La extensión A11y Primero abierta sobre accesibilidadprimero.com, con anotaciones: cuatro pestañas especializadas; una puntuación global animada de 72 sobre 100, “mejorable”; un semáforo con minibarra por categoría (imágenes 85, estructura 60, formularios 50, contraste 45); el recuento de encabezados; un resumen para el cliente en lenguaje sencillo (“19 imágenes sin descripción visual”, “La página no tiene título H1”); y los botones para evaluar y para descargar un informe PDF de dos páginas.](../../assets/blog/a11yprimero/5608.png)
 
 ### Pestaña Ver como…
 
@@ -133,7 +133,7 @@ Lo más valioso fue poder iterar rápido: ver un resultado, identificar qué no 
 
 ### Sobre las limitaciones
 
-A11y Primero no reemplaza una auditoría manual completa. Detecta errores automáticos —los más frecuentes y los más graves— pero hay aspectos de la accesibilidad que solo pueden evaluarse con criterio humano: si el texto alternativo de una imagen es realmente descriptivo, si el flujo de navegación con teclado es lógico, si el contenido tiene sentido para alguien que usa un lector de pantalla.  
+A11y Primero no reemplaza una auditoría manual completa. Detecta errores automáticos, los más frecuentes y los más graves, pero hay aspectos de la accesibilidad que solo pueden evaluarse con criterio humano: si el texto alternativo de una imagen es realmente descriptivo, si el flujo de navegación con teclado es lógico, si el contenido tiene sentido para alguien que usa un lector de pantalla.  
 La herramienta es un punto de partida y una forma de acelerar el proceso, no un sustituto de la expertise.
 
 ### Sobre la accesibilidad de la propia herramienta

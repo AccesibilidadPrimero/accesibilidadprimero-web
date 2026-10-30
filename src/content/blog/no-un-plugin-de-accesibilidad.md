@@ -17,7 +17,7 @@ El problema es que no funciona así. Y esto no es un error suyo ni de su organiz
 
 Es un error que se repite constantemente en el mercado, y la responsabilidad no está en las organizaciones que contratan webs, sino en los estudios de diseño y desarrollo que siguen vendiendo los plugins de accesibilidad como solución cuando, en el mejor de los casos, son un complemento.
 
-![Una empresa o institución pregunta «¿Nuestra web ya es accesible?» y el estudio de diseño responde «Con este plugin ya está resuelto». Entre los dos, el plugin. La intención estaba; el diagnóstico, no.](../../assets/blog/no-un-plugin-de-accesibilidad/5939.png)
+![Una empresa o institución pregunta “¿Nuestra web ya es accesible?” y el estudio de diseño responde “Con este plugin ya está resuelto”. Entre los dos, el plugin. La intención estaba; el diagnóstico, no.](../../assets/blog/no-un-plugin-de-accesibilidad/5939.png)
 
 ## Qué hace bien un plugin de accesibilidad
 
@@ -69,7 +69,7 @@ Esta decisión se toma en el CSS, no en el panel de control del plugin.
 
 ### Texto alternativo en imágenes
 
-Un plugin puede añadir un campo para que el usuario active un «modo descripción», pero si las imágenes no tienen atributo alt escrito en el HTML, un lector de pantalla simplemente no tiene nada que leer.
+Un plugin puede añadir un campo para que el usuario active un “modo descripción”, pero si las imágenes no tienen atributo alt escrito en el HTML, un lector de pantalla simplemente no tiene nada que leer.
 
 El plugin no puede inventar el contexto que la imagen no tiene declarado.
 
@@ -94,7 +94,7 @@ Si la web no está bien construida, el plugin no puede compensarlo.
 
 ### Contraste de color nativo
 
-Si el diseño original tiene texto gris claro sobre fondo blanco, el plugin puede ofrecer un «modo alto contraste».
+Si el diseño original tiene texto gris claro sobre fondo blanco, el plugin puede ofrecer un “modo alto contraste”.
 
 Pero ese modo es una sobreescritura forzada sobre un diseño que no cumple los criterios mínimos de ratio de contraste definidos por las WCAG.No es accesibilidad, es un parche.
 
@@ -120,7 +120,7 @@ La razón es arquitectónica: los problemas de jerarquía de encabezados, semán
 
 Para quienes quieran profundizar en el argumento económico, el W3C mantiene documentación específica sobre el impacto financiero de la accesibilidad web en su sección de casos de negocio [Financial Factors in Developing a Web Accessibility Business Case W3C/WAI](https://www.w3.org/WAI/business-case/archive/fin), donde se detalla cómo el coste es significativamente menor cuando se integra desde el inicio.
 
-Otras fuentes que respaldan las cifras del sobrecoste: [AudioEye — Website Accessibility vs. Lawsuit Costs](https://www.audioeye.com/post/website-accessibility-vs-lawsuit-costs/), [HTD Health — The True Cost of Accessibility](https://htdhealth.com/insights/the-true-cost-of-accessibility-why-adding-accessibility-later-can-cost-10x-more/), [A11yProof — Accessibility Remediation Pricing Guide](https://a11yproof.com/resources/guides/accessibility-remediation-pricing-guide).
+Otras fuentes que respaldan las cifras del sobrecoste: [AudioEye - Website Accessibility vs. Lawsuit Costs](https://www.audioeye.com/post/website-accessibility-vs-lawsuit-costs/), [HTD Health - The True Cost of Accessibility](https://htdhealth.com/insights/the-true-cost-of-accessibility-why-adding-accessibility-later-can-cost-10x-more/), [A11yProof - Accessibility Remediation Pricing Guide](https://a11yproof.com/resources/guides/accessibility-remediation-pricing-guide).
 
 ## Nuestro widget A11y:
 

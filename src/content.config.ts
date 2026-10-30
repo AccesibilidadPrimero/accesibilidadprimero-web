@@ -198,7 +198,7 @@ const proyectos = defineCollection({
              3.1.2), p. ej. 'ca' si Cesal la da en valenciano. */
           testimonio: z
             .object({
-              cita: z.string().regex(/^«[\s\S]+»$/, 'La cita va entre « ».'),
+              cita: z.string().regex(/^“[\s\S]+”$/, 'La cita va entre “ ”.'),
               nombre: z.string(),
               cargo: z.string(),
               lang: z.string().optional(),

@@ -5,13 +5,13 @@ descripcion: "Este artículo va de lo que viene después de elegir la fuente: di
 fecha: 2026-04-07
 categorias: [accesibilidad-digital, diseno]
 imagen: ../../assets/blog/tipografia-accesible-lo-que-dice-la-wcag.png
-imagenAlt: "Rótulo sobre fondo rosa: «Tamaños tipográficos. Px vs Rem»."
+imagenAlt: "Rótulo sobre fondo rosa: “Tamaños tipográficos. Px vs Rem”."
 urlAntigua: /tipografia-accesible-lo-que-dice-la-wcag/
 ---
 
 Este artículo cuenta la tipografía de la versión anterior de esta web, con Atkinson Hyperlegible Next e Instrument Serif. La web actual usa Instrument Sans. Los criterios de la WCAG que explica siguen vigentes.
 
-En el artículo anterior contamos cómo llegamos a elegir «Atkinson Hyperlegible Next» como tipografía funcional de nuestra web, y por qué añadimos «Instrument Serif» para las hero sections. Si no lo has leído, [es un buen punto de partida](/blog/tipografia-accesible-atkinson-hyperlegible/).
+En el artículo anterior contamos cómo llegamos a elegir “Atkinson Hyperlegible Next” como tipografía funcional de nuestra web, y por qué añadimos “Instrument Serif” para las hero sections. Si no lo has leído, [es un buen punto de partida](/blog/tipografia-accesible-atkinson-hyperlegible/).
 
 Este segundo artículo va de lo que viene después de elegir la fuente: dimensionarla bien, darle el espacio que necesita y garantizar que cumple con los criterios de accesibilidad en contraste. Porque una buena tipografía mal aplicada sigue siendo un problema.
 
@@ -43,19 +43,19 @@ Parece un detalle técnico. No lo es.
 </figure>
 
 Los píxeles (px) son unidades absolutas.  
-Si escribes font-size: 16px, el texto siempre mide 16 píxeles, pase lo que pase. El problema: muchas personas ajustan el tamaño de fuente predeterminado de su navegador, a 18px, 20px o más — porque lo necesitan para leer cómodamente. Si usas píxeles, esa configuración no tiene ningún efecto en tu web. Estás ignorando activamente la preferencia del usuario.
+Si escribes font-size: 16px, el texto siempre mide 16 píxeles, pase lo que pase. El problema: muchas personas ajustan el tamaño de fuente predeterminado de su navegador, a 18px, 20px o más, porque lo necesitan para leer cómodamente. Si usas píxeles, esa configuración no tiene ningún efecto en tu web. Estás ignorando activamente la preferencia del usuario.
 
 Los rem son relativos al tamaño base del navegador (normalmente 16px por defecto).  
 Si el usuario tiene configurado 20px, tu 1rem equivaldrá a 20px automáticamente. Respetas su elección sin hacer nada extra.
 
 | Elemento | px equiv. | Lo que usábamos | Rango recomendado |
 |---|---|---|---|
-| Cuerpo de texto | 16px | 1rem | 1 – 1.25rem |
-| Texto secundario | 14px | 0.875rem | 0.875 – 1rem |
-| Encabezado H1 | 32px | 2rem | 2 – 3rem |
-| Encabezado H2 | 24px | 1.5rem | 1.5 – 2.25rem |
-| Encabezado H3 | 20px | 1.25rem | 1.25 – 1.5rem |
-| Botones / etiquetas | 14 – 16px | 0.875 – 1rem | 0.875 – 1.125rem |
+| Cuerpo de texto | 16px | 1rem | 1 a 1.25rem |
+| Texto secundario | 14px | 0.875rem | 0.875 a 1rem |
+| Encabezado H1 | 32px | 2rem | 2 a 3rem |
+| Encabezado H2 | 24px | 1.5rem | 1.5 a 2.25rem |
+| Encabezado H3 | 20px | 1.25rem | 1.25 a 1.5rem |
+| Botones / etiquetas | 14 a 16px | 0.875 a 1rem | 0.875 a 1.125rem |
 
 Mínimo absoluto: 0.75rem (12px) en cualquier elemento visible. Si está en pantalla, alguien lo necesita leer.
 
@@ -95,7 +95,7 @@ Puedes tener la mejor fuente del mundo y el tamaño perfecto, y si el interlinea
 
 Lo comprobamos en nuestra propia web durante el proceso de construcción.
 
-Las WCAG 1.4.12 «Espaciado del texto» son claras: el contenido no debe romperse si el usuario aplica estos valores mínimos:
+Las WCAG 1.4.12 “Espaciado del texto” son claras: el contenido no debe romperse si el usuario aplica estos valores mínimos:
 
 | Propiedad CSS | Valor mínimo WCAG | En em (base 16px) |
 |---|---|---|
@@ -110,12 +110,12 @@ En nuestra web usamos line-height: 1.6 para el cuerpo de texto. El 1.5 es el mí
 
 ### El criterio más incumplido que vemos en auditorías
 
-El criterio WCAG 1.4.3 — «Contraste mínimo» es uno de los fallos más frecuentes en las webs que auditamos. Y casi siempre por la misma razón: alguien eligió un gris bonito sobre blanco sin comprobar el ratio.
+El criterio WCAG 1.4.3, “Contraste mínimo”, es uno de los fallos más frecuentes en las webs que auditamos. Y casi siempre por la misma razón: alguien eligió un gris bonito sobre blanco sin comprobar el ratio.
 
 Los valores que aplicamos:
 
-– Texto normal (menos de 24px, o menos de ~19px en negrita): mínimo «4.5:1»  
-– Texto grande (24px o más, o ~19px en negrita): mínimo «3:1»
+- Texto normal (menos de 24px, o menos de ~19px en negrita): mínimo “4.5:1”  
+- Texto grande (24px o más, o ~19px en negrita): mínimo “3:1”
 
 <figure class="demo" data-demo="contraste">
 <figcaption class="demo__intro">Cuatro grises sobre blanco. Los ratios están medidos, no estimados. Los dos de la derecha no cumplen: están a propósito, para que se vea la diferencia.</figcaption>
@@ -130,7 +130,7 @@ Los valores que aplicamos:
 <div>
 <p>No cumplen</p>
 <ul class="demo__lista">
-<li class="demo__caja"><span class="demo__muestra demo__caaaaaa" data-ejemplo="no-cumple" aria-hidden="true">Texto de ejemplo</span> <span class="demo__nota">#aaaaaa sobre blanco: 2,3:1. No cumple. Es el gris «suave» más frecuente en los diseños minimalistas, y una barrera real para muchas personas.</span></li>
+<li class="demo__caja"><span class="demo__muestra demo__caaaaaa" data-ejemplo="no-cumple" aria-hidden="true">Texto de ejemplo</span> <span class="demo__nota">#aaaaaa sobre blanco: 2,3:1. No cumple. Es el gris “suave” más frecuente en los diseños minimalistas, y una barrera real para muchas personas.</span></li>
 <li class="demo__caja"><span class="demo__muestra demo__cc0c0c0" data-ejemplo="no-cumple" aria-hidden="true">Texto de ejemplo</span> <span class="demo__nota">#c0c0c0 sobre blanco: 1,8:1. No cumple. Es el color típico del texto de ejemplo dentro de un campo de formulario.</span></li>
 </ul>
 </div>

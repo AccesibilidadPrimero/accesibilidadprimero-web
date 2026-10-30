@@ -108,7 +108,7 @@ const nombre = tipo ? TIPOS[tipo] : null;
     <ul class="rejilla tarjetas">
       {visibles.map((i, n) => (
         <li data-tipo={i.tipo} data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${i.clave}`}>
-          <TarjetaProyecto href={i.href} nombre={i.nombre} linea={i.linea} captura={i.captura} color={i.color} marca={i.marca} />
+          <TarjetaProyecto href={i.href} nombre={i.nombre} captura={i.captura} color={i.color} marca={i.marca} />
         </li>
       ))}
     </ul>

@@ -35,6 +35,22 @@ const rutas = [];
 })(RAIZ.replace(/\/$/, ''));
 const RUTAS = [...new Set(rutas.map((r) => r.replace(/\/+$/, '/').replace(/^\/\/$/, '/')))].sort();
 
+/* Comillas y rayas de la casa (Johnny, 30/10/2026): comillas curvas “ ” y
+   guiones cortos en toda la web. Ni «», ni raya (—), ni semirraya (–). Se
+   mira el HTML del build, texto y atributos que se leen (alt, aria-label,
+   title), sin scripts, estilos ni comentarios. */
+let rayas = 0;
+for (const ruta of RUTAS) {
+  const html = readFileSync(join(RAIZ, ruta, 'index.html'), 'utf8')
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<!--[\s\S]*?-->/g, '');
+  for (const m of html.matchAll(/[«»—–]/g)) {
+    rayas += 1;
+    console.error(`✗ ${ruta} · “${m[0]}” en: ${html.slice(Math.max(0, m.index - 50), m.index + 30).replace(/\s+/g, ' ')}`);
+  }
+}
+if (rayas) { console.error(`${rayas} comillas o rayas que no son de la casa: “ ” y -.`); process.exit(1); }
+console.log(`✓ ${RUTAS.length} páginas sin «», sin raya y sin semirraya.`);
+
 const PUERTO = 4401;
 const servidor = await servir(PUERTO);
 const ejecutable = process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium';

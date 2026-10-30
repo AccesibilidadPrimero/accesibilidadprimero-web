@@ -14,15 +14,21 @@
      (`--ritmo-intro`).
    · Entre bloques, 128 (`--ritmo-seccion`), como entre las secciones de la
      Home.
+   · `fondo` (Johnny, 30/10/2026: Servicios en rosa y Clientes en gris claro
+     en Estudio): el bloque pasa a banda de color de borde a borde, con el
+     mismo relleno que la banda de Estudio en la Home (96 arriba y abajo; 64
+     en móvil). El texto sigue en Ink: rinde sobre los dos.
    --------------------------------------------------------------------------- */
 interface Props {
   id: string;
   titulo: string;
+  /** Banda de color: 'rosa' (Rose AP) o 'gris' (Silk). */
+  fondo?: 'rosa' | 'gris';
 }
-const { id, titulo } = Astro.props;
+const { id, titulo, fondo } = Astro.props;
 ---
 
-<section class="bloque" aria-labelledby={id}>
+<section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
   <h2 id={id} class="bloque__titulo">{titulo}</h2>
   <div class="bloque__contenido"><slot /></div>
 </section>
@@ -35,6 +41,10 @@ const { id, titulo } = Astro.props;
     padding: 0 var(--gutter-page);
     margin-block-start: var(--ritmo-seccion);
   }
+  .bloque--rosa, .bloque--gris { padding-block: var(--space-64); }
+  .bloque--rosa { background: var(--rose-ap); }
+  .bloque--gris { background: var(--surface-band); }
+  @media (min-width: 768px) { .bloque--rosa, .bloque--gris { padding-block: var(--space-96); } }
   .bloque__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .bloque__contenido { min-width: 0; }
 

@@ -274,6 +274,12 @@ disciplina personal a las once de la noche.
   reduce pero no amplía, y recomprimir algo ya comprimido suma artefactos sin
   ahorrar bytes.
 - Titulares **sin antetítulo y sin mayúsculas sostenidas**: regla de lint.
+- **Comillas curvas “ ” y guiones cortos** (Johnny, 30/10/2026). Ni «», ni
+  raya (—), ni semirraya (–) en nada que se vea o se lea: texto, `alt`,
+  `aria-label`. Un inciso va entre comas o paréntesis; un intervalo, con “a”
+  o con guion. `npm run renglones` lo mira en todo el build y falla; lo que
+  llega de Mastodon lo normaliza `npm run mesa` al congelarlo. Los
+  comentarios del código no cuentan.
 - La paleta que declara cada proyecto se valida en build contra el fondo de la
   Home.
 

@@ -51,7 +51,7 @@ const video = (escena: string) => {
 const vertical = { tableta: '360px', movil: '280px' };
 
 const datos = [
-  ['Fechas', '31 marzo – 2 abril 2027'],
+  ['Fechas', '31 marzo - 2 abril 2027'],
   ['Sede', 'ICOMEM, Madrid'],
   ['Organizan', 'Eurlyaid y AEIPI'],
   ['Público', 'Profesionales, investigadores, familias'],
@@ -79,6 +79,8 @@ const datos = [
       <h2 id="datos" class="sr-only">Datos del congreso</h2>
       <dl class="datos__lista">
         {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        {/* La web del congreso (Johnny, 30/10/2026: «faltan la URL»). */}
+        {d.web && <div><dt>Web</dt><dd><CtaLink href={d.web}>{new URL(d.web).hostname.replace(/^www\./, '')}</CtaLink></dd></div>}
       </dl>
     </section>
 
@@ -97,7 +99,7 @@ const datos = [
       <VideoPausable
         class="video video--portada"
         {...video('portada')}
-        alt="Recorrido por la portada de eciconference2027.com de arriba abajo: la foto nocturna de Madrid con el lema «Growing together: innovation, equity and community», la bienvenida al congreso, los seis motivos para asistir, las cinco líneas temáticas del programa, las ponencias principales, la trayectoria de las ediciones anteriores, las tarifas y la convocatoria de abstracts, la sede en el Colegio de Médicos de Madrid, las preguntas frecuentes y el formulario de contacto."
+        alt="Recorrido por la portada de eciconference2027.com de arriba abajo: la foto nocturna de Madrid con el lema “Growing together: innovation, equity and community”, la bienvenida al congreso, los seis motivos para asistir, las cinco líneas temáticas del programa, las ponencias principales, la trayectoria de las ediciones anteriores, las tarifas y la convocatoria de abstracts, la sede en el Colegio de Médicos de Madrid, las preguntas frecuentes y el formulario de contacto."
         nombre="portada de eciconference2027.com"
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
@@ -139,7 +141,7 @@ const datos = [
       <VideoPausable
         class="video"
         {...video('tracks')}
-        alt="Las cinco líneas temáticas del programa en tarjetas de color. Se abre la primera, «Families, participation and natural environments», con su descripción; se cierra y se abre la tercera, «Quality, evidence and transdisciplinary practice»."
+        alt="Las cinco líneas temáticas del programa en tarjetas de color. Se abre la primera, “Families, participation and natural environments”, con su descripción; se cierra y se abre la tercera, “Quality, evidence and transdisciplinary practice”."
         nombre="Programme tracks"
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 896px, 62vw', ...vertical }}

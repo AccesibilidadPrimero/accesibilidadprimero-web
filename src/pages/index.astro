@@ -293,10 +293,12 @@ const conCuerpo = await Promise.all(
   .estudio__icono img { display: block; width: 50px; height: auto; }
 
   /* ---- Móvil 390 · medido en el Figma (2203:563, 2203:590) ----------------
-     Productos: 64 arriba y 96 abajo, y la frase centrada. Las columnas ya se
-     apilan en home.css con 48 entre ellas, que es lo del documento.
-     Estudio: la frase en una caja de 274, centrada en la página pero con el
-     texto alineado a la izquierda, como en el Figma. El enlace «Conoce
+     Productos: 64 arriba y 96 abajo. Las columnas ya se apilan en home.css
+     con 48 entre ellas, que es lo del documento.
+     Estudio: la frase en una caja de 274.
+     Desde el 30/10/2026 los H2 y los párrafos de la Home van a la izquierda
+     en todos los anchos (Johnny); antes, la frase de Productos en móvil y la
+     de Estudio iban centradas. El enlace «Conoce
      Accesibilidad Primero» está oculto en el frame de Móvil y aquí se queda
      a propósito (Johnny, 09/10): es el camino a Estudio desde la Home. */
   /* ---- El ritmo vertical, de 1024 para arriba ---------------------------
@@ -308,13 +310,12 @@ const conCuerpo = await Promise.all(
   .estudio { margin-block-start: var(--ritmo-seccion); }
 
   /* Tableta: la frase de Estudio en la caja de 572 del Figma de Tablet
-     (2201:558), centrada como en escritorio. */
+     (2201:558). */
   @media (min-width: 768px) and (max-width: 1023px) {
     .estudio__texto { max-width: 572px; }
   }
 
   @media (max-width: 767px) {
-    .productos__intro { text-align: center; }
     .estudio__texto { width: 274px; max-width: 100%; text-align: start; }
   }
 </style>
