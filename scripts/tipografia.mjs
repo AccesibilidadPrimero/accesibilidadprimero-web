@@ -259,6 +259,7 @@ console.log('\n── Un color: todo en negro ──\n');
 const INTERIORES = [
   { nombre: 'Contacto', url: '/contacto/', conErrores: true },
   { nombre: 'Estudio', url: '/estudio/', conErrores: false },
+  { nombre: 'Servicios', url: '/servicios/', conErrores: false },
   { nombre: 'Privacidad', url: '/privacidad/', conErrores: false },
   { nombre: 'Cookies', url: '/cookies/', conErrores: false },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', conErrores: false },

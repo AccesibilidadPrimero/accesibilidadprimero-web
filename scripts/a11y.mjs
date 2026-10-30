@@ -25,7 +25,7 @@ const axeSource = readFileSync(axePath, 'utf8');
 /* Contacto y Estudio entran el 10/10/2026 y las tres legales el 11/10. Cada
    página nueva se añade aquí. */
 const RUTAS = [
-  '/', '/contacto/', '/estudio/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
+  '/', '/contacto/', '/estudio/', '/servicios/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
   /* Blog (11/10/2026): el listado, una categoría y tres artículos que juntan
      todo lo que puede traer un Markdown: demostraciones y tablas (tipografía),
      tablas e imágenes (WCAG), y el más largo, con seis imágenes (A11y Primero). */
