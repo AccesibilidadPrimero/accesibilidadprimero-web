@@ -176,7 +176,12 @@ for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], 
     const p = await ctx.newPage();
     await p.goto(`http://localhost:${PUERTO}/proyectos/eci-conference/`, { waitUntil: 'load' });
     await p.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
-    const r = await p.evaluate((sel) => new Promise((res) => {
+    /* Sin JS no hay requestAnimationFrame que medir: se mira el estado tal
+       cual llega en el HTML. */
+    const r = modo === 'sin JS' ? await p.evaluate((sel) => {
+      const e = document.querySelector(sel);
+      return e && { primero: e.getAnimations({ subtree: true }).length ? 0 : null, ultimo: null, estado: e.dataset.estado, oculto: e.getAttribute('aria-hidden') === 'true', nombres: [], modulos: e.querySelectorAll('.modulo').length };
+    }, sel) : await p.evaluate((sel) => new Promise((res) => {
       const e = document.querySelector(sel);
       if (!e) return res(null);
       e.closest('section').scrollIntoView({ block: 'center' });
