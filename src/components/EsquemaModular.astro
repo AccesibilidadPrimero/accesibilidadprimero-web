@@ -1,0 +1,207 @@
+---
+/* ---------------------------------------------------------------------------
+   Esquema del sistema modular · caso ECI (Johnny, 30/10/2026).
+
+   Una web en miniatura sobre una rejilla de 6 columnas que cuenta, en cinco
+   tiempos, cómo crece la web del congreso sin rediseñarse:
+     1 · meses antes: lo que hay y los huecos de lo que vendrá;
+     2 · se confirman los ponentes;
+     3 · llegan abstracts, programa y preguntas;
+     4 · la semana antes: cuenta atrás junto a la portada, el programa sube;
+     5 · durante el congreso: el programa arriba en azul y el directo.
+   Prototipo aprobado: «Sistema modular ECI» (artifact del 30/10/2026).
+
+   · Ilustra lo que ya dice el texto de al lado, así que va con aria-hidden
+     (AGENTS.md §1, ARIA justificada): el lector de pantalla no se pierde nada.
+   · Se reproduce UNA vez, al llegar a la zona de lectura, y entera dura
+     menos de 5 s (850 ms entre tiempos, 600 ms por cambio, 40 ms de
+     desfase). Por eso no lleva control de pausa: 2.2.2 solo lo pide para
+     lo que se mueve solo más de 5 s. NO lo sostiene este comentario: lo
+     mide `npm run movimiento` sobre la página servida (§2.9).
+   · Sin JS se ve el último tiempo, completo y quieto: el HTML ya sale con
+     él. Con «reducir movimiento» nada viaja ni crece: salta al último
+     tiempo con un fundido de 300 ms (reducir no es eliminar, §2.3).
+   · Solo líneas de 1,5 px en Ink, el trazo del control de pausa, y el azul
+     de ECI en el módulo del programa. Sin texto dentro (§1).
+   --------------------------------------------------------------------------- */
+interface Props { class?: string }
+const { class: clase } = Astro.props;
+
+type Pieza = [string, Record<string, number>];
+const L = (x: number, y: number, w: number): Pieza => ['linea', { left: x, top: y, width: w }];
+const TIPOS: Record<string, { piezas: Pieza[]; pastilla?: boolean }> = {
+  cabecera: { piezas: [L(5, 46, 18), ['punto', { left: 62, top: 42 }], ['punto', { left: 72, top: 42 }], ['punto', { left: 82, top: 42 }], ['punto', { left: 92, top: 42 }]] },
+  texto: { piezas: [L(10, 28, 70), L(10, 48, 55), L(10, 68, 35)] },
+  portada: { piezas: [['circulo', { left: 80, top: 14, width: 8, aspect: 1 }], ['diagonal', { left: 50, top: 70, width: 42 }], L(6, 52, 46), L(6, 64, 32), ['pastilla', { left: 6, top: 76, width: 18, height: 12 }]] },
+  ponente: { piezas: [['circulo', { left: 12, top: 14, width: 34, aspect: 1 }], L(12, 66, 70), L(12, 80, 45)] },
+  formulario: { piezas: [['caja', { left: 8, top: 16, width: 84, height: 18 }], ['caja', { left: 8, top: 42, width: 84, height: 18 }], ['pastilla', { left: 8, top: 70, width: 34, height: 16 }]] },
+  lista: { piezas: [['punto', { left: 6, top: 22 }], L(12, 25, 34), L(52, 25, 36), ['punto', { left: 6, top: 47 }], L(12, 50, 28), L(52, 50, 30), ['punto', { left: 6, top: 72 }], L(12, 75, 38), L(52, 75, 24)] },
+  boton: { pastilla: true, piezas: [L(30, 46, 40)] },
+  mapa: { piezas: [['diagonal', { left: 4, top: 70, width: 92 }], L(0, 40, 100), ['circulo', { left: 58, top: 22, width: 14, aspect: 1 }]] },
+  video: { piezas: [['play', { left: 45, top: 38 }], L(8, 84, 30)] },
+  cifras: { piezas: [L(8, 34, 16), L(30, 34, 16), L(52, 34, 16), L(74, 34, 16), L(8, 60, 12), L(30, 60, 12), L(52, 60, 12), L(74, 60, 12)] },
+};
+const estilo = (c: Record<string, number>) => Object.entries(c)
+  .map(([k, v]) => (k === 'aspect' ? `aspect-ratio:${v}` : `${k}:${v}%`)).join(';');
+
+/* La rejilla: 6 columnas con un 3 % de calle. */
+const CALLE = 3, COL = (100 - 5 * CALLE) / 6;
+const k = (c: number, w: number, y: number, h: number) => ({ x: +(c * (COL + CALLE)).toFixed(3), w: +(w * COL + (w - 1) * CALLE).toFixed(3), y, h });
+type Caja = ReturnType<typeof k>;
+interface Modulo { id: string; tipo: string; lleno: number; fuera?: number[]; s: Record<number, Caja> }
+/* Dónde está cada módulo en cada tiempo (si no cambia, hereda el anterior),
+   desde qué tiempo está lleno y en cuáles no está. */
+const MODULOS: Modulo[] = [
+  { id: 'cabecera', tipo: 'cabecera', lleno: 1, s: { 1: k(0, 6, 0, 6) } },
+  { id: 'portada', tipo: 'portada', lleno: 1, s: { 1: k(0, 6, 8.5, 18), 4: k(0, 4, 8.5, 18), 5: k(0, 3, 64, 11) } },
+  { id: 'cifras', tipo: 'cifras', lleno: 1, s: { 1: k(0, 6, 29, 6), 4: k(4, 2, 8.5, 18), 5: k(3, 3, 64, 11) } },
+  { id: 'ponente-1', tipo: 'ponente', lleno: 2, s: { 1: k(0, 2, 37.5, 14), 4: k(0, 2, 43.5, 14), 5: k(0, 2, 47.5, 14) } },
+  { id: 'ponente-2', tipo: 'ponente', lleno: 2, s: { 1: k(2, 2, 37.5, 14), 4: k(2, 2, 43.5, 14), 5: k(2, 2, 47.5, 14) } },
+  { id: 'ponente-3', tipo: 'ponente', lleno: 2, s: { 1: k(4, 2, 37.5, 14), 4: k(4, 2, 43.5, 14), 5: k(4, 2, 47.5, 14) } },
+  { id: 'texto', tipo: 'texto', lleno: 1, fuera: [4, 5], s: { 1: k(0, 3, 54, 11) } },
+  { id: 'abstracts', tipo: 'formulario', lleno: 3, s: { 1: k(3, 3, 54, 11), 4: k(0, 3, 60, 11), 5: k(0, 3, 77.5, 10.5) } },
+  { id: 'programa', tipo: 'lista', lleno: 3, s: { 1: k(0, 6, 67.5, 12), 4: k(0, 6, 29, 12), 5: k(0, 6, 8.5, 18) } },
+  { id: 'inscripcion', tipo: 'boton', lleno: 1, fuera: [5], s: { 1: k(0, 2, 82, 6), 4: k(0, 2, 73.5, 6) } },
+  { id: 'sede', tipo: 'mapa', lleno: 1, s: { 1: k(2, 1, 82, 6), 4: k(2, 4, 73.5, 14), 5: k(4, 2, 29, 16) } },
+  { id: 'faq', tipo: 'texto', lleno: 3, s: { 1: k(3, 3, 82, 6), 4: k(3, 3, 60, 11), 5: k(3, 3, 77.5, 10.5) } },
+  { id: 'directo', tipo: 'video', lleno: 5, fuera: [1, 2, 3, 4], s: { 1: k(0, 4, 29, 16) } },
+];
+const ULTIMO = 5;
+const sitio = (m: Modulo, t: number) => { let b = m.s[1]; for (let i = 1; i <= t; i++) if (m.s[i]) b = m.s[i]; return b; };
+/* Lo que el script necesita: el sitio y el estado de cada módulo en cada tiempo. */
+const plan = MODULOS.map((m) => ({
+  id: m.id,
+  t: Array.from({ length: ULTIMO }, (_, i) => {
+    const t = i + 1;
+    return { ...sitio(m, t), lleno: t >= m.lleno, fuera: (m.fuera ?? []).includes(t), destacado: m.id === 'programa' && t === ULTIMO };
+  }),
+}));
+const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
+---
+
+<div class:list={['esquema', clase]} data-esquema-modular data-estado={ULTIMO} aria-hidden="true" data-plan={JSON.stringify(plan)}>
+  <div class="esquema__lienzo">
+    {MODULOS.map((m, i) => {
+      const f = final(plan[i]);
+      return (
+        <div
+          class:list={['modulo', f.lleno && 'lleno', f.fuera && 'fuera', f.destacado && 'destacado', TIPOS[m.tipo].pastilla && 'modulo--pastilla']}
+          data-modulo={m.id}
+          style={`--x:${f.x}%;--y:${f.y}%;--w:${f.w}%;--h:${f.h}%`}
+        >
+          {TIPOS[m.tipo].piezas.map(([tipo, c]) => (
+            <span class:list={['p', `p-${tipo}`, !['linea', 'diagonal'].includes(tipo) && 'p-forma']} style={estilo(c)} />
+          ))}
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  type Paso = { x: number; y: number; w: number; h: number; lleno: boolean; fuera: boolean; destacado: boolean };
+  const PASO = 850, DESFASE = 40;
+
+  document.querySelectorAll<HTMLElement>('[data-esquema-modular]').forEach((esquema) => {
+    const plan = JSON.parse(esquema.dataset.plan ?? '[]') as { id: string; t: Paso[] }[];
+    const ultimo = plan[0]?.t.length ?? 0;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const modulo = (id: string) => esquema.querySelector<HTMLElement>(`[data-modulo="${id}"]`)!;
+
+    /* Coloca el esquema en un tiempo. Los módulos que cambian entran con un
+       desfase corto, en el orden del plan. */
+    const aplicar = (t: number, animar: boolean) => {
+      let n = 0;
+      plan.forEach((m) => {
+        const el = modulo(m.id);
+        const p = m.t[t - 1];
+        const firma = [p.x, p.y, p.w, p.h, p.lleno, p.fuera, p.destacado].join('|');
+        const cambia = el.dataset.firma !== firma;
+        el.style.setProperty('--retraso', animar && cambia ? `${(n++) * DESFASE}ms` : '0ms');
+        el.style.setProperty('--x', `${p.x}%`); el.style.setProperty('--y', `${p.y}%`);
+        el.style.setProperty('--w', `${p.w}%`); el.style.setProperty('--h', `${p.h}%`);
+        el.classList.toggle('lleno', p.lleno);
+        el.classList.toggle('fuera', p.fuera);
+        el.classList.toggle('destacado', p.destacado);
+        el.dataset.firma = firma;
+      });
+      esquema.dataset.estado = String(t);
+    };
+
+    /* Si va a animarse, empieza en el primer tiempo, sin transición. */
+    if (!reduce.matches) {
+      esquema.classList.add('sin-transicion');
+      aplicar(1, false);
+      void esquema.offsetWidth;
+      esquema.classList.remove('sin-transicion');
+    } else {
+      plan.forEach((m) => { modulo(m.id).dataset.firma = ''; });
+    }
+
+    const reproducir = () => {
+      esquema.dataset.reproducido = '';
+      if (reduce.matches) {
+        // Al último tiempo de una vez, con un fundido corto.
+        aplicar(ultimo, false);
+        esquema.classList.add('funde');
+        return;
+      }
+      for (let t = 2; t <= ultimo; t++) setTimeout(() => aplicar(t, true), (t - 1) * PASO);
+    };
+
+    /* Una sola vez, cuando el bloque llega a la zona de lectura. */
+    const bloque = esquema.closest('section') ?? esquema;
+    const obs = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) { obs.disconnect(); reproducir(); }
+    }, { rootMargin: '-30% 0px -30% 0px' });
+    obs.observe(bloque);
+  });
+</script>
+
+<style>
+  .esquema { width: 100%; max-width: 280px; }
+  .esquema__lienzo { position: relative; width: 100%; aspect-ratio: 280 / 360; }
+  .modulo {
+    position: absolute;
+    left: var(--x); top: calc(var(--y) * 400 / 360); width: var(--w); height: calc(var(--h) * 400 / 360);
+    overflow: hidden;
+    border: var(--trazo-esquema) dashed var(--ink);
+    border-radius: 4px;
+    color: var(--ink);
+    background-color: transparent;
+    --trazo-esquema: 1.5px;
+    --dur: 600ms;
+    transition:
+      left var(--dur) var(--ease-out), top var(--dur) var(--ease-out),
+      width var(--dur) var(--ease-out), height var(--dur) var(--ease-out),
+      background-color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+    transition-delay: var(--retraso, 0ms);
+  }
+  .modulo--pastilla { border-radius: 999px; }
+  .modulo.lleno { border-style: solid; }
+  .modulo.fuera { opacity: 0; transform: scale(.92); }
+  .modulo.destacado { background-color: var(--proyecto-eci); border-color: var(--proyecto-eci); color: var(--silk); }
+
+  /* Las piezas de dentro aparecen cuando el módulo se llena: las líneas
+     crecen desde la izquierda y las formas se funden. */
+  .p { position: absolute; transition: transform var(--dur) var(--ease-out), opacity var(--dur) var(--ease-out); transition-delay: calc(var(--retraso, 0ms) + 120ms); }
+  .p-linea { height: var(--trazo-esquema); background: currentColor; transform-origin: left center; transform: scaleX(0); }
+  .p-forma { opacity: 0; }
+  .lleno .p-linea { transform: scaleX(1); }
+  .lleno .p-forma { opacity: 1; }
+  .p-circulo { border: var(--trazo-esquema) solid currentColor; border-radius: 50%; }
+  .p-caja { border: var(--trazo-esquema) solid currentColor; border-radius: 2px; }
+  .p-pastilla { border: var(--trazo-esquema) solid currentColor; border-radius: 999px; }
+  .p-punto { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+  .p-play { width: 0; height: 0; border-style: solid; border-width: 7px 0 7px 11px; border-color: transparent transparent transparent currentColor; }
+  .p-diagonal { height: var(--trazo-esquema); background: currentColor; transform-origin: left center; transform: rotate(-24deg) scaleX(0); }
+  .lleno .p-diagonal { transform: rotate(-24deg) scaleX(1); }
+
+  .sin-transicion .modulo, .sin-transicion .p { transition: none; }
+  .funde { animation: esquema-funde 300ms ease-out; }
+  @keyframes esquema-funde { from { opacity: .25; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .modulo, .p { transition: none; }
+  }
+</style>

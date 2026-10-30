@@ -29,6 +29,7 @@ import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
+import EsquemaModular from '../../components/EsquemaModular.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
 import hero from '../../assets/proyectos/eci-conference/hero.jpg';
 
@@ -125,6 +126,15 @@ const datos = [
       <figcaption>Keynote speakers</figcaption>
     </figure>
 
+    <section class="bloque" aria-labelledby="simplificar">
+      <p class="bloque__etiqueta">Simplificar</p>
+      <div class="bloque__contenido">
+        <h2 id="simplificar">La simplicidad y la complejidad se necesitan entre sí.</h2>
+        <p>Revisamos el contenido, agrupamos necesidades y construimos una arquitectura que permite avanzar de lo general a lo concreto. Cada página intenta responder primero a una necesidad y después navegar al siguiente paso.</p>
+        <p>La mayor parte del trabajo no estuvo en añadir. Estuvo en simplificar.</p>
+      </div>
+    </section>
+
     <figure class="pieza pieza--centro">
       <VideoPausable
         class="video"
@@ -137,14 +147,16 @@ const datos = [
       <figcaption>Programme tracks</figcaption>
     </figure>
 
-    <section class="bloque" aria-labelledby="simplificar">
-      <p class="bloque__etiqueta">Simplificar</p>
+    <section class="bloque" aria-labelledby="tarifas">
+      <p class="bloque__etiqueta">Sistema de tarifas</p>
       <div class="bloque__contenido">
-        <h2 id="simplificar">La simplicidad y la complejidad se necesitan entre sí.</h2>
-        <p>Revisamos el contenido, agrupamos necesidades y construimos una arquitectura que permite avanzar de lo general a lo concreto. Cada página intenta responder primero a una necesidad y después navegar al siguiente paso.</p>
-        <p>La mayor parte del trabajo no estuvo en añadir. Estuvo en simplificar.</p>
+        <h2 id="tarifas">En lugar de publicar los precios, el flujo comienza preguntando quién eres.</h2>
+        <p>El sistema de tarifas era uno de los puntos más complejos del congreso. Las distintas combinaciones de perfiles y condiciones habían provocado dificultades en ediciones anteriores.</p>
+        <p>En lugar de trasladar esa complejidad a las personas mediante una gran tabla de precios, cambiamos la lógica. A partir de una primera elección, el sistema acompaña a cada persona por las opciones que le corresponden, elimina las que no son relevantes y termina mostrando la tarifa adecuada.</p>
+        <p>Una decisión aparentemente sencilla que transforma una tabla compleja en un recorrido comprensible. Cuando la persona sabe qué inscripción necesita, el proceso continúa en Weeztix para formalizarla.</p>
       </div>
     </section>
+
 
     {/* El selector de tarifas, sobre el azul del congreso. El texto va en el
         Silk que declara la ficha (paleta.textoSobreAcento, validado en build). */}
@@ -162,42 +174,17 @@ const datos = [
       </figure>
     </div>
 
-    <section class="bloque" aria-labelledby="tarifas">
-      <p class="bloque__etiqueta">Sistema de tarifas</p>
-      <div class="bloque__contenido">
-        <h2 id="tarifas">En lugar de publicar los precios, el flujo comienza preguntando quién eres.</h2>
-        <p>El sistema de tarifas era uno de los puntos más complejos del congreso. Las distintas combinaciones de perfiles y condiciones habían provocado dificultades en ediciones anteriores.</p>
-        <p>En lugar de trasladar esa complejidad a las personas mediante una gran tabla de precios, cambiamos la lógica. A partir de una primera elección, el sistema acompaña a cada persona por las opciones que le corresponden, elimina las que no son relevantes y termina mostrando la tarifa adecuada.</p>
-        <p>Una decisión aparentemente sencilla que transforma una tabla compleja en un recorrido comprensible. Cuando la persona sabe qué inscripción necesita, el proceso continúa en Weeztix para formalizarla.</p>
+    {/* Con la microanimación del sistema modular (Johnny, 30/10/2026): en
+        escritorio, fija en la columna de la etiqueta mientras se lee; en
+        tablet y móvil, entre el titular y los párrafos. */}
+    <section class="bloque bloque--esquema" aria-labelledby="modular">
+      <div class="bloque__etiqueta">
+        <p>Un sistema modular</p>
+        <EsquemaModular class="esquema--columna" />
       </div>
-    </section>
-
-
-    <section class="bloque" aria-labelledby="abstracts">
-      <p class="bloque__etiqueta">Abstracts</p>
-      <div class="bloque__contenido">
-        <h2 id="abstracts">Creamos «AA Accessible Abstracts», una plataforma accesible para enviar y gestionar los abstracts del congreso.</h2>
-        <p>Enviar un abstract y seguir su proceso forma parte de la experiencia del congreso, igual que consultar el programa o comprar una entrada.</p>
-        <p>Por eso desarrollamos una plataforma específica para ECI e incorporamos la accesibilidad en cada paso. Su diseño sigue la misma lógica que el resto del ecosistema: claridad, sencillez y una experiencia coherente.</p>
-        <p>La accesibilidad acompaña a las personas durante todo el recorrido, también cuando pasan de la web a otra plataforma.</p>
-      </div>
-    </section>
-
-    <div class="pieza pieza--ancha">
-      <VideoPausable
-        class="video"
-        {...video('abstracts')}
-        alt="La convocatoria de abstracts, con las fechas de envío y la guía para autores, y después el formulario de envío de la plataforma de abstracts recorrido de arriba abajo: título, tipo de envío, línea temática, resumen, palabras clave, autores y el botón de enviar."
-        nombre="el envío de un abstract"
-        lang={DEFAULT_LANG}
-        sizes={{ escritorio: '(min-width: 1440px) 1392px, calc(100vw - 48px)', ...vertical }}
-      />
-    </div>
-
-    <section class="bloque" aria-labelledby="modular">
-      <p class="bloque__etiqueta">Un sistema modular</p>
       <div class="bloque__contenido">
         <h2 id="modular">Diseñamos para que la web pueda crecer con el congreso.</h2>
+        <EsquemaModular class="esquema--linea" />
         <p>La web se publica antes de que esté disponible toda la información. Los perfiles de ponentes, los abstracts, los contenidos y el programa se incorporan a medida que se confirman.</p>
         <p>Por eso creamos un sistema modular que permite añadir y organizar nuevos contenidos sin rediseñar la web cada vez.</p>
         <p>La experiencia puede evolucionar con el congreso: acompañar a quienes empiezan a planificar su participación meses antes y adaptarse a las necesidades de quienes consultan la información durante el evento, siempre desde una misma base.</p>
@@ -237,6 +224,14 @@ const datos = [
   @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
   @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
 
+  /* ---- El esquema del sistema modular ---- */
+  .bloque--esquema .bloque__etiqueta { display: flex; flex-direction: column; gap: var(--space-32); }
+  .bloque--esquema :global(.esquema--columna) { display: none; }
+  @media (min-width: 1024px) {
+    .bloque--esquema :global(.esquema--columna) { display: block; position: sticky; top: var(--space-24); }
+    .bloque--esquema :global(.esquema--linea) { display: none; }
+  }
+
   /* ---- Vídeos ---- */
   .eci :global(.video) { width: min(280px, 100%); }
   @media (min-width: 768px) { .eci :global(.video) { width: 360px; } }
@@ -249,7 +244,6 @@ const datos = [
     .pieza--derecha :global(.video), .pieza--derecha figcaption { width: 100%; }
     .pieza--centro :global(.video), .pieza--centro figcaption { width: min(896px, 100%); }
     .pieza--banda :global(.video), .pieza--banda figcaption { width: min(851px, 100%); }
-    .pieza--ancha :global(.video) { width: 100%; }
   }
 
   /* Las bandas de color, de borde a borde. */

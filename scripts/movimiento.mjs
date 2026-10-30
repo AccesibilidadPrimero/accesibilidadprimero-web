@@ -161,6 +161,53 @@ for (const url of ['/proyectos/', '/blog/']) {
   }
 }
 
+/* ---- Esquema del sistema modular · caso ECI (30/10/2026) ----
+   EsquemaModular.astro no lleva control de pausa porque se mueve MENOS de
+   5 s (2.2.2). Eso se mide aquí, no se escribe al lado (AGENTS.md §2.9):
+   · con JS: arranca al llegar a la zona de lectura, termina antes de 5 s
+     contados desde que el bloque llega, acaba en el último tiempo y no
+     vuelve a moverse (una sola vez, sin bucle);
+   · reducir movimiento: nada viaja; solo un fundido y el último tiempo;
+   · sin JS: el último tiempo, completo y quieto. */
+console.log('\n── Caso ECI: esquema del sistema modular ──\n');
+for (const [tam, w, h, sel] of [['escritorio', 1440, 900, '.esquema--columna'], ['movil', 390, 844, '.esquema--linea']]) {
+  for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
+    const ctx = await navegador.newContext({ viewport: { width: w, height: h }, ...opciones });
+    const p = await ctx.newPage();
+    await p.goto(`http://localhost:${PUERTO}/proyectos/eci-conference/`, { waitUntil: 'load' });
+    await p.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
+    const r = await p.evaluate((sel) => new Promise((res) => {
+      const e = document.querySelector(sel);
+      if (!e) return res(null);
+      e.closest('section').scrollIntoView({ block: 'center' });
+      const t0 = performance.now(); let primero = null, ultimo = null; const nombres = new Set();
+      const tick = () => {
+        const a = e.getAnimations({ subtree: true }); const t = performance.now() - t0;
+        a.forEach((x) => nombres.add(x.transitionProperty ?? x.animationName));
+        if (a.length) { if (primero === null) primero = t; ultimo = t; }
+        // Fin: 1,5 s seguidos sin nada moviéndose (y al menos 7 s de margen total).
+        if ((primero !== null && t - ultimo > 1500) || t > 9000) {
+          return res({ primero, ultimo, estado: e.dataset.estado, oculto: e.getAttribute('aria-hidden') === 'true', nombres: [...nombres], modulos: e.querySelectorAll('.modulo').length });
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }), sel);
+    await ctx.close();
+    if (!r) { anota(false, `${tam} · ${modo} · hay esquema (${sel})`); continue; }
+    const id = `${tam} · ${modo}`;
+    if (modo === 'con JS') {
+      anota(r.primero !== null && r.ultimo < LIMITE_MS && r.estado === '5' && r.oculto,
+        `${id} · se mueve ${r.primero !== null ? Math.round(r.ultimo - r.primero) : 0} ms y termina a los ${Math.round(r.ultimo ?? 0)} ms de llegar (límite ${LIMITE_MS}), en el último tiempo, una vez`);
+    } else if (modo === 'reducido') {
+      const viaja = r.nombres.some((n) => ['left', 'top', 'width', 'height', 'transform'].includes(n));
+      anota(!viaja && r.estado === '5', `${id} · nada viaja (${r.nombres.join(', ') || 'nada'}) y acaba en el último tiempo`);
+    } else {
+      anota(r.primero === null && r.estado === '5' && r.modulos > 0, `${id} · el último tiempo, completo y quieto (${r.modulos} módulos)`);
+    }
+  }
+}
+
 /* ---- Vídeos de los casos (VideoPausable, 29/10/2026) ----
    Cada vídeo de cada caso: un archivo por tamaño, en bucle, con el control
    del slider de la Home. Se mide sobre el archivo SERVIDO (AGENTS.md §2.9):
