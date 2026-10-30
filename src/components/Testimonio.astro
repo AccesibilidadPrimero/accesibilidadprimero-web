@@ -1,0 +1,102 @@
+---
+/* ---------------------------------------------------------------------------
+   Testimonio de un caso (Johnny, 30/10/2026: «un bloque de testimonio más
+   atractivo»). Sustituye al de cita y firma a tamaño de texto del 23/10.
+
+   Una banda de borde a borde en el color del proyecto, con el texto que su
+   paleta declara encima (validado en el build contra el acento). Dentro:
+     · unas comillas grandes, de dibujo: van `aria-hidden` porque la cita ya
+       la anuncia el <blockquote> y oírlas sería ruido;
+     · la cita en display, a la medida de una frase larga;
+     · la firma debajo, al cuerpo del texto, separada por un filete corto.
+   EXCEPCIÓN A LA REGLA DEL 08/10 («un solo texto grande, el h1»): la cita
+   va en display a propósito, porque es la voz del cliente y el bloque existe
+   para que se oiga. Es la única.
+
+   `borrador`: un testimonio que todavía no ha llegado. Solo se pinta en
+   `npm run dev`; en el build de producción no sale. Un testimonio inventado
+   no se publica (decisión del 30/08), ni en el .eu con noindex.
+   --------------------------------------------------------------------------- */
+interface Props {
+  cita: string;
+  nombre: string;
+  cargo: string;
+  /** El idioma de la cita, si no es el de la página (3.1.2). */
+  lang?: string;
+  /** Color de la banda y del texto encima: la paleta del proyecto. */
+  fondo: string;
+  texto: string;
+  foco: string;
+  borrador?: boolean;
+}
+const { cita, nombre, cargo, lang, fondo, texto, foco, borrador = false } = Astro.props;
+const pintar = !borrador || import.meta.env.DEV;
+---
+{
+  pintar && (
+    <section
+      class="testimonio"
+      aria-labelledby="testimonio-titulo"
+      style={`--t-fondo: ${fondo}; --t-texto: ${texto}; --t-foco: ${foco};`}
+      data-borrador={borrador ? '' : undefined}
+    >
+      <h2 id="testimonio-titulo" class="sr-only">Testimonio</h2>
+      <figure class="testimonio__figura">
+        <span class="testimonio__comillas" aria-hidden="true">“</span>
+        <blockquote class="testimonio__cita" lang={lang}><p>{cita}</p></blockquote>
+        <figcaption class="testimonio__firma">
+          <span>{nombre}</span>
+          <span>{cargo}</span>
+        </figcaption>
+      </figure>
+      {borrador && <p class="testimonio__aviso">Borrador: solo se ve en desarrollo.</p>}
+    </section>
+  )
+}
+
+<style>
+  .testimonio {
+    background: var(--t-fondo);
+    color: var(--t-texto);
+    --text: var(--t-texto);
+    --focus-ring: var(--t-foco);
+    padding: var(--space-96) var(--gutter-page);
+  }
+  @media (min-width: 1024px) { .testimonio { padding-block: var(--ritmo-seccion); } }
+  .testimonio__figura {
+    margin: 0;
+    display: grid;
+    gap: var(--space-32);
+    max-width: 1068px;
+  }
+  /* Las comillas: un dibujo, a cuatro veces el display, pegadas a la cita.
+     El alto se recorta para que no empujen la cita hacia abajo. */
+  .testimonio__comillas {
+    display: block;
+    font-size: calc(var(--display-size) * 4);
+    line-height: 1;
+    height: 0.45em;
+    margin-block-end: calc(var(--space-16) * -1);
+  }
+  .testimonio__cita { margin: 0; max-width: none; }
+  .testimonio__cita p {
+    margin: 0;
+    max-width: none;
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
+    font-weight: 400;
+    text-wrap: pretty;
+  }
+  /* La firma: nombre y cargo en dos líneas, con un filete corto encima. */
+  .testimonio__firma {
+    display: flex;
+    flex-direction: column;
+    padding-block-start: var(--space-24);
+    border-block-start: 1.5px solid currentColor;
+    width: fit-content;
+    min-width: 96px;
+  }
+  .testimonio__aviso { margin: var(--space-32) 0 0; font-size: var(--meta-size); }
+  [data-borrador] { outline: 2px dashed currentColor; outline-offset: -12px; }
+</style>

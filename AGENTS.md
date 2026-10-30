@@ -396,6 +396,16 @@ Declaración de accesibilidad lo nombra como incumplimiento conocido, y con
 «reducir movimiento» se para. Quitar el bucle obliga a quitarlo de la
 Declaración, y al revés; `npm run movimiento` vigila las dos cosas.
 
+**Casos: testimonio y esquema (30/10/2026).** El testimonio va en
+`Testimonio.astro`: banda en el color del proyecto y la cita en display, la
+única excepción a «un solo texto grande». Un testimonio que no ha llegado se
+marca `borrador` y solo se ve en `npm run dev`: un testimonio inventado no se
+publica. El esquema del sistema modular de ECI va en bucle con su botón de
+pausa (2.2.2) y en escritorio ocupa la columna central de tres;
+`npm run movimiento` lo comprueba. Los vídeos sobre blanco llevan una sombra
+leve. Las capturas de la Home tienen versión de móvil (`<archivo>-movil`,
+588 × 1280) en ECI e Izaskun.
+
 **Hero de la Home en móvil (30/10/2026).** Por debajo de 768 no hay
 animación: las láminas van en fila, con su frase escrita debajo, y se pasan
 con el dedo; la siguiente asoma por la derecha. Avanzan solas cada 3 s, con

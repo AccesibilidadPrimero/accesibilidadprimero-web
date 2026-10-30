@@ -25,6 +25,7 @@ import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
 import VideoPausable from '../../components/VideoPausable.astro';
+import Testimonio from '../../components/Testimonio.astro';
 
 export async function getStaticPaths() {
   return (await getCollection('proyectos'))
@@ -171,17 +172,9 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
       </div>
     )}
 
+    {/* El bloque nuevo del 30/10/2026: banda en el color del proyecto. */}
     {c.testimonio && (
-      <section class="seccion" aria-labelledby="testimonio">
-        <h2 id="testimonio">Testimonio</h2>
-        <figure class="testimonio">
-          <blockquote lang={c.testimonio.lang}><p>{c.testimonio.cita}</p></blockquote>
-          <figcaption>
-            <span>{c.testimonio.nombre}</span>
-            <span>{c.testimonio.cargo}</span>
-          </figcaption>
-        </figure>
-      </section>
+      <Testimonio {...c.testimonio} fondo={d.paleta.acento} texto={d.paleta.textoSobreAcento} foco={d.paleta.anilloFoco} />
     )}
 
     {/* Accesibilidad: solo el enlace a la declaración del cliente (Johnny,
@@ -313,8 +306,6 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 
   /* Testimonio: cita y firma, las dos a tamaño de texto (regla del 08/10:
      un solo titular grande por página, el h1). */
-  .testimonio { display: flex; flex-direction: column; gap: var(--space-32); }
-  .testimonio figcaption span { display: block; }
 
   /* El titular en dos líneas: el primer golpe («Foc i Cor.») va solo en la
      suya y el resto entra detrás, como en Estudio. */

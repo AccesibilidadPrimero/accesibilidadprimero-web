@@ -13,19 +13,25 @@
 
    · Ilustra lo que ya dice el texto de al lado, así que va con aria-hidden
      (AGENTS.md §1, ARIA justificada): el lector de pantalla no se pierde nada.
-   · Se reproduce UNA vez, al llegar a la zona de lectura, y entera dura
-     menos de 5 s (850 ms entre tiempos, 600 ms por cambio, 40 ms de
-     desfase). Por eso no lleva control de pausa: 2.2.2 solo lo pide para
-     lo que se mueve solo más de 5 s. NO lo sostiene este comentario: lo
-     mide `npm run movimiento` sobre la página servida (§2.9).
+   · EN BUCLE, CON PLAY/PAUSA (Johnny, 30/10/2026; antes, una sola vez):
+     arranca al llegar a la zona de lectura, recorre los cinco tiempos
+     (850 ms entre tiempos, 600 ms por cambio, 40 ms de desfase), se queda
+     2 s en el último y vuelve a empezar. Como se mueve más de 5 s, lleva el
+     botón de pausa de los vídeos (2.2.2), fuera de la parte aria-hidden.
+     Pausado, se queda donde estaba. Fuera de pantalla se para solo.
+     `npm run movimiento` lo comprueba sobre la página servida (§2.9).
    · Sin JS se ve el último tiempo, completo y quieto: el HTML ya sale con
      él. Con «reducir movimiento» nada viaja ni crece: salta al último
-     tiempo con un fundido de 300 ms (reducir no es eliminar, §2.3).
+     tiempo con un fundido de 300 ms (reducir no es eliminar, §2.3), y el
+     botón no se pinta: no hay nada que pausar.
    · Solo líneas de 1,5 px en Ink, el trazo del control de pausa, y el azul
      de ECI en el módulo del programa. Sin texto dentro (§1).
    --------------------------------------------------------------------------- */
+import { t } from '../i18n/ui';
+import { DEFAULT_LANG } from '../i18n/config';
 interface Props { class?: string }
 const { class: clase } = Astro.props;
+const ui = t(DEFAULT_LANG);
 
 type Pieza = [string, Record<string, number>];
 const L = (x: number, y: number, w: number): Pieza => ['linea', { left: x, top: y, width: w }];
@@ -79,8 +85,8 @@ const plan = MODULOS.map((m) => ({
 const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
 ---
 
-<div class:list={['esquema', clase]} data-esquema-modular data-estado={ULTIMO} aria-hidden="true" data-plan={JSON.stringify(plan)}>
-  <div class="esquema__lienzo">
+<div class:list={['esquema', clase]} data-esquema-modular data-estado={ULTIMO} data-plan={JSON.stringify(plan)}>
+  <div class="esquema__lienzo" aria-hidden="true">
     {MODULOS.map((m, i) => {
       const f = final(plan[i]);
       return (
@@ -96,11 +102,21 @@ const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
       );
     })}
   </div>
+  {/* El control de los vídeos de los casos (VideoPausable): lo enseña el
+      script solo con JS y sin «reducir movimiento». */}
+  <button type="button" class="esquema__control" data-esquema-control hidden
+          data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
+    <svg class="esquema__icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
+      <g class="esquema__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
+      <path class="esquema__play" d="M1 0 10 6 1 12z" />
+    </svg>
+    <span class="sr-only"><span data-esquema-label>{ui.carouselPause}</span> · esquema del sistema modular</span>
+  </button>
 </div>
 
 <script>
   type Paso = { x: number; y: number; w: number; h: number; lleno: boolean; fuera: boolean; destacado: boolean };
-  const PASO = 850, DESFASE = 40;
+  const PASO = 850, DESFASE = 40, ESPERA_FINAL = 2000;
 
   document.querySelectorAll<HTMLElement>('[data-esquema-modular]').forEach((esquema) => {
     const plan = JSON.parse(esquema.dataset.plan ?? '[]') as { id: string; t: Paso[] }[];
@@ -138,28 +154,78 @@ const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
       plan.forEach((m) => { modulo(m.id).dataset.firma = ''; });
     }
 
-    const reproducir = () => {
+    const control = esquema.querySelector<HTMLButtonElement>('[data-esquema-control]')!;
+    const etiqueta = esquema.querySelector<HTMLElement>('[data-esquema-label]')!;
+
+    /* El bucle: un tiempo cada PASO y, en el último, ESPERA_FINAL antes de
+       volver al primero. Un solo temporizador encadenado: pausar lo corta y
+       el esquema se queda en el tiempo en que estaba. */
+    let tiempo = 1;
+    let reloj: number | undefined;
+    let quiere = true;      // arranca solo; la persona lo para
+    let enLectura = false;
+    const siguiente = () => {
+      if (tiempo >= ultimo) {
+        esquema.classList.add('sin-transicion');
+        aplicar(1, false);
+        void esquema.offsetWidth;
+        esquema.classList.remove('sin-transicion');
+        tiempo = 1;
+      } else {
+        tiempo += 1;
+        aplicar(tiempo, true);
+      }
+      reloj = window.setTimeout(siguiente, tiempo >= ultimo ? ESPERA_FINAL : PASO);
+    };
+    const sincronizar = () => {
       esquema.dataset.reproducido = '';
       if (reduce.matches) {
-        // Al último tiempo de una vez, con un fundido corto.
-        aplicar(ultimo, false);
-        esquema.classList.add('funde');
+        // Al último tiempo de una vez, con un fundido corto, y sin botón.
+        window.clearTimeout(reloj); reloj = undefined;
+        if (tiempo !== ultimo) { aplicar(ultimo, false); tiempo = ultimo; esquema.classList.add('funde'); }
+        control.hidden = true;
         return;
       }
-      for (let t = 2; t <= ultimo; t++) setTimeout(() => aplicar(t, true), (t - 1) * PASO);
+      control.hidden = false;
+      etiqueta.textContent = quiere ? (control.dataset.labelPausar ?? 'Pausar') : (control.dataset.labelReproducir ?? 'Reproducir');
+      esquema.toggleAttribute('data-parado', !quiere);
+      const mover = quiere && enLectura;
+      if (mover && reloj === undefined) reloj = window.setTimeout(siguiente, PASO);
+      if (!mover) { window.clearTimeout(reloj); reloj = undefined; }
     };
 
-    /* Una sola vez, cuando el bloque llega a la zona de lectura. */
+    control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
+    reduce.addEventListener('change', sincronizar);
+
+    /* Se mueve mientras el bloque está en la zona de lectura. */
     const bloque = esquema.closest('section') ?? esquema;
-    const obs = new IntersectionObserver((es) => {
-      if (es.some((e) => e.isIntersecting)) { obs.disconnect(); reproducir(); }
-    }, { rootMargin: '-30% 0px -30% 0px' });
-    obs.observe(bloque);
+    new IntersectionObserver((es) => {
+      enLectura = es.some((e) => e.isIntersecting);
+      sincronizar();
+    }, { rootMargin: '-30% 0px -30% 0px' }).observe(bloque);
   });
 </script>
 
 <style>
-  .esquema { width: 100%; max-width: 280px; }
+  .esquema { width: 100%; max-width: 280px; display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-8); }
+  .esquema__lienzo { align-self: stretch; }
+  /* El botón de los vídeos: 44 de zona y un círculo de 32 dentro, a plomo
+     con el borde derecho del esquema. */
+  .esquema__control {
+    position: relative; display: grid; place-items: center;
+    width: var(--touch-min); height: var(--touch-min); margin-inline-end: -6px;
+    padding: 0; background: none; border: 0; color: inherit; cursor: pointer;
+  }
+  .esquema__control[hidden] { display: none; }
+  .esquema__control::before {
+    content: ''; position: absolute; inset: 6px;
+    border: 1.5px solid currentColor; border-radius: 50%;
+  }
+  .esquema__control:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .esquema__icono { fill: currentColor; }
+  .esquema__play { display: none; }
+  [data-parado] .esquema__pausa { display: none; }
+  [data-parado] .esquema__play { display: inline; }
   .esquema__lienzo { position: relative; width: 100%; aspect-ratio: 280 / 360; }
   .modulo {
     position: absolute;
