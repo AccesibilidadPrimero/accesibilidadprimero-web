@@ -2,8 +2,9 @@
 /* ---------------------------------------------------------------------------
    Barra de nota del proyecto · «Accessibility Meta Content» del Figma.
 
-   Dos bloques en una fila, separados 24: la nota con su punto de estado, y la
-   conformidad WCAG con su icono. Anchos del documento: 131 y 169.
+   La nota con su punto de estado y el nombre de la herramienta que la mide,
+   A11y Primero. Hasta el 03/11/2026 llevaba al lado un segundo bloque con la
+   conformidad WCAG y su icono (Figma: 131 y 169 de ancho).
 
    Tres cosas que el diseño original hacía mal y aquí no se repiten:
 
@@ -33,30 +34,25 @@ const fecha = nota
       <p class="meta__nota">
         {nota.declaracion ? (
           <a href={nota.declaracion} class="meta__enlace">
-            <span>{nota.valor} / 100</span>
+            <span>{nota.valor} / 100 · A11y Primero</span>
             <span class="sr-only">
-              {` en accesibilidad · ${proyecto}. Medido el ${fecha}. Ver la declaración de accesibilidad`}
+              {`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}. Ver la declaración de accesibilidad`}
             </span>
           </a>
         ) : (
           <span>
-            <span>{nota.valor} / 100</span>
-            <span class="sr-only">{` en accesibilidad · ${proyecto}. Medido el ${fecha}`}</span>
+            <span>{nota.valor} / 100 · A11y Primero</span>
+            <span class="sr-only">{`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}`}</span>
           </span>
         )}
         <span class="meta__punto" aria-hidden="true" />
       </p>
 
-      <p class="meta__wcag">
-        {/* Decorativo: lo que significa está escrito justo al lado. */}
-        <svg class="meta__icono" aria-hidden="true" focusable="false" viewBox="0 0 20 20" width="20" height="20">
-          <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="1.4" />
-          <circle cx="10" cy="5.1" r="1.5" fill="currentColor" />
-          <path d="M5 8h10M10 8v4M10 12l-2.2 4M10 12l2.2 4" fill="none" stroke="currentColor"
-                stroke-width="1.4" stroke-linecap="round" />
-        </svg>
-        <span>{nota.conformidad ?? 'WCAG 2.2 AA'}</span>
-      </p>
+      {/* Sin el sello «WCAG 2.2 AA» (Johnny, 03/11/2026): las declaraciones
+          dicen conformidad parcial y una puntuación de herramienta propia no
+          es una declaración de conformidad. La herramienta se nombra a la
+          vista. El desplegable con el detalle está pendiente de diseño en
+          Figma (AGENTS.md §1). */}
     </div>
   )
 }
@@ -71,7 +67,7 @@ const fecha = nota
     flex: none;
   }
 
-  .meta__nota, .meta__wcag { display: flex; align-items: center; gap: var(--space-8); }
+  .meta__nota { display: flex; align-items: center; gap: var(--space-8); }
 
   /* En negro, como «WCAG 2.2 AA» a su lado, y SIN flecha (Johnny, 09/10,
      tarde): la nota es un dato, y una ↗ más un punto verde eran tres signos
@@ -105,8 +101,6 @@ const fecha = nota
     background: var(--green-signal);
     flex: none;
   }
-
-  .meta__icono { flex: none; }
 
   @media (forced-colors: active) {
     .meta__punto { background: CanvasText; }

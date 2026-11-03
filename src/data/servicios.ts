@@ -5,8 +5,9 @@
    La auditoría y la formación salen de accesibilidadprimero.com
    (/auditoria-de-accesibilidad-wcag/ y /formacion/), reescritas con la voz de
    la web nueva: frases cortas, una idea por frase, sin jerga.
-   Diseño y desarrollo es texto nuevo, propuesto por Claude y pendiente de que
-   Johnny lo revise.
+   Diseño y desarrollo es texto nuevo, propuesto por Claude. Revisión de voz
+   del 03/11/2026 (Johnny): sin garantías sobre el resultado, sí sobre el
+   método; ver «Web 2.0 AP · Propuesta de mejora de redacción y tono».
    --------------------------------------------------------------------------- */
 
 export interface Punto {
@@ -32,29 +33,34 @@ export const DISENO = {
     {
       nombre: 'Un stack propio y accesible.',
       texto:
-        'Desarrollamos sobre una base técnica propia con WCAG 2.2 AA de serie. Cada componente está probado con teclado y lector de pantalla, y cada cambio pasa comprobaciones automáticas de contraste, reflow y navegación antes de publicarse.',
+        'Desarrollamos sobre una base técnica propia, pensada para cumplir WCAG 2.2 AA. Cada componente está probado con teclado y lector de pantalla, y cada cambio pasa comprobaciones automáticas de contraste, reflow y navegación antes de publicarse.',
     },
     {
       nombre: 'Un gestor de contenidos propio.',
       texto:
-        'Tu equipo actualiza textos, imágenes y artículos sin tocar código y sin romper la accesibilidad.',
+        'Tu equipo actualiza textos, imágenes y artículos sin tocar código.',
     },
     {
       nombre: 'Rápidas y sin plugins que mantener.',
       texto:
-        'Webs ligeras, servidas desde la red de Cloudflare. Sin WordPress ni plugins que actualizar cada semana: menos mantenimiento y menos puertas abiertas.',
+        'Webs ligeras, servidas desde la red de Cloudflare y sin plugins que actualizar cada semana. Menos mantenimiento para tu equipo.',
     },
     {
       nombre: 'Declaración y formación al entregar.',
       texto:
-        'Cada web sale con su declaración de accesibilidad publicada, y formamos a tu equipo para que siga siendo accesible.',
+        'Cada web sale con su declaración de accesibilidad y formamos a tu equipo para mantener la accesibilidad.',
+    },
+    {
+      nombre: 'Probamos cada web antes de publicarla.',
+      texto:
+        'La revisamos con teclado y lector de pantalla y documentamos lo que cumple. Si después alguien encuentra una barrera, la corregimos.',
     },
   ] satisfies Punto[],
 };
 
 export const AUDITORIA = {
   intro:
-    'Analizamos tu web con WCAG 2.2 y la normativa vigente, te explicamos cada barrera y te damos un plan para quitarlas. Al terminar, entregamos la declaración de accesibilidad publicada.',
+    'No es cumplir. Es poder usar. Revisamos tu web con WCAG 2.2 y la normativa vigente, te explicamos cada barrera y te damos un plan para quitarlas. Al terminar, preparamos la declaración de accesibilidad de tu web.',
   revisamos: [
     {
       nombre: 'Diseño e información.',
@@ -66,11 +72,11 @@ export const AUDITORIA = {
     },
     {
       nombre: 'Lenguaje.',
-      texto: 'Claridad del texto, barreras cognitivas y comunicación inclusiva. Es lo que casi ninguna auditoría mira.',
+      texto: 'Claridad del texto, barreras cognitivas y comunicación inclusiva. Para nosotros, la palabra también es accesibilidad.',
     },
   ] satisfies Punto[],
   entregamos:
-    'Un resumen para dirección, las incidencias ordenadas por prioridad, un plan de acción y la declaración de accesibilidad publicada en tu web.',
+    'Un resumen para dirección, las incidencias ordenadas por prioridad, un plan de acción y la declaración de accesibilidad de tu web.',
   tarifas: [
     {
       nombre: 'Express',
@@ -104,7 +110,7 @@ export const AUDITORIA = {
       para: 'Sector público y grandes empresas',
       precio: 'Desde 2.500 € + IVA',
       incluye: [
-        'Sin límite de páginas',
+        'Muestra y recorridos según el alcance',
         'WCAG 2.2 y EN 301 549',
         'Varias tecnologías de apoyo',
         'Reunión de 120 minutos',
@@ -117,7 +123,7 @@ export const AUDITORIA = {
 
 export const FORMACION = {
   intro:
-    'La accesibilidad no termina con la entrega. Formamos a los equipos que gestionan y actualizan la web para que la mantengan accesible sin depender de nadie.',
+    'La accesibilidad no termina con la entrega. Formamos a los equipos que gestionan y actualizan la web para que puedan mantener la accesibilidad en el día a día.',
   puntos: [
     {
       nombre: 'Al entregar el proyecto.',

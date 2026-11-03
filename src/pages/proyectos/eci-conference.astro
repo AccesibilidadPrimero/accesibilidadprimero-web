@@ -64,12 +64,12 @@ const datos = [
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
-  ctaTitulo={"Hacer simple lo complejo\ntambién es accesibilidad."}
+  ctaTitulo={"Cada persona,\nsu inscripción."}
 >
   <div class="eci" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina
-      titulo="Hacer de la complejidad una experiencia intuitiva."
-      golpes={['Hacer de la complejidad', 'una experiencia intuitiva.']}
+      titulo="Una web que crece con el congreso."
+      golpes={['Una web que crece', 'con el congreso.']}
       texto={['ECI Conference Madrid 2027 · Caso de estudio']}
       foto={hero}
     />
@@ -90,7 +90,7 @@ const datos = [
       <div class="bloque__contenido">
         <p>ECI Conference reúne a profesionales, investigadores y familias de Europa para compartir conocimiento y avanzar en torno a la intervención temprana en la infancia.</p>
         <p>Detrás de esos días de encuentro hay una enorme cantidad de información, decisiones y recorridos digitales.</p>
-        <p>Nuestro trabajo fue convertir toda esa complejidad en un sistema claro y accesible.</p>
+        <p>Nuestro trabajo fue ordenarla para que cada persona encuentre su perfil.</p>
       </div>
     </section>
 
@@ -113,7 +113,7 @@ const datos = [
         <h2 id="reto">Mucha información. Muchos perfiles. Un sistema claro.</h2>
         <p>Un congreso internacional empieza mucho antes de abrir sus puertas. Hay que reunir inscripciones, tarifas, abstracts, ponencias, horarios, espacios e información práctica. Y ofrecerla a personas con perfiles y necesidades diferentes, mientras los contenidos se actualizan a medida que se acerca la fecha.</p>
         <p>El reto estaba en ayudar a cada persona a encontrar y comprender la información que necesita.</p>
-        <p>Por eso empezamos por ordenar los contenidos, definir jerarquías y crear recorridos claros. Así, cada persona puede orientarse por la web y acceder a la información del congreso de forma sencilla.</p>
+        <p>Por eso empezamos por ordenar los contenidos, definir jerarquías y crear recorridos claros.</p>
       </div>
     </section>
 
@@ -129,10 +129,10 @@ const datos = [
       <figcaption>Keynote speakers</figcaption>
     </figure>
 
-    <section class="bloque" aria-labelledby="simplificar">
-      <p class="bloque__etiqueta">Simplificar</p>
+    <section class="bloque" aria-labelledby="ordenar">
+      <p class="bloque__etiqueta">Ordenar</p>
       <div class="bloque__contenido">
-        <h2 id="simplificar">La simplicidad y la complejidad se necesitan entre sí.</h2>
+        <h2 id="ordenar">De lo general a lo concreto.</h2>
         <p>Revisamos el contenido, agrupamos necesidades y construimos una arquitectura que permite avanzar de lo general a lo concreto. Cada página intenta responder primero a una necesidad y después navegar al siguiente paso.</p>
         <p>La mayor parte del trabajo no estuvo en añadir. Estuvo en simplificar.</p>
       </div>
@@ -153,10 +153,10 @@ const datos = [
     <section class="bloque" aria-labelledby="tarifas">
       <p class="bloque__etiqueta">Sistema de tarifas</p>
       <div class="bloque__contenido">
-        <h2 id="tarifas">En lugar de publicar los precios, el flujo comienza preguntando quién eres.</h2>
-        <p>El sistema de tarifas era uno de los puntos más complejos del congreso. Las distintas combinaciones de perfiles y condiciones habían provocado dificultades en ediciones anteriores.</p>
+        <h2 id="tarifas">Antes del precio, una pregunta: ¿quién eres?</h2>
+        <p>En ediciones anteriores, mucha gente no sabía qué entrada le correspondía entre tantas combinaciones de perfiles y condiciones.</p>
         <p>En lugar de trasladar esa complejidad a las personas mediante una gran tabla de precios, cambiamos la lógica. A partir de una primera elección, el sistema acompaña a cada persona por las opciones que le corresponden, elimina las que no son relevantes y termina mostrando la tarifa adecuada.</p>
-        <p>Una decisión aparentemente sencilla que transforma una tabla compleja en un recorrido comprensible. Cuando la persona sabe qué inscripción necesita, el proceso continúa en Weeztix para formalizarla.</p>
+        <p>Cuando la persona sabe qué inscripción necesita, el proceso continúa en Weeztix para formalizarla.</p>
       </div>
     </section>
 
@@ -285,8 +285,8 @@ const datos = [
   .declaracion { display: block; max-width: none; padding: var(--space-64) var(--gutter-page); text-align: center; }
   .declaracion :global(.linea) { display: block; }
 
-  /* El titular en dos líneas: «Hacer de la complejidad / una experiencia
-     intuitiva.» (Johnny, 29/10/2026). */
+  /* El titular en dos líneas: «Una web que crece / con el congreso.»
+     (Johnny, 29/10/2026; texto del 03/11/2026). */
   .eci :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
   @media (min-width: 768px) { .declaracion { padding-block: var(--space-96); } }
 </style>

@@ -45,15 +45,14 @@ imagenes:
       la ciudad y el botón “Discover Madrid”.
 ---
 
-Un congreso sobre inclusión necesita una web inclusiva.
+Un congreso con mucho que compartir. Una web que ayuda a cada persona a
+encontrar lo que necesita.
 
-Diseñamos su web con el mismo propósito: hacer comprensible lo complejo.
+Un congreso europeo mueve mucha información: programa, ponentes, inscripción
+y envío de abstracts. Muchas veces acaba repartida en PDF y formularios
+difíciles de usar.
 
-Un congreso europeo mueve mucha información: programa, ponentes, inscripción,
-envío de abstracts, etc. Casi siempre se reparte en PDFs y formularios poco
-accesibles.
-
-En la web de ECI el programa se recorre y se filtra de manera intuitiva, sin
+En ECI, el programa se recorre y se filtra en la propia web, sin
 descargar nada.
 
 Y para la gestión de abstracts creamos nuestra propia plataforma. Accessible

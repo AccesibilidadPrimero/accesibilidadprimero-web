@@ -83,13 +83,9 @@ const conCuerpo = await Promise.all(
 
   <section class="productos" aria-labelledby="productos-titulo">
     <h2 id="productos-titulo" class="productos__intro">
-      <span class="solo-amplio">
-        Desarrollamos aplicaciones que simplifican procesos complejos, hacen que lo digital sea
-        accesible para más personas.
-      </span>
-      <span class="solo-movil">
-        Aplicaciones que simplifican y hacen que lo digital sea accesible para más personas.
-      </span>
+      {/* Un solo texto en todos los anchos (Johnny, 03/11/2026): antes había
+          uno de escritorio y otro de móvil, dos redacciones de la misma idea. */}
+      También creamos herramientas para resolver problemas que encontramos por el camino.
     </h2>
 
     <ul class="productos__lista">
@@ -184,13 +180,8 @@ const conCuerpo = await Promise.all(
       <img src={iconoEstudio.src} alt="" width={iconoEstudio.width} height={iconoEstudio.height} />
     </div>
     <h2 id="estudio-titulo" class="estudio__texto">
-      <span class="solo-amplio">
-        Accesibilidad Primero<Fragment set:html={REGISTRADA} /> es un estudio de diseño. Creamos webs y aplicaciones con la
-        accesibilidad digital como punto de partida.
-      </span>
-      <span class="solo-movil">
-        Hacemos webs y productos digitales donde la accesibilidad es el punto de partida.
-      </span>
+      {/* Un solo texto en todos los anchos (Johnny, 03/11/2026). */}
+      Diseño, código y palabra, con la accesibilidad como punto de partida.
     </h2>
     <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero<Fragment set:html={REGISTRADA} /></CtaLink>
   </section>

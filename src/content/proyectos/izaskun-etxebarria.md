@@ -40,12 +40,11 @@ imagenes:
       antiguos expuestos en una vitrina iluminada.
 ---
 
-Diseñamos su web con el mismo propósito: dejar espacio a la obra.
+Dejar espacio a la obra.
 
-La interfaz casi desaparece. Sin adornos, sin ruido, sin nada que compita con
-las piezas.
+La interfaz se aparta para que hablen las obras.
 
 Obra propia y comisariado conviven sin mezclarse.
 
-Y las series - Agujeros de tiempo, Diálogos, Desapariciones - se navegan como
-lo que son: conjuntos, no imágenes sueltas.
+Y las series (“Agujeros de tiempo”, “Diálogos”, “Desapariciones”) se navegan
+como lo que son: conjuntos, no imágenes sueltas.

@@ -430,8 +430,8 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
       'Izaskun · enlace DESPUÉS': [1, debajo('.proyecto--izaskun .slider', '.proyecto--izaskun .proyecto__cta')],
       'Productos · columna': [342, w('.producto--itza')],
       'Estudio · caja de la frase': [274, w('.estudio__texto')],
-      'Productos · texto de móvil': [1, visible('.productos__intro').startsWith('Aplicaciones') ? 1 : 0],
-      'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Somos') ? 1 : 0],
+      'Productos · texto de móvil': [1, visible('.productos__intro').startsWith('También creamos') ? 1 : 0],
+      'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Diseño, código') ? 1 : 0],
       'Pie · lema, legales, ©': [1, debajo('.pie__lema', '.pie__nav') && debajo('.pie__nav', '.pie__copy') ? 1 : 0],
       'Hero · ocupa la pantalla': [844, r('.hero').bottom],
     };
@@ -445,12 +445,12 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
   }
 }
 {
-  /* Y en escritorio siguen los textos de siempre. */
+  /* Y en escritorio, el mismo texto que en móvil (03/11/2026). */
   const p = await nav.newPage({ viewport: { width: 1440, height: 900 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   const t = await p.evaluate(() => [
-    document.querySelector('.productos__intro').innerText.trim().startsWith('Desarrollamos') ? 1 : 0,
-    document.querySelector('.estudio__texto').innerText.trim().replace('®', '').startsWith('Accesibilidad Primero es') ? 1 : 0,
+    document.querySelector('.productos__intro').innerText.trim().startsWith('También creamos') ? 1 : 0,
+    document.querySelector('.estudio__texto').innerText.trim().startsWith('Diseño, código') ? 1 : 0,
   ]);
   await p.close();
   for (const [i, nombre] of ['1440 · Productos · texto de escritorio', '1440 · Estudio · texto de escritorio'].entries()) {
