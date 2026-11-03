@@ -33,10 +33,13 @@ const fecha = nota
     <div class="meta">
       <p class="meta__nota">
         {nota.declaracion ? (
-          <a href={nota.declaracion} class="meta__enlace">
+          /* En pestaña nueva (Johnny, 03/11/2026): la declaración está en la
+             web del cliente. Se avisa en el nombre accesible, como en los
+             demás enlaces externos de la web (CtaLink, TarjetaProyecto). */
+          <a href={nota.declaracion} class="meta__enlace" target="_blank" rel="noopener">
             <span>{nota.valor} / 100 · A11y Primero</span>
             <span class="sr-only">
-              {`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}. Ver la declaración de accesibilidad`}
+              {`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}. Ver la declaración de accesibilidad (se abre en una ventana nueva)`}
             </span>
           </a>
         ) : (

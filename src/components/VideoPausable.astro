@@ -4,8 +4,8 @@
 
    Lo usan los casos de proyecto: las grabaciones de la web del cliente
    (portada, modales, flujos). Un archivo por tamaño, si lo hay: escritorio
-   desde 1024, tableta desde 768 y móvil por debajo. Si falta uno, se usa
-   el siguiente más grande.
+   desde 1024 y tableta por debajo, también en móvil desde el 03/11/2026.
+   Si falta la de tableta, se usa la de escritorio.
 
    · Debajo va el primer fotograma como imagen fija, con la misma dirección
      de arte, y es ella la que lleva el `alt`: sin JS, con «reducir
@@ -48,7 +48,10 @@ interface Props {
   sizes: { escritorio: string; tableta: string; movil: string };
   class?: string;
 }
-const { escritorio, tableta = escritorio, movil = tableta, alt, nombre, lang, sizes, class: clase } = Astro.props;
+const { escritorio, tableta = escritorio, alt, nombre, lang, sizes, class: clase } = Astro.props;
+/* En móvil, la versión de tableta (Johnny, 03/11/2026): se acepta `movil`
+   para no tocar los casos, pero no se usa. */
+const movil = tableta;
 const ui = t(lang);
 
 /* Los anchos que se generan, sin pasar del original. */

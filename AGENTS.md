@@ -404,7 +404,9 @@ publica. El esquema del sistema modular de ECI va en bucle con su botón de
 pausa (2.2.2) y en escritorio ocupa la columna central de tres;
 `npm run movimiento` lo comprueba. Los vídeos sobre blanco llevan una sombra
 leve. Las capturas de la Home tienen versión de móvil (`<archivo>-movil`,
-588 × 1280) en ECI e Izaskun.
+588 × 1280) en ECI e Izaskun, pero desde el 03/11/2026 no se sirven: en
+móvil van las mismas capturas y vídeos que en tableta, en toda la web
+(Johnny). `ProjectSlider` y `VideoPausable` lo resuelven en un sitio.
 
 **Caso Elogio de la línea (30/10/2026).** Maqueta propia, replanteada con
 la estructura de ECI e Izaskun y los textos del Figma. Título «Elogio de la
@@ -418,14 +420,16 @@ CSS en bucle con botón de pausa; la pausa va por la variable
 `--reproduccion`, que leen todas sus reglas de animación (una regla de
 pausa aparte perdía por especificidad). `npm run movimiento` lo comprueba.
 
-**Hero de la Home en móvil (30/10/2026).** Por debajo de 768 no hay
-animación: las láminas van en fila, con su frase escrita debajo, y se pasan
-con el dedo; la siguiente asoma por la derecha. Avanzan solas cada 3 s, con
-botón de pausa visible (2.2.2); tocar la fila también las para. Con «reducir
-movimiento» no avanzan y el botón no se pinta; sin JS, la fila se desliza
-igual. El control transparente del escritorio no se pinta en móvil.
-`npm run geometria` mide el slider a 390 y `npm run movimiento` el avance y
-la pausa.
+**Hero de la Home en móvil (03/11/2026).** Por debajo de 768 no hay
+carrusel ni slider: se ve una sola ilustración, elegida al azar en cada
+carga entre las ocho, sin la frase del decálogo. Nada se mueve, así que no
+hay botón de pausa. Sin JS, la flor. Las demás láminas siguen en el árbol de
+accesibilidad. Sustituye al slider del 30/10/2026. `npm run geometria` la
+mide a 390 y `npm run movimiento` comprueba que no cambia mientras se mira y
+que sí cambia entre cargas.
+
+**Bloque Estudio de la Home (03/11/2026).** Centrado: es la excepción a los
+H2 y párrafos a la izquierda del 30/10/2026.
 
 **Servicios (30/10/2026).** `/servicios/`, con HeroPagina y Bloque como
 Estudio; el contenido vive en `src/data/servicios.ts`. La banda del hero

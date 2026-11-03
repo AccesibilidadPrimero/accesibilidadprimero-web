@@ -78,13 +78,12 @@
 }
 
 /* ---- Estudio -------------------------------------------------------------- */
-/* A la izquierda, con el icono encima (Johnny, 30/10/2026: «alinear los H2 y
-   los párrafos a la izquierda»; antes, centrada). El icono y el enlace van
-   con el texto: centrados sobre un texto alineado a la izquierda quedaban
-   sueltos. gap 32, padding 96/48. */
+/* Centrado: icono, frase y enlace (Johnny, 03/11/2026). Es la excepción a
+   «los H2 y los párrafos a la izquierda» del 30/10/2026: una frase corta en
+   su banda, no un texto que se lee. gap 32, padding 96/48. */
 .estudio {
-  align-items: flex-start;
-  text-align: start;
+  align-items: center;
+  text-align: center;
   gap: var(--space-32);
   padding-block: var(--space-96);
 }

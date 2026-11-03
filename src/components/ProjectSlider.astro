@@ -69,7 +69,10 @@ const buscar = (nombre: string) =>
    exige tres declaradas; esto comprueba que además existen en disco. */
 const faltan = imagenes.filter((i) => !buscar(i.archivo)).map((i) => i.archivo);
 /* Las verticales son opcionales, pero van las tres o ninguna (ver arriba). */
-const conMovil = imagenes.every((i) => buscar(`${i.archivo}-movil`));
+/* Desde el 03/11/2026 (Johnny) el móvil usa las mismas capturas que la
+   tableta: las verticales `-movil` se quedan en arte/ pero no se sirven. Para
+   volver a usarlas, cambiar `false` por la comprobación de abajo. */
+const conMovil = false && imagenes.every((i) => buscar(`${i.archivo}-movil`));
 if (faltan.length) {
   throw new Error(
     `Faltan capturas de ${titulo} en src/assets/proyectos/: ${faltan.join(', ')}.\n` +
