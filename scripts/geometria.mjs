@@ -311,7 +311,8 @@ console.log('\n── El hero a 390 ──\n');
     const vista = l.filter((x) => getComputedStyle(x).opacity === '1');
     return {
       'Láminas a la vista': [1, vista.length],
-      'Ilustración · alto': [225, vista[0]?.querySelector('img').getBoundingClientRect().height ?? 0],
+      /* Un 10 % más que el 225 del Figma, salvo la trompeta (03/11/2026). */
+      'Ilustración · alto': [vista[0]?.dataset.archivo === '02-comunicamos' ? 225 : 247.5, vista[0]?.querySelector('img').getBoundingClientRect().height ?? 0],
       'Página sin scroll horizontal': [390, document.documentElement.scrollWidth],
     };
   });
@@ -428,7 +429,7 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
       'Productos · columna': [342, w('.producto--itza')],
       'Estudio · caja de la frase': [274, w('.estudio__texto')],
       'Productos · texto de móvil': [1, visible('.productos__intro').startsWith('También creamos') ? 1 : 0],
-      'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Diseño, código') ? 1 : 0],
+      'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Código, diseño') ? 1 : 0],
       'Pie · lema, legales, ©': [1, debajo('.pie__lema', '.pie__nav') && debajo('.pie__nav', '.pie__copy') ? 1 : 0],
       'Hero · ocupa la pantalla': [844, r('.hero').bottom],
     };
@@ -447,7 +448,7 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   const t = await p.evaluate(() => [
     document.querySelector('.productos__intro').innerText.trim().startsWith('También creamos') ? 1 : 0,
-    document.querySelector('.estudio__texto').innerText.trim().startsWith('Diseño, código') ? 1 : 0,
+    document.querySelector('.estudio__texto').innerText.trim().startsWith('Código, diseño') ? 1 : 0,
   ]);
   await p.close();
   for (const [i, nombre] of ['1440 · Productos · texto de escritorio', '1440 · Estudio · texto de escritorio'].entries()) {

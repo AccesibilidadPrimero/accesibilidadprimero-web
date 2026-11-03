@@ -138,7 +138,7 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     <ul class="hero__pila" aria-label={ui.carouselRegion}>
       {
         ACTIVAS.map((il, i) => (
-          <li class="hero__lamina" data-indice={i} data-activa={i === 0 ? '' : undefined}
+          <li class="hero__lamina" data-indice={i} data-archivo={il.archivo} data-activa={i === 0 ? '' : undefined}
               data-movil={i === 0 ? '' : undefined}
               data-frase={il.frase} data-frase-lang={il.fraseLang ?? lang}
               data-ratio={(meta(il.archivo).width / meta(il.archivo).height).toFixed(4)}>
@@ -432,6 +432,11 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     .hero__escenario { padding-block: var(--space-24); }
     .hero__pila .hero__lamina { opacity: 0; transition: none; }
     .hero__pila .hero__lamina[data-movil] { opacity: 1; z-index: 10; }
+    /* Un 10 % más grandes en móvil (Johnny, 03/11/2026): 225 → 247,5. La
+       trompeta no: es la más ancha y a ese alto se saldría de la columna. */
+    .hero__pila { height: calc(var(--ilustracion) * 1.1); }
+    .hero__pila .hero__lamina img { height: calc(var(--ilustracion) * 1.1); }
+    .hero__pila .hero__lamina[data-archivo='02-comunicamos'] img { height: var(--ilustracion); }
     /* El control transparente del escritorio no tiene sentido aquí: en móvil
        no hay carrusel que parar. */
     .hero__control { display: none; }

@@ -83,7 +83,7 @@ for (const js of [false, true]) {
 
 /* 4 · La entrada del titular de Estudio, en golpes. El <h1> tiene que estar
    entero en el HTML, sin JS no se anima nada, y con JS todo acaba antes de
-   2 s: tres golpes y después el texto. */
+   2 s: dos golpes y después el texto (tres hasta el 03/11/2026). */
 {
   const TITULAR = 'Código, diseño y palabra.';
   const golpes = (page) => page.evaluate(() => {
@@ -103,9 +103,9 @@ for (const js of [false, true]) {
     const p = await ctx.newPage();
     await p.goto(PAGINA, { waitUntil: 'load' });
     let g = await golpes(p);
-    anota(g.texto === TITULAR && g.golpes === 3, `titular · ${n} · el h1 dice «${g.texto}» entero, en ${g.golpes} golpes`);
+    anota(g.texto === TITULAR && g.golpes === 2, `titular · ${n} · el h1 dice «${g.texto}» entero, en ${g.golpes} golpes`);
     if (n === 'sin JS') anota(g.animaciones === 0 && g.quietos, `titular · ${n} · no se anima: se ve quieto desde el principio`);
-    else anota(g.animaciones === 4 && g.fin <= 2000, `titular · ${n} · tres golpes y el texto, todo acaba a los ${(g.fin / 1000).toFixed(2)} s`);
+    else anota(g.animaciones === 3 && g.fin <= 2000, `titular · ${n} · dos golpes y el texto, todo acaba a los ${(g.fin / 1000).toFixed(2)} s`);
     await p.waitForTimeout(2100);
     g = await golpes(p);
     anota(g.quietos, `titular · ${n} · al terminar, todo en su sitio y opaco`);
