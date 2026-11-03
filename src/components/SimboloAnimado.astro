@@ -297,7 +297,8 @@ const { class: clase } = Astro.props;
      153 · 122 · 92 en vez de 180 · 144 · 108. */
   .simbolo__marco { position: relative; block-size: 92px; aspect-ratio: 338.4 / 299.43; }
   @media (min-width: 768px) { .simbolo__marco { block-size: 122px; } }
-  @media (min-width: 1024px) { .simbolo__marco { block-size: 153px; } }
+  /* En escritorio, un 10 % menos (Johnny, 03/11/2026): 138 en vez de 153. */
+  @media (min-width: 1024px) { .simbolo__marco { block-size: 138px; } }
 
   /* Centrado en el espacio vacío entre la cabecera y el titular, como las
      ilustraciones del resto de heros (Johnny, 30/10/2026). Del 13/10 al 30/10

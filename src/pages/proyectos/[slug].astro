@@ -68,7 +68,6 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen}
-  ctaTitulo={c.cierre}
 >
   <div class="caso" style={fondo}>
     {/* Hero común (HeroPagina): pantalla entera, texto abajo a 24 del borde
@@ -88,7 +87,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
       <dl class="ficha__datos">
         <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>
         <div><dt>Año</dt><dd>{c.anio}</dd></div>
-        <div><dt>Qué hicimos</dt><dd>{c.queHicimos}</dd></div>
+        <div><dt>Rol</dt><dd>{c.queHicimos}</dd></div>
         <div><dt>Estándar</dt><dd>{c.conformidad}</dd></div>
         {d.web && dominio && <div class="ficha__web"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
       </dl>
@@ -137,7 +136,9 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 
     <section class="seccion" aria-labelledby="reto">
       <h2 id="reto" class="titular">El reto</h2>
-      <p class="intro">{c.reto.intro}</p>
+      {/* Un salto en el Markdown (`|-`) es un renglón fijo: cada línea en su
+          <span> en bloque, una sola frase para el lector de pantalla. */}
+      <p class="intro">{c.reto.intro.split('\n').map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}</p>
       <div class="tensiones">
         {c.reto.tensiones.map((t) => (
           <div class="tension">
@@ -271,6 +272,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
   }
   @media (min-width: 768px) { .seccion { padding-block: var(--space-96); } }
   .intro { max-width: 672px; }
+  .intro .linea { display: block; }
   h3 + p { margin: 0; }
 
   /* El reto: dos tensiones, cada una bajo un filete de Ink. */
@@ -313,4 +315,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 
   /* La declaración: un enlace solo, con el aire de una sección. */
   .declaracion { display: block; }
+  /* En escritorio, el enlace a la declaración en una sola línea (Johnny,
+     03/11/2026); por debajo, como cualquier enlace, puede partir. */
+  @media (min-width: 1024px) { .declaracion :global(.cta) { white-space: nowrap; } }
 </style>

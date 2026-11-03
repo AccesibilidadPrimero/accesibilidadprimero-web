@@ -65,9 +65,10 @@ caso:
   # el estándar de trabajo (“Estándar”), como en el Figma de Archivo.
   conformidad: WCAG 2.2 nivel AA
   reto:
-    intro: >-
-      Foc i Cor no es solo un restaurante con una web. Es un proyecto social
-      que, además, da de comer. Y eso planteaba dos retos desde el principio.
+    # `|-`: el salto después de la primera frase es fijo (Johnny, 03/11/2026).
+    intro: |-
+      Foc i Cor no es solo un restaurante con una web.
+      Es un proyecto social que, además, da de comer. Y eso planteaba dos retos desde el principio.
     tensiones:
       - titulo: Contarlo todo sin perder el foco.
         cuerpo: >-
@@ -146,7 +147,6 @@ caso:
       - La pestaña activa de la carta, a 6,2:1 sobre el naranja de la marca.
       - 'Pendiente: los enlaces legales del pie miden 14 px de alto; el criterio pide 24.'
     declaracion: https://www.focicor.es/accessibilitat/
-  cierre: Una carta que se lee, no que se descarga.
   # Testimonio: PENDIENTE del texto literal y del permiso de Cesal. Al
   # recibirlo, quitar los # de las cinco líneas y pegar la cita entre “ ”.
   # testimonio:

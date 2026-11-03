@@ -53,7 +53,7 @@ const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 const datos = [
   ['Cliente', 'Izaskun Etxebarria, artista y comisaria'],
   ['Año', '2026'],
-  ['Qué hicimos', 'Diseño y desarrollo web'],
+  ['Rol', 'Diseño y desarrollo web'],
   ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 ---
@@ -63,7 +63,6 @@ const datos = [
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
-  ctaTitulo={"La obra delante.\nLa web, detrás."}
 >
   <div class="izaskun" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina

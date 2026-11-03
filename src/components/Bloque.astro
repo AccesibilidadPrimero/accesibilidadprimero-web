@@ -27,10 +27,12 @@ interface Props {
   desplegable?: boolean;
   /** Desplegable que carga abierto (Diseño y desarrollo, 03/11/2026). */
   abierto?: boolean;
+  /** El título solo para el lector de pantalla (Contacto, 03/11/2026). */
+  tituloOculto?: boolean;
   /** Banda de color: 'rosa' (Rose AP) o 'gris' (Silk). */
   fondo?: 'rosa' | 'gris';
 }
-const { id, titulo, fondo, desplegable = false, abierto = false } = Astro.props;
+const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = false } = Astro.props;
 ---
 
 {desplegable ? (
@@ -48,7 +50,7 @@ const { id, titulo, fondo, desplegable = false, abierto = false } = Astro.props;
   </section>
 ) : (
   <section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
-    <h2 id={id} class="bloque__titulo">{titulo}</h2>
+    <h2 id={id} class:list={['bloque__titulo', tituloOculto && 'sr-only']}>{titulo}</h2>
     <div class="bloque__contenido"><slot /></div>
   </section>
 )}
