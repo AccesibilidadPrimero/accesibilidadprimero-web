@@ -25,6 +25,7 @@
    --------------------------------------------------------------------------- */
 import { getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
+import SiguienteProyecto from '../../components/SiguienteProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
@@ -213,6 +214,7 @@ const datos = [
       </p>
     )}
   </div>
+  <SiguienteProyecto actual="eci-conference" />
 </Base>
 
 <style>

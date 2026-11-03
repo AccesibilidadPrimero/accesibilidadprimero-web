@@ -49,8 +49,17 @@ export type RouteKey =
 /** Los destinos del menú principal, en orden. Productos salió el 14/10/2026:
     los productos propios viven dentro de Proyectos, con su filtro. Servicios
     entró el 30/10/2026, detrás de Proyectos: primero lo hecho, después lo que
-    ofrecemos. */
-export const NAV: RouteKey[] = ['proyectos', 'servicios', 'estudio', 'blog', 'contacto'];
+    ofrecemos. Nuevo orden (Johnny, 03/11/2026): primero quiénes somos y qué
+    hacemos, después lo hecho. */
+export const NAV: RouteKey[] = ['estudio', 'servicios', 'proyectos', 'blog', 'contacto'];
+
+/** Apartados de un destino del menú (03/11/2026). Quien solo busca una
+    auditoría no tiene que recorrerse todo Servicios: cada apartado lleva a su
+    desplegable, ya abierto. La clave es el `id` del Bloque en la página. */
+export type SubKey = 'diseno' | 'auditoria' | 'formacion';
+export const SUBNAV: Partial<Record<RouteKey, SubKey[]>> = {
+  servicios: ['diseno', 'auditoria', 'formacion'],
+};
 
 /** Las tres del pie. */
 export const NAV_LEGAL: RouteKey[] = ['privacidad', 'cookies', 'accesibilidad'];

@@ -115,4 +115,7 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
     .bloque--desplegable .bloque__titulo { grid-column: 1 / -1; max-width: none; }
     .bloque--desplegable .bloque__contenido { grid-column: 2; }
   }
+  /* Al llegar con un ancla (submenú de Servicios) el título no queda pegado
+     al borde de la ventana. */
+  .bloque__boton { scroll-margin-block-start: var(--space-48); }
 </style>

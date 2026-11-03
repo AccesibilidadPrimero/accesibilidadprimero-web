@@ -19,11 +19,11 @@ import CtaLink from './CtaLink.astro';
 
 interface Props {
   class?: string;
-  /** Una debajo de otra en todos los anchos (Contacto, 03/11/2026): en fila,
-      a ciertos anchos Mastodon bajaba sola a otro renglón. */
-  apiladas?: boolean;
+  /** Tres columnas fijas (Contacto, 03/11/2026): en fila libre, a ciertos
+      anchos Mastodon bajaba sola a otro renglón. */
+  columnas?: boolean;
 }
-const { class: className, apiladas = false } = Astro.props;
+const { class: className, columnas = false } = Astro.props;
 
 const REDES = [
   {
@@ -49,7 +49,7 @@ const REDES = [
 ---
 
 <!-- Una lista: son tres destinos del mismo tipo (AGENTS.md §3). -->
-<ul class:list={['redes', apiladas && 'redes--apiladas', className]}>
+<ul class:list={['redes', columnas && 'redes--columnas', className]}>
   {
     REDES.map((r) => (
       <li>
@@ -89,5 +89,9 @@ const REDES = [
     vertical-align: -0.25em;
     margin-inline-end: var(--space-8);
   }
-  .redes.redes--apiladas { flex-direction: column; flex-wrap: nowrap; }
+  /* Las tres en una rejilla de tres columnas, cada una de su ancho: nunca
+     parten en dos filas desiguales. En móvil, una debajo de otra. */
+  @media (min-width: 768px) {
+    .redes.redes--columnas { display: grid; grid-template-columns: repeat(3, max-content); column-gap: var(--space-48); }
+  }
 </style>
