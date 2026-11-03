@@ -32,7 +32,7 @@ export const PRODUCTOS: Producto[] = [
     nombre: 'Itza',
     marca: true,
     tipo: 'aplicaciones',
-    descripcion: 'El asistente accesible para organizaciones con impacto social.',
+    descripcion: 'Un asistente accesible para orientar a quienes visitan tu web.',
     cta: 'Ver Itza',
     href: 'https://itza.accesibilidadprimero.com/',
     clase: 'producto--itza',
@@ -49,7 +49,7 @@ export const PRODUCTOS: Producto[] = [
     tarjeta: {
       captura: 'itza-fotograma',
       color: 'var(--mint-video)',
-      linea: 'El asistente accesible para organizaciones con impacto social.',
+      linea: 'Un asistente accesible para orientar a quienes visitan tu web.',
     },
   },
   {
@@ -57,7 +57,7 @@ export const PRODUCTOS: Producto[] = [
     marca: true,
     tipo: 'extensiones',
     descripcion:
-      'Extensión de Chrome para auditorías express, fácil de ver, entender y corregir.',
+      'Una extensión de Chrome para ver, entender y corregir barreras de accesibilidad.',
     cta: 'Ver A11y Primero',
     /* Enlace INTERNO (14/10). Antes apuntaba a www.accesibilidadprimero.com/
        a11yprimero/, que es esta misma web: con la v2 esa dirección redirige a
@@ -74,14 +74,14 @@ export const PRODUCTOS: Producto[] = [
     tarjeta: {
       captura: 'a11y-primero',
       color: 'var(--yellow-ap)',
-      linea: 'Extensión de Chrome para auditorías express, fácil de ver, entender y corregir.',
+      linea: 'Una extensión de Chrome para ver, entender y corregir barreras de accesibilidad.',
     },
   },
   {
     nombre: 'Accessible Abstracts',
     marca: true,
     tipo: 'aplicaciones',
-    descripcion: 'Una plataforma para enviar, revisar y gestionar abstracts.',
+    descripcion: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
     /* Por debajo de 768, el texto del Figma de Móvil. */
     descripcionMovil: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
     /* El nombre entero y no «AA»: en una web de accesibilidad «AA» se lee

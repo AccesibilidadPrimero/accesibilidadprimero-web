@@ -33,7 +33,7 @@ const lang = DEFAULT_LANG;
 const SERVICIOS = [
   {
     nombre: 'Diseño y desarrollo web accesible.',
-    texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como estándar mínimo. Nuestro día a día.',
+    texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como referencia mínima. Es lo que hacemos cada día.',
   },
   {
     nombre: 'Auditorías de accesibilidad.',
@@ -118,7 +118,7 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
 
   <Bloque id="equipo" titulo="Equipo">
     <div class="pila">
-      <p class="equipo__texto" set:html={conMarca('Accesibilidad Primero nació en marzo de 2026. Somos un estudio pequeño, trabajas directamente con las personas que diseñan y desarrollan tu proyecto.')} />
+      <p class="equipo__texto" set:html={conMarca('Accesibilidad Primero nació en marzo de 2026. Somos un estudio pequeño: hablas directamente con quien diseña y desarrolla tu web.')} />
       <div class="persona">
         <!-- El nombre va al lado, así que el `alt` no lo repite: dice lo que
              la foto añade. -->
@@ -145,7 +145,7 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
 
   <Bloque id="catedra" titulo="Cátedra dicaTIC">
     <div class="pila">
-      <p>Participamos en la dirección de la Cátedra dicaTIC de Brecha Digital y Discapacidad de la Universitat Politècnica de València, aportando una visión estratégica en diseño, tecnología y accesibilidad digital.</p>
+      <p>Participamos en la dirección de la Cátedra dicaTIC de Brecha Digital y Discapacidad de la Universitat Politècnica de València. Desde allí impulsamos proyectos de diseño, tecnología y accesibilidad digital como estos:</p>
       <ul class="filas">
         {CATEDRA.map((p) => <li class="fila">{p}</li>)}
       </ul>

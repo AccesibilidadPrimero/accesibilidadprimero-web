@@ -39,7 +39,7 @@ const CORREO = CORREO_ESTUDIO;
 const CAMPOS = [
   {
     id: 'nombre',
-    etiqueta: 'Nombre y apellidos',
+    etiqueta: 'Nombre',
     ayuda: '¿Qué nombre prefieres que usemos al responderte?',
     tipo: 'text',
     autocomplete: 'name',
@@ -71,7 +71,7 @@ const CAMPOS = [
   current="contacto"
   conCta={false}
   title="Contacto · Accesibilidad Primero"
-  description="No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os está costando. Contestamos siempre."
+  description="No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os gustaría hacer. Contestamos siempre."
 >
   <!-- Hero en menta, como la Home (HeroPagina.astro). El `alt` dice lo que
        la ilustración aporta: trabajo hecho entre dos. -->
@@ -79,7 +79,7 @@ const CAMPOS = [
     ilustracion={lapiz}
     alt="Dos personas diminutas empujan juntas un lápiz enorme."
     titulo="Cuéntanos a dónde quieres llegar."
-    texto={['No hace falta que traigas el proyecto resuelto. Con que nos digas qué hacéis y qué os está costando, ya tenemos por dónde empezar. Contestamos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
+    texto={['No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os gustaría hacer. Con eso ya podemos empezar. Contestamos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
   />
 
   <Bloque id="escribenos" titulo="Escríbenos">
@@ -140,9 +140,9 @@ const CAMPOS = [
         }
 
         <div class="campo">
-          <label for="mensaje">Cuéntanos</label>
+          <label for="mensaje">Tu mensaje</label>
           <p id="mensaje-ayuda" class="campo__ayuda">
-            ¿Qué necesitas o qué idea tienes? Cuéntanos lo que quieras compartir y te responderemos.
+            ¿Qué necesitas o qué idea tienes? Con unas líneas basta.
           </p>
           <p id="mensaje-error" class="campo__error" hidden />
           <textarea

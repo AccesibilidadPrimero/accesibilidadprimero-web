@@ -35,10 +35,10 @@ decisiones:
       variantes de más contraste para textos y elementos interactivos. La
       identidad se mantiene; la legibilidad mejora.
     autoria: compartida
-  - titulo: Una carta en tiempo real.
+  - titulo: Una carta que se actualiza sola.
     cuerpo: >-
-      El equipo cambia platos y precios desde una hoja de cálculo. La carta se
-      actualiza sola, sin PDF, y se lee desde cualquier dispositivo.
+      El equipo cambia platos y precios desde una hoja de cálculo y la web lo
+      refleja al momento. Sin PDF, desde cualquier dispositivo.
     autoria: propia
 # Medidas el 11/10/2026: el texto principal sobre la crema da 5,68:1.
 cifras:
@@ -55,10 +55,10 @@ caso:
   titular: Foc i Cor. Inclusión social a través de la cocina.
   golpes: ['Foc i Cor.', 'Inclusión social', 'a través de la cocina.']
   entradilla: >-
-    Foc i Cor es el restaurante escuela de la ONG Cesal en Catarroja, una de
-    las zonas que la DANA se llevó por delante. Hasta abril de 2027 formará a
-    más de cien personas en riesgo de exclusión en los oficios de cocina, sala
-    y barra.
+    Foc i Cor es el restaurante escuela de la ONG Cesal en Catarroja, uno de
+    los pueblos más golpeados por la DANA de 2024. Su objetivo: formar hasta
+    abril de 2027 a más de cien personas en riesgo de exclusión en los oficios
+    de cocina, sala y barra.
   anio: 2026
   queHicimos: Diseño, desarrollo y accesibilidad
   # Johnny, 23/10: sin “parcialmente conforme”. La ficha lo presenta como
@@ -72,12 +72,12 @@ caso:
       - titulo: Contarlo todo sin perder el foco.
         cuerpo: >-
           Es un negocio de hostelería, una escuela de oficios para personas en
-          riesgo de exclusión y una forma de reactivar el comercio de una zona
-          arrasada. Si la web solo cuenta una de estas tres dimensiones, las
-          otras dos desaparecen. Para que el proyecto sea sostenible, el
+          riesgo de exclusión y una forma de reactivar el comercio de la zona.
+          Si la web solo cuenta una de estas tres dimensiones, las otras dos
+          desaparecen. Para que el proyecto sea sostenible, el
           restaurante tiene que funcionar como puerta de entrada: atraer al
           público y hacer posible todo lo demás.
-      - titulo: Todo proyecto social debe tener una web inclusiva.
+      - titulo: Que nadie se quede fuera, también en la web.
         cuerpo: >-
           Si Foc i Cor existe para que nadie se quede fuera, su web tenía que
           responder al mismo principio. La conversación con Cesal no empezó
@@ -146,7 +146,7 @@ caso:
       - La pestaña activa de la carta, a 6,2:1 sobre el naranja de la marca.
       - 'Pendiente: los enlaces legales del pie miden 14 px de alto; el criterio pide 24.'
     declaracion: https://www.focicor.es/accessibilitat/
-  cierre: Lo que vive dentro de un PDF no está al alcance de todo el mundo.
+  cierre: Una carta que se lee, no que se descarga.
   # Testimonio: PENDIENTE del texto literal y del permiso de Cesal. Al
   # recibirlo, quitar los # de las cinco líneas y pegar la cita entre “ ”.
   # testimonio:
@@ -172,7 +172,7 @@ imagenes:
       vista.
 ---
 
-Diseñamos su web con el mismo propósito: que nadie se quede fuera de la mesa.
+Que nadie se quede fuera de la mesa.
 
 La carta se lee sin descargar un PDF. Los ingredientes y los alérgenos están a
 la vista, no en una nota al pie. La reserva se completa sin pedir ayuda: desde
