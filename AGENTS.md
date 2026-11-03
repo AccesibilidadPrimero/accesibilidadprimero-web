@@ -413,6 +413,20 @@ la estructura de ECI e Izaskun y los textos del Figma. Título «Elogio de la
 línea», con la ele minúscula. Sin nota ni enlace a declaración: la de
 elogiodelalinea.com no está publicada. El testimonio de Pau va de
 `borrador`.
+Revisión 2 (03/11/2026): un caso «muy blanco» (página y banda en blanco); el
+hero es el fragmento de 5 s de la película en que la línea escribe el
+nombre, una sola vez y sin botón (`npm run movimiento` mide el archivo);
+ficha con «Estándar: WCAG 2.2 nivel AA» como los demás; apartado
+«Accesibilidad» con los criterios; la serie de porcelana sustituye a la
+silla. **El testimonio de Pau sigue en `borrador`: Johnny pidió uno
+ficticio y no se publica** (un testimonio inventado se lee como real).
+
+**Testimonios reales (03/11/2026).** Sin formato especial: en ECI, un bloque
+más («Desde el otro lado», título a la izquierda y texto a la derecha) sobre
+gris claro; en Izaskun, foto y texto en dos columnas sobre el carmesí, con
+`data-campo-color` para que `tipografia` acepte el Silk de la paleta. Las
+citas van literales: no se corrigen sin permiso de quien las firma.
+`Testimonio.astro` queda solo para los borradores.
 
 **Caso Izaskun (30/10/2026).** Maqueta propia, con la estructura de ECI y
 los textos del Figma. La retícula editorial (`ReticulaEditorial.astro`) es

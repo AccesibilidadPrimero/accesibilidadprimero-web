@@ -413,6 +413,20 @@ for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'r
   await ctx.close();
 }
 
+/* ---- Elogio de la línea: el fragmento del hero (03/11/2026) -------------
+   Se justifica sin botón porque dura 5 s o menos y no se repite: se mide el
+   archivo que sirve la web (AGENTS.md §2.9), no el comentario. */
+console.log('\n── Elogio de la línea: hero ──\n');
+{
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/proyectos/elogio-de-la-linea/`, { waitUntil: 'load' });
+  await p.waitForFunction(() => { const v = document.querySelector('[data-hero-frase]'); return v && v.readyState >= 1; }, null, { timeout: 10000 });
+  const v = await p.$eval('[data-hero-frase]', (v) => ({ dur: v.duration, loop: v.loop, muted: v.muted }));
+  anota(v.dur <= 5.05 && !v.loop && v.muted, `hero · ${v.dur.toFixed(2)} s, sin bucle y en silencio`);
+  await ctx.close();
+}
+
 await navegador.close();
 servidor.close();
 if (fallos) { console.error(`\n${fallos} comprobaciones fallan.`); process.exit(1); }
