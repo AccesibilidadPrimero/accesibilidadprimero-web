@@ -30,7 +30,13 @@ const variante = proyecto.id.includes('foc') ? 'foc'
    está debajo del slider; en Foc i Cor se lee la columna de texto y luego
    las capturas. */
 const ctaAlFinal = variante !== 'eci';
-const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
+/* El enlace lleva al CASO, dentro de la web (Johnny, 03/11/2026); antes,
+   «Ir a …» abría la web del cliente en otra pestaña. La web del cliente
+   sigue enlazada desde la ficha del caso. Si el caso no está publicado,
+   queda el enlace externo de antes. */
+const enlaceCaso = d.casoPublicado ? `/proyectos/${proyecto.id}/` : null;
+const destino = enlaceCaso ?? d.web;
+const textoCta = enlaceCaso ? `Ver ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nombreCorto ?? d.titulo}`;
 ---
 
 <section
@@ -64,9 +70,9 @@ const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
       dentro del cuerpo no hay forma de llevarlo ahí sin romper el orden del
       DOM. Fuera, cada composición lo coloca con su área de rejilla. Va antes
       o después del slider según `ctaAlFinal` (arriba). */}
-  {!ctaAlFinal && d.web && (
+  {!ctaAlFinal && destino && (
     <div class="proyecto__cta">
-      <CtaLink href={d.web} external>{textoCta}</CtaLink>
+      <CtaLink href={destino} external={!enlaceCaso}>{textoCta}</CtaLink>
     </div>
   )}
 
@@ -76,9 +82,9 @@ const textoCta = `Ir a ${d.nombreCorto ?? d.titulo}`;
     )
   }
 
-  {ctaAlFinal && d.web && (
+  {ctaAlFinal && destino && (
     <div class="proyecto__cta">
-      <CtaLink href={d.web} external>{textoCta}</CtaLink>
+      <CtaLink href={destino} external={!enlaceCaso}>{textoCta}</CtaLink>
     </div>
   )}
 </section>
