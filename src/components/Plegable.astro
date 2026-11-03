@@ -1,23 +1,24 @@
 ---
 /* ---------------------------------------------------------------------------
    Un desplegable dentro de un bloque (las tarifas de Servicios, 03/11/2026).
-   Encabezado de nivel 3 con su botón, y el panel debajo. El comportamiento
+   Encabezado (h3 o h4, `nivel`) con su botón, y el panel debajo. El comportamiento
    está en src/scripts/plegable.ts; el + que se vuelve × es el de
    Disclosure.astro, el gesto de «desplegar» de toda la web.
    --------------------------------------------------------------------------- */
-interface Props { id: string; titulo: string }
-const { id, titulo } = Astro.props;
+interface Props { id: string; titulo: string; nivel?: 3 | 4 }
+const { id, titulo, nivel = 3 } = Astro.props;
+const Encabezado = (nivel === 4 ? 'h4' : 'h3') as 'h3' | 'h4';
 ---
 
 <div class="plegable">
-  <h3 class="plegable__titulo">
+  <Encabezado class="plegable__titulo">
     <button type="button" class="plegable__boton" aria-expanded="false" aria-controls={`${id}-panel`} data-plegable-boton>
       <span>{titulo}</span>
       <svg class="plegable__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
         <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
       </svg>
     </button>
-  </h3>
+  </Encabezado>
   <div id={`${id}-panel`} class="plegable__panel" hidden data-mov-propio><slot /></div>
 </div>
 
@@ -26,7 +27,8 @@ const { id, titulo } = Astro.props;
 </script>
 
 <style>
-  .plegable { border-block-start: 1px solid var(--rule); }
+  /* Sin filete (Johnny, 03/11/2026: «las menos líneas posibles»): los
+     separa el aire y el + los anuncia. */
   .plegable__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .plegable__boton {
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);

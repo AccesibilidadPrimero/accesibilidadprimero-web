@@ -25,16 +25,18 @@ interface Props {
   /** Plegado: el título es un botón que abre el contenido (Servicios,
       Johnny, 03/11/2026). Comportamiento en src/scripts/plegable.ts. */
   desplegable?: boolean;
+  /** Desplegable que carga abierto (Diseño y desarrollo, 03/11/2026). */
+  abierto?: boolean;
   /** Banda de color: 'rosa' (Rose AP) o 'gris' (Silk). */
   fondo?: 'rosa' | 'gris';
 }
-const { id, titulo, fondo, desplegable = false } = Astro.props;
+const { id, titulo, fondo, desplegable = false, abierto = false } = Astro.props;
 ---
 
 {desplegable ? (
   <section class:list={['bloque', 'bloque--desplegable', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
     <h2 class="bloque__titulo">
-      <button type="button" id={id} class="bloque__boton" aria-expanded="false" aria-controls={`${id}-panel`} data-plegable-boton>
+      <button type="button" id={id} class="bloque__boton" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} data-plegable-boton>
         <span>{titulo}</span>
         {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
         <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
@@ -42,7 +44,7 @@ const { id, titulo, fondo, desplegable = false } = Astro.props;
         </svg>
       </button>
     </h2>
-    <div id={`${id}-panel`} class="bloque__contenido" hidden data-mov-propio><slot /></div>
+    <div id={`${id}-panel`} class="bloque__contenido" hidden={!abierto} data-mov-propio><slot /></div>
   </section>
 ) : (
   <section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>

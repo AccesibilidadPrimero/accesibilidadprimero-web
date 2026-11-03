@@ -151,6 +151,7 @@ export const FORMACION = {
     },
     {
       nombre: 'Píldoras monográficas.',
+      mic: 'pildora',
       texto:
         'Formaciones prácticas sobre un tema: PDF accesibles, HTML semántico, buenas prácticas WCAG y uso correcto del gestor de contenidos.',
     },

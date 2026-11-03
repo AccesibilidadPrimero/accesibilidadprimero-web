@@ -21,7 +21,7 @@
 export type Tipo =
   | 'medida' | 'stack' | 'gestor' | 'ligera' | 'declaracion' | 'prueba'
   | 'jerarquia' | 'interaccion' | 'lenguaje'
-  | 'dia';
+  | 'dia' | 'pildora';
 interface Props { tipo: Tipo; color: 'rosa' | 'amarillo' | 'verde' }
 const { tipo, color } = Astro.props;
 const acento = { rosa: 'var(--rose-ap)', amarillo: 'var(--yellow-ap)', verde: 'var(--green-ap)' }[color];
@@ -116,6 +116,18 @@ const acento = { rosa: 'var(--rose-ap)', amarillo: 'var(--yellow-ap)', verde: 'v
       <rect class="a lleno lenguaje__subrayado" x="22" y="34" width="28" height="4" rx="2" />
     </>
   )}
+  {tipo === 'pildora' && (
+    <>
+      {/* Píldoras monográficas: una cápsula que cae y se llena por mitades,
+          un tema cada vez. */}
+      <g class="pildora">
+        <rect class="a lleno pildora__mitad" x="48" y="22" width="22" height="20" rx="10" />
+        <rect class="t" x="26" y="22" width="44" height="20" rx="10" />
+        <path class="t" d="M48 22v20" />
+      </g>
+      <path class="t pildora__suelo" d="M20 54h56" />
+    </>
+  )}
   {tipo === 'dia' && (
     <>
       {/* Formación: la accesibilidad, día a día. Cinco días que se marcan. */}
@@ -186,6 +198,10 @@ const acento = { rosa: 'var(--rose-ap)', amarillo: 'var(--yellow-ap)', verde: 'v
     :global(html.js) .lenguaje .linea, :global(html.js) .mic--lenguaje .linea { animation-delay: 900ms; }
     :global(html.js) .mic--lenguaje .linea--2 { animation-delay: 1050ms; }
     :global(html.js) .lenguaje__subrayado { animation-name: mic-traza; animation-delay: 1250ms; transform-origin: left center; }
+
+    :global(html.js) .pildora { animation-name: mic-cae; --d: 700ms; }
+    :global(html.js) .pildora__mitad { animation-name: mic-traza; animation-delay: 700ms; transform-origin: left center; }
+    :global(html.js) .pildora__suelo { animation-name: mic-traza; transform-origin: center; --d: 500ms; }
 
     :global(html.js) .dia { animation-name: mic-llena; transform-origin: center bottom; --d: 500ms; }
     :global(html.js) .dia--2 { animation-delay: 250ms; }

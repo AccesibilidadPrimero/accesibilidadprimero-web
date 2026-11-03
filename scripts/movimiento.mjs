@@ -406,7 +406,7 @@ for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'r
     return { n: anims.length, fin: anims.reduce((a, b) => Math.max(a, b.effect.getComputedTiming().endTime), 0) };
   }));
   if (modo === 'con JS') {
-    anota(m.length === 10 && m.every((x) => x.n > 0 && x.fin <= 3000), `con JS · ${m.length} microanimaciones, la más larga acaba a los ${(Math.max(...m.map((x) => x.fin)) / 1000).toFixed(2)} s`);
+    anota(m.length === 11 && m.every((x) => x.n > 0 && x.fin <= 3000), `con JS · ${m.length} microanimaciones, la más larga acaba a los ${(Math.max(...m.map((x) => x.fin)) / 1000).toFixed(2)} s`);
   } else {
     anota(m.every((x) => x.n === 0), `${modo} · ninguna se anima`);
   }

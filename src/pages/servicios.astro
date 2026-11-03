@@ -10,8 +10,9 @@
    queda quieto: sin botón de pausa, porque no se mueve más de 5 s (2.2.2).
    Con «reducir movimiento» no cambia (lo resuelve HeroPagina).
 
-   Revisión 2 (Johnny, 03/11/2026): cada servicio es un desplegable (Bloque
-   `desplegable`), las tarifas también, y cada punto lleva su microanimación
+   Revisión 2 y 3 (Johnny, 03/11/2026): cada servicio es un desplegable
+   (Bloque `desplegable`; Diseño y desarrollo carga abierto), las tarifas van
+   dentro de la auditoría, una por desplegable, y cada punto lleva su microanimación
    con el color de su servicio: diseño en rosa, auditoría en amarillo y
    formación en verde claro (Microanimacion.astro).
 
@@ -48,7 +49,7 @@ const lang = DEFAULT_LANG;
   />
 
   <div class="servicios">
-  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable>
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable abierto>
     <div class="pila">
       <p>{DISENO.intro}</p>
       <ul class="puntos">
@@ -77,23 +78,26 @@ const lang = DEFAULT_LANG;
         ))}
       </ul>
       <p>{AUDITORIA.entregamos}</p>
-    </div>
-  </Bloque>
 
-  {/* Las tarifas: un desplegable por tarifa, con lo que se audita como
-      título (Johnny, 03/11/2026). Dentro, el nombre, el precio y lo que
-      incluye, en el orden en que se leen. Sin recuadro. */}
-  <Bloque id="tarifas" titulo="Tarifas" desplegable>
-    <div class="tarifas">
-      {AUDITORIA.tarifas.map((t, i) => (
-        <Plegable id={`tarifa-${i + 1}`} titulo={t.titulo}>
-          <p class="tarifa__precio">{t.nombre} · {t.precio}</p>
-          {t.para && <p>{t.para}</p>}
-          <ul class="tarifa__incluye">
-            {t.incluye.map((x) => <li>{x}</li>)}
-          </ul>
-        </Plegable>
-      ))}
+      {/* Las tarifas, DENTRO de la auditoría: son su precio (Johnny,
+          03/11/2026). Un <h3> como los puntos y un desplegable por tarifa,
+          con lo que se audita como título (<h4>). Dentro, el precio y lo que
+          incluye; sin el nombre de la tarifa ni recuadro. */}
+      <div class="tarifas">
+        <h3 class="punto__nombre">Tarifas</h3>
+        <p>Tres alcances, según el tamaño de la web.</p>
+        <div class="tarifas__lista">
+          {AUDITORIA.tarifas.map((t, i) => (
+            <Plegable id={`tarifa-${i + 1}`} titulo={t.titulo} nivel={4}>
+              <p class="tarifa__precio">{t.precio}</p>
+              {t.para && <p>{t.para}</p>}
+              <ul class="tarifa__incluye">
+                {t.incluye.map((x) => <li>{x}</li>)}
+              </ul>
+            </Plegable>
+          ))}
+        </div>
+      </div>
     </div>
   </Bloque>
 
@@ -104,6 +108,7 @@ const lang = DEFAULT_LANG;
       <ul class="puntos">
         {FORMACION.puntos.map((p) => (
           <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="verde" />}
             <h3 class="punto__nombre">{p.nombre}</h3>
             <p>{p.texto}</p>
           </li>
@@ -118,8 +123,6 @@ const lang = DEFAULT_LANG;
   p { margin: 0; }
   /* Los desplegables, juntos y a 128 del hero (Bloque.astro). */
   .servicios { margin-block-start: var(--ritmo-seccion); }
-  /* El filete que cierra la lista, en los márgenes de la página. */
-  .servicios::after { content: ''; display: block; margin-inline: var(--gutter-page); border-block-start: 1px solid var(--rule); }
   ul { margin: 0; padding: 0; list-style: none; }
 
   /* Como en Estudio: 24 entre las piezas de un bloque. */
@@ -132,11 +135,11 @@ const lang = DEFAULT_LANG;
   .puntos li { display: flex; flex-direction: column; gap: var(--space-16); }
   .punto__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
 
-  /* Tarifas: desplegables seguidos, sin recuadro (03/11/2026). */
-  .tarifas { max-width: 888px; border-block-end: 1px solid var(--rule); }
+  /* Tarifas: dentro de la auditoría, desplegables seguidos, sin recuadro ni
+     filetes (03/11/2026). */
+  .tarifas { display: flex; flex-direction: column; gap: var(--space-16); padding-block-start: var(--space-24); }
   .tarifa__precio { margin-block-end: var(--space-8); }
-  .tarifa__incluye { display: flex; flex-direction: column; margin-block-start: var(--space-16); }
-  .tarifa__incluye li { padding-block: var(--space-8); border-block-start: 1px solid var(--rule); }
+  .tarifa__incluye { display: flex; flex-direction: column; gap: var(--space-4); margin-block-start: var(--space-16); }
 
   /* El titular: en una línea en escritorio y tableta; en móvil, partido
      antes de «y Formación» (Johnny, 03/11/2026). El golpe lo declara

@@ -446,9 +446,12 @@ referencia:
   vuelve al menta (`fondosUnaVez`). Sin botón de pausa: no se mueve más de
   5 s (2.2.2). El planeta va al ancho de la flor de la Home
   (`ilustracionComoHome`).
-- Cada servicio y las tarifas son **desplegables** (`Bloque desplegable` y
-  `Plegable.astro`, script en `src/scripts/plegable.ts`): encabezado con un
+- Cada servicio es un **desplegable** (`Bloque desplegable`; Diseño y
+  desarrollo carga `abierto`) y las tarifas van **dentro de la auditoría**,
+  una por desplegable (`Plegable.astro`, `nivel={4}`), sin el nombre de la
+  tarifa. Script en `src/scripts/plegable.ts`: encabezado con un
   `<button aria-expanded>` dentro y panel con `hidden`. Sin JS, abiertos.
+  Filetes, los mínimos: solo entre servicios.
 - **Microanimaciones** (`Microanimacion.astro`): una por punto, líneas de
   1,5 px en Ink y un detalle en el color del servicio (diseño rosa,
   auditoría amarillo, formación verde claro). `aria-hidden`, una sola vez
