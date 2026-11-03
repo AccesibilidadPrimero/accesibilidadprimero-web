@@ -25,6 +25,8 @@ type Dict = {
   footerNavLabel: string;
   ctaHeading: string;
   ctaAction: string;
+  /** El botón del bloque de cierre (ContactCTA). El del hero sigue siendo `ctaAction`. */
+  ctaCierre: string;
   nav: Record<RouteKey, string>;
   readMore: string;
   readLess: string;
@@ -60,8 +62,9 @@ export const UI: Record<Lang, Dict> = {
     footerTagline: 'Accesibilidad Primero. Siempre.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: '¿Tienes una web en mente?\nCuéntanos a dónde quieres llegar.',
+    ctaHeading: 'Nos gustan los proyectos que quieren llegar a más personas.',
     ctaAction: 'Cuéntanos tu proyecto',
+    ctaCierre: 'Escríbenos',
     nav: {
       home: 'Inicio',
       proyectos: 'Proyectos',
@@ -106,6 +109,7 @@ export const UI: Record<Lang, Dict> = {
     footerNavLabel: 'Legal',
     ctaHeading: 'El teu projecte treballa per la inclusió.\nEl teu web també.',
     ctaAction: 'Explica’ns el teu projecte',
+    ctaCierre: 'Escriu-nos',
     nav: {
       home: 'Inici',
       proyectos: 'Projectes',
@@ -150,6 +154,7 @@ export const UI: Record<Lang, Dict> = {
     footerNavLabel: 'Legal',
     ctaHeading: 'Your project works for inclusion.\nYour website should too.',
     ctaAction: 'Tell us about your project',
+    ctaCierre: 'Write to us',
     nav: {
       home: 'Home',
       proyectos: 'Projects',

@@ -200,9 +200,9 @@ console.log('\n── Las tres composiciones de proyecto a 1440 (Figma → medid
 /* ---- El símbolo de Estudio ------------------------------------------------
    Figma `2080:531`: un marco de 60 × 60 con el símbolo dentro. Medido sobre el
    render del documento, el dibujo ocupa 50,25 × 44,5 y está centrado. Se
-   comprueba el marco, el ancho del dibujo y que arranque en el margen de 24:
-   desde el 30/10/2026 la sección va a la izquierda (Johnny); antes, centrada
-   en la página. */
+   comprueba el marco, el ancho del dibujo y que esté centrado en la página:
+   desde el 03/11/2026 la sección vuelve a ir centrada (Johnny); del 30/10 al
+   03/11 fue a la izquierda. */
 console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n');
 {
   const p3 = await nav.newPage({ viewport: { width: 1440, height: 900 } });
@@ -219,7 +219,7 @@ console.log('\n── El símbolo de Estudio a 1440 (Figma → medido) ──\n'
       /* El alto no se escribe a mano: sale de la proporción del archivo. */
       'Símbolo · alto': [50 / (338.4 / 299.43), i.height],
       'Símbolo · centrado en el marco': [0, (i.left + i.width / 2) - (c.left + c.width / 2)],
-      'Marco · en el margen de 24': [24, c.left],
+      'Marco · centrado en la página': [0, (c.left + c.width / 2) - document.documentElement.clientWidth / 2],
     };
   });
   await p3.close();
@@ -299,23 +299,20 @@ console.log('\n── Texto a 24 del borde, a 1440 ──\n');
   } }
 }
 
-/* ---- El slider del hero en móvil (Johnny, 30/10/2026) ---------------------
-   A 390: cada lámina mide la columna menos 48 (342 − 48 = 294), la ilustración
-   225 de alto, la siguiente asoma por la derecha y la fila no ensancha la
-   página. El botón de pausa mide 44. */
-console.log('\n── El slider del hero a 390 ──\n');
+/* ---- El hero en móvil (Johnny, 03/11/2026) -------------------------------
+   Una sola ilustración a la vista, de 225 de alto, y la página sin scroll
+   horizontal. Sustituye a la medida del slider del 30/10. */
+console.log('\n── El hero a 390 ──\n');
 {
   const p = await nav.newPage({ viewport: { width: 390, height: 844 } });
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   const m = await p.evaluate(() => {
     const l = [...document.querySelectorAll('.hero__lamina')];
-    const b = document.querySelector('[data-slider-control]').getBoundingClientRect();
+    const vista = l.filter((x) => getComputedStyle(x).opacity === '1');
     return {
-      'Lámina · ancho': [294, l[0].getBoundingClientRect().width],
-      'Ilustración · alto': [225, l[1].querySelector('img').getBoundingClientRect().height],
-      'La siguiente asoma (borde izquierdo < 390)': [1, l[1].getBoundingClientRect().left < 390 ? 1 : 0],
+      'Láminas a la vista': [1, vista.length],
+      'Ilustración · alto': [225, vista[0]?.querySelector('img').getBoundingClientRect().height ?? 0],
       'Página sin scroll horizontal': [390, document.documentElement.scrollWidth],
-      'Botón de pausa · alto': [44, b.height],
     };
   });
   await p.close();

@@ -20,7 +20,7 @@ const lineas = (titulo ?? ui.ctaHeading).split('\n');
   <h2 id="cta-contacto" class="contacto__titulo">
     {lineas.map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
   </h2>
-  <CtaLink href={path('contacto', lang)} size="large">{ui.ctaAction}</CtaLink>
+  <CtaLink href={path('contacto', lang)} size="large">{ui.ctaCierre}</CtaLink>
 </section>
 
 <style>

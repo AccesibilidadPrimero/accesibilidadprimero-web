@@ -42,9 +42,8 @@ imagenes:
 
 Dejar espacio a la obra.
 
-La interfaz se aparta para que hablen las obras.
+La interfaz se aparta para que la obra cree su propio espacio.
 
-Obra propia y comisariado conviven sin mezclarse.
+Obra propia y comisariado, sin mezclarse.
 
-Y las series (“Agujeros de tiempo”, “Diálogos”, “Desapariciones”) se navegan
-como lo que son: conjuntos, no imágenes sueltas.
+Y las series se navegan como lo que son: conjuntos, no imágenes sueltas.

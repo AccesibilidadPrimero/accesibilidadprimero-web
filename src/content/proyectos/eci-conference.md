@@ -4,10 +4,12 @@ cliente: ECI Conference
 nombreCorto: ECI Conference
 # `|-`: los saltos son cortes fijos en escritorio (ProjectSection.astro).
 # Ninguno puede caer detrás de una partícula (“reúne a”): 14/10/2026, AGENTS.md §4.
+# “intervención temprana” va con espacio que no se parte (U+00A0): es un
+# término y en móvil se partía en dos renglones (Johnny, 03/11/2026).
 resumen: |-
   ECI (Early Childhood Intervention) reúne
   a profesionales de toda Europa para avanzar
-  hacia una intervención temprana más inclusiva.
+  hacia una intervención temprana más inclusiva.
 web: https://www.eciconference2027.com/
 orden: 1
 tipo: webs
