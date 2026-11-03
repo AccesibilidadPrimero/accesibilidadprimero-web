@@ -5,6 +5,7 @@
    «Ver Foc i Cor →»: con el nombre del proyecto, no «Siguiente», para que el
    enlace diga adónde lleva sin contexto (2.4.4). El orden es el de Proyectos
    (`orden` en el contenido) y da la vuelta: después del último, el primero.
+   Usa `nombreCorto` si lo hay: «Ver ECI Conference» (Johnny, 03/11/2026).
    Va en un <nav> con nombre propio para que se pueda saltar a él como región.
    --------------------------------------------------------------------------- */
 import { getCollection } from 'astro:content';
@@ -23,7 +24,7 @@ const siguiente = casos[(i + 1) % casos.length];
 
 {casos.length > 1 && (
   <nav class="siguiente" aria-label="Siguiente proyecto">
-    <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.data.titulo}</CtaLink>
+    <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.data.nombreCorto ?? siguiente.data.titulo}</CtaLink>
   </nav>
 )}
 

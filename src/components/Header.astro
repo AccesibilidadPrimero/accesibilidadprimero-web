@@ -60,7 +60,7 @@ const langs = alternates(current, slug);
                   aria-label={`${ui.submenuDe} ${ui.nav[key]}`}
                   data-submenu-boton
                 >
-                  <svg aria-hidden="true" focusable="false" viewBox="0 0 12 8" width="12" height="8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 14 24" width="14" height="24"><path d="M7 0v21M1 15l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
                 </button>
                 <ul id={`submenu-${key}`} class="header__sub" hidden data-submenu-panel>
                   {sub.map((s) => (
@@ -207,7 +207,9 @@ const langs = alternates(current, slug);
 
   /* Submenú de escritorio. El enlace conserva su relleno de 12 a la izquierda;
      a la derecha lo cede al botón, que mide 44 de ancho y lleva el chevrón
-     centrado: «Servicios ⌄» se lee como una sola pieza. */
+     centrado: «Servicios ↓» se lee como una sola pieza. La flecha es la
+     completa del sistema (la de CtaLink, girada), no un chevrón (Johnny,
+     03/11/2026); abierto, apunta hacia arriba. */
   .header__item--sub { position: relative; display: flex; align-items: center; }
   .header__item--sub > .header__link { padding-inline-end: 0; }
   .header__sub-boton {
