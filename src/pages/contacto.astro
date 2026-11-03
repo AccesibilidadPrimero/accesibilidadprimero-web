@@ -41,6 +41,14 @@ const CAMPOS = [
     id: 'nombre',
     etiqueta: 'Nombre',
     ayuda: '¿Qué nombre prefieres que usemos al responderte?',
+    /* Dentro de la casilla, más claro (Johnny, 03/11/2026). Un placeholder
+       se borra al escribir y no lo leen todos los lectores, así que la ayuda
+       sigue en el HTML para `aria-describedby`, oculta a la vista (sr-only).
+       El gris es Ink / Secondary: 5,60:1 sobre el blanco de la casilla. */
+    dentro: true,
+    /* La frase entera no cabe en la casilla a 390 (se cortaba en «al re…»):
+       dentro va corta y la ayuda completa la oye el lector. */
+    marcador: 'El nombre que prefieras',
     tipo: 'text',
     autocomplete: 'name',
     obligatorio: true,
@@ -71,15 +79,16 @@ const CAMPOS = [
   current="contacto"
   conCta={false}
   title="Contacto · Accesibilidad Primero"
-  description="No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os gustaría hacer. Contestamos siempre."
+  description="No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar. Respondemos siempre."
 >
   <!-- Hero en menta, como la Home (HeroPagina.astro). El `alt` dice lo que
        la ilustración aporta: trabajo hecho entre dos. -->
   <HeroPagina
     ilustracion={lapiz}
     alt="Dos personas diminutas empujan juntas un lápiz enorme."
+    ilustracionComoHome
     titulo="Cuéntanos a dónde quieres llegar."
-    texto={['No hace falta que traigas el proyecto resuelto. Cuéntanos qué hacéis y qué os gustaría hacer. Con eso ya podemos empezar. Contestamos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
+    texto={['No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar. Respondemos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
   />
 
   <Bloque id="escribenos" titulo="Escríbenos">
@@ -121,13 +130,14 @@ const CAMPOS = [
           CAMPOS.map((c) => (
             <div class="campo">
               <label for={c.id}>{c.etiqueta}</label>
-              {'ayuda' in c && <p id={`${c.id}-ayuda`} class="campo__ayuda">{c.ayuda}</p>}
+              {'ayuda' in c && <p id={`${c.id}-ayuda`} class:list={['campo__ayuda', 'dentro' in c && 'sr-only']}>{c.ayuda}</p>}
               <p id={`${c.id}-error`} class="campo__error" hidden />
               <input
                 id={c.id}
                 name={c.id}
                 type={c.tipo}
                 autocomplete={c.autocomplete}
+                placeholder={'marcador' in c ? c.marcador : undefined}
                 required={c.obligatorio}
                 aria-describedby={['ayuda' in c ? `${c.id}-ayuda` : '', `${c.id}-error`].filter(Boolean).join(' ')}
                 data-validar
@@ -199,7 +209,9 @@ const CAMPOS = [
       </p>
   </Bloque>
 
-  <Bloque id="directamente" titulo="También puedes escribirnos directamente">
+  {/* Sin el título visible «También puedes escribirnos directamente»
+      (Johnny, 03/11/2026). El h2 sigue para quien salta por encabezados. */}
+  <Bloque id="directamente" titulo="Correo y redes" tituloOculto>
     <div class="directo">
       {/* La frase es de Johnny (10/10). El correo iba dentro de ella, pero un
           enlace en un renglón de texto mide 23 px de alto y la regla del
@@ -251,6 +263,7 @@ const CAMPOS = [
     inline-size: 100%;
   }
   .campo__ayuda, .campo__error { margin: 0; }
+  .campo__entrada::placeholder { color: var(--grey); opacity: 1; }
 
   /* Borde Ink / Secondary de 1,5: 5,60:1 sobre blanco, por encima del 3:1
      que pide 1.4.11 para el contorno de un control. */

@@ -50,13 +50,12 @@ const video = (escena: string) => {
    centradas, como la portada de Foc i Cor. */
 const vertical = { tableta: '360px', movil: '280px' };
 
-/* La ficha de todos los casos (Johnny, 03/11/2026): cliente, año, qué
-   hicimos, estándar y web. Antes, los datos del congreso. En ECI la
-   identidad y los textos también son del estudio. */
+/* La ficha de todos los casos (Johnny, 03/11/2026): cliente, año, rol,
+   estándar y web. Antes, los datos del congreso. */
 const datos = [
   ['Cliente', 'AEIPI y Eurlyaid'],
   ['Año', '2026'],
-  ['Qué hicimos', 'Identidad, contenidos, diseño y desarrollo'],
+  ['Rol', 'Contenidos, diseño y desarrollo'],
   ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 ---
@@ -66,7 +65,6 @@ const datos = [
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
-  ctaTitulo={"Cada persona,\nsu inscripción."}
 >
   <div class="eci" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina
@@ -198,12 +196,13 @@ const datos = [
 
     {/* Testimonio de AEIPI (03/11/2026). Sin formato especial (Johnny): un
         bloque como los demás, título a la izquierda y texto a la derecha,
-        sobre gris claro. La cita va literal: no se redacta ni se retoca. */}
+        sobre gris claro. Dos correcciones de concordancia y puntuación con
+        permiso (Johnny, 03/11/2026): la coma tras «Desde AEIPI» y «llegase». */}
     <section class="bloque bloque--testimonio" aria-labelledby="testimonio">
       <h2 id="testimonio" class="bloque__etiqueta">Desde el otro lado</h2>
       <figure class="bloque__contenido testimonio">
-        <blockquote><p>“Desde AEIPI donde estamos comprometidos con la accesibilidad, la inclusión y los derechos de la infancia con desafíos en el desarrollo y sus familias, haber tenido la oportunidad de trabajar con Accesibilidad Primero, ha sido el mejor camino de asegurar la coherencia del código ético de la entidad, haciendo que la información de las conferencias ECI 2027 en Madrid, llegasen a cualquier persona, independientemente de su condición, lugar de residencia o idioma, y ofreciendo oportunidades equitativas de participación, gracias a los recursos y prestaciones que desde Accesibilidad Primero nos han brindado.”</p></blockquote>
-        <figcaption>AEIPI</figcaption>
+        <blockquote><p>“Desde AEIPI, donde estamos comprometidos con la accesibilidad, la inclusión y los derechos de la infancia con desafíos en el desarrollo y sus familias, haber tenido la oportunidad de trabajar con Accesibilidad Primero, ha sido el mejor camino de asegurar la coherencia del código ético de la entidad, haciendo que la información de las conferencias ECI 2027 en Madrid, llegase a cualquier persona, independientemente de su condición, lugar de residencia o idioma, y ofreciendo oportunidades equitativas de participación, gracias a los recursos y prestaciones que desde Accesibilidad Primero nos han brindado.”</p></blockquote>
+        <figcaption><span class="linea">Rosa Fernández Valero</span> <span class="linea">Directora de Atención Temprana en Avapace</span></figcaption>
       </figure>
     </section>
 
@@ -241,7 +240,7 @@ const datos = [
   /* El testimonio, como un bloque más sobre gris claro (03/11/2026). */
   .bloque--testimonio { background: var(--surface-band); }
   .testimonio blockquote { margin: 0; }
-  .testimonio figcaption { margin-block-start: var(--space-8); }
+  .testimonio figcaption { display: flex; flex-direction: column; margin-block-start: var(--space-8); }
   @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
 
   /* ---- El esquema del sistema modular ---- */

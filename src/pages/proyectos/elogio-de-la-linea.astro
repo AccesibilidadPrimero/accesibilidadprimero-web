@@ -9,8 +9,9 @@
    Revisión 2 (Johnny, 03/11/2026): un caso «muy blanco», sin bandas de
    color; el hero es el fragmento de la película en que la línea escribe
    «Elogio de la línea»; grabaciones nuevas de la web actualizada; la serie
-   de porcelana sustituye a la silla; ficha con el estándar de todos los
-   casos y un apartado propio de accesibilidad.
+   de porcelana, en la banda negra del final, sustituye a la foto de la
+   silla; ficha con el estándar de todos los casos y un apartado propio de
+   accesibilidad.
 
    Lo que NO viene del Figma, por las reglas del sitio:
    · Hero: el común (HeroPagina) sobre blanco, con el fragmento de 5 s de la
@@ -56,7 +57,7 @@ const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 const datos = [
   ['Cliente', 'Pau Jordà, arquitecto'],
   ['Año', '2026'],
-  ['Qué hicimos', 'Concepto con Pau Jordà. Diseño, navegación y desarrollo'],
+  ['Rol', 'Diseño, navegación y desarrollo'],
   ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 const cifras = [
@@ -71,7 +72,6 @@ const cifras = [
   current="proyectos"
   title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
-  ctaTitulo={"Una sola línea.\nMuchas formas de recorrerla."}
 >
   <script>
     /* El hero: el fragmento se reproduce una vez, solo con JS y sin
@@ -82,6 +82,7 @@ const cifras = [
   <div class="elogio" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina
       titulo="Elogio de la línea"
+      golpes={['Elogio', 'de la línea']}
       texto={['Pau Jordà. Arquitecto. Caso de estudio']}
       superficie={{ fondo: 'var(--white)', foco: 'var(--blue-ap)' }}
     >
@@ -189,18 +190,30 @@ const cifras = [
       </div>
     </section>
 
-    {/* La serie de porcelana recorrida (03/11/2026): sustituye a la silla. */}
     <figure class="pieza pieza--derecha">
       <VideoPausable
         class="video"
+        {...video('silla')}
+        alt="La página de la silla de metal avanza en horizontal: la silla de varillas oxidadas, el texto del proyecto y los bocetos de la idea atornillada."
+        nombre="la tira de la silla de metal"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
+      />
+      <figcaption>La silla de metal</figcaption>
+    </figure>
+
+    {/* La serie de porcelana recorrida, sobre la banda negra (03/11/2026):
+        sustituye a la foto de la silla. */}
+    <div class="banda banda--acento">
+      <VideoPausable
+        class="video video--portada"
         {...video('porcelana')}
         alt="La página de la serie de porcelana avanza en horizontal: la foto de las tres piezas blancas con frutas secas y especias, el título y el texto de Pau sobre comer en una hoja, y después los bocetos y las fotos de cada pieza."
         nombre="la serie de porcelana"
         lang={DEFAULT_LANG}
-        sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
+        sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
       />
-      <figcaption>Serie de porcelana</figcaption>
-    </figure>
+    </div>
 
     {/* «Desde el otro lado»: el testimonio de Pau, en borrador hasta que lo
         mande (solo se ve en `npm run dev`). Un testimonio inventado no se
@@ -272,12 +285,10 @@ const cifras = [
   }
 
   /* Las bandas carmesí, de borde a borde. */
-  /* Un caso «muy blanco» (Johnny, 03/11/2026): la página entera en blanco y
-     la banda de la portada también, con la sombra leve de los vídeos sobre
-     blanco. Antes, bandas en Ink. */
+  /* Un caso «muy blanco» (Johnny, 03/11/2026): la página en blanco, salvo
+     las dos bandas negras del primer vídeo y el último. */
   .elogio { background: var(--white); }
-  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--white); }
-  .banda :global(.vp__marco) { border-radius: var(--radio); box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08); }
+  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
   .elogio :global(.hero-frase) { object-fit: contain; }
   .lista { display: flex; flex-direction: column; gap: var(--space-8); }
   @media (min-width: 1024px) {

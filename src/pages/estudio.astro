@@ -36,7 +36,7 @@ const SERVICIOS = [
   {
     nombre: 'Diseño y desarrollo web accesible.',
     mic: 'medida' as Tipo,
-    color: 'blanco' as const,
+    color: 'rosa' as const,
     texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como referencia mínima. Es lo que hacemos cada día.',
   },
   {
@@ -54,7 +54,7 @@ const SERVICIOS = [
   {
     nombre: 'Documentos y comunicación inclusiva.',
     mic: 'declaracion' as Tipo,
-    color: 'blanco' as const,
+    color: 'rosa' as const,
     texto: 'Creamos y adaptamos presentaciones y documentos PDF accesibles. Ayudamos a cumplir los requisitos de accesibilidad aplicables a administraciones y proyectos con financiación pública.',
   },
 ];
@@ -76,10 +76,8 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   { nombre: 'CESAL', proyecto: 'Foc i Cor, restaurante escuela en Catarroja' },
   { nombre: 'AEIPI y Eurlyaid', proyecto: 'ECI Conference Madrid 2027' },
   { nombre: 'Izaskun Etxebarria' },
-  { nombre: 'Les Veus de la DANA' },
   { nombre: 'Elogio de la línea' },
   { nombre: 'WKND', proyecto: 'GUS, el perro guía' },
-  { nombre: 'Teatro Off' },
 ];
 ---
 
@@ -111,13 +109,15 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
     </div>
   </Bloque>
 
-  <Bloque id="servicios" titulo="Servicios" fondo="rosa">
+  {/* Sin la banda rosa (03/11/2026): con las microanimaciones, el rosa
+      competía con el detalle de diseño y era la única banda de color. */}
+  <Bloque id="servicios" titulo="Servicios">
     <ul class="servicios">
       {
         SERVICIOS.map((s) => (
           <li>
-            {/* Las microanimaciones de Servicios (03/11/2026). Sobre la banda
-                rosa, el detalle de diseño va en blanco: en rosa no se vería. */}
+            {/* Las microanimaciones de Servicios (03/11/2026), con el color
+                de cada servicio. */}
             <Microanimacion tipo={s.mic} color={s.color} />
             <h3 class="servicio__nombre">{s.nombre}</h3>
             <p>{s.texto}</p>
