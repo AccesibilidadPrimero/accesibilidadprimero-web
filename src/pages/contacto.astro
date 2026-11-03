@@ -222,13 +222,13 @@ const CAMPOS = [
           perdona en una frase, AP no). Así que el correo sale a su línea,
           como enlace suelto con su flecha. El <wbr> deja partir la dirección
           después de la arroba: sin espacios, a 320 no cabe (1.4.10). */}
-      {/* Ordenado (Johnny, 03/11/2026): la frase y el correo juntos, y las
-          redes debajo, una por línea, como una sola lista de canales. */}
+      {/* Ordenado (Johnny, 03/11/2026): la frase y el correo en una sola
+          línea, y las redes debajo en tres columnas. */}
       <div class="directo__correo">
         <p>Si lo prefieres, escríbenos por correo:</p>
         <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
       </div>
-      <Redes apiladas />
+      <Redes columnas />
     </div>
   </Bloque>
 </Base>
@@ -248,8 +248,13 @@ const CAMPOS = [
     gap: var(--space-32);
   }
   .directo p { margin: 0; }
-  /* La frase y su correo, pegados: 8, el aire de un enlace bajo su texto. */
-  .directo__correo { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8); }
+  /* La frase y su correo en una línea; si no caben (móvil), el correo baja
+     entero, con su flecha. */
+  /* El título del bloque está oculto, así que el contenido caía en la
+     primera columna (456 px a 1440) y las redes se salían. Va en la columna
+     del formulario, a plomo con él (03/11/2026). */
+  :global(.bloque__contenido:has(> .directo)) { grid-column: -2 / -1; min-width: 0; }
+  .directo__correo { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-12); row-gap: var(--space-8); }
 
   /* ----- Formulario ----------------------------------------------------
      Campos de 560 como máximo; 32 entre ellos; 6 dentro de cada uno. */

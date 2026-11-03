@@ -9,7 +9,7 @@
    quiere.
    --------------------------------------------------------------------------- */
 
-import type { Lang, RouteKey } from './config';
+import type { Lang, RouteKey, SubKey } from './config';
 
 type Dict = {
   skipLink: string;
@@ -28,6 +28,9 @@ type Dict = {
   /** El botón del bloque de cierre (ContactCTA). El del hero sigue siendo `ctaAction`. */
   ctaCierre: string;
   nav: Record<RouteKey, string>;
+  /** Apartados del menú y el nombre del botón que los abre («Apartados de Servicios»). */
+  subnav: Record<SubKey, string>;
+  submenuDe: string;
   readMore: string;
   readLess: string;
   carouselPause: string;
@@ -76,6 +79,8 @@ export const UI: Record<Lang, Dict> = {
       cookies: 'Cookies',
       accesibilidad: 'Accesibilidad',
     },
+    subnav: { diseno: 'Diseño', auditoria: 'Auditoría', formacion: 'Formación' },
+    submenuDe: 'Apartados de',
     readMore: 'Leer más',
     readLess: 'Leer menos',
     carouselPause: 'Pausar',
@@ -121,6 +126,8 @@ export const UI: Record<Lang, Dict> = {
       cookies: 'Galetes',
       accesibilidad: 'Accessibilitat',
     },
+    subnav: { diseno: 'Disseny', auditoria: 'Auditoria', formacion: 'Formació' },
+    submenuDe: 'Apartats de',
     readMore: 'Llegeix-ne més',
     readLess: 'Llegeix-ne menys',
     carouselPause: 'Pausa',
@@ -166,6 +173,8 @@ export const UI: Record<Lang, Dict> = {
       cookies: 'Cookies',
       accesibilidad: 'Accessibility',
     },
+    subnav: { diseno: 'Design', auditoria: 'Audit', formacion: 'Training' },
+    submenuDe: 'Sections of',
     readMore: 'Read more',
     readLess: 'Read less',
     carouselPause: 'Pause',

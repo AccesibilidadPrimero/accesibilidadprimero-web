@@ -20,6 +20,7 @@
    --------------------------------------------------------------------------- */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Picture, getImage } from 'astro:assets';
+import SiguienteProyecto from '../../components/SiguienteProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
@@ -186,6 +187,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
       </p>
     )}
   </div>
+  <SiguienteProyecto actual={p.id} />
 </Base>
 
 

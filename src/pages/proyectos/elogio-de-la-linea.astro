@@ -29,6 +29,7 @@
 import { getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
+import SiguienteProyecto from '../../components/SiguienteProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
@@ -228,6 +229,7 @@ const cifras = [
       foco={d.paleta.anilloFoco}
     />
   </div>
+  <SiguienteProyecto actual="elogio-de-la-linea" />
 </Base>
 
 <style>

@@ -13,7 +13,7 @@
    porque solo hay un idioma activo. Cuando se activen catalán e inglés suma
    ~200 px y entre 1024 y ~1200 NO cabe: habrá que volver a medir.
    --------------------------------------------------------------------------- */
-import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { NAV, SUBNAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
 import { t } from '../i18n/ui';
 import MenuModal from './MenuModal.astro';
 
@@ -32,8 +32,9 @@ const langs = alternates(current, slug);
     <nav aria-label={ui.navLabel} class="header__nav">
       <ul class="header__list">
         {
-          NAV.map((key) => (
-            <li>
+          NAV.map((key) => {
+            const sub = SUBNAV[key];
+            const enlace = (
               <a
                 href={path(key, lang)}
                 class="header__link"
@@ -41,8 +42,34 @@ const langs = alternates(current, slug);
               >
                 {ui.nav[key]}
               </a>
-            </li>
-          ))
+            );
+            if (!sub) return <li>{enlace}</li>;
+            /* Submenú (03/11/2026). El patrón de «disclosure» y no el de
+               menú ARIA: el enlace sigue llevando a la página entera y al lado
+               va un botón propio que abre los apartados. Se abre al pulsar,
+               no al pasar el ratón: en táctil no hay hover y un panel que
+               aparece solo tapa lo que la persona iba a leer. */
+            return (
+              <li class="header__item--sub" data-submenu>
+                {enlace}
+                <button
+                  type="button"
+                  class="header__sub-boton"
+                  aria-expanded="false"
+                  aria-controls={`submenu-${key}`}
+                  aria-label={`${ui.submenuDe} ${ui.nav[key]}`}
+                  data-submenu-boton
+                >
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 12 8" width="12" height="8"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                </button>
+                <ul id={`submenu-${key}`} class="header__sub" hidden data-submenu-panel>
+                  {sub.map((s) => (
+                    <li><a href={`${path(key, lang)}#${s}`} class="header__sub-link">{ui.subnav[s]}</a></li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })
         }
       </ul>
     </nav>
@@ -177,4 +204,89 @@ const langs = alternates(current, slug);
     text-decoration-thickness: var(--underline-rest);
     text-underline-offset: 5px;
   }
+
+  /* Submenú de escritorio. El enlace conserva su relleno de 12 a la izquierda;
+     a la derecha lo cede al botón, que mide 44 de ancho y lleva el chevrón
+     centrado: «Servicios ⌄» se lee como una sola pieza. */
+  .header__item--sub { position: relative; display: flex; align-items: center; }
+  .header__item--sub > .header__link { padding-inline-end: 0; }
+  .header__sub-boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--link);
+    cursor: pointer;
+  }
+  .header__sub-boton svg { transition: transform var(--dur-base) var(--ease-out); }
+  .header__sub-boton[aria-expanded='true'] svg { transform: rotate(180deg); }
+  /* Sin JS no hay botón: «Servicios» lleva a la página entera, que es donde
+     están los tres apartados. */
+  html:not(.js) .header__sub-boton { display: none; }
+
+  .header__sub {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 0;
+    z-index: 50;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-8) 0;
+    min-inline-size: 100%;
+    /* Opaco: el contraste del texto no puede depender de lo que haya detrás
+       (en la Home, el hero menta). */
+    background: var(--white);
+    border-radius: var(--radio);
+    box-shadow: 0 0 0 1px var(--hairline);
+  }
+  .header__sub[hidden] { display: none; }
+  .header__sub-link {
+    display: flex;
+    align-items: center;
+    min-height: var(--touch-min);
+    padding: 0 var(--space-12);
+    font-size: var(--texto-size);
+    line-height: var(--texto-leading);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .header__sub-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: 5px;
+  }
 </style>
+
+<script>
+  /* Submenú de escritorio: abre y cierra con el botón; Esc cierra y devuelve
+     el foco al botón; se cierra al pulsar fuera, al sacar el foco del grupo y
+     al elegir un apartado (si es de la misma página no hay navegación que lo
+     cierre). */
+  document.querySelectorAll<HTMLElement>('[data-submenu]').forEach((grupo) => {
+    const boton = grupo.querySelector<HTMLButtonElement>('[data-submenu-boton]');
+    const panel = grupo.querySelector<HTMLElement>('[data-submenu-panel]');
+    if (!boton || !panel) return;
+    const poner = (abrir: boolean) => {
+      boton.setAttribute('aria-expanded', String(abrir));
+      panel.hidden = !abrir;
+    };
+    boton.addEventListener('click', () => poner(boton.getAttribute('aria-expanded') !== 'true'));
+    grupo.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) { poner(false); boton.focus(); }
+    });
+    grupo.addEventListener('focusout', (e) => {
+      const a = (e as FocusEvent).relatedTarget as Node | null;
+      if (a && !grupo.contains(a)) poner(false);
+    });
+    document.addEventListener('click', (e) => {
+      if (!grupo.contains(e.target as Node)) poner(false);
+    });
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) poner(false);
+    });
+  });
+</script>
