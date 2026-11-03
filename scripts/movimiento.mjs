@@ -359,35 +359,56 @@ console.log('\n── Home en móvil: ilustración del hero ──\n');
   await sin.close();
 }
 
-/* ---- Servicios: la banda del hero cambia de color (30/10/2026) ------------
-   Se mueve más de 5 s, así que lleva botón (2.2.2). Se comprueba:
-   · con JS: el color cambia antes de 3,5 s; el botón se llama «Pausar · …»
-     y mide 44; al pulsarlo pasa a «Reproducir» y el color no vuelve a cambiar;
-   · reducir movimiento: el color no cambia y el botón no se pinta;
-   · sin JS: ni cambia ni hay botón. */
+/* ---- Servicios: la banda del hero da UNA vuelta (03/11/2026) -----------
+   Pasa por los tres colores en 5 s y vuelve al primero, sin botón: no se
+   mueve más de 5 s (2.2.2). Se comprueba:
+   · con JS: a 1 s ya ha cambiado; a 6 s ha vuelto al primero y ahí se queda;
+     no hay botón de pausa;
+   · reducir movimiento y sin JS: el color no cambia. */
 console.log('\n── Servicios: fondo del hero ──\n');
 for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }], ['sin JS', { javaScriptEnabled: false }]]) {
   const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 }, ...opciones });
   const p = await ctx.newPage();
   await p.goto(`http://localhost:${PUERTO}/servicios/`, { waitUntil: 'load' });
   const color = () => p.$eval('[data-fondos]', (e) => getComputedStyle(e).getPropertyValue('--surface-accent').trim());
-  const boton = () => p.$eval('[data-fondos-control]', (b) => ({
-    visible: !!b.offsetParent, nombre: b.textContent.replace(/\s+/g, ' ').trim(), alto: b.getBoundingClientRect().height,
-  }));
   const c0 = await color();
-  await p.waitForTimeout(3500);
+  await p.waitForTimeout(1000);
   const c1 = await color();
-  const b0 = await boton();
+  await p.waitForTimeout(5000);
+  const c2 = await color();
+  await p.waitForTimeout(3000);
+  const c3 = await color();
+  const boton = await p.$('[data-fondos-control]');
+  // El primero de la lista, resuelto: la vuelta arranca al cargar, así que
+  // en la primera lectura ya puede ir por el segundo.
+  const primero = await p.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--mint').trim());
   if (modo === 'con JS') {
-    anota(c1 !== c0, `con JS · el color cambia solo (${c0} → ${c1})`);
-    anota(b0.visible && /^Pausar · /.test(b0.nombre) && b0.alto >= 44, `con JS · botón «${b0.nombre}» de ${b0.alto} px`);
-    await p.click('[data-fondos-control]');
-    const c2 = await color();
-    await p.waitForTimeout(3500);
-    const b1 = await boton();
-    anota(c2 === await color() && /^Reproducir · /.test(b1.nombre), `con JS · «Pausar» lo para y el botón pasa a «${b1.nombre}»`);
+    anota(c1 !== primero, `con JS · el color cambia solo (${primero} → ${c1})`);
+    anota(c2 === primero && c3 === primero, `con JS · en 6 s vuelve al primero y se queda (${c2}, ${c3})`);
+    anota(boton === null, 'con JS · sin botón de pausa');
   } else {
-    anota(c1 === c0 && !b0.visible, `${modo} · el color no cambia y no hay botón`);
+    anota(c1 === c0 && c3 === c0 && boton === null, `${modo} · el color no cambia y no hay botón`);
+  }
+  await ctx.close();
+}
+
+/* ---- Servicios: las microanimaciones (03/11/2026) -------------------------
+   Una vez, menos de 3 s, al verse: no necesitan botón (2.2.2). Con «reducir
+   movimiento» no hay ninguna animación en marcha. */
+console.log('\n── Servicios: microanimaciones ──\n');
+for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'reduce' }]]) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 }, ...opciones });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/servicios/`, { waitUntil: 'load' });
+  await p.$$eval('[data-plegable-boton][aria-expanded="false"]', (bs) => bs.forEach((b) => b.click()));
+  const m = await p.$$eval('[data-microanimacion]', (ms) => ms.map((x) => {
+    const anims = [...x.querySelectorAll('*')].flatMap((e) => e.getAnimations());
+    return { n: anims.length, fin: anims.reduce((a, b) => Math.max(a, b.effect.getComputedTiming().endTime), 0) };
+  }));
+  if (modo === 'con JS') {
+    anota(m.length === 10 && m.every((x) => x.n > 0 && x.fin <= 3000), `con JS · ${m.length} microanimaciones, la más larga acaba a los ${(Math.max(...m.map((x) => x.fin)) / 1000).toFixed(2)} s`);
+  } else {
+    anota(m.every((x) => x.n === 0), `${modo} · ninguna se anima`);
   }
   await ctx.close();
 }

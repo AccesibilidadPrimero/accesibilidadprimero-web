@@ -69,8 +69,15 @@ interface Props {
   fondos?: string[];
   /** Lo que se pausa, para el nombre del botón: «Pausar · <esto>». */
   fondosNombre?: string;
+  /** Los fondos recorren la lista UNA vez en 5 s y vuelven al primero, sin
+      botón de pausa: no se mueve más de 5 s (2.2.2). Servicios, 03/11/2026. */
+  fondosUnaVez?: boolean;
+  /** La ilustración al ancho de la flor de la Home (460 · 446 · 285), no al
+      alto de 400 · 320 · 240: un dibujo apaisado como el planeta se veía el
+      doble de grande. Servicios, 03/11/2026. */
+  ilustracionComoHome?: boolean;
 }
-const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo' } = Astro.props;
+const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo', fondosUnaVez = false, ilustracionComoHome = false } = Astro.props;
 const ui = t(DEFAULT_LANG);
 /* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
 const anchosFoto = foto ? [640, 1024, 1440, 2048, 2880].filter((w) => w < foto.width).concat(foto.width) : [];
@@ -84,12 +91,13 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
 ---
 
 <div
-  class:list={['apertura', golpes && 'apertura--golpes', foto && 'apertura--foto', fondos && 'apertura--fondos']}
+  class:list={['apertura', golpes && 'apertura--golpes', foto && 'apertura--foto', fondos && 'apertura--fondos', fondosUnaVez && 'apertura--una-vez', ilustracionComoHome && 'apertura--ilustracion-home']}
   style={fondos ? `--surface-accent: ${fondos[0]};` : estilo}
   data-fondos={fondos ? JSON.stringify(fondos) : undefined}
+  data-fondos-una-vez={fondosUnaVez ? '' : undefined}
 >
   {
-    fondos && (
+    fondos && !fondosUnaVez && (
       <button type="button" class="apertura__pausa" data-fondos-control hidden
               data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
         <svg class="apertura__pausa-icono" aria-hidden="true" focusable="false" viewBox="0 0 10 12" width="10" height="12">
@@ -171,7 +179,26 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
   /* La banda que cambia de color (prop `fondos`). Un temporizador, no una
      animación CSS en bucle: así «Pausar» para el cambio de verdad y el color
      se queda donde estaba. */
-  document.querySelectorAll<HTMLElement>('[data-fondos]').forEach((raiz) => {
+  /* Una sola vuelta en 5 s (`fondosUnaVez`): cada color se funde en el
+     siguiente durante un tercio del tiempo y la banda acaba en el primero.
+     Arranca cuando el hero se ve y no se repite. */
+  const VUELTA = 5000;
+  document.querySelectorAll<HTMLElement>('[data-fondos][data-fondos-una-vez]').forEach((raiz) => {
+    const fondos: string[] = JSON.parse(raiz.dataset.fondos ?? '[]');
+    if (fondos.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const paso = VUELTA / fondos.length;
+    raiz.style.setProperty('--dur-fondos', `${paso}ms`);
+    const io = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      fondos.forEach((_, i) => window.setTimeout(() => {
+        raiz.style.setProperty('--surface-accent', fondos[(i + 1) % fondos.length]);
+      }, i * paso));
+    });
+    io.observe(raiz);
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-fondos]:not([data-fondos-una-vez])').forEach((raiz) => {
     const fondos: string[] = JSON.parse(raiz.dataset.fondos ?? '[]');
     const control = raiz.querySelector<HTMLButtonElement>('[data-fondos-control]');
     const etiqueta = raiz.querySelector<HTMLElement>('[data-fondos-label]');
@@ -327,6 +354,10 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
   }
   @media (min-width: 768px) { .apertura :global(.apertura__ilustracion) { block-size: 320px; } }
   @media (min-width: 1024px) { .apertura :global(.apertura__ilustracion) { block-size: 400px; } }
+  /* Al ancho de la flor de la Home en cada tramo (`ilustracionComoHome`). */
+  .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 285px; }
+  @media (min-width: 768px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 446px; } }
+  @media (min-width: 1024px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 460px; } }
 
   .apertura__titulo {
     margin: 0;

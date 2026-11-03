@@ -4,10 +4,16 @@
    la estructura es la de Estudio (HeroPagina + Bloque) para que la geometría
    viva en un solo sitio (AGENTS.md §8, «Páginas interiores»).
 
-   Hero: el planeta (arte/servicios/planeta.svg), el titular en tres líneas y
-   el fondo que cambia de color cada 3 s, uno por servicio, con fundido. Ese
-   cambio dura más de 5 s, así que lleva botón de pausa (2.2.2); con «reducir
-   movimiento» no cambia (lo resuelve HeroPagina).
+   Hero: el planeta (arte/servicios/planeta.svg) al alto de las ilustraciones
+   de la Home, el titular en una línea (en móvil, partido antes de «y
+   Formación») y el fondo que recorre una vez los tres colores en 5 s y se
+   queda quieto: sin botón de pausa, porque no se mueve más de 5 s (2.2.2).
+   Con «reducir movimiento» no cambia (lo resuelve HeroPagina).
+
+   Revisión 2 (Johnny, 03/11/2026): cada servicio es un desplegable (Bloque
+   `desplegable`), las tarifas también, y cada punto lleva su microanimación
+   con el color de su servicio: diseño en rosa, auditoría en amarillo y
+   formación en verde claro (Microanimacion.astro).
 
    Orden de los servicios: Diseño y desarrollo, Auditoría, Formación. El
    contenido está en src/data/servicios.ts.
@@ -18,6 +24,8 @@ import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { DEFAULT_LANG, path } from '../i18n/config';
 import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
+import Plegable from '../components/Plegable.astro';
+import Microanimacion from '../components/Microanimacion.astro';
 import planeta from '../assets/servicios/planeta.svg';
 
 const lang = DEFAULT_LANG;
@@ -26,25 +34,27 @@ const lang = DEFAULT_LANG;
   lang={lang}
   current="servicios"
   title="Servicios · Accesibilidad Primero"
-  description="Diseño y desarrollo, auditoría de accesibilidad y formación. Diseñamos webs accesibles, revisamos las que ya existen y formamos a quienes las gestionan."
+  description="Diseño y desarrollo, auditoría de accesibilidad y formación. Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan."
 >
   <HeroPagina
     ilustracion={planeta}
     alt="Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde."
     titulo="Diseño, Auditoría y Formación."
-    golpes={['Diseño,', 'Auditoría', 'y Formación.']}
-    enLineas
-    texto={['Diseñamos webs accesibles, revisamos las que ya existen y formamos a quienes las gestionan.']}
+    golpes={['Diseño, Auditoría', 'y Formación.']}
+    texto={['Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan.']}
     fondos={['var(--mint)', 'var(--rose-ap)', 'var(--yellow-ap)']}
-    fondosNombre="el color del fondo"
+    fondosUnaVez
+    ilustracionComoHome
   />
 
-  <Bloque id="diseno" titulo="Diseño y desarrollo">
+  <div class="servicios">
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable>
     <div class="pila">
       <p>{DISENO.intro}</p>
       <ul class="puntos">
         {DISENO.puntos.map((p) => (
           <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="rosa" />}
             <h3 class="punto__nombre">{p.nombre}</h3>
             <p>{p.texto}</p>
           </li>
@@ -54,12 +64,13 @@ const lang = DEFAULT_LANG;
     </div>
   </Bloque>
 
-  <Bloque id="auditoria" titulo="Auditoría de accesibilidad">
+  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable>
     <div class="pila">
       <p>{AUDITORIA.intro}</p>
       <ul class="puntos">
         {AUDITORIA.revisamos.map((p) => (
           <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="amarillo" />}
             <h3 class="punto__nombre">{p.nombre}</h3>
             <p>{p.texto}</p>
           </li>
@@ -67,25 +78,28 @@ const lang = DEFAULT_LANG;
       </ul>
       <p>{AUDITORIA.entregamos}</p>
     </div>
-    {/* Las tarifas: una lista bajo su <h3>, cada una con su nombre como <h4>.
-        El precio y lo que incluye van debajo, en el orden en que se leen. */}
-    <h3 class="punto__nombre tarifas__titulo">Tarifas</h3>
-    <ul class="tarifas">
-      {AUDITORIA.tarifas.map((t) => (
-        <li class="tarifa">
-          <h4 class="tarifa__nombre">{t.nombre}</h4>
-          <p class="tarifa__para">{t.para}</p>
-          <p class="tarifa__precio">{t.precio}</p>
-          <ul class="tarifa__incluye">
-            {t.incluye.map((i) => <li>{i}</li>)}
-          </ul>
-        </li>
-      ))}
-    </ul>
   </Bloque>
 
-  <Bloque id="formacion" titulo="Formación">
+  {/* Las tarifas: un desplegable por tarifa, con lo que se audita como
+      título (Johnny, 03/11/2026). Dentro, el nombre, el precio y lo que
+      incluye, en el orden en que se leen. Sin recuadro. */}
+  <Bloque id="tarifas" titulo="Tarifas" desplegable>
+    <div class="tarifas">
+      {AUDITORIA.tarifas.map((t, i) => (
+        <Plegable id={`tarifa-${i + 1}`} titulo={t.titulo}>
+          <p class="tarifa__precio">{t.nombre} · {t.precio}</p>
+          {t.para && <p>{t.para}</p>}
+          <ul class="tarifa__incluye">
+            {t.incluye.map((x) => <li>{x}</li>)}
+          </ul>
+        </Plegable>
+      ))}
+    </div>
+  </Bloque>
+
+  <Bloque id="formacion" titulo="Formación" desplegable>
     <div class="pila">
+      <Microanimacion tipo="dia" color="verde" />
       <p>{FORMACION.intro}</p>
       <ul class="puntos">
         {FORMACION.puntos.map((p) => (
@@ -97,10 +111,15 @@ const lang = DEFAULT_LANG;
       </ul>
     </div>
   </Bloque>
+  </div>
 </Base>
 
 <style>
   p { margin: 0; }
+  /* Los desplegables, juntos y a 128 del hero (Bloque.astro). */
+  .servicios { margin-block-start: var(--ritmo-seccion); }
+  /* El filete que cierra la lista, en los márgenes de la página. */
+  .servicios::after { content: ''; display: block; margin-inline: var(--gutter-page); border-block-start: 1px solid var(--rule); }
   ul { margin: 0; padding: 0; list-style: none; }
 
   /* Como en Estudio: 24 entre las piezas de un bloque. */
@@ -113,29 +132,17 @@ const lang = DEFAULT_LANG;
   .puntos li { display: flex; flex-direction: column; gap: var(--space-16); }
   .punto__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
 
-  /* Tarifas: tres columnas desde 1024, una debajo de otra por debajo. Cada
-     una en su caja con filete, sin color: el color de la página es el del
-     hero. */
-  .tarifas {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-24);
-    margin-block-start: var(--space-16);
-  }
-  .tarifas__titulo { margin-block-start: var(--space-64); }
-  @media (min-width: 1024px) { .tarifas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  .tarifa {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-    padding: var(--space-24);
-    border: 1px solid var(--rule);
-    border-radius: var(--radio);
-  }
-  .tarifa__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
-  /* El precio al cuerpo del texto, como todo (la escala tiene dos tamaños):
-     lo separa el aire. */
-  .tarifa__precio { margin-block: var(--space-16); }
-  .tarifa__incluye { display: flex; flex-direction: column; }
+  /* Tarifas: desplegables seguidos, sin recuadro (03/11/2026). */
+  .tarifas { max-width: 888px; border-block-end: 1px solid var(--rule); }
+  .tarifa__precio { margin-block-end: var(--space-8); }
+  .tarifa__incluye { display: flex; flex-direction: column; margin-block-start: var(--space-16); }
   .tarifa__incluye li { padding-block: var(--space-8); border-block-start: 1px solid var(--rule); }
+
+  /* El titular: en una línea en escritorio y tableta; en móvil, partido
+     antes de «y Formación» (Johnny, 03/11/2026). El golpe lo declara
+     HeroPagina, de ahí el :global (AGENTS.md §6). */
+  @media (max-width: 767px) {
+    :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
+  }
+  .puntos li > :global(.mic) { margin-block-end: var(--space-8); }
 </style>
