@@ -19,8 +19,11 @@ import CtaLink from './CtaLink.astro';
 
 interface Props {
   class?: string;
+  /** Una debajo de otra en todos los anchos (Contacto, 03/11/2026): en fila,
+      a ciertos anchos Mastodon bajaba sola a otro renglón. */
+  apiladas?: boolean;
 }
-const { class: className } = Astro.props;
+const { class: className, apiladas = false } = Astro.props;
 
 const REDES = [
   {
@@ -46,7 +49,7 @@ const REDES = [
 ---
 
 <!-- Una lista: son tres destinos del mismo tipo (AGENTS.md §3). -->
-<ul class:list={['redes', className]}>
+<ul class:list={['redes', apiladas && 'redes--apiladas', className]}>
   {
     REDES.map((r) => (
       <li>
@@ -86,4 +89,5 @@ const REDES = [
     vertical-align: -0.25em;
     margin-inline-end: var(--space-8);
   }
+  .redes.redes--apiladas { flex-direction: column; flex-wrap: nowrap; }
 </style>

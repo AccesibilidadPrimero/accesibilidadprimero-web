@@ -58,6 +58,9 @@ const CAMPOS = [
     id: 'correo',
     etiqueta: 'Correo electrónico',
     ayuda: 'Por ejemplo: nombre@correo.com',
+    /* Dentro de la casilla, como el nombre (03/11/2026). */
+    dentro: true,
+    marcador: 'nombre@correo.com',
     tipo: 'email',
     autocomplete: 'email',
     obligatorio: true,
@@ -219,9 +222,13 @@ const CAMPOS = [
           perdona en una frase, AP no). Así que el correo sale a su línea,
           como enlace suelto con su flecha. El <wbr> deja partir la dirección
           después de la arroba: sin espacios, a 320 no cabe (1.4.10). */}
-      <p>Si prefieres contactar por correo, puedes hacerlo en:</p>
-      <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
-      <Redes />
+      {/* Ordenado (Johnny, 03/11/2026): la frase y el correo juntos, y las
+          redes debajo, una por línea, como una sola lista de canales. */}
+      <div class="directo__correo">
+        <p>Si lo prefieres, escríbenos por correo:</p>
+        <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
+      </div>
+      <Redes apiladas />
     </div>
   </Bloque>
 </Base>
@@ -241,6 +248,8 @@ const CAMPOS = [
     gap: var(--space-32);
   }
   .directo p { margin: 0; }
+  /* La frase y su correo, pegados: 8, el aire de un enlace bajo su texto. */
+  .directo__correo { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8); }
 
   /* ----- Formulario ----------------------------------------------------
      Campos de 560 como máximo; 32 entre ellos; 6 dentro de cada uno. */
