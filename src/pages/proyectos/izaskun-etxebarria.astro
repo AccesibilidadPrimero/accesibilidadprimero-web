@@ -29,7 +29,7 @@ import VideoPausable from '../../components/VideoPausable.astro';
 import ReticulaEditorial from '../../components/ReticulaEditorial.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
 import hero from '../../assets/proyectos/izaskun-etxebarria/hero.jpg';
-import sala from '../../assets/proyectos/izaskun-etxebarria/comisariado.jpg';
+import retrato from '../../assets/proyectos/izaskun-etxebarria/retrato.jpg';
 
 const p = (await getEntry('proyectos', 'izaskun-etxebarria'))!;
 const d = p.data;
@@ -42,7 +42,10 @@ const video = (escena: string) => {
     if (!poster) throw new Error(`Caso Izaskun: falta el póster video-${escena}-${formato}.png`);
     return { archivo: `/video/izaskun-etxebarria/${escena}-${formato}.mp4`, poster };
   };
-  return { escritorio: f('escritorio'), tableta: f('tableta'), movil: f('movil') };
+  /* Desde el 03/11/2026 el móvil usa la de tableta (VideoPausable): las
+     grabaciones nuevas ya no llevan versión de móvil. */
+  const conMovil = posters[`../../assets/proyectos/izaskun-etxebarria/video-${escena}-movil.png`];
+  return { escritorio: f('escritorio'), tableta: f('tableta'), ...(conMovil ? { movil: f('movil') } : {}) };
 };
 const vertical = { tableta: '360px', movil: '280px' };
 const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
@@ -111,13 +114,13 @@ const datos = [
     <figure class="pieza pieza--derecha">
       <VideoPausable
         class="video"
-        {...video('comisariado')}
-        alt="La página de comisariado: fotografías de exposiciones a todo el ancho, una debajo de otra, con el título de cada proyecto y su texto."
-        nombre="Comisariado"
+        {...video('bide-zabalak')}
+        alt="La página de la obra Bide-zabalak se recorre de arriba abajo: la serie enmarcada en la pared, las imágenes de calles y edificios a gran tamaño sobre fondo oscuro, la banda carmesí con el título y el texto a dos columnas."
+        nombre="Bide-zabalak"
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
       />
-      <figcaption>Comisariado</figcaption>
+      <figcaption>Bide-zabalak</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="estructura">
@@ -166,18 +169,28 @@ const datos = [
       </ul>
     </section>
 
-    {/* La obra, en sala, sobre el carmesí. */}
-    <div class="banda banda--acento">
+    {/* Testimonio de Izaskun (03/11/2026), sobre el carmesí: la foto a la
+        izquierda y el texto a la derecha (en tablet y móvil, uno encima de
+        otro). Sustituye a la foto de sala. La cita va literal. */}
+    <section class="banda banda--acento banda--testimonio" aria-labelledby="testimonio" data-campo-color>
       <Picture
-        src={sala}
+        src={retrato}
         formats={['avif', 'webp']}
-        widths={[480, 960, 1440, sala.width].filter((w, i, a) => w <= sala.width && a.indexOf(w) === i)}
-        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
-        alt="Dos hombres miran de cerca unos libros antiguos expuestos en una vitrina iluminada, en una sala en penumbra."
-        class="foto foto--sala"
+        widths={[300, retrato.width].filter((w, i, a) => w <= retrato.width && a.indexOf(w) === i)}
+        sizes="(min-width: 1024px) 420px, calc(100vw - 48px)"
+        alt="Retrato en blanco y negro de Izaskun Etxebarria, con gafas y la mano apoyada en la mejilla, delante de unas baldas con cuadros y objetos de su estudio."
+        class="foto foto--retrato"
         loading="lazy"
       />
-    </div>
+      <figure class="testimonio">
+        <h2 id="testimonio">Desde el otro lado</h2>
+        <blockquote>
+          <p>“Johnny Vigas y yo somos grandes amigos, y esa confianza fue la base de todo el proceso. Empezamos pensando en una web que reuniera todo lo que he hecho a lo largo de mi vida, pero nuestras conversaciones nos llevaron a algo mucho más esencial: reconocerme de nuevo como artista.</p>
+          <p>Johnny tiene una enorme capacidad para escuchar, ver a la otra persona desde un lugar positivo y descubrir sus potencias, cuidando también los miedos que aparecen durante el proceso. Su sensibilidad y su conexión con el mundo del arte hicieron posible una web íntima, mínima, transparente y reflexiva. No es una recopilación de mi trayectoria, sino un espacio que permite conocerme primero como artista y, después, como todo lo demás.”</p>
+        </blockquote>
+        <figcaption>Izaskun Etxebarria, artista y comisaria</figcaption>
+      </figure>
+    </section>
 
     {d.nota?.declaracion && (
       <p class="declaracion">
@@ -249,7 +262,17 @@ const datos = [
     .banda { padding-block: var(--space-96); }
     .banda :global(.video--portada) { width: min(1148px, 85%); }
   }
-  .izaskun :global(.foto--sala) { display: block; width: min(1100px, 100%); height: auto; border-radius: var(--radio); }
+  /* El testimonio sobre el carmesí: foto y texto en dos columnas desde 1024
+     (03/11/2026). El texto, en el Silk de la paleta (validado en build). */
+  .banda--testimonio { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48); place-items: start; }
+  .izaskun :global(.foto--retrato) { display: block; width: min(420px, 100%); height: auto; border-radius: var(--radio); }
+  .testimonio { display: flex; flex-direction: column; gap: var(--space-24); max-width: 720px; }
+  .testimonio h2 { color: inherit; }
+  .testimonio blockquote { margin: 0; display: flex; flex-direction: column; gap: var(--space-24); }
+  @media (min-width: 1024px) {
+    .banda--testimonio { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: center; }
+    .banda--testimonio :global(.foto--retrato) { justify-self: end; }
+  }
 
   .declaracion { display: block; max-width: none; padding: var(--space-64) var(--gutter-page); text-align: center; }
   .declaracion :global(.linea) { display: block; }

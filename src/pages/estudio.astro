@@ -26,6 +26,8 @@ import { conMarca } from '../i18n/marca';
 import { CORREO_ESTUDIO } from '../data/contacto';
 /* Las dos las compila `npm run arte` desde arte/estudio/. */
 import SimboloAnimado from '../components/SimboloAnimado.astro';
+import Microanimacion from '../components/Microanimacion.astro';
+import type { Tipo } from '../components/Microanimacion.astro';
 import retrato from '../assets/estudio/johnny-vigas.jpg';
 
 const lang = DEFAULT_LANG;
@@ -33,18 +35,26 @@ const lang = DEFAULT_LANG;
 const SERVICIOS = [
   {
     nombre: 'Diseño y desarrollo web accesible.',
+    mic: 'medida' as Tipo,
+    color: 'blanco' as const,
     texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como referencia mínima. Es lo que hacemos cada día.',
   },
   {
     nombre: 'Auditorías de accesibilidad.',
+    mic: 'jerarquia' as Tipo,
+    color: 'amarillo' as const,
     texto: 'Analizamos tu web, identificamos las barreras, te las explicamos y definimos un plan para aplicar las mejoras. Es el primer paso si quieres que tu web actual sea accesible sin diseñarla desde cero.',
   },
   {
     nombre: 'Formación y consultoría.',
+    mic: 'dia' as Tipo,
+    color: 'verde' as const,
     texto: 'Ayudamos a tu equipo a crear y mantener contenidos y servicios digitales accesibles. Creamos un protocolo para que cada contenido nuevo de tu web sea accesible.',
   },
   {
     nombre: 'Documentos y comunicación inclusiva.',
+    mic: 'declaracion' as Tipo,
+    color: 'blanco' as const,
     texto: 'Creamos y adaptamos presentaciones y documentos PDF accesibles. Ayudamos a cumplir los requisitos de accesibilidad aplicables a administraciones y proyectos con financiación pública.',
   },
 ];
@@ -106,6 +116,9 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
       {
         SERVICIOS.map((s) => (
           <li>
+            {/* Las microanimaciones de Servicios (03/11/2026). Sobre la banda
+                rosa, el detalle de diseño va en blanco: en rosa no se vería. */}
+            <Microanimacion tipo={s.mic} color={s.color} />
             <h3 class="servicio__nombre">{s.nombre}</h3>
             <p>{s.texto}</p>
           </li>

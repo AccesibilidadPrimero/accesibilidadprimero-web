@@ -406,10 +406,24 @@ for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'r
     return { n: anims.length, fin: anims.reduce((a, b) => Math.max(a, b.effect.getComputedTiming().endTime), 0) };
   }));
   if (modo === 'con JS') {
-    anota(m.length === 10 && m.every((x) => x.n > 0 && x.fin <= 3000), `con JS · ${m.length} microanimaciones, la más larga acaba a los ${(Math.max(...m.map((x) => x.fin)) / 1000).toFixed(2)} s`);
+    anota(m.length === 11 && m.every((x) => x.n > 0 && x.fin <= 3000), `con JS · ${m.length} microanimaciones, la más larga acaba a los ${(Math.max(...m.map((x) => x.fin)) / 1000).toFixed(2)} s`);
   } else {
     anota(m.every((x) => x.n === 0), `${modo} · ninguna se anima`);
   }
+  await ctx.close();
+}
+
+/* ---- Elogio de la línea: el fragmento del hero (03/11/2026) -------------
+   Se justifica sin botón porque dura 5 s o menos y no se repite: se mide el
+   archivo que sirve la web (AGENTS.md §2.9), no el comentario. */
+console.log('\n── Elogio de la línea: hero ──\n');
+{
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.goto(`http://localhost:${PUERTO}/proyectos/elogio-de-la-linea/`, { waitUntil: 'load' });
+  await p.waitForFunction(() => { const v = document.querySelector('[data-hero-frase]'); return v && v.readyState >= 1; }, null, { timeout: 10000 });
+  const v = await p.$eval('[data-hero-frase]', (v) => ({ dur: v.duration, loop: v.loop, muted: v.muted }));
+  anota(v.dur <= 5.05 && !v.loop && v.muted, `hero · ${v.dur.toFixed(2)} s, sin bucle y en silencio`);
   await ctx.close();
 }
 

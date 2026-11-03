@@ -6,8 +6,19 @@
    de nuevo el caso, inspirado en los otros casos»). Título: «Elogio de la
    línea», con la ele minúscula.
 
+   Revisión 2 (Johnny, 03/11/2026): un caso «muy blanco», sin bandas de
+   color; el hero es el fragmento de la película en que la línea escribe
+   «Elogio de la línea»; grabaciones nuevas de la web actualizada; la serie
+   de porcelana sustituye a la silla; ficha con el estándar de todos los
+   casos y un apartado propio de accesibilidad.
+
    Lo que NO viene del Figma, por las reglas del sitio:
-   · Hero: el común (HeroPagina) con la foto del ajedrez de la web de Pau.
+   · Hero: el común (HeroPagina) sobre blanco, con el fragmento de 5 s de la
+     película (1,0 a 6,0 s). Se reproduce UNA vez y se queda en la frase
+     escrita, así que no necesita botón (2.2.2); `npm run movimiento` mide
+     que dura 5 s o menos. Sin JS y con «reducir movimiento», la frase
+     quieta (el póster es el último fotograma). Va `aria-hidden`: el h1 ya
+     dice lo mismo.
    · Tipografía: un solo titular grande, el h1. Los h2, a tamaño de texto.
    · Las capturas son vídeos: grabaciones de elogiodelalinea.com del
      30/10/2026, una por tamaño, cada una con su control (VideoPausable).
@@ -16,15 +27,14 @@
    --------------------------------------------------------------------------- */
 import { getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
-import { Picture } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
 import Testimonio from '../../components/Testimonio.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
-import hero from '../../assets/proyectos/elogio-de-la-linea/hero.jpg';
-import silla from '../../assets/proyectos/elogio-de-la-linea/silla.jpg';
+import fraseFinal from '../../assets/proyectos/elogio-de-la-linea/hero-frase.png';
 
 const p = (await getEntry('proyectos', 'elogio-de-la-linea'))!;
 const d = p.data;
@@ -36,8 +46,10 @@ const video = (escena: string) => {
     if (!poster) throw new Error(`Caso Elogio: falta el póster video-${escena}-${formato}.png`);
     return { archivo: `/video/elogio-de-la-linea/${escena}-${formato}.mp4`, poster };
   };
-  return { escritorio: f('escritorio'), tableta: f('tableta'), movil: f('movil') };
+  /* Desde el 03/11/2026 el móvil usa la de tableta (VideoPausable). */
+  return { escritorio: f('escritorio'), tableta: f('tableta') };
 };
+const poster = await getImage({ src: fraseFinal, width: 1280, format: 'webp', quality: 'high' });
 const vertical = { tableta: '360px', movil: '280px' };
 const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 
@@ -45,11 +57,11 @@ const datos = [
   ['Cliente', 'Pau Jordà, arquitecto'],
   ['Año', '2026'],
   ['Qué hicimos', 'Concepto con Pau Jordà. Diseño, navegación y desarrollo'],
-  ['Accesibilidad', 'Evaluación en curso'],
+  ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 const cifras = [
   ['Una línea', 'escribe el nombre y dibuja todos los proyectos'],
-  ['11 proyectos', 'de diseño, arquitectura y construcción, cada uno con su tira'],
+  ['11 proyectos', 'de diseño, arquitectura y construcción, cada uno con su recorrido'],
   ['1.024 px', 'por debajo de ese ancho, o con zoom, la web se lee en vertical'],
 ];
 ---
@@ -61,12 +73,23 @@ const cifras = [
   description={d.resumen.replace(/\s+/g, ' ')}
   ctaTitulo={"Una sola línea.\nMuchas formas de recorrerla."}
 >
+  <script>
+    /* El hero: el fragmento se reproduce una vez, solo con JS y sin
+       «reducir movimiento». Se queda en el último fotograma: la frase. */
+    const v = document.querySelector<HTMLVideoElement>('[data-hero-frase]');
+    if (v && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {});
+  </script>
   <div class="elogio" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
     <HeroPagina
       titulo="Elogio de la línea"
-      texto={['Portafolio de Pau Jordà, arquitecto · Caso de estudio']}
-      foto={hero}
-    />
+      texto={['Pau Jordà. Arquitecto. Caso de estudio']}
+      superficie={{ fondo: 'var(--white)', foco: 'var(--blue-ap)' }}
+    >
+      {/* aria-hidden: dibuja con la línea el mismo titular que dice el h1. */}
+      <video slot="ilustracion" class="apertura__ilustracion hero-frase" data-hero-frase
+             src="/video/elogio-de-la-linea/hero-frase.mp4" poster={poster.src}
+             width="1280" height="720" muted playsinline preload="auto" aria-hidden="true"></video>
+    </HeroPagina>
 
     <section class="datos" aria-labelledby="datos">
       <h2 id="datos" class="sr-only">Datos del proyecto</h2>
@@ -120,7 +143,7 @@ const cifras = [
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 1100px, 76vw', ...vertical }}
       />
-      <figcaption>Cada proyecto, una tira: el ajedrez</figcaption>
+      <figcaption>Cada proyecto, un recorrido: el ajedrez</figcaption>
     </figure>
 
     <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
@@ -138,7 +161,7 @@ const cifras = [
           <p>En 2:42 la línea escribe “Elogio de la línea” y se convierte en cada proyecto. Arranca sin sonido, se puede pausar y lleva su descripción en texto. Si el sistema pide menos movimiento, no se pone en marcha sola.</p>
         </li>
         <li>
-          <h3>Cada proyecto, una tira.</h3>
+          <h3>Cada proyecto, un recorrido.</h3>
           <p>Las páginas avanzan en horizontal, como una exposición: foto, texto, bocetos. Las imágenes se mueven un poco más despacio que el texto, como planos a distinta distancia.</p>
         </li>
         <li>
@@ -148,31 +171,40 @@ const cifras = [
       </ul>
     </section>
 
+    {/* Accesibilidad (Johnny, 03/11/2026): lo que la web hace, en llano, y
+        los criterios que lo respaldan. */}
+    <section class="bloque" aria-labelledby="accesibilidad">
+      <h2 id="accesibilidad" class="bloque__etiqueta">Accesibilidad</h2>
+      <div class="bloque__contenido">
+        <p>La web está construida con la accesibilidad como punto de partida.</p>
+        <ul class="lista">
+          <li>Se puede ampliar al 200 % sin que se rompa. En pantallas pequeñas, la tira horizontal pasa a ser vertical.</li>
+          <li>Se navega con el teclado, el ratón o el trackpad.</li>
+          <li>Todas las imágenes tienen texto alternativo.</li>
+          <li>Hay un solo contenido para todas las pantallas, sin duplicados para el lector de pantalla.</li>
+          <li>Los enlaces y los iconos tienen nombre accesible.</li>
+          <li>El vídeo de portada empieza en silencio y tiene un control de sonido.</li>
+        </ul>
+        <p>Criterios WCAG: 1.1.1, 1.3.1, 1.4.2, 1.4.4, 1.4.10, 2.1.1, 2.4.4 y 4.1.2.</p>
+      </div>
+    </section>
+
+    {/* La serie de porcelana recorrida (03/11/2026): sustituye a la silla. */}
     <figure class="pieza pieza--derecha">
       <VideoPausable
         class="video"
-        {...video('silla')}
-        alt="La página de la silla de metal avanza en horizontal: la silla de varillas oxidadas, el texto del proyecto y los bocetos de la idea atornillada."
-        nombre="la tira de la silla de metal"
+        {...video('porcelana')}
+        alt="La página de la serie de porcelana avanza en horizontal: la foto de las tres piezas blancas con frutas secas y especias, el título y el texto de Pau sobre comer en una hoja, y después los bocetos y las fotos de cada pieza."
+        nombre="la serie de porcelana"
         lang={DEFAULT_LANG}
         sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
       />
-      <figcaption>La silla de metal</figcaption>
+      <figcaption>Serie de porcelana</figcaption>
     </figure>
 
-    {/* La línea se hace silla: la pieza, sobre la banda Ink. */}
-    <div class="banda banda--acento">
-      <Picture
-        src={silla}
-        formats={['avif', 'webp']}
-        widths={[400, 800].filter((w) => w <= silla.width)}
-        sizes="(min-width: 768px) 560px, calc(100vw - 48px)"
-        alt="La silla de metal de Pau Jordà: un dibujo de varillas oxidadas que forma asiento, respaldo y patas con una sola línea continua, sobre fondo blanco."
-        class="foto foto--silla"
-        loading="lazy"
-      />
-    </div>
-
+    {/* «Desde el otro lado»: el testimonio de Pau, en borrador hasta que lo
+        mande (solo se ve en `npm run dev`). Un testimonio inventado no se
+        publica (AGENTS.md §8). */}
     <Testimonio
       borrador
       cita="Texto del testimonio pendiente de recibir de Pau Jordà. Lo dejamos con su extensión aproximada, unas treinta palabras, para ver cómo respira el bloque en la página."
@@ -240,12 +272,18 @@ const cifras = [
   }
 
   /* Las bandas carmesí, de borde a borde. */
-  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
+  /* Un caso «muy blanco» (Johnny, 03/11/2026): la página entera en blanco y
+     la banda de la portada también, con la sombra leve de los vídeos sobre
+     blanco. Antes, bandas en Ink. */
+  .elogio { background: var(--white); }
+  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--white); }
+  .banda :global(.vp__marco) { border-radius: var(--radio); box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08); }
+  .elogio :global(.hero-frase) { object-fit: contain; }
+  .lista { display: flex; flex-direction: column; gap: var(--space-8); }
   @media (min-width: 1024px) {
     .banda { padding-block: var(--space-96); }
     .banda :global(.video--portada) { width: min(1148px, 85%); }
   }
-  .elogio :global(.foto--silla) { display: block; width: min(560px, 100%); height: auto; border-radius: var(--radio); }
   /* En cifras: la cifra y su explicación, con filete, como la ficha. */
   .cifras { display: flex; flex-direction: column; margin-block-start: var(--space-24); }
   .cifras > div { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); padding-block: var(--space-16); border-block-start: 1px solid var(--rule); }

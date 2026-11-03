@@ -72,9 +72,9 @@ interface Props {
   /** Los fondos recorren la lista UNA vez en 5 s y vuelven al primero, sin
       botón de pausa: no se mueve más de 5 s (2.2.2). Servicios, 03/11/2026. */
   fondosUnaVez?: boolean;
-  /** La ilustración al ancho de la flor de la Home (460 · 446 · 285), no al
-      alto de 400 · 320 · 240: un dibujo apaisado como el planeta se veía el
-      doble de grande. Servicios, 03/11/2026. */
+  /** La ilustración por ancho y no por alto (340 · 330 · 256): un dibujo
+      apaisado y denso como el planeta, a 400 de alto, se veía el doble de
+      grande que las de la Home. Servicios, 03/11/2026. */
   ilustracionComoHome?: boolean;
 }
 const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo', fondosUnaVez = false, ilustracionComoHome = false } = Astro.props;
@@ -354,10 +354,12 @@ const estilo = superficie ? `--surface-accent: ${superficie.fondo}; --focus-ring
   }
   @media (min-width: 768px) { .apertura :global(.apertura__ilustracion) { block-size: 320px; } }
   @media (min-width: 1024px) { .apertura :global(.apertura__ilustracion) { block-size: 400px; } }
-  /* Al ancho de la flor de la Home en cada tramo (`ilustracionComoHome`). */
-  .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 285px; }
-  @media (min-width: 768px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 446px; } }
-  @media (min-width: 1024px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 460px; } }
+  /* Por ancho (`ilustracionComoHome`), para que pese a la vista lo que el
+     dibujo de la flor en la Home (Johnny, 03/11/2026: «sigue super grande»;
+     en móvil, un 10 % menos que la primera vez). */
+  .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 256px; }
+  @media (min-width: 768px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 330px; } }
+  @media (min-width: 1024px) { .apertura--ilustracion-home :global(.apertura__ilustracion) { block-size: auto; inline-size: 340px; } }
 
   .apertura__titulo {
     margin: 0;

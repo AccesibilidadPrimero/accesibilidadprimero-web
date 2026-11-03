@@ -62,7 +62,7 @@ export const UI: Record<Lang, Dict> = {
     footerTagline: 'Accesibilidad Primero. Siempre.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'Nos gustan los proyectos que quieren llegar a más personas.',
+    ctaHeading: 'Nos gustan los proyectos\nque quieren llegar a más personas.',
     ctaAction: 'Cuéntanos tu proyecto',
     ctaCierre: 'Escríbenos',
     nav: {
