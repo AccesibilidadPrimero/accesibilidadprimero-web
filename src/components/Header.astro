@@ -60,7 +60,7 @@ const langs = alternates(current, slug);
                   aria-label={`${ui.submenuDe} ${ui.nav[key]}`}
                   data-submenu-boton
                 >
-                  <svg aria-hidden="true" focusable="false" viewBox="0 0 14 24" width="14" height="24"><path d="M7 0v21M1 15l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 10 16" width="10" height="16"><path d="M5 0v14.5M1 10.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
                 </button>
                 <ul id={`submenu-${key}`} class="header__sub" hidden data-submenu-panel>
                   {sub.map((s) => (
@@ -207,18 +207,26 @@ const langs = alternates(current, slug);
 
   /* Submenú de escritorio. El enlace conserva su relleno de 12 a la izquierda;
      a la derecha lo cede al botón, que mide 44 de ancho y lleva el chevrón
-     centrado: «Servicios ↓» se lee como una sola pieza. La flecha es la
-     completa del sistema (la de CtaLink, girada), no un chevrón (Johnny,
-     03/11/2026); abierto, apunta hacia arriba. */
+     centrado: «Servicios ↓» se lee como una sola pieza. La flecha es
+     completa, no un chevrón, y más corta que la de CtaLink para no pesar más
+     que la palabra (Johnny, 03/11/2026); abierto, apunta hacia arriba. */
   .header__item--sub { position: relative; display: flex; align-items: center; }
   .header__item--sub > .header__link { padding-inline-end: 0; }
   .header__sub-boton {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    /* La flecha a 8 de la palabra, no centrada en los 44: centrada quedaba
+       a 17 y se leía suelta. La zona pulsable sigue en 44. */
+    justify-content: flex-start;
     min-width: var(--touch-min);
     min-height: var(--touch-min);
-    padding: 0;
+    padding: 0 0 0 var(--space-8);
+    /* Lo que sobra de los 44 a la derecha de la flecha se monta sobre el
+       relleno de «Proyectos»: así entre flecha y palabra se ven ~24, como
+       entre las demás palabras del menú. Ninguna zona baja de 44. */
+    margin-inline-end: calc(var(--space-12) * -1);
+    position: relative;
+    z-index: 1;
     background: none;
     border: 0;
     color: var(--link);
