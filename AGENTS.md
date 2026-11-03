@@ -439,6 +439,23 @@ el botón no se pinta. `npm run movimiento` lo comprueba y `npm run contraste`
 mide la página en los tres colores. No hay frame en el Figma todavía: la
 página nace del código (Johnny, 30/10/2026).
 
+**Servicios, revisión 2 (03/11/2026).** Decisiones de Johnny sin frame de
+Figma (la página nace del código), con las microanimaciones del caso ECI como
+referencia:
+- La banda del hero da **una sola vuelta** a los tres colores en 5 s y
+  vuelve al menta (`fondosUnaVez`). Sin botón de pausa: no se mueve más de
+  5 s (2.2.2). El planeta va al ancho de la flor de la Home
+  (`ilustracionComoHome`).
+- Cada servicio y las tarifas son **desplegables** (`Bloque desplegable` y
+  `Plegable.astro`, script en `src/scripts/plegable.ts`): encabezado con un
+  `<button aria-expanded>` dentro y panel con `hidden`. Sin JS, abiertos.
+- **Microanimaciones** (`Microanimacion.astro`): una por punto, líneas de
+  1,5 px en Ink y un detalle en el color del servicio (diseño rosa,
+  auditoría amarillo, formación verde claro). `aria-hidden`, una sola vez
+  al verse y menos de 3 s, así que sin botón. Con «reducir movimiento» y
+  sin JS, el último fotograma quieto. `npm run movimiento` lo comprueba y
+  `npm run contraste` mide con todo abierto.
+
 **Páginas legales (11/10/2026).** Privacidad, Cookies y Declaración de
 accesibilidad salen de `src/data/legal.ts` con la plantilla
 `PaginaLegal.astro`. Ese archivo es también la fuente del texto del Figma:

@@ -68,7 +68,7 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   { nombre: 'Izaskun Etxebarria' },
   { nombre: 'Les Veus de la DANA' },
   { nombre: 'Elogio de la línea' },
-  { nombre: 'GUS, el perro guía', proyecto: 'Guía de estilo web' },
+  { nombre: 'WKND', proyecto: 'GUS, el perro guía' },
   { nombre: 'Teatro Off' },
 ];
 ---
@@ -84,12 +84,10 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
        400 · 320 · 240. Decorativo: ver SimboloAnimado.astro. -->
   <HeroPagina
     titulo="Código, diseño y palabra."
-    golpes={['Código,', 'diseño y', 'palabra.']}
-    enLineas
+    golpes={['Código, diseño', 'y palabra.']}
     enParrafos
     texto={[
       'La forma en que comunicamos construye realidades.',
-      'Por eso, trabajamos por un espacio digital más justo y abierto a todas las personas.',
     ]}
   >
     <SimboloAnimado slot="ilustracion" class="apertura__ilustracion" />
@@ -176,6 +174,12 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
 </Base>
 
 <style>
+  /* El titular: en una línea en escritorio y tableta; en móvil, partido
+     antes de «y palabra» (Johnny, 03/11/2026). El golpe lo declara
+     HeroPagina, de ahí el :global (AGENTS.md §6). */
+  @media (max-width: 767px) {
+    :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
+  }
   p { margin: 0; }
   ul { margin: 0; padding: 0; list-style: none; }
   .linea { display: block; }

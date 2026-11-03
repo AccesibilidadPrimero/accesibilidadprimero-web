@@ -22,16 +22,38 @@
 interface Props {
   id: string;
   titulo: string;
+  /** Plegado: el título es un botón que abre el contenido (Servicios,
+      Johnny, 03/11/2026). Comportamiento en src/scripts/plegable.ts. */
+  desplegable?: boolean;
   /** Banda de color: 'rosa' (Rose AP) o 'gris' (Silk). */
   fondo?: 'rosa' | 'gris';
 }
-const { id, titulo, fondo } = Astro.props;
+const { id, titulo, fondo, desplegable = false } = Astro.props;
 ---
 
-<section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
-  <h2 id={id} class="bloque__titulo">{titulo}</h2>
-  <div class="bloque__contenido"><slot /></div>
-</section>
+{desplegable ? (
+  <section class:list={['bloque', 'bloque--desplegable', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
+    <h2 class="bloque__titulo">
+      <button type="button" id={id} class="bloque__boton" aria-expanded="false" aria-controls={`${id}-panel`} data-plegable-boton>
+        <span>{titulo}</span>
+        {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
+        <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+          <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
+    </h2>
+    <div id={`${id}-panel`} class="bloque__contenido" hidden data-mov-propio><slot /></div>
+  </section>
+) : (
+  <section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
+    <h2 id={id} class="bloque__titulo">{titulo}</h2>
+    <div class="bloque__contenido"><slot /></div>
+  </section>
+)}
+
+<script>
+  import '../scripts/plegable';
+</script>
 
 <style>
   .bloque {
@@ -48,6 +70,32 @@ const { id, titulo, fondo } = Astro.props;
   .bloque__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .bloque__contenido { min-width: 0; }
 
+  /* ---- Desplegable (03/11/2026) ----
+     Los bloques plegados van seguidos, separados solo por un filete: con 128
+     de aire, una lista de títulos cerrados se deshace. El 128 que los separa
+     del hero lo pone la página en el contenedor (servicios.astro): entre dos
+     bloques Astro puede dejar un <script>, y un `+` de CSS no lo salta. */
+  .bloque--desplegable { gap: 0; margin-block-start: 0; }
+  /* El filete va en el título y no en la sección: así respeta los márgenes de
+     la página en vez de ir de borde a borde. */
+  .bloque--desplegable .bloque__titulo { border-block-start: 1px solid var(--rule); }
+  .bloque__boton {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);
+    inline-size: 100%; min-height: var(--touch-min); padding: var(--space-24) 0;
+    background: none; border: 0; color: var(--text); font: inherit; text-align: start; cursor: pointer;
+  }
+  .bloque__boton:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .bloque__signo { flex: none; transition: transform var(--dur-base) var(--ease-out); }
+  .bloque__boton:is(:hover, :focus-visible) .bloque__signo { transform: scale(1.2); }
+  .bloque__boton[aria-expanded='true'] .bloque__signo { transform: rotate(45deg); }
+  .bloque--desplegable .bloque__contenido { padding-block-end: var(--space-48); }
+  :global(html:not(.js)) .bloque--desplegable .bloque__contenido[hidden] { display: block; }
+  :global(html:not(.js)) .bloque__signo { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .bloque--desplegable .bloque__contenido:not([hidden]) { animation: bloque-despliega var(--dur-despliegue) var(--ease-asentar); }
+  }
+  @keyframes bloque-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
+
   @media (min-width: 1024px) {
     .bloque {
       display: grid;
@@ -57,5 +105,10 @@ const { id, titulo, fondo } = Astro.props;
     /* El nombre en su columna de 204, aunque sea largo («Organizaciones y
        proyectos» parte en dos renglones, como en el Figma). */
     .bloque__titulo { max-width: 204px; }
+    /* Plegado, el título ocupa la fila entera: el + a la derecha del todo,
+       y el contenido abierto debajo, en su columna. */
+    .bloque--desplegable { grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); }
+    .bloque--desplegable .bloque__titulo { grid-column: 1 / -1; max-width: none; }
+    .bloque--desplegable .bloque__contenido { grid-column: 2; }
   }
 </style>

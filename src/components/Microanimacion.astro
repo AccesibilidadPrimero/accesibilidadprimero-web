@@ -1,0 +1,208 @@
+---
+/* ---------------------------------------------------------------------------
+   Microanimaciones de Servicios (Johnny, 03/11/2026).
+
+   Un dibujo pequeño por punto, del lenguaje del esquema modular de ECI:
+   líneas de 1,5 px en Ink y UN detalle en el color del servicio —diseño en
+   rosa, auditoría en amarillo, formación en verde claro—. Sin texto dentro
+   (AGENTS.md §1).
+
+   · Ilustran lo que dice el texto de al lado: van con aria-hidden (ARIA
+     justificada, AGENTS.md §1). El lector de pantalla no se pierde nada.
+   · SE REPRODUCEN UNA VEZ, al entrar en pantalla (o al abrir su
+     desplegable), y duran menos de 3 s. Como ninguna se mueve más de 5 s,
+     no necesitan botón de pausa (2.2.2). Al terminar se quedan quietas en
+     su último fotograma.
+   · Sin JS y con «reducir movimiento» se ve el último fotograma, quieto: es
+     el estado del CSS sin animación.
+   · `npm run movimiento` comprueba que acaban antes de 3 s y que con
+     «reducir movimiento» no se animan.
+   --------------------------------------------------------------------------- */
+export type Tipo =
+  | 'medida' | 'stack' | 'gestor' | 'ligera' | 'declaracion' | 'prueba'
+  | 'jerarquia' | 'interaccion' | 'lenguaje'
+  | 'dia';
+interface Props { tipo: Tipo; color: 'rosa' | 'amarillo' | 'verde' }
+const { tipo, color } = Astro.props;
+const acento = { rosa: 'var(--rose-ap)', amarillo: 'var(--yellow-ap)', verde: 'var(--green-ap)' }[color];
+---
+
+<svg class:list={['mic', `mic--${tipo}`]} data-microanimacion style={`--acento:${acento}`}
+     viewBox="0 0 96 64" width="96" height="64" aria-hidden="true" focusable="false">
+  {tipo === 'medida' && (
+    <>
+      {/* Diseño a medida: un marco que sobra se ajusta a lo que contiene. */}
+      <rect class="a lleno" x="30" y="22" width="36" height="20" rx="3" />
+      <rect class="medida__marco" x="22" y="16" width="52" height="32" rx="4" />
+      <path class="t medida__cota" d="M22 56h52M22 53v6M74 53v6" />
+    </>
+  )}
+  {tipo === 'stack' && (
+    <>
+      {/* Un stack propio: tres capas que encajan una sobre otra. */}
+      <rect class="t capa capa--1" x="18" y="42" width="60" height="10" rx="2" />
+      <rect class="t capa capa--2" x="18" y="28" width="60" height="10" rx="2" />
+      <rect class="a capa capa--3" x="18" y="14" width="60" height="10" rx="2" />
+    </>
+  )}
+  {tipo === 'gestor' && (
+    <>
+      {/* Un gestor propio: una página que se rellena sin tocar código. */}
+      <rect class="t" x="12" y="8" width="72" height="48" rx="3" />
+      <path class="t" d="M12 16h72" />
+      <rect class="a lleno gestor__imagen" x="20" y="22" width="22" height="18" rx="2" />
+      <path class="t linea linea--1" d="M50 24h26" />
+      <path class="t linea linea--2" d="M50 32h20" />
+      <path class="t linea linea--3" d="M50 40h24" />
+      <path class="t linea linea--4" d="M20 48h44" />
+    </>
+  )}
+  {tipo === 'ligera' && (
+    <>
+      {/* Rápidas y sin plugins: los añadidos caen y la carga se llena. */}
+      <rect class="t plug plug--1" x="22" y="10" width="8" height="8" rx="1" />
+      <rect class="t plug plug--2" x="44" y="10" width="8" height="8" rx="1" />
+      <rect class="t plug plug--3" x="66" y="10" width="8" height="8" rx="1" />
+      <rect class="t" x="12" y="36" width="72" height="10" rx="5" />
+      <rect class="a lleno ligera__barra" x="14" y="38" width="68" height="6" rx="3" />
+    </>
+  )}
+  {tipo === 'declaracion' && (
+    <>
+      {/* Declaración al entregar: un documento que se escribe y se firma. */}
+      <path class="t" d="M30 6h26l10 10v42H30z M56 6v10h10" />
+      <path class="t linea linea--1" d="M36 24h22" />
+      <path class="t linea linea--2" d="M36 32h18" />
+      <path class="t linea linea--3" d="M36 40h20" />
+      <circle class="a lleno sello" cx="64" cy="50" r="9" />
+      <path class="t sello" d="M60 50l3 3 5-6" />
+    </>
+  )}
+  {tipo === 'prueba' && (
+    <>
+      {/* Probamos antes de publicar: el foco recorre la página, pieza a pieza. */}
+      <rect class="t" x="10" y="26" width="20" height="14" rx="2" />
+      <rect class="t" x="38" y="26" width="20" height="14" rx="2" />
+      <rect class="t" x="66" y="26" width="20" height="14" rx="2" />
+      <rect class="a foco prueba__foco" x="63" y="23" width="26" height="20" rx="4" />
+    </>
+  )}
+  {tipo === 'jerarquia' && (
+    <>
+      {/* Diseño e información: un título, su subrayado y el texto, en orden. */}
+      <rect class="a lleno jerarquia__marca" x="14" y="12" width="44" height="10" rx="1" />
+      <path class="t jerarquia__titulo" d="M16 17h40" />
+      <path class="t linea linea--1" d="M16 32h64" />
+      <path class="t linea linea--2" d="M16 40h56" />
+      <path class="t linea linea--3" d="M16 48h44" />
+    </>
+  )}
+  {tipo === 'interaccion' && (
+    <>
+      {/* Interacción y código: el foco pasa por los campos hasta el botón. */}
+      <rect class="t" x="16" y="8" width="64" height="12" rx="2" />
+      <rect class="t" x="16" y="26" width="64" height="12" rx="2" />
+      <rect class="t" x="16" y="44" width="30" height="12" rx="6" />
+      <rect class="a foco interaccion__foco" x="13" y="41" width="36" height="18" rx="8" />
+    </>
+  )}
+  {tipo === 'lenguaje' && (
+    <>
+      {/* Lenguaje: un garabato que se ordena en frases claras. */}
+      <path class="t" d="M12 8h72v36H40l-12 12V44H12z" />
+      <path class="t lenguaje__garabato" d="M20 26c4-10 8 10 12 0s8 10 12 0 8 10 12 0 8 10 12 0" />
+      <path class="t linea linea--1" d="M22 20h52" />
+      <path class="t linea linea--2" d="M22 28h40" />
+      <rect class="a lleno lenguaje__subrayado" x="22" y="34" width="28" height="4" rx="2" />
+    </>
+  )}
+  {tipo === 'dia' && (
+    <>
+      {/* Formación: la accesibilidad, día a día. Cinco días que se marcan. */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <>
+          <rect class="t" x={10 + i * 16} y="22" width="12" height="20" rx="2" />
+          <rect class={`a lleno dia dia--${i + 1}`} x={12 + i * 16} y="24" width="8" height="16" rx="1" />
+        </>
+      ))}
+    </>
+  )}
+</svg>
+
+<script>
+  /* Se reproduce una vez al entrar en pantalla. Un panel cerrado tiene
+     `hidden`: el observador no lo ve hasta que se abre, así que la animación
+     espera a que alguien lo despliegue. */
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('en-marcha');
+    io.unobserve(e.target);
+  }), { threshold: 0.6 });
+  document.querySelectorAll('[data-microanimacion]').forEach((m) => io.observe(m));
+</script>
+
+<style>
+  .mic { display: block; width: 96px; height: 64px; overflow: visible; color: var(--ink); }
+  .t { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .a.lleno { fill: var(--acento); stroke: none; }
+  .a.foco { fill: none; stroke: var(--acento); stroke-width: 3; }
+  .medida__marco { fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .plug, .lenguaje__garabato { opacity: 0; }
+  * { transform-box: fill-box; }
+
+  /* ---- La animación: solo con JS y sin «reducir movimiento». Hasta que
+     entra en pantalla está detenida en su primer fotograma. ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .mic * { animation-duration: var(--d, 900ms); animation-timing-function: var(--ease-out); animation-fill-mode: both; animation-play-state: paused; }
+    :global(html.js) .mic.en-marcha * { animation-play-state: running; }
+
+    :global(html.js) .medida__marco { animation-name: mic-ajusta; transform-origin: center; }
+    :global(html.js) .medida__cota { animation-name: mic-ajusta-cota; transform-origin: center; }
+
+    :global(html.js) .capa { animation-name: mic-cae; }
+    :global(html.js) .capa--2 { animation-delay: 250ms; }
+    :global(html.js) .capa--3 { animation-delay: 500ms; }
+
+    :global(html.js) .linea { animation-name: mic-traza; transform-origin: left center; }
+    :global(html.js) .linea--2 { animation-delay: 150ms; }
+    :global(html.js) .linea--3 { animation-delay: 300ms; }
+    :global(html.js) .linea--4 { animation-delay: 450ms; }
+    :global(html.js) .gestor__imagen { animation-name: mic-aparece; animation-delay: 700ms; transform-origin: center; }
+
+    :global(html.js) .plug { animation-name: mic-se-va; --d: 700ms; }
+    :global(html.js) .plug--2 { animation-delay: 150ms; }
+    :global(html.js) .plug--3 { animation-delay: 300ms; }
+    :global(html.js) .ligera__barra { animation-name: mic-traza; animation-delay: 500ms; --d: 600ms; transform-origin: left center; }
+
+    :global(html.js) .sello { animation-name: mic-aparece; animation-delay: 750ms; transform-origin: center; }
+
+    :global(html.js) .prueba__foco { animation-name: mic-recorre; --d: 1800ms; animation-timing-function: steps(1, end); }
+
+    :global(html.js) .jerarquia__marca { animation-name: mic-traza; animation-delay: 450ms; transform-origin: left center; }
+
+    :global(html.js) .interaccion__foco { animation-name: mic-baja; --d: 1800ms; animation-timing-function: steps(1, end); }
+
+    :global(html.js) .lenguaje__garabato { animation-name: mic-garabato; --d: 1200ms; }
+    :global(html.js) .lenguaje .linea, :global(html.js) .mic--lenguaje .linea { animation-delay: 900ms; }
+    :global(html.js) .mic--lenguaje .linea--2 { animation-delay: 1050ms; }
+    :global(html.js) .lenguaje__subrayado { animation-name: mic-traza; animation-delay: 1250ms; transform-origin: left center; }
+
+    :global(html.js) .dia { animation-name: mic-llena; transform-origin: center bottom; --d: 500ms; }
+    :global(html.js) .dia--2 { animation-delay: 250ms; }
+    :global(html.js) .dia--3 { animation-delay: 500ms; }
+    :global(html.js) .dia--4 { animation-delay: 750ms; }
+    :global(html.js) .dia--5 { animation-delay: 1000ms; }
+  }
+
+  @keyframes mic-ajusta { from { transform: scale(1.5, 1.6); stroke-dasharray: 4 3; } 80% { stroke-dasharray: 4 3; } to { transform: scale(1); stroke-dasharray: none; } }
+  @keyframes mic-ajusta-cota { from { transform: scaleX(1.5); } }
+  @keyframes mic-cae { from { transform: translateY(-14px); opacity: 0; } }
+  @keyframes mic-traza { from { transform: scaleX(0); } }
+  @keyframes mic-aparece { from { transform: scale(0); } 70% { transform: scale(1.15); } }
+  @keyframes mic-se-va { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(16px); } }
+  /* El foco salta de pieza en pieza, como con el tabulador. */
+  @keyframes mic-recorre { from { transform: translateX(-56px); } 33% { transform: translateX(-28px); } 66% { transform: translateX(0); } }
+  @keyframes mic-baja { from { transform: translateY(-36px); } 33% { transform: translateY(-18px); } 66% { transform: translateY(0); } }
+  @keyframes mic-garabato { from { opacity: 1; } 60% { opacity: 1; } to { opacity: 0; } }
+  @keyframes mic-llena { from { transform: scaleY(0); } }
+</style>

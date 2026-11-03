@@ -1,0 +1,47 @@
+---
+/* ---------------------------------------------------------------------------
+   Un desplegable dentro de un bloque (las tarifas de Servicios, 03/11/2026).
+   Encabezado de nivel 3 con su botón, y el panel debajo. El comportamiento
+   está en src/scripts/plegable.ts; el + que se vuelve × es el de
+   Disclosure.astro, el gesto de «desplegar» de toda la web.
+   --------------------------------------------------------------------------- */
+interface Props { id: string; titulo: string }
+const { id, titulo } = Astro.props;
+---
+
+<div class="plegable">
+  <h3 class="plegable__titulo">
+    <button type="button" class="plegable__boton" aria-expanded="false" aria-controls={`${id}-panel`} data-plegable-boton>
+      <span>{titulo}</span>
+      <svg class="plegable__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+        <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </button>
+  </h3>
+  <div id={`${id}-panel`} class="plegable__panel" hidden data-mov-propio><slot /></div>
+</div>
+
+<script>
+  import '../scripts/plegable';
+</script>
+
+<style>
+  .plegable { border-block-start: 1px solid var(--rule); }
+  .plegable__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .plegable__boton {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);
+    inline-size: 100%; min-height: var(--touch-min); padding: var(--space-12) 0;
+    background: none; border: 0; color: var(--text); font: inherit; text-align: start; cursor: pointer;
+  }
+  .plegable__boton:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .plegable__signo { flex: none; transition: transform var(--dur-base) var(--ease-out); }
+  .plegable__boton:is(:hover, :focus-visible) .plegable__signo { transform: scale(1.2); }
+  .plegable__boton[aria-expanded='true'] .plegable__signo { transform: rotate(45deg); }
+  .plegable__panel { padding-block: var(--space-8) var(--space-24); }
+  :global(html:not(.js)) .plegable__panel[hidden] { display: block; }
+  :global(html:not(.js)) .plegable__signo { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .plegable__panel:not([hidden]) { animation: plegable-despliega var(--dur-despliegue) var(--ease-asentar); }
+  }
+  @keyframes plegable-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
+</style>

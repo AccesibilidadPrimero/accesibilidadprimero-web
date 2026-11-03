@@ -42,8 +42,9 @@ const RUTAS = [
   { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
     preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
   { nombre: 'Estudio', url: '/estudio/', minimo: 30 },
-  /* Servicios: la banda del hero cambia de color cada 3 s. Se para con su
-     botón y se mide en cada uno de los tres colores (30/10/2026). */
+  /* Servicios: la banda del hero pasa por tres colores. Se mide en cada uno
+     (30/10/2026) y con todos los desplegables abiertos: lo que está cerrado
+     no se pinta y no se mediría (03/11/2026). */
   ...['var(--mint)', 'var(--rose-ap)', 'var(--yellow-ap)'].map((color) => ({
     nombre: `Servicios · ${color.slice(6, -1)}`, url: '/servicios/', minimo: 40,
     preparar: async (p) => {
@@ -53,6 +54,7 @@ const RUTAS = [
         const b = document.querySelector('[data-fondos-control]');
         if (b && !b.hidden) b.click();
         document.querySelector('[data-fondos]').style.setProperty('--surface-accent', c);
+        document.querySelectorAll('[data-plegable-boton][aria-expanded="false"]').forEach((x) => x.click());
       }, color);
       await p.waitForTimeout(1000);
     },

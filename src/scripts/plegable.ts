@@ -1,0 +1,23 @@
+/* ---------------------------------------------------------------------------
+   Desplegables de las páginas interiores (Servicios, 03/11/2026).
+
+   El patrón de acordeón de la WAI: el título es un encabezado de verdad y
+   dentro lleva un <button> con `aria-expanded` y `aria-controls`. El panel se
+   oculta con `hidden`, no con altura 0: lo que está cerrado no se lee.
+
+   Sin JS los paneles salen abiertos y los botones no se pintan (AGENTS.md
+   §5): el CSS lo resuelve con `html:not(.js)`. Lo usan Bloque.astro
+   (`desplegable`) y Plegable.astro, y Astro lo carga una sola vez.
+   --------------------------------------------------------------------------- */
+document.documentElement.classList.add('js');
+
+document.querySelectorAll<HTMLButtonElement>('[data-plegable-boton]').forEach((boton) => {
+  const panel = document.getElementById(boton.getAttribute('aria-controls') ?? '');
+  if (!panel) return;
+  boton.addEventListener('click', () => {
+    const abierto = boton.getAttribute('aria-expanded') === 'true';
+    boton.setAttribute('aria-expanded', String(!abierto));
+    panel.hidden = abierto;
+    // El foco se queda en el botón. Moverlo solo se justifica en diálogos.
+  });
+});
