@@ -267,7 +267,7 @@ for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'r
    · igual con reducir movimiento;
    · sin JS, la imagen fija con su alternativa y sin botón. */
 console.log('\n── Casos: vídeos ──\n');
-const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/'];
+const CASOS = ['/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/proyectos/itza/'];
 const TAMANOS = [['escritorio', 1440, 900], ['tableta', 820, 1180], ['movil', 390, 844]];
 const estadoVideo = (p, i) => p.evaluate((i) => {
   const raiz = document.querySelectorAll('[data-video-pausable]')[i];
@@ -282,7 +282,7 @@ const estadoVideo = (p, i) => p.evaluate((i) => {
     listo: v.classList.contains('is-listo'), oculto: v.getAttribute('aria-hidden') === 'true',
     visible: getComputedStyle(b).display !== 'none', nombre: b.textContent.replace(/\s+/g, ' ').trim(),
     alto: r.height, parado: raiz.hasAttribute('data-parado'),
-    alt: img?.alt ?? '', esperado: raiz.dataset[clave],
+    alt: img?.alt ?? '', esperado: raiz.dataset[clave], auto: raiz.hasAttribute('data-vp-auto'),
   };
 }, i);
 const alVideo = (p, i) => p.evaluate((i) => document.querySelectorAll('[data-video-pausable]')[i]?.scrollIntoView({ block: 'center' }), i);
@@ -302,10 +302,24 @@ for (const caso of CASOS) {
         // del botón se mide en 43,99 px por el redondeo del subpíxel.
         await alVideo(p, i); await p.waitForTimeout(1300);
         // Empieza en pausa (Johnny, 29/10/2026): quieto, sin descargar nada y con el icono de reproducir.
+        // Salvo `auto` (hero de Itza, 04/11/2026): arranca solo, una vez, con «Pausar» desde el
+        // principio; con reducir movimiento, quieto como los demás.
         const a = await estadoVideo(p, i);
+        const boton = p.locator('[data-vp-control]').nth(i);
+        if (a.auto && modo === 'con JS') {
+          await p.waitForFunction((i) => { const v = document.querySelectorAll('[data-video-pausable] video')[i]; return v && !v.paused && v.currentTime > 0; }, i, { timeout: 20000 }).catch(() => {});
+          const a2 = await estadoVideo(p, i);
+          anota(!a2.paused && !a2.loop && a2.src === a2.esperado && a2.visible && a2.alto >= 44 && a2.nombre.startsWith('Pausar · ') && a2.oculto && a2.alt.length >= 20,
+            `${id} · ${modo} · arranca solo, una vez (${a2.duracion?.toFixed(1)} s), con «${a2.nombre}»`);
+          await boton.click();
+          const t1 = (await estadoVideo(p, i)).t; await p.waitForTimeout(400);
+          const c = await estadoVideo(p, i);
+          anota(c.paused && c.t === t1 && c.parado && c.nombre.startsWith('Reproducir · '), `${id} · ${modo} · Pausar lo para`);
+          await ctx.close();
+          continue;
+        }
         anota(a.paused && !a.src && a.parado && a.visible && a.alto >= 44 && a.nombre.startsWith('Reproducir · ') && a.oculto && a.alt.length >= 20,
           `${id} · ${modo} · empieza en pausa, sin descargar, con «${a.nombre}» de ${Math.round(a.alto)} px`);
-        const boton = p.locator('[data-vp-control]').nth(i);
         await boton.click();
         await p.waitForFunction((i) => { const v = document.querySelectorAll('[data-video-pausable] video')[i]; return v && !v.paused && v.currentTime > 0 && v.classList.contains('is-listo'); }, i, { timeout: 20000 }).catch(() => {});
         const b = await estadoVideo(p, i);

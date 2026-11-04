@@ -43,16 +43,19 @@ export const PRODUCTOS: Producto[] = [
     href: '/proyectos/itza/',
     caso: 'itza',
     clase: 'producto--itza',
-    /* Desde el 04/11/2026, una imagen fija y no el vídeo de Off Escuela: el
-       asistente en nuestra propia web, con la misma conversación que el caso.
-       Los tres productos, con el mismo tratamiento: la interfaz sola, sin
-       marco de móvil, sobre su color. */
-    imagen: 'itza',
-    alt:
-      'El asistente Itza abierto: Marta pregunta si hacemos auditorías de accesibilidad ' +
-      'y el asistente le responde que auditamos la web con WCAG 2.2 y la normativa ' +
-      'vigente, explicamos cada barrera, damos un plan para quitarlas y preparamos la ' +
-      'declaración de accesibilidad.',
+    /* Vídeo otra vez (Johnny, 04/11/2026), grabado sobre nuestra web: Marta
+       pulsa una pregunta sugerida y el asistente responde. 4,3 s, una vez,
+       sin botón (2.2.2); lo vigila `npm run teclado`. */
+    video: {
+      mp4: '/video/itza.mp4',
+      webm: '/video/itza.webm',
+      descripcion:
+        'El asistente Itza abierto: Marta pulsa la pregunta sugerida “¿Hacéis auditorías ' +
+        'de accesibilidad?” y el asistente le responde que auditamos la web con WCAG 2.2 y ' +
+        'la normativa vigente, explicamos cada barrera, damos un plan para quitarlas y ' +
+        'preparamos la declaración de accesibilidad.',
+    },
+    /* En el listado de Proyectos, la imagen fija con transparencia. */
     tarjeta: {
       captura: 'itza',
       color: 'var(--mint)',
@@ -76,9 +79,9 @@ export const PRODUCTOS: Producto[] = [
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
     alt:
-      'El panel de la extensión A11y Primero sobre nuestra propia web: 100, sin fallos ' +
-      'automáticos, dos comprobaciones para revisar a mano y las cuatro barras por ' +
-      'apartado (imágenes, estructura, formularios y contraste) al máximo.',
+      'El panel de la extensión A11y Primero sobre una web de ejemplo: 92, pocos fallos ' +
+      'automáticos, y las cuatro barras por apartado: imágenes 100 y formularios 94 en ' +
+      'verde, estructura 86 y contraste 74 en naranja.',
     tarjeta: {
       captura: 'a11y-primero',
       color: 'var(--yellow-ap)',
