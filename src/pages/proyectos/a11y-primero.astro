@@ -27,6 +27,7 @@
      «queda muy pobre»).
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
+import CtaLink from '../../components/CtaLink.astro';
 import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
@@ -42,6 +43,8 @@ const datos = [
   ['Año', '2026'],
   ['Rol', 'Desarrollo'],
   ['Estándar', 'WCAG 2.2 A/AA'],
+  /* Su estado, a la vista (auditoría de usabilidad, 04/11/2026). */
+  ['Estado', 'En revisión en la Chrome Web Store'],
 ];
 const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
 ---
@@ -75,6 +78,10 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
         <p>A11y Primero es una extensión de Chrome que analiza la accesibilidad de una página en un clic, con axe-core y los criterios de WCAG 2.2.</p>
         <p>La hicimos para nuestro propio trabajo: es la herramienta con la que empezamos cada auditoría del estudio. Y la preparamos para que la use cualquiera que quiera saber por dónde empezar con su web.</p>
         <p>Las capturas de esta página son la extensión evaluando esta misma web.</p>
+        {/* El siguiente paso (auditoría de usabilidad, 04/11/2026): todavía
+            no se puede instalar, así que no se promete una descarga. */}
+        <p>Todavía no se puede instalar: está en revisión en la Chrome Web Store. Si quieres probarla antes, escríbenos.</p>
+        <CtaLink href="/contacto/">Quiero probar A11y Primero</CtaLink>
       </div>
     </section>
 
