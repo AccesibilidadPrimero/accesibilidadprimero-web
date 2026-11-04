@@ -13,19 +13,28 @@
    sin llamar al servicio real; las preguntas sugeridas son las que tendría
    esta web. Lo dice el propio caso.
 
+   VÍDEOS (Johnny, 04/11/2026: «explicar bien la experiencia simulando
+   consultas»): el hero, las preguntas sugeridas y el contacto al cerrar son
+   grabaciones del widget con una persona ficticia (Marta) que escribe y
+   pulsa. El hero arranca solo, una vez, con botón de pausa (dura 13 s); los
+   otros dos, como en todos los casos, los arranca quien mira.
+
    Off Escuela sale nombrada, sin captura: el widget se está instalando allí
    y todavía no está activo (Johnny, 04/11/2026).
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
-import hero from '../../assets/proyectos/itza/hero.jpg';
+import VideoPausable from '../../components/VideoPausable.astro';
 import movil from '../../assets/proyectos/itza/movil.jpg';
-import sugerencias from '../../assets/proyectos/itza/sugerencias.jpg';
-import contacto from '../../assets/proyectos/itza/contacto.jpg';
+import posterHero from '../../assets/proyectos/itza/itza-hero-fotograma.png';
+import posterSugerencias from '../../assets/proyectos/itza/itza-sugerencias-fotograma.png';
+import posterContacto from '../../assets/proyectos/itza/itza-contacto-fotograma.png';
+const video = (n: string, poster: ImageMetadata) => ({ escritorio: { archivo: `/video/itza-${n}.mp4`, poster } });
 
 const titulo = 'Itza';
 const datos = [
@@ -49,9 +58,18 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       golpes={['Ninguna pregunta', 'sin respuesta.']}
       texto={['Itza · Caso de estudio']}
       superficie={{ fondo: 'var(--mint-video)', foco: 'var(--blue-ap)' }}
-      ilustracion={hero}
-      alt="La ventana de Itza: Marta dice su nombre, pregunta si hacemos auditorías de accesibilidad y el asistente le responde qué incluye la auditoría; debajo, la barra “Pregúntame lo que necesites” con el botón de voz."
-    />
+    >
+      <VideoPausable
+        slot="ilustracion"
+        class="itza-hero"
+        auto
+        {...video('hero', posterHero)}
+        alt="Una consulta en Itza: Marta pulsa la barra “Pregúntame lo que necesites”, se abre la ventana y el asistente le pregunta cómo llamarla. Escribe “Me llamo Marta”, elige la pregunta sugerida “¿Hacéis auditorías de accesibilidad?” y el asistente responde que auditamos la web con WCAG 2.2 y la normativa vigente, explicamos cada barrera, damos un plan para quitarlas y preparamos la declaración de accesibilidad."
+        nombre="la consulta de Marta"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '400px', tableta: '330px', movil: '286px' }}
+      />
+    </HeroPagina>
 
     <section class="datos" aria-labelledby="datos">
       <h2 id="datos" class="sr-only">Datos del proyecto</h2>
@@ -94,14 +112,13 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
     </section>
 
     <figure class="pieza pieza--centro">
-      <Picture
-        src={sugerencias}
-        formats={['avif', 'webp']}
-        widths={anchos(sugerencias.width, [640, 1100, 1600, 2200])}
-        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
-        alt="Itza en esta web después de saludar a Marta: cuatro preguntas sugeridas, “¿Qué servicios ofrecéis?”, “¿Hacéis auditorías de accesibilidad?”, “¿Cómo es trabajar con vosotros?” y “Quiero contaros mi proyecto”."
-        class="captura"
-        loading="lazy"
+      <VideoPausable
+        class="captura-video"
+        {...video('sugerencias', posterSugerencias)}
+        alt="Itza en esta web: Marta pulsa la barra del pie de la página, escribe su nombre y el asistente la saluda y le ofrece cuatro preguntas sugeridas, “¿Qué servicios ofrecéis?”, “¿Hacéis auditorías de accesibilidad?”, “¿Cómo es trabajar con vosotros?” y “Quiero contaros mi proyecto”, que el cursor recorre una a una."
+        nombre="las preguntas sugeridas"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '(min-width: 1440px) 1100px, 76vw', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' }}
       />
       <figcaption>Preguntas sugeridas</figcaption>
     </figure>
@@ -116,14 +133,13 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
     </section>
 
     <figure class="pieza pieza--derecha">
-      <Picture
-        src={contacto}
-        formats={['avif', 'webp']}
-        widths={[contacto.width / 2, contacto.width]}
-        sizes="(min-width: 768px) 420px, calc(100vw - 48px)"
-        alt="Al cerrar la conversación, Itza pregunta “¿Te ha sido útil? Déjanos tus datos”, con los campos de nombre y correo, el botón “Enviar y cerrar” y la opción “Cerrar sin dejar datos”."
-        class="captura captura--ventana"
-        loading="lazy"
+      <VideoPausable
+        class="captura-video captura-video--ventana"
+        {...video('contacto', posterContacto)}
+        alt="Al cerrar la conversación, Itza pregunta “¿Te ha sido útil? Déjanos tus datos”. Marta escribe su nombre y su correo, pulsa “Enviar y cerrar” y el asistente le da las gracias y le deja el correo del estudio. También se puede cerrar sin dejar datos."
+        nombre="el contacto al cerrar"
+        lang={DEFAULT_LANG}
+        sizes={{ escritorio: '420px', tableta: '420px', movil: 'calc(100vw - 48px)' }}
       />
       <figcaption>Al cerrar</figcaption>
     </figure>
@@ -194,9 +210,10 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
 
   /* La ventana del hero, más alta que una ilustración (400): a ese tamaño
      la conversación no se leía. Cabe en lo que deja libre el titular. */
-  .itza :global(.apertura__ilustracion) { block-size: 400px; }
-  @media (min-width: 768px) { .itza :global(.apertura__ilustracion) { block-size: 460px; } }
-  @media (min-width: 1024px) { .itza :global(.apertura__ilustracion) { block-size: 560px; } }
+  /* Desde el 04/11/2026 es un vídeo: el ancho sale del alto (1032 × 1444). */
+  .itza :global(.itza-hero) { --alto: 400px; inline-size: calc(var(--alto) * 1032 / 1444); max-inline-size: 100%; }
+  @media (min-width: 768px) { .itza :global(.itza-hero) { --alto: 460px; } }
+  @media (min-width: 1024px) { .itza :global(.itza-hero) { --alto: 560px; } }
 
   /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
   .itza :global(.captura) {
@@ -211,6 +228,10 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
   /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
   .itza :global(.captura--movil) { width: min(360px, 100%); }
   .itza :global(.captura--ventana) { width: min(420px, 100%); box-shadow: none; }
+  /* Los vídeos, con la misma sombra que las capturas. */
+  .itza :global(.captura-video .vp__marco) { border-radius: var(--radio); box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08); }
+  .itza :global(.captura-video--ventana) { width: min(420px, 100%); }
+  .itza :global(.captura-video--ventana .vp__marco) { box-shadow: none; }
   .pieza--derecha figcaption { width: min(420px, 100%); }
   @media (min-width: 1024px) {
     .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }

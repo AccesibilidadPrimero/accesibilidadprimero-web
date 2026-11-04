@@ -85,12 +85,15 @@ transparente para que el color lo ponga la página. 1.264 de alto a 2x.
 
 | Archivo | Qué se ve |
 |---|---|
-| `itza.webp` | El asistente sobre nuestra web, con la conversación del caso (Marta, ficticia). |
-| `a11y-primero.webp` | El panel, pestaña Resumen, analizando nuestra propia web: 100. |
+| `itza.webp` | El asistente sobre nuestra web, con la conversación del caso (Marta, ficticia). Solo en el listado de Casos. |
+| `itza.mp4` · `.webm` | La Home: Marta pulsa una sugerencia y el asistente responde. 4,3 s, una vez, sin botón. Pósteres `itza-inicio.png` y `itza-fotograma.png`, sacados del vídeo tal como lo pinta Chrome, para que no se note la junta con el campo (`--mint-video`). |
+| `a11y-primero.webp` | El panel, pestaña Resumen, con nota 92 sobre una web de ejemplo (más color: barras verdes y naranjas). |
 | `accesible-abstracts.webp` | El formulario de envío de ECI en el móvil, vacío (producción). |
 
 Sustituyen al vídeo de Itza en Off Escuela, al panel antiguo de A11y Primero
 (el 72) y al móvil de la landing de Accesible Abstracts.
+
+**Itza en su caso** (`arte/proyectos/itza/`, 04/11/2026): `itza-hero`, `itza-sugerencias` e `itza-contacto`, en `.mp4` y `.webm`, cada uno con su `-fotograma.png`. Grabados con el widget real y respuestas de ejemplo; el cursor es dibujado. El hero arranca solo, una vez (13 s), con botón de pausa; los otros dos, al pulsar.
 
 ## 4 · Icono de Estudio · `arte/estudio/` · 1 SVG
 

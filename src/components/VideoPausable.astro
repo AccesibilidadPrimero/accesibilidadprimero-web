@@ -27,6 +27,12 @@
      Como nada se mueve sin que la persona lo pida, 2.2.2 se cumple de
      sobra; el botón de pausa sigue ahí para pararlo.
    · Sin JS no hay botón, porque no haría nada.
+   · `auto` (04/11/2026, hero de Itza): arranca solo, UNA vez y sin bucle,
+     y se queda en el último fotograma. Como dura más de 5 s, el botón de
+     pausa es obligatorio (2.2.2) y está desde el principio. Con «reducir
+     movimiento» no arranca: se queda la imagen fija, que en este caso es el
+     ÚLTIMO fotograma, el final de la consulta. Al terminar, el botón vuelve
+     a «Reproducir» y la vuelve a empezar.
    `npm run movimiento` lo mide sobre los archivos servidos (§2.9).
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
@@ -47,8 +53,10 @@ interface Props {
   /** El ancho con que se pinta en cada tamaño, para elegir la imagen. */
   sizes: { escritorio: string; tableta: string; movil: string };
   class?: string;
+  /** Arranca solo, una vez (ver arriba). */
+  auto?: boolean;
 }
-const { escritorio, tableta = escritorio, alt, nombre, lang, sizes, class: clase } = Astro.props;
+const { escritorio, tableta = escritorio, alt, nombre, lang, sizes, class: clase, auto = false } = Astro.props;
 /* En móvil, la versión de tableta (Johnny, 03/11/2026): se acepta `movil`
    para no tocar los casos, pero no se usa. */
 const movil = tableta;
@@ -68,7 +76,7 @@ const pM = await fuentes(movil.poster, [280, 560, 780]);
 const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.poster.width), format: 'jpg', quality: 'high' });
 ---
 
-<div class:list={['vp', clase]} data-video-pausable data-parado
+<div class:list={['vp', clase]} data-video-pausable data-parado data-vp-auto={auto ? '' : undefined}
      data-video-escritorio={escritorio.archivo} data-video-tableta={tableta.archivo} data-video-movil={movil.archivo}>
   <div class="vp__marco">
     <picture>
@@ -80,7 +88,7 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
       <source type="image/webp" srcset={pM.webp} sizes={sizes.movil} width={pM.w} height={pM.h} />
       <img src={respaldo.src} width={pM.w} height={pM.h} alt={alt} class="vp__imagen" loading="lazy" decoding="async" />
     </picture>
-    <video class="vp__video" aria-hidden="true" muted loop playsinline preload="none"></video>
+    <video class="vp__video" aria-hidden="true" muted loop={!auto} playsinline preload="none"></video>
   </div>
   <button type="button" class="vp__control" data-vp-control
           data-label-pausar={ui.carouselPause} data-label-reproducir={ui.carouselPlay}>
@@ -102,7 +110,8 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
     const tableta = window.matchMedia('(min-width: 768px)');
     const pausar = control.dataset.labelPausar ?? 'Pausar';
     const reproducir = control.dataset.labelReproducir ?? 'Reproducir';
-    let quiere = false;   // empieza en pausa: lo arranca la persona
+    // Empieza en pausa y lo arranca la persona, salvo `auto` sin «reducir movimiento».
+    let quiere = raiz.hasAttribute('data-vp-auto') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let visible = false;
 
     const archivo = () => (escritorio.matches ? raiz.dataset.videoEscritorio
@@ -121,6 +130,7 @@ const respaldo = await getImage({ src: movil.poster, width: Math.min(560, movil.
     };
 
     video.addEventListener('playing', () => video.classList.add('is-listo'));
+    video.addEventListener('ended', () => { quiere = false; pintar(); });
     control.addEventListener('click', () => { quiere = !quiere; sincronizar(); });
     // Al cambiar de tamaño se vuelve a la imagen fija hasta que el otro vídeo arranque.
     [escritorio, tableta].forEach((m) => m.addEventListener('change', () => {
