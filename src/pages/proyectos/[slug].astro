@@ -20,7 +20,7 @@
    --------------------------------------------------------------------------- */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { Picture, getImage } from 'astro:assets';
-import SiguienteProyecto from '../../components/SiguienteProyecto.astro';
+import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
@@ -179,15 +179,8 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
       <Testimonio {...c.testimonio} fondo={d.paleta.acento} texto={d.paleta.textoSobreAcento} foco={d.paleta.anilloFoco} />
     )}
 
-    {/* Accesibilidad: solo el enlace a la declaración del cliente (Johnny,
-        23/10). Los puntos medidos siguen en el contenido, sin pintarse. */}
-    {c.accesibilidad.declaracion && (
-      <p class="seccion declaracion">
-        <CtaLink href={c.accesibilidad.declaracion}>Declaración de accesibilidad de {d.titulo}</CtaLink>
-      </p>
-    )}
   </div>
-  <SiguienteProyecto actual={p.id} />
+  <CierreProyecto actual={p.id} declaracion={c.accesibilidad.declaracion} titulo={d.titulo} />
 </Base>
 
 
@@ -315,9 +308,4 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
      suya y el resto entra detrás, como en Estudio. */
   .caso :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
 
-  /* La declaración: un enlace solo, con el aire de una sección. */
-  .declaracion { display: block; }
-  /* En escritorio, el enlace a la declaración en una sola línea (Johnny,
-     03/11/2026); por debajo, como cualquier enlace, puede partir. */
-  @media (min-width: 1024px) { .declaracion :global(.cta) { white-space: nowrap; } }
 </style>

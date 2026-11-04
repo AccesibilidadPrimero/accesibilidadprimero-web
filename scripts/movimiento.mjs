@@ -297,7 +297,10 @@ for (const caso of CASOS) {
         const ctx = await navegador.newContext({ viewport: { width: w, height: h }, ...opciones });
         const p = await ctx.newPage();
         await p.goto(`http://localhost:${PUERTO}${caso}`, { waitUntil: 'load' });
-        await alVideo(p, i); await p.waitForTimeout(900);
+        // 1300 y no 900 (04/11/2026): los vídeos de los casos entran ahora con la
+        // aparición al hacer scroll (1,2 s), y a mitad del desplazamiento el alto
+        // del botón se mide en 43,99 px por el redondeo del subpíxel.
+        await alVideo(p, i); await p.waitForTimeout(1300);
         // Empieza en pausa (Johnny, 29/10/2026): quieto, sin descargar nada y con el icono de reproducir.
         const a = await estadoVideo(p, i);
         anota(a.paused && !a.src && a.parado && a.visible && a.alto >= 44 && a.nombre.startsWith('Reproducir · ') && a.oculto && a.alt.length >= 20,

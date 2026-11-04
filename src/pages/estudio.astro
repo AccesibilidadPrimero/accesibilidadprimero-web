@@ -187,6 +187,13 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
 </Base>
 
 <style>
+  /* El correo, en la misma línea base que «Contacto» (Johnny, 04/11/2026). El
+     enlace mide 44 de alto (zona táctil) con el texto centrado, así que su
+     renglón caía 10 px más abajo que el del título. Se sube esa diferencia;
+     la zona táctil no cambia. En móvil van apilados y no hace falta. */
+  @media (min-width: 1024px) {
+    .pila--contacto > :global(.cta:first-child) { margin-block-start: calc((var(--texto-leading) - var(--touch-min)) / 2); }
+  }
   /* El titular: en una línea en escritorio y tableta; en móvil, partido
      antes de «y palabra» (Johnny, 03/11/2026). El golpe lo declara
      HeroPagina, de ahí el :global (AGENTS.md §6). */

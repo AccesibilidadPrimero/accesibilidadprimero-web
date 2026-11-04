@@ -30,8 +30,10 @@ const PIEZAS: Array<[selector: string, orden: Orden]> = [
   // Cada proyecto: título y nota · texto y enlace · capturas.
   ['.proyecto__intro', 0],
   ['.proyecto__cuerpo', 1],
-  ['.proyecto__cta', 1],
   ['.proyecto .slider', 2],
+  /* El enlace al caso va DEBAJO de las capturas en los tres proyectos desde
+     el 04/11/2026: entra el último. */
+  ['.proyecto__cta', 2],
   // Productos: la frase, y las tres columnas de izquierda a derecha.
   ['.producto', 'posicion'],
   // Estudio: símbolo · frase · enlace.
@@ -54,7 +56,26 @@ const PIEZAS: Array<[selector: string, orden: Orden]> = [
   ['.caso .decision', 'posicion'],
   ['.caso .banda-equipo > picture', 0],
   ['.caso .testimonio', 1],
-  ['.caso .declaracion', 0],
+  /* Revisión del 04/11/2026 (Johnny: «a veces no son muy fluidas»). Hasta
+     hoy solo se movían la Home y Foc i Cor; el resto de páginas se quedaban
+     quietas y solo el cierre entraba, así que el mismo gesto de scroll se
+     sentía distinto en cada página. Ahora late todo igual:
+
+     Casos con maqueta propia (ECI, Izaskun, Elogio): la etiqueta, el texto,
+     las piezas y bandas con vídeo, y lo que va en fila por su sitio. */
+  ['.datos__lista > div', 'posicion'],
+  ['.bloque__etiqueta', 0],
+  ['.bloque__esquema', 1],
+  ['.decisiones__enunciado', 0],
+  ['.decisiones__lista > li', 'posicion'],
+  ['.pieza', 0],
+  ['.banda', 0],
+  // El cierre de cada caso (CierreProyecto.astro): declaración y siguiente.
+  ['.cierre__declaracion', 0],
+  ['.siguiente', 1],
+  // Páginas interiores con Bloque (Estudio, Qué hacemos, Contacto) y casos.
+  ['.bloque__titulo:not(.sr-only)', 0],
+  ['.bloque__contenido:not([hidden])', 1],
 ];
 
 /* Las tres frases que abren bloque. Son el acento: entran renglón a renglón.
@@ -166,26 +187,28 @@ function arrancar() {
      como la curva hace casi todo el recorrido en el primer tercio, termina
      antes de llegar a la zona de lectura. */
   /* EL ESCALONADO, SOLO ENTRE LO QUE ENTRA A LA VEZ (Johnny, 10/10: «el
-     ritmo de navegación, que sea como el escritorio»). En escritorio el
-     título, la copia y las capturas de un proyecto asoman juntos y el orden
-     fijo de PIEZAS los escalona: empiezan uno tras otro y se posan a la vez.
-     Por debajo de 1024 todo va apilado y cada pieza entra SOLA, así que ese
-     mismo orden fijo no escalonaba nada: solo añadía retraso. Las capturas
-     esperaban 240 ms sin nadie delante, y los productos (orden por columna)
-     entraban cada uno con un retraso distinto sin motivo.
+     ritmo de navegación, que sea como el escritorio»). Lo que entra en la
+     misma tanda se escalona: primero lo de arriba y, a la misma altura, en el
+     orden de PIEZAS (lo que nombra, lo que explica, la imagen) y de izquierda
+     a derecha. Lo que entra solo, sale ya.
 
-     Así que en tableta y móvil el orden se reparte en el momento: lo que
-     entra en la misma tanda se escalona por su sitio en la página, y lo que
-     entra solo, sale ya. Es la misma sensación que en escritorio. */
-  const estrecho = window.matchMedia('(max-width: 1023px)');
+     Hasta el 04/11/2026 esto solo se hacía por debajo de 1024; en escritorio
+     mandaba el orden fijo, y una pieza que asomaba sola esperaba igual sus
+     120 o 240 ms sin nadie delante. Con el enlace de ECI debajo de un slider
+     de 900 px, ese retraso se notaba como un tirón: el bloque llegaba tarde.
+     Ahora el orden se reparte en el momento en todos los anchos. */
+  const ordenFijo = new Map<HTMLElement, number>();
   const observador = new IntersectionObserver(
     (entradas) => {
-      if (estrecho.matches) {
-        entradas
-          .filter((e) => e.isIntersecting && !(e.target as HTMLElement).dataset.renglones)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-          .forEach((e, i) => (e.target as HTMLElement).style.setProperty('--orden', String(Math.min(i, 2))));
-      }
+      entradas
+        .filter((e) => e.isIntersecting && !(e.target as HTMLElement).dataset.renglones)
+        .sort((a, b) =>
+          // Misma fila (24 px de margen) → orden de lectura; si no, de arriba abajo.
+          Math.abs(a.boundingClientRect.top - b.boundingClientRect.top) < 24
+            ? (ordenFijo.get(a.target as HTMLElement) ?? 0) - (ordenFijo.get(b.target as HTMLElement) ?? 0) ||
+              a.boundingClientRect.left - b.boundingClientRect.left
+            : a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach((e, i) => (e.target as HTMLElement).style.setProperty('--orden', String(Math.min(i, 2))));
       for (const e of entradas) {
         if (!e.isIntersecting) continue;
         const el = e.target as HTMLElement;
@@ -201,7 +224,12 @@ function arrancar() {
   const alto = window.innerHeight;
   for (const [selector, orden] of PIEZAS) {
     document.querySelectorAll<HTMLElement>(selector).forEach((el, i) => {
+      if (el.dataset.aparece) return; // ya lo marcó un selector anterior
+      /* Nunca uno dentro de otro: los dos desplazamientos se sumarían (32 px)
+         y el de dentro llegaría a destiempo. Manda el de fuera. */
+      if (el.parentElement?.closest('[data-aparece]') || el.querySelector('[data-aparece]')) return;
       if (el.getBoundingClientRect().top < alto) return; // ya se ve: quieto
+      ordenFijo.set(el, orden === 'posicion' ? i % 3 : orden);
       el.style.setProperty('--orden', String(orden === 'posicion' ? i % 3 : orden));
       el.dataset.aparece = 'espera';
       observador.observe(el);
@@ -211,6 +239,7 @@ function arrancar() {
   for (const selector of FRASES) {
     const frase = document.querySelector<HTMLElement>(selector);
     if (!frase || frase.getBoundingClientRect().top < alto) continue;
+    if (frase.parentElement?.closest('[data-aparece]')) continue;
     frase.dataset.aparece = 'espera';
     if (!reducido) {
       frase.dataset.renglones = '';

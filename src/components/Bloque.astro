@@ -98,7 +98,15 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
   @media (prefers-reduced-motion: no-preference) {
     :global(html.js) .bloque--desplegable .bloque__contenido:not([hidden]) { animation: bloque-despliega var(--dur-despliegue) var(--ease-asentar); }
   }
+  /* Reducir no es eliminar (AGENTS.md §2.3, 04/11/2026): sin desplazamiento,
+     el fundido de 300 ms. El panel lleva data-mov-propio, así que la regla
+     global no lo deja en 0,01 ms; sin esto, con reducir movimiento se abría
+     de golpe. */
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .bloque--desplegable .bloque__contenido:not([hidden]) { animation: bloque-funde var(--dur-fundido-reducido) linear; }
+  }
   @keyframes bloque-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
+  @keyframes bloque-funde { from { opacity: 0; } }
 
   @media (min-width: 1024px) {
     .bloque {

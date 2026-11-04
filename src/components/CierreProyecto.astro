@@ -1,0 +1,66 @@
+---
+/* ---------------------------------------------------------------------------
+   Cierre de cada caso (Johnny, 04/11/2026: «todos los cierres de proyectos
+   deben ser iguales», con el de Izaskun de referencia)
+
+   Dos piezas centradas, una debajo de otra:
+   1. La declaración de accesibilidad del cliente, si la hay (Elogio de la
+      línea no la tiene publicada). En dos líneas, como en Izaskun.
+   2. «Ver <siguiente proyecto>», con el nombre del proyecto y no
+      «Siguiente», para que el enlace diga adónde lleva sin contexto (2.4.4).
+      El orden es el de Proyectos (`orden`). Después del último caso no se
+      vuelve al primero: «Ver todos los casos de estudio» lleva al listado,
+      donde también están los productos (Johnny, 04/11/2026; los productos
+      no tienen todavía página propia). Usa `nombreCorto`
+      si lo hay («Ver ECI Conference»). Va en un <nav> con nombre propio para
+      que se pueda saltar a él como región.
+   Entre las dos, 48: van juntas, más cerca entre sí que del resto (antes
+   eran 96 + 128 y el enlace se quedaba suelto).
+   --------------------------------------------------------------------------- */
+import { getCollection } from 'astro:content';
+import CtaLink from './CtaLink.astro';
+
+interface Props {
+  actual: string;
+  /** La declaración publicada en la web del cliente. */
+  declaracion?: string;
+  titulo: string;
+}
+const { actual, declaracion, titulo } = Astro.props;
+
+const casos = (await getCollection('proyectos'))
+  .filter((p) => p.data.casoPublicado)
+  .sort((a, b) => a.data.orden - b.data.orden);
+const i = casos.findIndex((c) => c.id === actual);
+if (i < 0) throw new Error(`CierreProyecto: «${actual}» no es un caso publicado.`);
+const siguiente = casos[i + 1];
+---
+
+<div class="cierre">
+  {declaracion && (
+    <p class="cierre__declaracion">
+      <CtaLink href={declaracion}><span class="linea">Declaración de accesibilidad</span> <span class="linea">de {titulo}</span></CtaLink>
+    </p>
+  )}
+  <nav class="siguiente" aria-label="Siguiente proyecto">
+    {siguiente ? (
+      <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.data.nombreCorto ?? siguiente.data.titulo}</CtaLink>
+    ) : (
+      <CtaLink href="/proyectos/" size="large">Ver todos los casos de estudio</CtaLink>
+    )}
+  </nav>
+</div>
+
+<style>
+  .cierre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page) 0;
+    text-align: center;
+  }
+  @media (min-width: 768px) { .cierre { padding-block-start: var(--space-96); } }
+  .cierre__declaracion { margin: 0; }
+  .cierre__declaracion :global(.linea) { display: block; }
+</style>
