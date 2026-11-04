@@ -61,5 +61,5 @@ difíciles de usar.
 En ECI, el programa se recorre y se filtra en la propia web, sin
 descargar nada.
 
-Y para la gestión de abstracts creamos nuestra propia plataforma. Accessible
+Y para la gestión de abstracts creamos nuestra propia plataforma. Accesible
 Abstracts.

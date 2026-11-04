@@ -62,13 +62,8 @@ const ESPERADO = {
      Móvil 390). Se piden a 588 × 1280. */
   ...Object.fromEntries(['eci', 'foc', 'izaskun'].flatMap((p) =>
     [1, 2, 3].map((n) => [`proyectos/${p}-${n}-movil.png`, [294, 640]]))),
-  /* Productos: el hueco es 392 × 403, pero el móvil entra encajado por el
-     alto, así que lo que hay que medir es el dibujo: 403 de alto y el ancho
-     que le da su proporción (0,486), 196. */
-  'productos/itza-fotograma.png': [196, 403],
-  'productos/itza-inicio.png': [196, 403],
-  'productos/a11y-primero.png': [196, 403],
-  'productos/accessible-abstracts.png': [196, 403],
+  /* Productos (04/11/2026): WebP con transparencia, la interfaz con su
+     sombra; no pasan por esta tabla. */
 };
 
 /* Lee el tamaño de un PNG sin dependencias: va en la cabecera IHDR. */

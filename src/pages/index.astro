@@ -52,7 +52,7 @@ const conCuerpo = await Promise.all(
    se sale del campo ni se recorta. Las tres maquetas tienen la misma
    proporción (0,49), así que las tres salen al mismo tamaño.
 
-   El campo de Accessible Abstracts mide 439 en el Figma y no 443. Son cuatro
+   El campo de Accesible Abstracts mide 439 en el Figma y no 443. Son cuatro
    píxeles en una fila que el resto del documento trata como igual: se toma
    como descuido y las tres van a 443. Pendiente de corregir en el Figma. */
 /* TEXTOS DE MÓVIL (Johnny, 09/10): en el Figma de Móvil 390 tres textos están
@@ -238,13 +238,9 @@ const conCuerpo = await Promise.all(
     object-fit: contain;
     display: block;
   }
-  /* El menta del vídeo, no el de la paleta. El clip trae su propio fondo
-     dentro, y h264 lo decodifica como #c6e7e3 en vez de #c7eae4 —un punto por
-     canal, cosa de la conversión YUV→RGB, no del archivo de Johnny—. Con el
-     token puesto se intuía el rectángulo del vídeo sobre el campo; con el
-     color del vídeo la junta desaparece. Medido en los dos códecs: mp4 y webm
-     decodifican exactamente el mismo valor. */
-  .producto--itza { --campo: var(--mint-video); }
+  /* El menta de la paleta (04/11/2026): con la imagen fija ya no hay vídeo
+     cuyo color igualar. */
+  .producto--itza { --campo: var(--mint); }
   .producto--a11y { --campo: var(--yellow-ap); }
   .producto--aa   { --campo: var(--rose-ap); }
   .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }

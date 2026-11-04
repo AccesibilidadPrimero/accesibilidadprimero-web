@@ -29,7 +29,7 @@ const RUTAS = [
   /* Blog (11/10/2026): el listado, una categoría y tres artículos que juntan
      todo lo que puede traer un Markdown: demostraciones y tablas (tipografía),
      tablas e imágenes (WCAG), y el más largo, con seis imágenes (A11y Primero). */
-  '/proyectos/', '/proyectos/tipo/aplicaciones/', '/proyectos/tipo/extensiones/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/proyectos/a11y-primero/', '/proyectos/itza/',
+  '/proyectos/', '/proyectos/tipo/aplicaciones/', '/proyectos/tipo/extensiones/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/proyectos/a11y-primero/', '/proyectos/itza/', '/proyectos/accesible-abstracts/',
   '/blog/', '/blog/categoria/diseno/',
   '/blog/tipografia-accesible-lo-que-dice-la-wcag/', '/blog/pero-que-es-la-wcag/', '/blog/a11yprimero/',
 ];

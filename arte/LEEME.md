@@ -24,7 +24,7 @@ hasta tener la web publicada.
 |---|---|---|
 | Carrusel del hero | 7 | SVG |
 | Pantallas de los proyectos | 9 | PNG |
-| Campos de los productos | 3 | PNG |
+| Campos de los productos | 3 | WebP |
 | Icono de Estudio | 1 | SVG |
 | **Total** | **20** | |
 
@@ -77,17 +77,20 @@ diga qué se ve en esa pantalla concreta —«Portada de ECI con el programa
 filtrado por día», no «captura de la web»—. Son nueve frases. Si prefieres, las
 escribo yo y te las paso para que las apruebes antes de montarlas.
 
-## 3 · Campos de los productos · `arte/productos/` · 3 PNG
+## 3 · Campos de los productos · `arte/productos/` · 3 WebP
 
-| Archivo | En pantalla | Exportar a |
-|---|---|---|
-| `itza.png` | 432 × 444 | **864 × 888** |
-| `a11y-primero.png` | 546 × 561 | **1092 × 1122** |
-| `accessible-abstracts.png` | 318 × 327 | **636 × 654** |
+**Rehechos el 04/11/2026.** Los tres con el mismo tratamiento: la interfaz
+sola, sin marco de móvil, con esquinas de 16 y una sombra suave, sobre fondo
+transparente para que el color lo ponga la página. 1.264 de alto a 2x.
 
-El de Itza en el Figma es una animación de menos de 5 segundos. Si acaba siendo
-vídeo: `.mp4` y `.webm`, sin sonido, y un fotograma fijo para quien tenga
-activado `prefers-reduced-motion`.
+| Archivo | Qué se ve |
+|---|---|
+| `itza.webp` | El asistente sobre nuestra web, con la conversación del caso (Marta, ficticia). |
+| `a11y-primero.webp` | El panel, pestaña Resumen, analizando nuestra propia web: 100. |
+| `accesible-abstracts.webp` | El formulario de envío de ECI en el móvil, vacío (producción). |
+
+Sustituyen al vídeo de Itza en Off Escuela, al panel antiguo de A11y Primero
+(el 72) y al móvil de la landing de Accesible Abstracts.
 
 ## 4 · Icono de Estudio · `arte/estudio/` · 1 SVG
 
@@ -164,3 +167,10 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 | `hero.jpg` · `contacto.jpg` | La ventana de Itza sola, con la conversación y con la tarjeta de contacto (@2x) | El widget de la landing montado sobre esta web, con respuestas de ejemplo |
 | `sugerencias.jpg` | La portada de esta web con Itza abierto y las preguntas sugeridas (2880 × 1800) | Ídem |
 | `movil.jpg` | La conversación a 390 de ancho (780 × 1688) | Ídem |
+
+## Caso Accesible Abstracts · `arte/proyectos/accesible-abstracts/` · 5 imágenes (04/11/2026)
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `envio.jpg` · `envio-movil.jpg` | El formulario de envío de ECI (2880 × 1800 y 780 × 1688) | Producción, público y vacío |
+| `hero.jpg` · `evaluacion.jpg` · `comite.jpg` | Abstracts de un revisor, evaluación doble ciego y panel del comité | La aplicación en local (SQLite) con datos de prueba inventados |

@@ -441,6 +441,10 @@ Las capturas de los productos se hacen sobre ESTA web («metaweb», Johnny,
 04/11/2026), no sobre la de un cliente: A11y Primero evaluándola e Itza
 instalado en ella, con respuestas de ejemplo y sin llamar al servicio real.
 Cada caso lo dice en «El proyecto». Itza: `/proyectos/itza/`.
+Accesible Abstracts (`/proyectos/accesible-abstracts/`): el formulario de
+envío es el de ECI en producción (público y vacío); revisores y comité, la
+aplicación en local con datos de prueba. Las pantallas de producción llevan
+datos reales de autores y revisores y no se publican.
 
 **Testimonios reales (03/11/2026).** Sin formato especial: en ECI, un bloque
 más («Desde el otro lado», título a la izquierda y texto a la derecha) sobre

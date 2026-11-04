@@ -10,8 +10,8 @@
    color; el hero es el fragmento de la película en que la línea escribe
    «Elogio de la línea»; grabaciones nuevas de la web actualizada; la serie
    de porcelana, en la banda negra del final, sustituye a la foto de la
-   silla; ficha con el estándar de todos los casos y un apartado propio de
-   accesibilidad.
+   silla; ficha con el estándar de todos los casos. El apartado propio de
+   accesibilidad se quitó el 04/11/2026 (Johnny).
 
    Lo que NO viene del Figma, por las reglas del sitio:
    · Hero: el común (HeroPagina) sobre blanco, con el fragmento de 5 s de la
@@ -173,24 +173,6 @@ const cifras = [
       </ul>
     </section>
 
-    {/* Accesibilidad (Johnny, 03/11/2026): lo que la web hace, en llano, y
-        los criterios que lo respaldan. */}
-    <section class="bloque" aria-labelledby="accesibilidad">
-      <h2 id="accesibilidad" class="bloque__etiqueta">Accesibilidad</h2>
-      <div class="bloque__contenido">
-        <p>La web está construida con la accesibilidad como punto de partida.</p>
-        <ul class="lista">
-          <li>Se puede ampliar al 200 % sin que se rompa. En pantallas pequeñas, la tira horizontal pasa a ser vertical.</li>
-          <li>Se navega con el teclado, el ratón o el trackpad.</li>
-          <li>Todas las imágenes tienen texto alternativo.</li>
-          <li>Hay un solo contenido para todas las pantallas, sin duplicados para el lector de pantalla.</li>
-          <li>Los enlaces y los iconos tienen nombre accesible.</li>
-          <li>El vídeo de portada empieza en silencio y tiene un control de sonido.</li>
-        </ul>
-        <p>Criterios WCAG: 1.1.1, 1.3.1, 1.4.2, 1.4.4, 1.4.10, 2.1.1, 2.4.4 y 4.1.2.</p>
-      </div>
-    </section>
-
     <figure class="pieza pieza--derecha">
       <VideoPausable
         class="video"
@@ -292,7 +274,6 @@ const cifras = [
   .elogio { background: var(--white); }
   .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
   .elogio :global(.hero-frase) { object-fit: contain; }
-  .lista { display: flex; flex-direction: column; gap: var(--space-8); }
   @media (min-width: 1024px) {
     .banda { padding-block: var(--space-96); }
     .banda :global(.video--portada) { width: min(1148px, 85%); }

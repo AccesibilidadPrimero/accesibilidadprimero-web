@@ -43,19 +43,19 @@ export const PRODUCTOS: Producto[] = [
     href: '/proyectos/itza/',
     caso: 'itza',
     clase: 'producto--itza',
-    video: {
-      mp4: '/video/itza.mp4',
-      webm: '/video/itza.webm',
-      descripcion:
-        'El asistente Itza en el móvil, dentro de la web de Off Escuela: Ana pregunta ' +
-        'qué cursos hay para adultos y el asistente le responde con los de interpretación ' +
-        'para mayores de 18 años y le pregunta qué día de la semana le viene mejor.',
-    },
-    /* El último fotograma del vídeo: la conversación entera. El fondo del
-       clip es el menta TAL COMO lo decodifica el vídeo, de ahí el token. */
+    /* Desde el 04/11/2026, una imagen fija y no el vídeo de Off Escuela: el
+       asistente en nuestra propia web, con la misma conversación que el caso.
+       Los tres productos, con el mismo tratamiento: la interfaz sola, sin
+       marco de móvil, sobre su color. */
+    imagen: 'itza',
+    alt:
+      'El asistente Itza abierto: Marta pregunta si hacemos auditorías de accesibilidad ' +
+      'y el asistente le responde que auditamos la web con WCAG 2.2 y la normativa ' +
+      'vigente, explicamos cada barrera, damos un plan para quitarlas y preparamos la ' +
+      'declaración de accesibilidad.',
     tarjeta: {
-      captura: 'itza-fotograma',
-      color: 'var(--mint-video)',
+      captura: 'itza',
+      color: 'var(--mint)',
       linea: 'Un asistente accesible para orientar a quienes visitan tu web.',
     },
   },
@@ -76,10 +76,9 @@ export const PRODUCTOS: Producto[] = [
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
     alt:
-      'El panel de la extensión A11y Primero: la nota 72 marcada como “mejorable” sobre ' +
-      'accesibilidadprimero.com, cuatro barras por apartado (imágenes 85, estructura 60, ' +
-      'formularios 50 y contraste 45), el recuento de encabezados y un resumen para el ' +
-      'cliente con los cuatro problemas principales en lenguaje claro.',
+      'El panel de la extensión A11y Primero sobre nuestra propia web: 100, sin fallos ' +
+      'automáticos, dos comprobaciones para revisar a mano y las cuatro barras por ' +
+      'apartado (imágenes, estructura, formularios y contraste) al máximo.',
     tarjeta: {
       captura: 'a11y-primero',
       color: 'var(--yellow-ap)',
@@ -87,7 +86,7 @@ export const PRODUCTOS: Producto[] = [
     },
   },
   {
-    nombre: 'Accessible Abstracts',
+    nombre: 'Accesible Abstracts',
     marca: true,
     tipo: 'aplicaciones',
     descripcion: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
@@ -96,16 +95,18 @@ export const PRODUCTOS: Producto[] = [
     /* El nombre entero y no «AA»: en una web de accesibilidad «AA» se lee
        como el nivel de conformidad de WCAG, y muchos lectores de pantalla lo
        pronuncian «a a» (Johnny, 09/10). */
-    cta: 'Ver Accessible Abstracts',
-    href: 'https://aa.accesibilidadprimero.com/',
+    cta: 'Ver Accesible Abstracts',
+    /* Desde el 04/11/2026, a su caso de estudio; la landing, desde la ficha. */
+    href: '/proyectos/accesible-abstracts/',
+    caso: 'accesible-abstracts',
     clase: 'producto--aa',
-    imagen: 'accessible-abstracts',
+    imagen: 'accesible-abstracts',
     alt:
-      'La plataforma Accessible Abstracts en un móvil: el titular “Abstract management ' +
-      'that everyone can actually use”, los botones de demostración y un panel con ' +
-      'cuatro abstracts enviados y su estado de revisión.',
+      'El formulario de envío de Accesible Abstracts en el móvil, con la marca de ECI ' +
+      'Conference Madrid 2027: “Call for Abstracts, Submit your abstract”, el plazo de ' +
+      'envío y el primer campo, el título.',
     tarjeta: {
-      captura: 'accessible-abstracts',
+      captura: 'accesible-abstracts',
       color: 'var(--rose-ap)',
       linea: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
     },
