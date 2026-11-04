@@ -272,7 +272,7 @@ const INTERIORES = [
   { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', conErrores: false },
   { nombre: 'Caso A11y Primero', url: '/proyectos/a11y-primero/', conErrores: false },
   { nombre: 'Caso Itza', url: '/proyectos/itza/', conErrores: false },
-  { nombre: 'Caso Accessible Abstracts', url: '/proyectos/accessible-abstracts/', conErrores: false },
+  { nombre: 'Caso Accesible Abstracts', url: '/proyectos/accesible-abstracts/', conErrores: false },
   { nombre: 'Caso Elogio de la línea', url: '/proyectos/elogio-de-la-linea/', conErrores: false },
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },

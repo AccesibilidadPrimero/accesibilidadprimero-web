@@ -28,7 +28,7 @@ interface Props {
 const { href, size = 'default', external = false, class: className } = Astro.props;
 const esExterno = external || /^https?:\/\//.test(href);
 
-/* LA FLECHA NUNCA SE QUEDA SOLA EN UN RENGLÓN (10/10). Con «Ver Accessible
+/* LA FLECHA NUNCA SE QUEDA SOLA EN UN RENGLÓN (10/10). Con «Ver Accesible
    Abstracts» a 768 la flecha bajaba sola al renglón de abajo, y ni el margen
    ni un U+2060 (word joiner) lo evitaban: Chrome trata un <svg> en línea como
    un punto de corte pase lo que pase. Lo único fiable es no dejarle dónde

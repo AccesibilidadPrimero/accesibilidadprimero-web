@@ -69,7 +69,7 @@ const RUTAS = [
   { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', minimo: 20 },
   { nombre: 'Caso A11y Primero', url: '/proyectos/a11y-primero/', minimo: 20 },
   { nombre: 'Caso Itza', url: '/proyectos/itza/', minimo: 20 },
-  { nombre: 'Caso Accessible Abstracts', url: '/proyectos/accessible-abstracts/', minimo: 20 },
+  { nombre: 'Caso Accesible Abstracts', url: '/proyectos/accesible-abstracts/', minimo: 20 },
   { nombre: 'Caso Elogio de la línea', url: '/proyectos/elogio-de-la-linea/', minimo: 20 },
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },

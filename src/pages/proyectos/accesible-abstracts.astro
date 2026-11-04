@@ -1,6 +1,6 @@
 ---
 /* ---------------------------------------------------------------------------
-   Caso Accessible Abstracts · el tercer caso de un producto propio (04/11/2026)
+   Caso Accesible Abstracts · el tercer caso de un producto propio (04/11/2026)
 
    Johnny: «es el gran proyecto, por su complejidad y la sencillez que hemos
    conseguido». Nació para ECI Conference Madrid 2027 y de ahí pasó a
@@ -26,19 +26,18 @@ import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
-import hero from '../../assets/proyectos/accessible-abstracts/hero.jpg';
-import envioMovil from '../../assets/proyectos/accessible-abstracts/envio-movil.jpg';
-import envio from '../../assets/proyectos/accessible-abstracts/envio.jpg';
-import evaluacion from '../../assets/proyectos/accessible-abstracts/evaluacion.jpg';
-import comite from '../../assets/proyectos/accessible-abstracts/comite.jpg';
+import hero from '../../assets/proyectos/accesible-abstracts/hero.jpg';
+import envioMovil from '../../assets/proyectos/accesible-abstracts/envio-movil.jpg';
+import envio from '../../assets/proyectos/accesible-abstracts/envio.jpg';
+import evaluacion from '../../assets/proyectos/accesible-abstracts/evaluacion.jpg';
+import comite from '../../assets/proyectos/accesible-abstracts/comite.jpg';
 
-const titulo = 'Accessible Abstracts';
+const titulo = 'Accesible Abstracts';
 const datos = [
   ['Producto', 'Plataforma de abstracts'],
   ['Año', '2026'],
   ['Rol', 'Desarrollo'],
-  ['Estándar', 'WCAG 2.1 A/AA'],
-  ['Versión', '1.0 · la 2.0, en desarrollo'],
+  ['Estándar', 'WCAG 2.2 A/AA'],
 ];
 const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
 const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)';
@@ -48,16 +47,16 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
   lang={DEFAULT_LANG}
   current="proyectos"
   title={`${titulo} · Proyectos · Accesibilidad Primero`}
-  description="Accessible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas."
+  description="Accesible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas."
 >
   <div class="aa">
     <HeroPagina
       titulo="Complejo por dentro, sencillo por fuera."
       golpes={['Complejo por dentro,', 'sencillo por fuera.']}
-      texto={['Accessible Abstracts · Caso de estudio']}
+      texto={['Accesible Abstracts · Caso de estudio']}
       superficie={{ fondo: 'var(--rose-ap)', foco: 'var(--blue-ap)' }}
       ilustracion={hero}
-      alt="La página de un revisor en Accessible Abstracts: sus cuatro abstracts asignados, con referencia, título, tipo, línea temática y estado, dos pendientes y dos revisados, y el aviso de que la revisión es doble ciego."
+      alt="La página de un revisor en Accesible Abstracts: sus cuatro abstracts asignados, con referencia, título, tipo, línea temática y estado, dos pendientes y dos revisados, y el aviso de que la revisión es doble ciego."
     />
 
     <section class="datos" aria-labelledby="datos">
@@ -71,7 +70,7 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
     <section class="bloque" aria-labelledby="proyecto">
       <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
       <div class="bloque__contenido">
-        <p>Accessible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.</p>
+        <p>Accesible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.</p>
         <p>Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.</p>
         <p>El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.</p>
       </div>
@@ -183,7 +182,7 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
       </ul>
     </section>
   </div>
-  <CierreProyecto actual="accessible-abstracts" titulo={titulo} />
+  <CierreProyecto actual="accesible-abstracts" titulo={titulo} />
 </Base>
 
 <style>

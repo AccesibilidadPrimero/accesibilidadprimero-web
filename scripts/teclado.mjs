@@ -229,7 +229,9 @@ check('El alt describe la imagen y no repite la frase',
       console.log('    el control puede quitarse y esta comprobación seguirá cuadrando.');
     }
   } else {
-    check('Hay un vídeo de producto que comprobar', false, 'no se encontró [data-video-producto]');
+    /* Desde el 04/11/2026 los tres productos llevan imagen fija. Si vuelve
+       un vídeo, esta comprobación vuelve a aplicarse sola. */
+    console.log('  · sin vídeo de producto en la Home: nada que comprobar');
   }
   await p.close();
 }
