@@ -49,7 +49,9 @@ const lang = DEFAULT_LANG;
   />
 
   <div class="servicios">
-  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable abierto>
+  {/* Los tres cerrados al cargar (Johnny, 04/11/2026): se elige servicio
+      antes de leer ninguno. */}
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable>
     <div class="pila">
       <p>{DISENO.intro}</p>
       <ul class="puntos">
@@ -61,7 +63,7 @@ const lang = DEFAULT_LANG;
           </li>
         ))}
       </ul>
-      <CtaLink href={path('proyectos', lang)}>Ver proyectos</CtaLink>
+      <CtaLink href={path('proyectos', lang)}>Ver casos de estudio</CtaLink>
     </div>
   </Bloque>
 

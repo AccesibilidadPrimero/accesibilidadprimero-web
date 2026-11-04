@@ -56,7 +56,6 @@ const PIEZAS: Array<[selector: string, orden: Orden]> = [
   ['.caso .decision', 'posicion'],
   ['.caso .banda-equipo > picture', 0],
   ['.caso .testimonio', 1],
-  ['.caso .declaracion', 0],
   /* Revisión del 04/11/2026 (Johnny: «a veces no son muy fluidas»). Hasta
      hoy solo se movían la Home y Foc i Cor; el resto de páginas se quedaban
      quietas y solo el cierre entraba, así que el mismo gesto de scroll se
@@ -71,7 +70,9 @@ const PIEZAS: Array<[selector: string, orden: Orden]> = [
   ['.decisiones__lista > li', 'posicion'],
   ['.pieza', 0],
   ['.banda', 0],
-  ['.declaracion', 0],
+  // El cierre de cada caso (CierreProyecto.astro): declaración y siguiente.
+  ['.cierre__declaracion', 0],
+  ['.siguiente', 1],
   // Páginas interiores con Bloque (Estudio, Qué hacemos, Contacto) y casos.
   ['.bloque__titulo:not(.sr-only)', 0],
   ['.bloque__contenido:not([hidden])', 1],
