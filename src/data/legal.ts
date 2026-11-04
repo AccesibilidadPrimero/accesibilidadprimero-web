@@ -189,7 +189,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
   entrada: [
     'Nos dedicamos a esto, así que esta página no puede ser un trámite. Aquí está el estado real de accesibilidad de nuestra propia web, incluido lo que todavía no cumple.',
   ],
-  fecha: 'Última revisión: 11 de octubre de 2026.',
+  fecha: 'Última revisión: 4 de noviembre de 2026.',
   descripcion: `Estado real de accesibilidad de ${DOMINIO}: grado de conformidad con WCAG 2.2 AA, limitaciones conocidas y cómo avisarnos.`,
   bloques: [
     {
@@ -224,6 +224,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
             'El formulario de contacto necesita JavaScript, porque la protección contra envíos automáticos lo necesita. Sin JavaScript no aparece, y en su lugar se ofrece el correo.',
             'Si esa protección no puede comprobar el envío, por ejemplo con algunos bloqueadores, el formulario no se envía. Lo decimos en pantalla y damos el correo como alternativa.',
             'Las imágenes de “Sobre la mesa” vienen de nuestras publicaciones en Mastodon. Solo aparecen las que tienen texto alternativo, pero su calidad se revisa al publicarlas, no aquí.',
+            'Los vídeos de los casos de estudio no tienen sonido. Lo que enseñan está descrito en su texto alternativo.',
           ],
         },
       ],
@@ -232,16 +233,18 @@ export const ACCESIBILIDAD: PaginaLegal = {
       id: 'comprobado',
       titulo: 'Cómo se ha comprobado',
       piezas: [
-        { p: 'El 11 de octubre de 2026, en todas las páginas y con la web ya construida:' },
+        { p: 'La primera revisión fue el 11 de octubre de 2026. Desde entonces la web tiene páginas nuevas, como los casos de estudio, los vídeos y las animaciones, y el 4 de noviembre de 2026 volvimos a comprobarla entera, con la web ya construida:' },
         {
           lista: [
-            'axe-core 4.14 en Chromium, a 390, 768 y 1440 píxeles de ancho.',
+            'axe-core 4.14 en Chromium, a 390, 768 y 1440 píxeles de ancho, y Lighthouse.',
             'Contraste medido píxel a píxel sobre la página pintada, no leído del código.',
             'Tamaño de todo lo que se pulsa, y sin desplazamiento horizontal a 320 píxeles.',
-            'Recorrido con teclado del menú y del carrusel.',
+            'Recorrido con teclado del menú, del carrusel y de la tira de “Sobre la mesa”.',
+            'Cada vídeo y cada animación, con y sin la opción de reducir el movimiento. Lo que se mueve solo más de cinco segundos tiene botón de pausa, salvo el emblema de Estudio.',
             'El formulario de contacto, también con sus errores abiertos.',
           ],
         },
+        { p: 'Todas estas comprobaciones pasan, salvo el incumplimiento del emblema que explicamos arriba.' },
         { p: 'Estas pruebas automáticas cubren alrededor de un tercio de los criterios de WCAG. La revisión manual con teclado y con lectores de pantalla está pendiente. Cuando esté hecha, actualizaremos esta página con su fecha y su resultado.' },
       ],
     },
