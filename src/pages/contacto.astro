@@ -20,15 +20,10 @@
    --------------------------------------------------------------------------- */
 import Base from '../layouts/Base.astro';
 import CtaLink from '../components/CtaLink.astro';
-import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import Redes from '../components/Redes.astro';
 import { DEFAULT_LANG, path } from '../i18n/config';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
-/* Compilada por `npm run arte` desde arte/contacto/lapiz.svg (Johnny, 10/10).
-   Importada y no escrita a mano: Astro le pone el hash al nombre y, si el
-   archivo desaparece, el build se para. */
-import lapiz from '../assets/contacto/lapiz.svg';
 
 const lang = DEFAULT_LANG;
 const CORREO = CORREO_ESTUDIO;
@@ -84,18 +79,23 @@ const CAMPOS = [
   title="Contacto · Accesibilidad Primero"
   description="No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar. Respondemos siempre."
 >
-  <!-- Hero en menta, como la Home (HeroPagina.astro). El `alt` dice lo que
-       la ilustración aporta: trabajo hecho entre dos. -->
-  <HeroPagina
-    ilustracion={lapiz}
-    alt="Dos personas diminutas empujan juntas un lápiz enorme."
-    ilustracionComoHome
-    titulo="Cuéntanos a dónde quieres llegar."
-    texto={['No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar.', 'Respondemos siempre, aunque sea para decirte que no somos el estudio adecuado.']}
-    enParrafos
-  />
-
-  <Bloque id="escribenos" titulo="Escríbenos">
+  {/* SIN HERO desde el 04/11/2026 (auditoría de usabilidad: quien llega aquí
+      ya quiere escribir y la primera pantalla era una presentación). El
+      titular, a tamaño de texto en la columna de los rótulos, como un bloque
+      más; la introducción, el correo y el formulario, juntos en la otra. */}
+  <section class="pagina-contacto" aria-labelledby="contacto-titulo">
+    <h1 id="contacto-titulo" class="pagina-contacto__titulo">Cuéntanos a dónde quieres llegar.</h1>
+    <div class="pagina-contacto__contenido">
+      <div class="pagina-contacto__intro">
+        <p>No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar.</p>
+        <p>Respondemos siempre, aunque sea para decirte que no somos el estudio adecuado.</p>
+        {/* El correo, ANTES del formulario: es la otra forma de empezar. */}
+        <div class="directo__correo">
+          <p>Si lo prefieres, escríbenos por correo:</p>
+          <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
+        </div>
+      </div>
+      <h2 class="sr-only">Escríbenos</h2>
       <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
            su etiqueta, «(opcional)». Así no hace falta explicar qué significa
            un asterisco (3.3.2), y el lector de pantalla no lo lee en cada
@@ -211,11 +211,12 @@ const CAMPOS = [
       <p class="confirmacion" data-confirmacion tabindex="-1" hidden>
         Gracias, ya tenemos tu mensaje. Te responderemos a <span data-confirmacion-correo></span>.
       </p>
-  </Bloque>
+    </div>
+  </section>
 
   {/* Sin el título visible «También puedes escribirnos directamente»
       (Johnny, 03/11/2026). El h2 sigue para quien salta por encabezados. */}
-  <Bloque id="directamente" titulo="Correo y redes" tituloOculto>
+  <Bloque id="directamente" titulo="Redes" tituloOculto>
     <div class="directo">
       {/* La frase es de Johnny (10/10). El correo iba dentro de ella, pero un
           enlace en un renglón de texto mide 23 px de alto y la regla del
@@ -225,10 +226,7 @@ const CAMPOS = [
           después de la arroba: sin espacios, a 320 no cabe (1.4.10). */}
       {/* Ordenado (Johnny, 03/11/2026): la frase y el correo en una sola
           línea, y las redes debajo en tres columnas. */}
-      <div class="directo__correo">
-        <p>Si lo prefieres, escríbenos por correo:</p>
-        <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
-      </div>
+      {/* El correo subió arriba, junto al formulario (04/11/2026). */}
       <Redes columnas />
     </div>
   </Bloque>
@@ -239,8 +237,18 @@ const CAMPOS = [
 </script>
 
 <style>
-  /* El hero y los bloques viven en HeroPagina.astro y Bloque.astro: son los
-     mismos que en Estudio. */
+  /* La cabecera de la página: el ritmo de los bloques (Bloque.astro), con el
+     titular en la columna de los rótulos y a 64 de la cabecera, como el
+     listado de Proyectos. */
+  .pagina-contacto { padding: var(--ritmo-intro) var(--gutter-page) 0; display: flex; flex-direction: column; gap: var(--space-24); }
+  .pagina-contacto__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .pagina-contacto__contenido { display: flex; flex-direction: column; gap: var(--space-48); min-width: 0; }
+  .pagina-contacto__intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 560px; }
+  .pagina-contacto__intro p { margin: 0; }
+  @media (min-width: 1024px) {
+    .pagina-contacto { display: grid; grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); gap: 0; }
+    .pagina-contacto__titulo { max-width: 204px; }
+  }
 
   .directo {
     display: flex;

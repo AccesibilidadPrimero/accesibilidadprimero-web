@@ -51,7 +51,7 @@ const lang = DEFAULT_LANG;
   <div class="servicios">
   {/* Los tres cerrados al cargar (Johnny, 04/11/2026): se elige servicio
       antes de leer ninguno. */}
-  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable>
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable resumen={DISENO.resumen}>
     <div class="pila">
       <p>{DISENO.intro}</p>
       <ul class="puntos">
@@ -67,7 +67,7 @@ const lang = DEFAULT_LANG;
     </div>
   </Bloque>
 
-  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable>
+  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable resumen={AUDITORIA.resumen}>
     <div class="pila">
       <p>{AUDITORIA.intro}</p>
       <ul class="puntos">
@@ -87,7 +87,7 @@ const lang = DEFAULT_LANG;
           incluye; sin el nombre de la tarifa ni recuadro. */}
       <div class="tarifas">
         <h3 class="punto__nombre">Tarifas</h3>
-        <p>Tres alcances, según el tamaño de la web.</p>
+        <p>{AUDITORIA.comun}</p>
         <div class="tarifas__lista">
           {AUDITORIA.tarifas.map((t, i) => (
             <Plegable id={`tarifa-${i + 1}`} titulo={t.titulo} nivel={4}>
@@ -103,7 +103,7 @@ const lang = DEFAULT_LANG;
     </div>
   </Bloque>
 
-  <Bloque id="formacion" titulo="Formación" desplegable>
+  <Bloque id="formacion" titulo="Formación" desplegable resumen={FORMACION.resumen}>
     <div class="pila">
       <Microanimacion tipo="dia" color="verde" />
       <p>{FORMACION.intro}</p>

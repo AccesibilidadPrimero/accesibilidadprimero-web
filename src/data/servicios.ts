@@ -28,9 +28,12 @@ export interface Tarifa {
   incluye: string[];
 }
 
+/* Las frases visibles con el bloque cerrado (auditoría de usabilidad,
+   04/11/2026). */
 export const DISENO = {
+  resumen: 'Webs accesibles a medida, del concepto al código.',
   intro:
-    'Diseñamos y desarrollamos webs del concepto al código. La accesibilidad está en cada decisión desde la primera línea de código, no se añade al final.',
+    'Diseñamos y desarrollamos webs del concepto al código. La accesibilidad está en cada decisión desde la primera línea de código, no se añade al final. También hacemos accesibles documentos y presentaciones, incluidos los PDF.',
   puntos: [
     {
       nombre: 'Diseño a medida.',
@@ -71,6 +74,11 @@ export const DISENO = {
 };
 
 export const AUDITORIA = {
+  resumen: 'Revisamos tu web, te explicamos cada barrera y te damos un plan para quitarlas.',
+  /* Los tres alcances son la misma auditoría; cambia el número de páginas
+     (Johnny, 04/11/2026). Lo común, una vez y fuera de las tarifas. */
+  comun:
+    'Las tres son la misma auditoría: revisión automática y manual, lectores de pantalla, análisis del lenguaje, recorridos críticos, arquitectura de la información y plan de acción. Lo que cambia es el número de páginas.',
   intro:
     'No es cumplir. Es poder usar. Auditamos tu web con WCAG 2.2 y la normativa vigente, te explicamos cada barrera y te damos un plan para quitarlas. Al terminar, preparamos la declaración de accesibilidad de tu web.',
   revisamos: [
@@ -98,9 +106,6 @@ export const AUDITORIA = {
       nombre: 'Express',
       precio: '590 a 790 € + IVA',
       incluye: [
-        'Revisión automática y manual',
-        'Lectores de pantalla',
-        'Análisis del lenguaje',
         'Reunión de 60 minutos',
         'De 5 a 7 días hábiles',
       ],
@@ -110,10 +115,6 @@ export const AUDITORIA = {
       nombre: 'Completa',
       precio: '1.200 a 1.800 € + IVA',
       incluye: [
-        'Los recorridos críticos',
-        'NVDA y VoiceOver',
-        'Arquitectura de la información',
-        'Plan de acción en tres fases',
         'Reunión de 90 minutos',
         'Dos semanas de soporte por correo',
         'De 10 a 15 días hábiles',
@@ -137,6 +138,7 @@ export const AUDITORIA = {
 };
 
 export const FORMACION = {
+  resumen: 'Para que tu equipo mantenga la accesibilidad en el día a día.',
   intro:
     'La accesibilidad no termina con la entrega. Formamos a los equipos que gestionan y actualizan la web para que puedan mantener la accesibilidad en el día a día.',
   puntos: [

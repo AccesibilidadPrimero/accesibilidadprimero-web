@@ -1,6 +1,8 @@
 ---
 titulo: Izaskun Etxebarria
 cliente: Izaskun Etxebarria
+# La línea de la tarjeta en Casos de estudio (04/11/2026).
+linea: La web de una artista y comisaria.
 # `|-` y no `>-`: conserva los saltos de línea, que en escritorio son cortes
 # fijos (ProjectSection.astro).
 resumen: |-

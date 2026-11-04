@@ -191,7 +191,9 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 
   /* ---- Ficha en franja ---- */
   .ficha { padding: var(--space-48) var(--gutter-page); }
-  .ficha__datos { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .ficha__datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (04/11/2026); la web, entera. */
+  @media (max-width: 767px) { .ficha__web { grid-column: 1 / -1; } }
   .ficha__datos > div { display: flex; flex-direction: column; gap: var(--space-4); }
   /* El enlace mide 44 de alto: se come el aire de su fila, no la estira. */
   .ficha__web dd { margin-block: calc(var(--aire-control) * -1); }

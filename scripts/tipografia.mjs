@@ -257,7 +257,8 @@ console.log('\n── Un color: todo en negro ──\n');
    errores abiertos, porque los mensajes de error no existen hasta que
    alguien envía mal. */
 const INTERIORES = [
-  { nombre: 'Contacto', url: '/contacto/', conErrores: true },
+  /* Sin hero desde el 04/11/2026: el <h1> se ve, pero a tamaño de texto. */
+  { nombre: 'Contacto', url: '/contacto/', conErrores: true, sinTitular: true },
   { nombre: 'Estudio', url: '/estudio/', conErrores: false },
   { nombre: 'Servicios', url: '/servicios/', conErrores: false },
   { nombre: 'Privacidad', url: '/privacidad/', conErrores: false },

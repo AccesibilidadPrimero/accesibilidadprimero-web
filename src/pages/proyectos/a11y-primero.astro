@@ -173,7 +173,10 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
 
   /* ---- Datos ---- en franja, como en los casos de clientes. */
   .datos { padding: var(--space-48) var(--gutter-page); }
-  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
   .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
   @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
   @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
