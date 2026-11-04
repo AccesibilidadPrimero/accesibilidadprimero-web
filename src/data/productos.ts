@@ -97,7 +97,9 @@ export const PRODUCTOS: Producto[] = [
        como el nivel de conformidad de WCAG, y muchos lectores de pantalla lo
        pronuncian «a a» (Johnny, 09/10). */
     cta: 'Ver Accessible Abstracts',
-    href: 'https://aa.accesibilidadprimero.com/',
+    /* Desde el 04/11/2026, a su caso de estudio; la landing, desde la ficha. */
+    href: '/proyectos/accessible-abstracts/',
+    caso: 'accessible-abstracts',
     clase: 'producto--aa',
     imagen: 'accessible-abstracts',
     alt:

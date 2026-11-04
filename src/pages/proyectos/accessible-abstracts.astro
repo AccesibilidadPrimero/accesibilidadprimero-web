@@ -1,0 +1,235 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Accessible Abstracts · el tercer caso de un producto propio (04/11/2026)
+
+   Johnny: «es el gran proyecto, por su complejidad y la sencillez que hemos
+   conseguido». Nació para ECI Conference Madrid 2027 y de ahí pasó a
+   producto; la versión 2 está en desarrollo con lo aprendido en ECI.
+
+   Misma maqueta y mismo tono que los demás casos. El contenido sale del
+   repositorio (README, MANIFEST, QA-CHECKLIST) y de la landing
+   aa.accesibilidadprimero.com, reescrito en la voz de los casos.
+
+   Las capturas:
+   · El formulario de envío es el de producción (abstracts.eciconference2027
+     .com/submit.php), que es público y está vacío.
+   · Las de revisores y comité son la aplicación de verdad (el mismo código)
+     corriendo en local con DATOS DE PRUEBA: títulos, revisores y
+     puntuaciones inventados. Las de producción llevan datos reales de
+     autores y revisores, y no se publican. Lo dice el propio caso.
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+import hero from '../../assets/proyectos/accessible-abstracts/hero.jpg';
+import envioMovil from '../../assets/proyectos/accessible-abstracts/envio-movil.jpg';
+import envio from '../../assets/proyectos/accessible-abstracts/envio.jpg';
+import evaluacion from '../../assets/proyectos/accessible-abstracts/evaluacion.jpg';
+import comite from '../../assets/proyectos/accessible-abstracts/comite.jpg';
+
+const titulo = 'Accessible Abstracts';
+const datos = [
+  ['Producto', 'Plataforma de abstracts'],
+  ['Año', '2026'],
+  ['Rol', 'Desarrollo'],
+  ['Estándar', 'WCAG 2.1 A/AA'],
+  ['Versión', '1.0 · la 2.0, en desarrollo'],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)';
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={`${titulo} · Proyectos · Accesibilidad Primero`}
+  description="Accessible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas."
+>
+  <div class="aa">
+    <HeroPagina
+      titulo="Complejo por dentro, sencillo por fuera."
+      golpes={['Complejo por dentro,', 'sencillo por fuera.']}
+      texto={['Accessible Abstracts · Caso de estudio']}
+      superficie={{ fondo: 'var(--rose-ap)', foco: 'var(--blue-ap)' }}
+      ilustracion={hero}
+      alt="La página de un revisor en Accessible Abstracts: sus cuatro abstracts asignados, con referencia, título, tipo, línea temática y estado, dos pendientes y dos revisados, y el aviso de que la revisión es doble ciego."
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        <div><dt>Web</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">aa.accesibilidadprimero.com</CtaLink></dd></div>
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <div class="bloque__contenido">
+        <p>Accessible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid: hasta mil propuestas, cinco líneas temáticas y treinta revisores.</p>
+        <p>Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.</p>
+        <p>El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={envioMovil}
+        formats={['avif', 'webp']}
+        widths={[envioMovil.width / 2, envioMovil.width]}
+        sizes="(min-width: 768px) 360px, calc(100vw - 48px)"
+        alt="El formulario de envío de ECI en el móvil: la cabecera con los logotipos de AEIPI y Eurlyaid, el título “Call for Abstracts” y los campos de título, tipo, línea temática y resumen, uno debajo de otro."
+        class="captura captura--movil"
+        loading="lazy"
+      />
+      <figcaption>El envío, en el móvil</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">El reto</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">Mucho proceso, poca interfaz.</h2>
+        <p>Un congreso así mueve envíos, autorías, conflictos de interés, revisión por pares, puntuaciones, avisos y decisiones. Las herramientas habituales lo resuelven con formularios largos y paneles llenos de opciones, y dejan fuera a quien usa teclado, lector de pantalla o zum.</p>
+        <h3>Cada persona ve solo lo suyo.</h3>
+        <p>Quien envía, un formulario sin crear cuenta. Quien revisa, sus abstracts y una escala de 1 a 5. El comité, el estado de todo y las decisiones. La complejidad se queda dentro.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={envio}
+        formats={['avif', 'webp']}
+        widths={anchos(envio.width, [640, 1100, 1600, 2200])}
+        sizes={centro}
+        alt="El formulario de envío de ECI Conference Madrid 2027: el plazo de envío, el título, el tipo de comunicación, la línea temática y el resumen con su contador de palabras, las palabras clave, la financiación y la declaración de conflictos de interés."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Enviar un abstract, sin cuenta</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">La estructura</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">Del envío al programa, en cuatro pasos.</h2>
+        <p>Los autores envían el abstract y reciben una confirmación con su referencia. Cada abstract se asigna solo a dos revisores de su línea temática, repartiendo la carga y dejando fuera los conflictos de interés, declarados o por afiliación.</p>
+        <p>Los revisores puntúan seis criterios de 1 a 5, pueden guardar a medias y dejar un comentario para el comité. El comité decide, los autores reciben la notificación y todo se exporta para el programa y la revista.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={evaluacion}
+        formats={['avif', 'webp']}
+        widths={anchos(evaluacion.width, [640, 1100, 1600, 2200])}
+        sizes={centro}
+        alt="La evaluación de un abstract: el título, el tipo y la línea temática, el aviso de que los nombres, afiliaciones y correos de los autores están ocultos, el texto del abstract y los primeros criterios, cada uno con su escala de 1 a 5."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Evaluar, en doble ciego</figcaption>
+    </figure>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={comite}
+        formats={['avif', 'webp']}
+        widths={anchos(comite.width, [640, 1100, 1600, 2200])}
+        sizes={centro}
+        alt="El panel del comité: los abstracts con su referencia, título, tipo, línea temática, cuántas revisiones tienen de dos, la nota media y un selector para decidir, con pestañas para la asignación y las exportaciones."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Decidir, en el comité</figcaption>
+    </figure>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">Decisiones de diseño</h2>
+        <p>Lo difícil era el proceso, no las pantallas. Cada decisión quita un paso a alguien.</p>
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <h3>Doble ciego de verdad.</h3>
+          <p>Los nombres, afiliaciones y correos de los autores no llegan a las páginas de revisión. No se esconden con diseño: no están.</p>
+        </li>
+        <li>
+          <h3>Sin cuenta para enviar.</h3>
+          <p>Quien envía un abstract no tiene que registrarse ni recordar una contraseña. Recibe una confirmación con su referencia y ya está.</p>
+        </li>
+        <li>
+          <h3>Revisión continua.</h3>
+          <p>Los abstracts se asignan a medida que llegan, con un resumen diario para cada revisor: sin avalancha al cierre del plazo.</p>
+        </li>
+        <li>
+          <h3>Con la marca de cada congreso.</h3>
+          <p>Funciona en el dominio y con los colores de cada congreso, en un alojamiento normal y sin licencias por abstract. Los datos son del congreso.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <CierreProyecto actual="accessible-abstracts" titulo={titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La captura del hero, apaisada: por ancho, con el radio de las demás. */
+  .aa :global(.apertura__ilustracion) { block-size: auto; inline-size: min(1100px, 100%); border-radius: var(--radio); box-shadow: 0 8px 24px rgb(23 23 23 / 0.12); }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .aa :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { align-self: stretch; }
+  /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
+  .aa :global(.captura--movil) { width: min(360px, 100%); }
+  .pieza--derecha figcaption { width: min(360px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>

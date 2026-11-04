@@ -164,3 +164,10 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 | `hero.jpg` · `contacto.jpg` | La ventana de Itza sola, con la conversación y con la tarjeta de contacto (@2x) | El widget de la landing montado sobre esta web, con respuestas de ejemplo |
 | `sugerencias.jpg` | La portada de esta web con Itza abierto y las preguntas sugeridas (2880 × 1800) | Ídem |
 | `movil.jpg` | La conversación a 390 de ancho (780 × 1688) | Ídem |
+
+## Caso Accessible Abstracts · `arte/proyectos/accessible-abstracts/` · 5 imágenes (04/11/2026)
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `envio.jpg` · `envio-movil.jpg` | El formulario de envío de ECI (2880 × 1800 y 780 × 1688) | Producción, público y vacío |
+| `hero.jpg` · `evaluacion.jpg` · `comite.jpg` | Abstracts de un revisor, evaluación doble ciego y panel del comité | La aplicación en local (SQLite) con datos de prueba inventados |
