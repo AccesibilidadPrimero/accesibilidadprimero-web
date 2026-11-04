@@ -19,6 +19,7 @@
    --------------------------------------------------------------------------- */
 import { getCollection } from 'astro:content';
 import CtaLink from './CtaLink.astro';
+import { PRODUCTOS } from '../data/productos';
 
 interface Props {
   actual: string;
@@ -28,9 +29,15 @@ interface Props {
 }
 const { actual, declaracion, titulo } = Astro.props;
 
-const casos = (await getCollection('proyectos'))
-  .filter((p) => p.data.casoPublicado)
-  .sort((a, b) => a.data.orden - b.data.orden);
+/* El recorrido: los casos de clientes en el orden de Proyectos y, detrás,
+   los productos que ya tienen caso, en el orden de la Home (04/11/2026). */
+const casos = [
+  ...(await getCollection('proyectos'))
+    .filter((p) => p.data.casoPublicado)
+    .sort((a, b) => a.data.orden - b.data.orden)
+    .map((p) => ({ id: p.id, nombre: p.data.nombreCorto ?? p.data.titulo })),
+  ...PRODUCTOS.filter((p) => p.caso).map((p) => ({ id: p.caso!, nombre: p.nombre })),
+];
 const i = casos.findIndex((c) => c.id === actual);
 if (i < 0) throw new Error(`CierreProyecto: «${actual}» no es un caso publicado.`);
 const siguiente = casos[i + 1];
@@ -44,7 +51,7 @@ const siguiente = casos[i + 1];
   )}
   <nav class="siguiente" aria-label="Siguiente proyecto">
     {siguiente ? (
-      <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.data.nombreCorto ?? siguiente.data.titulo}</CtaLink>
+      <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.nombre}</CtaLink>
     ) : (
       <CtaLink href="/proyectos/" size="large">Ver todos los casos de estudio</CtaLink>
     )}

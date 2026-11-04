@@ -145,3 +145,15 @@ filtros.
 Al pasar por el puente de Claude estos SVG reciben un bloque C2PA; se limpian
 y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 
+
+---
+
+## Caso A11y Primero · `arte/proyectos/a11y-primero/` · 3 PNG (04/11/2026)
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `hero-panel.png` | El panel sobre la página de ejemplo, fondo transparente (1278 × 908, @2x de 639 × 454) | Capturado a @2x de la landing de la extensión |
+| `resumen.png` | Pestaña Resumen sobre la web de ejemplo (1280 × 800) | Ficha de la Chrome Web Store |
+| `wcag.png` | Pestaña WCAG, con un fallo abierto (1280 × 800) | Ficha de la Chrome Web Store |
+
+Las dos capturas de la tienda vienen por debajo de @2x: si hay versiones a 2560 × 1600, se sustituyen con el mismo nombre.
