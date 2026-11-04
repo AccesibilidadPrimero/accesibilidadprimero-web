@@ -158,7 +158,9 @@ const conCuerpo = await Promise.all(
             ) : (
               <p class="producto__desc">{p.descripcion}</p>
             )}
-            <CtaLink href={p.href} external>{p.cta}</CtaLink>
+            {/* La flecha la decide el destino (04/11/2026): A11y Primero ya lleva a
+                su caso, dentro de la web, y con `external` fijo salía con ↗. */}
+            <CtaLink href={p.href}>{p.cta}</CtaLink>
           </li>
         ))
       }

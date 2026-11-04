@@ -152,7 +152,7 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 
 | Archivo | Qué es | Origen |
 |---|---|---|
-| `hero.jpg` | La extensión abierta sobre offvalencia.com, pestaña Resumen (1600 × 1000) | Capturada de la extensión v2.0.0 a @2x |
+| `hero.jpg` | La extensión abierta sobre esta web, pestaña Resumen (1600 × 1000) | Capturada de la extensión v2.0.0 a @2x |
 | `panel-wcag.png` | El panel solo, pestaña WCAG (600 × 1200, @2x de 300) | Ídem |
 | `wcag.jpg` · `ver-como.jpg` | Fallos marcados en la página y simulación de baja visión (2560 × 1600) | Ídem |
 

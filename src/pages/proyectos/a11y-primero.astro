@@ -14,13 +14,15 @@
    Lo que cambia frente a un caso de cliente, y por qué:
    · Hero: no hay foto de ambiente, así que va la banda en el color del
      producto (el amarillo de su tarjeta en Proyectos) con la extensión
-     abierta sobre una web real.
+     abierta sobre esta misma web.
    · Sin «Web» en la ficha ni declaración en el cierre: la extensión está en
      revisión en la Chrome Web Store y no tiene página pública todavía.
    · Las capturas son imágenes, no vídeos. Son de la extensión de verdad
-     (v2.0.0, cargada en Chromium) sobre offvalencia.com, a @2x, con el panel
-     montado encima como lo pinta Chrome (Johnny, 04/11/2026: «puedes usar
-     la web de Off para los ejemplos visuales»).
+     (v2.0.0, cargada en Chromium) sobre esta misma web, a @2x, con el panel
+     montado encima como lo pinta Chrome. Una «metaweb» (Johnny, 04/11/2026):
+     enseñamos la extensión evaluando nuestra propia web, en lugar de señalar
+     los fallos de la web de un cliente. Si la web cambia, se vuelve a
+     capturar; lo que dice el panel es lo que midió ese día.
    · Sin la banda amarilla de los límites del final (Johnny, 04/11/2026:
      «queda muy pobre»).
    --------------------------------------------------------------------------- */
@@ -58,7 +60,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       texto={['A11y Primero · Caso de estudio']}
       superficie={{ fondo: 'var(--yellow-ap)', foco: 'var(--blue-ap)' }}
       ilustracion={hero}
-      alt="A11y Primero abierto sobre la portada de offvalencia.com: el panel da 90 de 100, “pocos fallos automáticos”, con imágenes, formularios y contraste a 100 y estructura a 90, y avisa de que una comprobación necesita revisión manual."
+      alt="A11y Primero abierto sobre la portada de esta web: el panel da 100 de 100, “sin fallos automáticos”, con las cuatro categorías a 100, y avisa de que dos comprobaciones necesitan revisión manual."
     />
 
     <section class="datos" aria-labelledby="datos">
@@ -73,6 +75,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       <div class="bloque__contenido">
         <p>A11y Primero es una extensión de Chrome que analiza la accesibilidad de una página en un clic, con axe-core y los criterios de WCAG 2.2.</p>
         <p>La hicimos para nuestro propio trabajo: es la herramienta con la que empezamos cada auditoría del estudio. Y la preparamos para que la use cualquiera que quiera saber por dónde empezar con su web.</p>
+        <p>Las capturas de esta página son la extensión evaluando esta misma web.</p>
       </div>
     </section>
 
@@ -82,7 +85,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
         formats={['avif', 'webp']}
         widths={[panelWcag.width / 2, panelWcag.width]}
         sizes="(min-width: 768px) 300px, calc(100vw - 48px)"
-        alt="La pestaña WCAG del panel: el fallo 1.4.4, que impide ampliar la página con el zum, y abierto el apartado “Revisar a mano”, con diez textos del menú sobre un fondo degradado que la herramienta no puede medir, cada uno con su selector."
+        alt="La pestaña WCAG del panel sobre esta web: sin fallos WCAG automáticos y dos puntos para revisar a mano, el vídeo sin subtítulos (1.2.2) y, abierto, el contraste de dos textos que la animación de entrada tapa en parte (1.4.3), cada uno con su selector."
         class="captura captura--panel"
         loading="lazy"
       />
@@ -105,7 +108,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
         formats={['avif', 'webp']}
         widths={anchos(wcag.width, [640, 1100, 1600, 2200])}
         sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
-        alt="La portada de offvalencia.com con los elementos marcados por la extensión: los textos del menú y del titular, recuadrados en azul con un interrogante porque están sobre una foto y hay que medirlos a mano, y el panel abierto a la derecha."
+        alt="El bloque de productos de la portada de esta web, con la extensión abierta a la derecha: el vídeo de Itza, recuadrado en azul con un interrogante porque hay que revisar a mano si necesita subtítulos, y al lado la tarjeta de la propia A11y Primero."
         class="captura"
         loading="lazy"
       />
@@ -128,7 +131,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
         formats={['avif', 'webp']}
         widths={anchos(verComo.width, [640, 1100, 1600, 2200])}
         sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
-        alt="La misma portada con la simulación de baja visión: la foto, el titular y el menú se ven borrosos y apagados, y el panel abierto en la pestaña “Ver como…” con sus cuatro simulaciones."
+        alt="La portada de esta web con la simulación de baja visión: la ilustración, el titular y el menú se ven borrosos y apagados, y el panel abierto en la pestaña “Ver como…” con sus cuatro simulaciones."
         class="captura"
         loading="lazy"
       />
