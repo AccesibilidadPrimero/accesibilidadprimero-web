@@ -1,0 +1,37 @@
+---
+/* ---------------------------------------------------------------------------
+   Una captura con su versión para móvil (auditoría de usabilidad, 04/11/2026).
+
+   Por debajo de 768 se ve otra imagen: la misma pantalla de la aplicación en
+   el móvil, recortada para que se lea. A ese ancho la captura de escritorio
+   enseña la interfaz pero no deja leerla. No hay visor ampliado a propósito:
+   añade foco, Escape y retorno que mantener, y el recorte resuelve lo mismo.
+
+   El `alt` es uno para las dos, así que tiene que valer para ambas.
+   --------------------------------------------------------------------------- */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  movil: ImageMetadata;
+  alt: string;
+  sizes: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+}
+const { src, movil, alt, sizes, class: clase, loading = 'lazy' } = Astro.props;
+const anchos = (max: number, lista: number[]) => lista.filter((w) => w < max).concat(max);
+const juego = async (img: ImageMetadata, lista: number[], format: 'avif' | 'webp') =>
+  (await Promise.all(anchos(img.width, lista).map(async (w) => `${(await getImage({ src: img, width: w, format })).src} ${w}w`))).join(', ');
+const m = { avif: await juego(movil, [390], 'avif'), webp: await juego(movil, [390], 'webp') };
+const d = { avif: await juego(src, [640, 1100, 1600, 2200], 'avif'), webp: await juego(src, [640, 1100, 1600, 2200], 'webp') };
+const respaldo = await getImage({ src, width: Math.min(1100, src.width), format: 'jpg' });
+---
+<picture>
+  <source media="(max-width: 767px)" type="image/avif" srcset={m.avif} sizes="calc(100vw - 48px)" width={movil.width} height={movil.height} />
+  <source media="(max-width: 767px)" type="image/webp" srcset={m.webp} sizes="calc(100vw - 48px)" width={movil.width} height={movil.height} />
+  <source type="image/avif" srcset={d.avif} sizes={sizes} width={src.width} height={src.height} />
+  <source type="image/webp" srcset={d.webp} sizes={sizes} width={src.width} height={src.height} />
+  <img src={respaldo.src} width={src.width} height={src.height} alt={alt} class={clase} loading={loading} decoding="async" />
+</picture>

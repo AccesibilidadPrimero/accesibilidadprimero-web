@@ -29,16 +29,18 @@ interface Props {
   abierto?: boolean;
   /** El título solo para el lector de pantalla (Contacto, 03/11/2026). */
   tituloOculto?: boolean;
+  /** Desplegable: una frase visible aunque esté cerrado (04/11/2026). */
+  resumen?: string;
   /** Banda de color: 'rosa' (Rose AP) o 'gris' (Silk). */
   fondo?: 'rosa' | 'gris';
 }
-const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = false } = Astro.props;
+const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = false, resumen } = Astro.props;
 ---
 
 {desplegable ? (
   <section class:list={['bloque', 'bloque--desplegable', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
     <h2 class="bloque__titulo">
-      <button type="button" id={id} class="bloque__boton" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} data-plegable-boton>
+      <button type="button" id={id} class="bloque__boton" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} aria-describedby={resumen ? `${id}-resumen` : undefined} data-plegable-boton>
         <span>{titulo}</span>
         {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
         <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
@@ -46,6 +48,7 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
         </svg>
       </button>
     </h2>
+    {resumen && <p id={`${id}-resumen`} class="bloque__resumen">{resumen}</p>}
     <div id={`${id}-panel`} class="bloque__contenido" hidden={!abierto} data-mov-propio><slot /></div>
   </section>
 ) : (
@@ -93,6 +96,9 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
   .bloque__boton:is(:hover, :focus-visible) .bloque__signo { transform: scale(1.2); }
   .bloque__boton[aria-expanded='true'] .bloque__signo { transform: rotate(45deg); }
   .bloque--desplegable .bloque__contenido { padding-block-end: var(--space-48); }
+  /* El resumen, visible con el bloque cerrado (auditoría de usabilidad,
+     04/11/2026): se elige servicio sabiendo qué es cada uno. */
+  .bloque__resumen { margin: 0; padding-block-end: var(--space-24); margin-block-start: calc(var(--space-8) - var(--space-24)); }
   :global(html:not(.js)) .bloque--desplegable .bloque__contenido[hidden] { display: block; }
   :global(html:not(.js)) .bloque__signo { display: none; }
   @media (prefers-reduced-motion: no-preference) {
@@ -122,6 +128,7 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
     .bloque--desplegable { grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); }
     .bloque--desplegable .bloque__titulo { grid-column: 1 / -1; max-width: none; }
     .bloque--desplegable .bloque__contenido { grid-column: 2; }
+    .bloque--desplegable .bloque__resumen { grid-column: 2; }
   }
   /* Al llegar con un ancla (submenú de Servicios) el título no queda pegado
      al borde de la ventana. */

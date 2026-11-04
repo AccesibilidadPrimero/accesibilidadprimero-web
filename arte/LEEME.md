@@ -177,3 +177,4 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 |---|---|---|
 | `envio.jpg` · `envio-movil.jpg` | El formulario de envío de ECI (2880 × 1800 y 780 × 1688) | Producción, público y vacío |
 | `hero.jpg` · `evaluacion.jpg` · `comite.jpg` | Abstracts de un revisor, evaluación doble ciego y panel del comité | La aplicación en local (SQLite) con datos de prueba inventados |
+| `hero-m.jpg` · `envio-m.jpg` · `evaluacion-m.jpg` · `comite-m.jpg` | Las mismas pantallas a 390 (@2x), para leerse en el móvil (04/11/2026) | `CapturaArte.astro` las sirve por debajo de 768 |

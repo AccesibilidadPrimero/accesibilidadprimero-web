@@ -28,6 +28,10 @@ const archivos = import.meta.glob<{ default: ImageMetadata }>(
 );
 const medio = (n: string) => Object.entries(archivos).find(([r]) => r.endsWith(`/${n}`))?.[1]?.default;
 
+/* La fecha de cada publicación, visible (auditoría de usabilidad, 04/11/2026):
+   sin ella, una convocatoria ya pasada se leía como algo de ahora. */
+const fecha = (iso: string) => new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }).format(new Date(iso));
+
 const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo)) : [];
 ---
 
@@ -63,6 +67,7 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
               <img src={img.src} alt="" width={img.width} height={img.height} loading="lazy" decoding="async" />
               {/* `lang` solo cuando el post está en otro idioma que la página:
                   marcarlo siempre sería ruido (3.1.2). */}
+              <time class="mesa__fecha" datetime={n.fecha}>{fecha(n.fecha)}</time>
               <p class="mesa__texto" lang={n.idioma === lang ? undefined : n.idioma}>{n.titular}</p>
               {/* Lo que la vista no dice: que la tarjeta lleva a Mastodon. Desde
                   el 10/10 ya no hay enlace «Ir a Mastodon» debajo de la tira
@@ -134,6 +139,7 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
      la puerta es lo ÚNICO que impide que algo viejo parezca de hoy. Y la
      fecha tampoco se esconde con `sr-only`: dársela a quien escucha y no a
      quien mira son dos contenidos distintos para dos personas. */
+  .mesa__fecha { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text); margin-block-end: calc(var(--space-8) - var(--space-16)); }
   .mesa__texto { font-size: var(--texto-size); line-height: var(--texto-leading); color: var(--text); }
   .mesa__enlace:hover .mesa__texto { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
 

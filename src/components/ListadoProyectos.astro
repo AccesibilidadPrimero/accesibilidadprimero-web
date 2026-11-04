@@ -52,7 +52,9 @@ const casos: Item[] = (await getCollection('proyectos'))
       tipo: c.data.tipo,
       href: `/proyectos/${c.id}/`,
       nombre: c.data.titulo,
-      linea: c.data.linea ?? c.data.resumen,
+      /* Una frase corta bajo el nombre (auditoría de usabilidad, 04/11/2026):
+         quien no conoce la marca sabe qué es antes de entrar. */
+      linea: c.data.linea ?? '',
       captura: buscar(capturasCaso, c.data.imagenes[0].archivo, c.id),
       color: c.data.paleta.acento,
       marca: false,
@@ -86,11 +88,12 @@ const nombre = tipo ? TIPOS[tipo] : null;
 <Base
   lang={DEFAULT_LANG}
   current="proyectos"
-  title={nombre ? `Proyectos · ${nombre} · Accesibilidad Primero` : 'Proyectos · Accesibilidad Primero'}
+  title={nombre ? `Casos de estudio · ${nombre} · Accesibilidad Primero` : 'Casos de estudio · Accesibilidad Primero'}
   description="Webs, aplicaciones y extensiones accesibles para organizaciones y proyectos con impacto social."
 >
   <div class="listado">
-    <h1 class="sr-only">{nombre ? `Proyectos · ${nombre}` : 'Proyectos'}</h1>
+    {/* «Casos de estudio», como el menú (04/11/2026). */}
+    <h1 class="sr-only">{nombre ? `Casos de estudio · ${nombre}` : 'Casos de estudio'}</h1>
 
     {/* Segundo <nav> de la página: lleva su propio nombre, distinto del menú
         principal (AGENTS.md §3). */}
@@ -108,7 +111,7 @@ const nombre = tipo ? TIPOS[tipo] : null;
     <ul class="rejilla tarjetas">
       {visibles.map((i, n) => (
         <li data-tipo={i.tipo} data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${i.clave}`}>
-          <TarjetaProyecto href={i.href} nombre={i.nombre} captura={i.captura} color={i.color} marca={i.marca} />
+          <TarjetaProyecto href={i.href} nombre={i.nombre} linea={i.linea} captura={i.captura} color={i.color} marca={i.marca} />
         </li>
       ))}
     </ul>

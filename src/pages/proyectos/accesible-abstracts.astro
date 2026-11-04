@@ -31,6 +31,12 @@ import envioMovil from '../../assets/proyectos/accesible-abstracts/envio-movil.j
 import envio from '../../assets/proyectos/accesible-abstracts/envio.jpg';
 import evaluacion from '../../assets/proyectos/accesible-abstracts/evaluacion.jpg';
 import comite from '../../assets/proyectos/accesible-abstracts/comite.jpg';
+/* Las versiones para móvil (04/11/2026): la misma aplicación a 390. */
+import CapturaArte from '../../components/CapturaArte.astro';
+import heroM from '../../assets/proyectos/accesible-abstracts/hero-m.jpg';
+import envioM from '../../assets/proyectos/accesible-abstracts/envio-m.jpg';
+import evaluacionM from '../../assets/proyectos/accesible-abstracts/evaluacion-m.jpg';
+import comiteM from '../../assets/proyectos/accesible-abstracts/comite-m.jpg';
 
 const titulo = 'Accesible Abstracts';
 const datos = [
@@ -55,15 +61,23 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
       golpes={['Complejo por dentro,', 'sencillo por fuera.']}
       texto={['Accesible Abstracts · Caso de estudio']}
       superficie={{ fondo: 'var(--rose-ap)', foco: 'var(--blue-ap)' }}
-      ilustracion={hero}
-      alt="La página de un revisor en Accesible Abstracts: sus cuatro abstracts asignados, con referencia, título, tipo, línea temática y estado, dos pendientes y dos revisados, y el aviso de que la revisión es doble ciego."
-    />
+    >
+      <CapturaArte
+        slot="ilustracion"
+        class="apertura__ilustracion"
+        src={hero}
+        movil={heroM}
+        sizes="(min-width: 1440px) 1100px, calc(100vw - 48px)"
+        loading="eager"
+        alt="Accesible Abstracts vista por una revisora: sus abstracts asignados, con referencia, título, tipo, línea temática y estado, y el aviso de que la revisión es doble ciego y los nombres, afiliaciones y correos de los autores están ocultos."
+      />
+    </HeroPagina>
 
     <section class="datos" aria-labelledby="datos">
       <h2 id="datos" class="sr-only">Datos del proyecto</h2>
       <dl class="datos__lista">
         {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-        <div><dt>Web</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">aa.accesibilidadprimero.com</CtaLink></dd></div>
+        <div><dt>Web</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">Conocer la plataforma</CtaLink></dd></div>
       </dl>
     </section>
 
@@ -73,6 +87,7 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
         <p>Accesible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.</p>
         <p>Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.</p>
         <p>El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.</p>
+        <CtaLink href="/proyectos/eci-conference/">Ver el caso de ECI Conference</CtaLink>
       </div>
     </section>
 
@@ -100,14 +115,12 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
     </section>
 
     <figure class="pieza pieza--centro">
-      <Picture
+      <CapturaArte
         src={envio}
-        formats={['avif', 'webp']}
-        widths={anchos(envio.width, [640, 1100, 1600, 2200])}
+        movil={envioM}
         sizes={centro}
-        alt="El formulario de envío de ECI Conference Madrid 2027: el plazo de envío, el título, el tipo de comunicación, la línea temática y el resumen con su contador de palabras, las palabras clave, la financiación y la declaración de conflictos de interés."
+        alt="El formulario de envío de ECI Conference Madrid 2027: el plazo, el título, el tipo de comunicación, la línea temática, el resumen con su contador de palabras, las palabras clave, la financiación, la declaración de conflictos de interés y los autores con su afiliación y correo."
         class="captura"
-        loading="lazy"
       />
       <figcaption>Enviar un abstract, sin cuenta</figcaption>
     </figure>
@@ -122,27 +135,23 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
     </section>
 
     <figure class="pieza pieza--centro">
-      <Picture
+      <CapturaArte
         src={evaluacion}
-        formats={['avif', 'webp']}
-        widths={anchos(evaluacion.width, [640, 1100, 1600, 2200])}
+        movil={evaluacionM}
         sizes={centro}
         alt="La evaluación de un abstract: el título, el tipo y la línea temática, el aviso de que los nombres, afiliaciones y correos de los autores están ocultos, el texto del abstract y los primeros criterios, cada uno con su escala de 1 a 5."
         class="captura"
-        loading="lazy"
       />
       <figcaption>Evaluar, en doble ciego</figcaption>
     </figure>
 
     <figure class="pieza pieza--centro">
-      <Picture
+      <CapturaArte
         src={comite}
-        formats={['avif', 'webp']}
-        widths={anchos(comite.width, [640, 1100, 1600, 2200])}
+        movil={comiteM}
         sizes={centro}
         alt="El panel del comité: los abstracts con su referencia, título, tipo, línea temática, cuántas revisiones tienen de dos, la nota media y un selector para decidir, con pestañas para la asignación y las exportaciones."
         class="captura"
-        loading="lazy"
       />
       <figcaption>Decidir, en el comité</figcaption>
     </figure>
@@ -192,7 +201,10 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
 
   /* ---- Datos ---- en franja, como en los casos de clientes. */
   .datos { padding: var(--space-48) var(--gutter-page); }
-  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
   .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
   @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
   @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

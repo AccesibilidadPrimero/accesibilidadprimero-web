@@ -1,6 +1,8 @@
 ---
 titulo: ECI Conference Mad 2027
 cliente: ECI Conference
+# La línea de la tarjeta en Casos de estudio (04/11/2026).
+linea: Congreso internacional de intervención temprana.
 nombreCorto: ECI Conference
 # `|-`: los saltos son cortes fijos en escritorio (ProjectSection.astro).
 # Ninguno puede caer detrás de una partícula (“reúne a”): 14/10/2026, AGENTS.md §4.
