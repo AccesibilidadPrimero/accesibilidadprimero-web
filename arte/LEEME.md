@@ -156,3 +156,11 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 | `panel-wcag.png` | El panel solo, pestaña WCAG (600 × 1200, @2x de 300) | Ídem |
 | `wcag.jpg` · `ver-como.jpg` | Fallos marcados en la página y simulación de baja visión (2560 × 1600) | Ídem |
 
+
+## Caso Itza · `arte/proyectos/itza/` · 4 imágenes (04/11/2026)
+
+| Archivo | Qué es | Origen |
+|---|---|---|
+| `hero.jpg` · `contacto.jpg` | La ventana de Itza sola, con la conversación y con la tarjeta de contacto (@2x) | El widget de la landing montado sobre esta web, con respuestas de ejemplo |
+| `sugerencias.jpg` | La portada de esta web con Itza abierto y las preguntas sugeridas (2880 × 1800) | Ídem |
+| `movil.jpg` | La conversación a 390 de ancho (780 × 1688) | Ídem |

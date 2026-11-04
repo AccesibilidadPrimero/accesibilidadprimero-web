@@ -38,7 +38,10 @@ export const PRODUCTOS: Producto[] = [
     tipo: 'aplicaciones',
     descripcion: 'Un asistente accesible para orientar a quienes visitan tu web.',
     cta: 'Ver Itza',
-    href: 'https://itza.accesibilidadprimero.com/',
+    /* Desde el 04/11/2026, a su caso de estudio. La landing sigue enlazada
+       desde la ficha del caso. */
+    href: '/proyectos/itza/',
+    caso: 'itza',
     clase: 'producto--itza',
     video: {
       mp4: '/video/itza.mp4',

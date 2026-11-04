@@ -437,6 +437,10 @@ de ambiente, el hero va en el color del producto con el panel dibujado; sin
 caso lleva `caso` en `src/data/productos.ts`, y `CierreProyecto` lo pone en
 el recorrido «Ver …» detrás de los casos de clientes; después del último,
 «Ver todos los casos de estudio». Sin «Avísame cuando esté disponible».
+Las capturas de los productos se hacen sobre ESTA web («metaweb», Johnny,
+04/11/2026), no sobre la de un cliente: A11y Primero evaluándola e Itza
+instalado en ella, con respuestas de ejemplo y sin llamar al servicio real.
+Cada caso lo dice en «El proyecto». Itza: `/proyectos/itza/`.
 
 **Testimonios reales (03/11/2026).** Sin formato especial: en ECI, un bloque
 más («Desde el otro lado», título a la izquierda y texto a la derecha) sobre
