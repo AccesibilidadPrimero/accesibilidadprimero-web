@@ -7,6 +7,10 @@ resumen: |-
   Izaskun Etxebarria es artista y comisaria.
   Su trabajo se mueve entre la instalación,
   el libro de artista y el dibujo.
+aporte: |-
+  Diseñamos una web que se aparta
+  para que la obra tenga su espacio,
+  con las series navegables como conjuntos.
 web: https://izaskunetxebarria.com/
 orden: 3
 tipo: webs

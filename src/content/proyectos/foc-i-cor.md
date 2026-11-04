@@ -4,6 +4,9 @@ cliente: ONG Cesal
 resumen: >-
   Foc i Cor es el restaurante escuela de la ONG Cesal en Catarroja. Allí la
   cocina se convierte en una oportunidad de futuro.
+aporte: >-
+  Diseñamos una web que equilibra restaurante y proyecto social, con una carta
+  que el chef actualiza desde la propia cocina.
 web: https://focicor.es/
 orden: 2
 tipo: webs

@@ -10,6 +10,10 @@ resumen: |-
   ECI (Early Childhood Intervention) reúne
   a profesionales de toda Europa para avanzar
   hacia una intervención temprana más inclusiva.
+aporte: |-
+  Diseñamos la información del congreso:
+  qué contar, en qué orden y cómo llega
+  cada persona a lo que busca.
 web: https://www.eciconference2027.com/
 orden: 1
 tipo: webs
