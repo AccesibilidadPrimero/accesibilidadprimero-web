@@ -115,6 +115,11 @@ Están aquí porque ya han pasado, no en abstracto:
 - **Aparición al hacer scroll:** lo que se mueve está listado en
   `src/scripts/aparicion.ts` y lo marca el JS al arrancar; sin JS no se marca
   nada. En movimiento normal el bloque no se oculta nunca, solo sube 16 px.
+  Desde el 04/11/2026 late igual en TODAS las páginas (antes solo la Home y
+  Foc i Cor), el escalonado se reparte entre lo que entra a la vez en
+  cualquier ancho y nunca se marca un elemento dentro de otro marcado. Los
+  desplegables, al abrirse, suben 8 px y funden; con reducir movimiento,
+  fundido de 300 ms.
   Con reducir movimiento, fundido de 300 ms. Un elemento que trae su propia
   versión reducida lleva `data-mov-propio` para que la regla global de
   `base.css` no la deje en 0,01 ms. `npm run aparicion` lo comprueba.
@@ -153,8 +158,12 @@ Están aquí porque ya han pasado, no en abstracto:
   manda es la proporción, no una cifra: si el hueco interior se acerca al
   exterior, el título se queda suelto y no se sabe a qué texto pertenece.
   No es el interlineado, que no se toca.
-  - Servicios de Estudio, lista de párrafos en una columna: **16 / 48**. Se
-    probó 32 / 64 y sobraba blanco: el nombre se despegaba de su texto.
+  - Servicios de Estudio y de Qué hacemos, lista de párrafos en una columna:
+    **24 / 72** (Johnny, 04/11/2026: un punto intermedio con el 48 de los
+    casos). Antes 16 / 48; se probó 32 / 64 y sobraba blanco.
+  - Casos (ECI, Foc i Cor, Izaskun, Elogio): **48** entre un titular y su
+    texto, 24 entre párrafos y 72 antes de un titular que corta el texto
+    (Johnny, 04/11/2026: «la distancia define la jerarquía»).
   - Productos de la Home: **32**. Cada producto es una columna suelta, con la
     imagen encima y nada debajo con lo que competir.
   - No se aplica a titulares en display (ya los separa el tamaño), a nombre +
