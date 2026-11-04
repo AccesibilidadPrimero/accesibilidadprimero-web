@@ -639,8 +639,8 @@ for (const ancho of [1440, 768, 390]) {
       return { n: items.length, dentro, fuera };
     });
     esperadas++; medidos++;
-    const bien = r.n > 1 && r.dentro.every((d) => Math.abs(d - 16) <= TOLERANCIA) &&
-      r.fuera.every((f) => Math.abs(f - 48) <= TOLERANCIA && f >= 3 * Math.max(...r.dentro) - TOLERANCIA);
+    const bien = r.n > 1 && r.dentro.every((d) => Math.abs(d - 24) <= TOLERANCIA) &&
+      r.fuera.every((f) => Math.abs(f - 72) <= TOLERANCIA && f >= 3 * Math.max(...r.dentro) - TOLERANCIA);
     if (!bien) fallos++;
     console.log(`  ${bien ? '✓' : '✗'} ${String(ancho).padStart(4)} · ${r.n} servicios · dentro ${[...new Set(r.dentro)].join('/')} · entre ${[...new Set(r.fuera)].join('/')}`);
     await ph.close();

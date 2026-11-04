@@ -28,6 +28,10 @@ type Dict = {
   /** El botón del bloque de cierre (ContactCTA). El del hero sigue siendo `ctaAction`. */
   ctaCierre: string;
   nav: Record<RouteKey, string>;
+  /** Lo que el lector de pantalla oye detrás de un nombre de menú demasiado
+      corto: «AP» se queda en «AP, el estudio». Empieza por el texto visible
+      para que el control por voz siga funcionando (2.5.3). */
+  navComplemento: Partial<Record<RouteKey, string>>;
   readMore: string;
   readLess: string;
   carouselPause: string;
@@ -67,15 +71,18 @@ export const UI: Record<Lang, Dict> = {
     ctaCierre: 'Escríbenos',
     nav: {
       home: 'Inicio',
-      proyectos: 'Proyectos',
-      servicios: 'Servicios',
-      estudio: 'Estudio',
+      /* Nombres del menú (Johnny, 04/11/2026): «AP · Qué hacemos · Casos de
+         estudio · Contacto». Las URL no cambian. */
+      proyectos: 'Casos de estudio',
+      servicios: 'Qué hacemos',
+      estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contacto',
       privacidad: 'Privacidad',
       cookies: 'Cookies',
       accesibilidad: 'Accesibilidad',
     },
+    navComplemento: { estudio: ', el estudio' },
     readMore: 'Leer más',
     readLess: 'Leer menos',
     carouselPause: 'Pausar',
@@ -121,6 +128,7 @@ export const UI: Record<Lang, Dict> = {
       cookies: 'Galetes',
       accesibilidad: 'Accessibilitat',
     },
+    navComplemento: {},
     readMore: 'Llegeix-ne més',
     readLess: 'Llegeix-ne menys',
     carouselPause: 'Pausa',
@@ -166,6 +174,7 @@ export const UI: Record<Lang, Dict> = {
       cookies: 'Cookies',
       accesibilidad: 'Accessibility',
     },
+    navComplemento: {},
     readMore: 'Read more',
     readLess: 'Read less',
     carouselPause: 'Pause',

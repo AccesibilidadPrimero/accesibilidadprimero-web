@@ -44,10 +44,6 @@ imagenes:
       antiguos expuestos en una vitrina iluminada.
 ---
 
-Dejar espacio a la obra.
-
-La interfaz se aparta para que la obra cree su propio espacio.
-
 Obra propia y comisariado, sin mezclarse.
 
-Y las series se navegan como lo que son: conjuntos, no imágenes sueltas.
+Trabajos, exposiciones y textos se recorren sin perder la personalidad del proyecto. En “Agujeros de tiempo”, las panorámicas avanzan de lado a lado con el puntero.

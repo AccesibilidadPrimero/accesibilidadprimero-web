@@ -39,7 +39,7 @@ const langs = alternates(current, slug);
                 class="header__link"
                 aria-current={key === current ? 'page' : undefined}
               >
-                {ui.nav[key]}
+                {ui.nav[key]}{ui.navComplemento[key] && <span class="sr-only">{ui.navComplemento[key]}</span>}
               </a>
             </li>
           ))
