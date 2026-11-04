@@ -430,6 +430,14 @@ ficha con «Estándar: WCAG 2.2 nivel AA» como los demás; apartado
 silla. **El testimonio de Pau sigue en `borrador`: Johnny pidió uno
 ficticio y no se publica** (un testimonio inventado se lee como real).
 
+**Casos de productos (04/11/2026).** Mismo tono y misma maqueta que los
+casos de clientes (Johnny). El primero, `/proyectos/a11y-primero/`: sin foto
+de ambiente, el hero va en el color del producto con el panel dibujado; sin
+«Web» ni declaración mientras la extensión esté en revisión. Un producto con
+caso lleva `caso` en `src/data/productos.ts`, y `CierreProyecto` lo pone en
+el recorrido «Ver …» detrás de los casos de clientes; después del último,
+«Ver todos los casos de estudio». Sin «Avísame cuando esté disponible».
+
 **Testimonios reales (03/11/2026).** Sin formato especial: en ECI, un bloque
 más («Desde el otro lado», título a la izquierda y texto a la derecha) sobre
 gris claro; en Izaskun, foto y texto en dos columnas sobre el carmesí, con

@@ -20,6 +20,10 @@ export interface Producto {
   imagen?: string;
   alt?: string;
   video?: { mp4: string; webm: string; descripcion: string };
+  /** El slug de su caso de estudio en /proyectos/<caso>/, si ya lo tiene
+      (A11y Primero, 04/11/2026). Entra en el recorrido «Ver …» del final de
+      los casos, detrás de los de clientes. */
+  caso?: string;
   /** La tarjeta del listado de Proyectos. */
   tarjeta: { captura: string; color: string; linea: string };
 }
@@ -63,7 +67,9 @@ export const PRODUCTOS: Producto[] = [
        a11yprimero/, que es esta misma web: con la v2 esa dirección redirige a
        /blog/a11yprimero/ (public/_redirects). Marcarlo como externo prometía
        otra web y otra pestaña para acabar en el blog de casa. */
-    href: '/blog/a11yprimero/',
+    /* Desde el 04/11/2026, a su caso de estudio. */
+    href: '/proyectos/a11y-primero/',
+    caso: 'a11y-primero',
     clase: 'producto--a11y',
     imagen: 'a11y-primero',
     alt:

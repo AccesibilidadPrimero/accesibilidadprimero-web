@@ -1,0 +1,228 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso A11y Primero · el primer caso de un producto propio (04/11/2026)
+
+   Johnny: «los casos de estudio de los productos y las extensiones deben
+   tener el mismo estilo de tono y de diseño que en los casos de las webs».
+   Así que es la maqueta de Izaskun y ECI, pieza a pieza: hero, ficha,
+   bloques «etiqueta | texto», capturas, decisiones de diseño y el cierre
+   común (CierreProyecto). El contenido sale de la landing de la extensión
+   (a11y-i18n/_publicacion/a11y-primero-landing.html), reescrito en la voz
+   de los casos: qué hicimos y por qué, no un anuncio. Sin «Avísame cuando
+   esté disponible» (Johnny, 04/11/2026).
+
+   Lo que cambia frente a un caso de cliente, y por qué:
+   · Hero: no hay foto de ambiente, así que va la banda en el color del
+     producto (el amarillo de su tarjeta en Proyectos) con la extensión
+     abierta sobre esta misma web.
+   · Sin «Web» en la ficha ni declaración en el cierre: la extensión está en
+     revisión en la Chrome Web Store y no tiene página pública todavía.
+   · Las capturas son imágenes, no vídeos. Son de la extensión de verdad
+     (v2.0.0, cargada en Chromium) sobre esta misma web, a @2x, con el panel
+     montado encima como lo pinta Chrome. Una «metaweb» (Johnny, 04/11/2026):
+     enseñamos la extensión evaluando nuestra propia web, en lugar de señalar
+     los fallos de la web de un cliente. Si la web cambia, se vuelve a
+     capturar; lo que dice el panel es lo que midió ese día.
+   · Sin la banda amarilla de los límites del final (Johnny, 04/11/2026:
+     «queda muy pobre»).
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+import hero from '../../assets/proyectos/a11y-primero/hero.jpg';
+import panelWcag from '../../assets/proyectos/a11y-primero/panel-wcag.png';
+import wcag from '../../assets/proyectos/a11y-primero/wcag.jpg';
+import verComo from '../../assets/proyectos/a11y-primero/ver-como.jpg';
+
+const titulo = 'A11y Primero';
+const datos = [
+  ['Producto', 'Extensión de Chrome de Accesibilidad Primero'],
+  ['Año', '2026'],
+  ['Rol', 'Diseño, contenidos y desarrollo'],
+  ['Comprueba', 'WCAG 2.2 niveles A y AA, con axe-core'],
+  ['Estado', 'Versión 2.0, en revisión en la Chrome Web Store'],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={`${titulo} · Proyectos · Accesibilidad Primero`}
+  description="A11y Primero, la extensión de Chrome de Accesibilidad Primero: una evaluación de accesibilidad contada para quien decide y para quien corrige."
+>
+  <div class="a11y" style="--acento: var(--yellow-ap); --texto-acento: var(--ink);">
+    <HeroPagina
+      titulo="Entender qué falla y cómo mejorarlo."
+      golpes={['Entender qué falla', 'y cómo mejorarlo.']}
+      texto={['A11y Primero · Caso de estudio']}
+      superficie={{ fondo: 'var(--yellow-ap)', foco: 'var(--blue-ap)' }}
+      ilustracion={hero}
+      alt="A11y Primero abierto sobre la portada de esta web: el panel da 100 de 100, “sin fallos automáticos”, con las cuatro categorías a 100, y avisa de que dos comprobaciones necesitan revisión manual."
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <div class="bloque__contenido">
+        <p>A11y Primero es una extensión de Chrome que analiza la accesibilidad de una página en un clic, con axe-core y los criterios de WCAG 2.2.</p>
+        <p>La hicimos para nuestro propio trabajo: es la herramienta con la que empezamos cada auditoría del estudio. Y la preparamos para que la use cualquiera que quiera saber por dónde empezar con su web.</p>
+        <p>Las capturas de esta página son la extensión evaluando esta misma web.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={panelWcag}
+        formats={['avif', 'webp']}
+        widths={[panelWcag.width / 2, panelWcag.width]}
+        sizes="(min-width: 768px) 300px, calc(100vw - 48px)"
+        alt="La pestaña WCAG del panel sobre esta web: sin fallos WCAG automáticos y dos puntos para revisar a mano, el vídeo sin subtítulos (1.2.2) y, abierto, el contraste de dos textos que la animación de entrada tapa en parte (1.4.3), cada uno con su selector."
+        class="captura captura--panel"
+        loading="lazy"
+      />
+      <figcaption>WCAG</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">El reto</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">Una evaluación, dos maneras de entenderla.</h2>
+        <p>Un resultado lleno de tecnicismos no explica qué ocurre, a quién afecta ni por qué conviene mejorarlo. Y a quien trabaja en el código no le basta con saber que hay un problema: necesita localizarlo, conocer el criterio afectado y saber cómo corregirlo.</p>
+        <h3>Para quien decide y para quien corrige.</h3>
+        <p>Cada hallazgo se cuenta de las dos maneras. “Las imágenes deben tener texto alternativo” es lo que lee quien decide; “1.1.1, image-alt, nivel A” y el selector de cada imagen, lo que necesita quien corrige.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={wcag}
+        formats={['avif', 'webp']}
+        widths={anchos(wcag.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt="El bloque de productos de la portada de esta web, con la extensión abierta a la derecha: el vídeo de Itza, recuadrado en azul con un interrogante porque hay que revisar a mano si necesita subtítulos, y al lado la tarjeta de la propia A11y Primero."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Marcar fallos en la página</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">La estructura</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">Cinco pestañas, del dato al informe.</h2>
+        <p>“Resumen” da una puntuación de 0 a 100 y los resultados por categorías. “WCAG”, el detalle técnico de cada fallo, con los elementos afectados marcados sobre la propia página.</p>
+        <p>“Proyecto” evalúa varias páginas de un mismo sitio y exporta un informe conjunto, porque la portada puede salir limpia y la carta no. “Historial” compara las tres últimas evaluaciones de cada dominio. Y “Ver como…” simula baja visión, visión borrosa, daltonismo y alto contraste sobre la página.</p>
+        <p>Todo acaba en un informe en PDF para compartir y en Markdown para pegar en un ticket o un repositorio.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={verComo}
+        formats={['avif', 'webp']}
+        widths={anchos(verComo.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt="La portada de esta web con la simulación de baja visión: la ilustración, el titular y el menú se ven borrosos y apagados, y el panel abierto en la pestaña “Ver como…” con sus cuatro simulaciones."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Ver como…</figcaption>
+    </figure>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">Decisiones de diseño</h2>
+        <p>Una prueba automática detecta aproximadamente un tercio de las barreras. La herramienta no resuelve la accesibilidad: ayuda a saber por dónde empezar. Cada decisión sale de ahí.</p>
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <h3>Un 100 no es un sello.</h3>
+          <p>La puntuación va siempre acompañada de lo que la prueba no ha podido comprobar. Lo que la herramienta no puede decidir, como un texto sobre una foto, se separa para revisarlo a mano en lugar de inventarse un número.</p>
+        </li>
+        <li>
+          <h3>Una puntuación que se puede explicar.</h3>
+          <p>Se parte de 100 y cada regla que falla resta según su impacto: crítico 10, grave 7, moderado 3 y menor 1. Las buenas prácticas y lo que hay que revisar a mano no restan.</p>
+        </li>
+        <li>
+          <h3>Los datos se quedan en el navegador.</h3>
+          <p>Sin registro ni servidores externos. La extensión solo lee la pestaña en la que se abre y solo cuando se pulsa “Evaluar”, y el informe se genera en el propio equipo.</p>
+        </li>
+        <li>
+          <h3>En tres idiomas.</h3>
+          <p>La interfaz está en castellano, catalán e inglés, según el idioma de Chrome.</p>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+  <CierreProyecto actual="a11y-primero" titulo={titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La captura del hero, con el radio de las demás capturas. */
+  .a11y :global(.apertura__ilustracion) { border-radius: var(--radio); }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .a11y :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { align-self: stretch; }
+  /* El panel solo, a su tamaño de Chrome (300): la captura es @2x de eso. */
+  .a11y :global(.captura--panel) { width: min(300px, 100%); }
+  .pieza--derecha figcaption { width: min(300px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>

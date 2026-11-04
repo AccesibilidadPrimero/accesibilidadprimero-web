@@ -67,6 +67,7 @@ const RUTAS = [
   { nombre: 'Caso Foc i Cor', url: '/proyectos/foc-i-cor/', minimo: 40 },
   { nombre: 'Caso ECI Conference', url: '/proyectos/eci-conference/', minimo: 30 },
   { nombre: 'Caso Izaskun Etxebarria', url: '/proyectos/izaskun-etxebarria/', minimo: 20 },
+  { nombre: 'Caso A11y Primero', url: '/proyectos/a11y-primero/', minimo: 20 },
   { nombre: 'Caso Elogio de la línea', url: '/proyectos/elogio-de-la-linea/', minimo: 20 },
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },
@@ -109,7 +110,19 @@ for (const ruta of RUTAS) {
     if (alto === await page.evaluate(() => document.documentElement.scrollHeight)) break;
   }
   // Estados que solo existen tras una acción (los errores de Contacto).
-  if (ruta.preparar) await ruta.preparar(page);
+  if (ruta.preparar) {
+    await ruta.preparar(page);
+    /* Los mensajes de error alargan la página. Si la ventana no se vuelve a
+       ajustar, la captura de página entera la estira ENTRE medir y capturar
+       y las cajas caen sobre otra cosa (el botón negro): «fallos» de 1:1 que
+       salían a ratos en el CI (04/11/2026). */
+    for (let i = 0; i < 3; i++) {
+      const alto = await page.evaluate(() => document.documentElement.scrollHeight);
+      await page.setViewportSize({ width: 1440, height: alto });
+      await page.waitForTimeout(250);
+      if (alto === await page.evaluate(() => document.documentElement.scrollHeight)) break;
+    }
+  }
 
   /* Cajas de texto visibles, con su color y su tamaño efectivo. */
   const cajas = await page.evaluate(() => {

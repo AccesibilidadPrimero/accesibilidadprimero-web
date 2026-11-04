@@ -596,7 +596,7 @@ for (const ancho of [1440, 768, 390]) {
 {
   /* /proyectos/ salió de la lista el 14/10/2026: ya no lleva hero (ver el
      bloque siguiente). */
-  const PAGINAS = ['/estudio/', '/servicios/', '/contacto/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/blog/',
+  const PAGINAS = ['/estudio/', '/servicios/', '/contacto/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/proyectos/a11y-primero/', '/blog/',
     '/blog/categoria/diseno/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/'];
   const art = (await (await fetch(`http://localhost:${PUERTO}/blog/`)).text()).match(/href="(\/blog\/(?!categoria)[^"]+\/)"/);
   if (art) PAGINAS.push(art[1]);
