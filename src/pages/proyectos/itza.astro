@@ -1,0 +1,222 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Itza · el segundo caso de un producto propio (04/11/2026)
+
+   La misma maqueta y el mismo tono que A11y Primero y los casos de clientes
+   (Johnny, 04/11/2026). El contenido sale de la landing de Itza
+   (ITZA/LAnding Itza/index.html y ITZA_PROYECTO.md), reescrito en la voz de
+   los casos: qué hicimos y por qué.
+
+   Las capturas son el widget de verdad (el de la landing, con su HTML, CSS
+   y JS) montado sobre esta misma web, como en A11y Primero: no se enseña la
+   web de un cliente. Las respuestas del asistente son de ejemplo, servidas
+   sin llamar al servicio real; las preguntas sugeridas son las que tendría
+   esta web. Lo dice el propio caso.
+
+   Off Escuela sale nombrada, sin captura: es la demo real en producción que
+   ya enseña la landing.
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { DEFAULT_LANG } from '../../i18n/config';
+import hero from '../../assets/proyectos/itza/hero.jpg';
+import movil from '../../assets/proyectos/itza/movil.jpg';
+import sugerencias from '../../assets/proyectos/itza/sugerencias.jpg';
+import contacto from '../../assets/proyectos/itza/contacto.jpg';
+
+const titulo = 'Itza';
+const datos = [
+  ['Producto', 'Asistente accesible de Accesibilidad Primero'],
+  ['Año', '2026'],
+  ['Rol', 'Diseño, contenidos y desarrollo'],
+  ['Estándar', 'WCAG 2.1 nivel AA'],
+  ['En uso', 'Off Escuela, Valencia'],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+---
+
+<Base
+  lang={DEFAULT_LANG}
+  current="proyectos"
+  title={`${titulo} · Proyectos · Accesibilidad Primero`}
+  description="Itza, el asistente accesible de Accesibilidad Primero: responde las preguntas de quienes visitan la web de una organización, con teclado, voz y lector de pantalla."
+>
+  <div class="itza">
+    <HeroPagina
+      titulo="Ninguna pregunta sin respuesta."
+      golpes={['Ninguna pregunta', 'sin respuesta.']}
+      texto={['Itza · Caso de estudio']}
+      superficie={{ fondo: 'var(--mint-video)', foco: 'var(--blue-ap)' }}
+      ilustracion={hero}
+      alt="La ventana de Itza: Marta dice su nombre, pregunta si hacemos auditorías de accesibilidad y el asistente le responde qué incluye la auditoría; debajo, la barra “Pregúntame lo que necesites” con el botón de voz."
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        <div><dt>Web</dt><dd><CtaLink href="https://itza.accesibilidadprimero.com/">itza.accesibilidadprimero.com</CtaLink></dd></div>
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <div class="bloque__contenido">
+        <p>Itza es un asistente que responde las preguntas de quienes visitan la web de una organización: qué hace, cómo apuntarse, qué horarios tiene, si quedan plazas. Atiende las 24 horas, orienta a cada persona y recoge los datos de quien quiere que le contacten.</p>
+        <p>Lo pensamos para asociaciones, fundaciones, centros educativos y proyectos culturales, que suelen responder esas preguntas a mano, una a una. Off Escuela, la escuela de artes escénicas de Off Valencia, lo usa para resolver las consultas sobre sus cursos.</p>
+        <p>Las capturas de esta página son Itza instalado en esta misma web, con una conversación de ejemplo.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={movil}
+        formats={['avif', 'webp']}
+        widths={[movil.width / 2, movil.width]}
+        sizes="(min-width: 768px) 360px, calc(100vw - 48px)"
+        alt="La misma conversación en el móvil: la ventana de Itza ocupa casi toda la pantalla, con la respuesta sobre la auditoría, el campo para escribir y la barra con el botón de voz debajo."
+        class="captura captura--movil"
+        loading="lazy"
+      />
+      <figcaption>En el móvil</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">El reto</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">Un asistente que también sea accesible.</h2>
+        <p>Un chat es una ventana que se abre encima de la página. Si no se maneja con teclado, si el lector de pantalla no anuncia las respuestas o si atrapa el foco sin dejar salir, deja fuera justo a quien más ayuda necesita.</p>
+        <h3>Por teclado, por voz y con lector de pantalla.</h3>
+        <p>Se abre y se cierra con teclado, el foco se queda dentro mientras está abierto y vuelve a su sitio al cerrar. Cada respuesta se anuncia sola, y se puede preguntar hablando y escuchar la respuesta.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={sugerencias}
+        formats={['avif', 'webp']}
+        widths={anchos(sugerencias.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt="Itza en esta web después de saludar a Marta: cuatro preguntas sugeridas, “¿Qué servicios ofrecéis?”, “¿Hacéis auditorías de accesibilidad?”, “¿Cómo es trabajar con vosotros?” y “Quiero contaros mi proyecto”."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Preguntas sugeridas</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">La estructura</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">Una barra, una conversación y un contacto.</h2>
+        <p>Itza vive en una barra al pie de la página: “Pregúntame lo que necesites”. Al pulsarla se abre la conversación. Primero pregunta cómo llamar a quien escribe y después ofrece preguntas sugeridas, las de cada organización.</p>
+        <p>Responde con la información de la propia organización y tiene la instrucción de no inventar datos. Al cerrar, propone dejar nombre y correo, y se puede cerrar sin dejarlos.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={contacto}
+        formats={['avif', 'webp']}
+        widths={[contacto.width / 2, contacto.width]}
+        sizes="(min-width: 768px) 420px, calc(100vw - 48px)"
+        alt="Al cerrar la conversación, Itza pregunta “¿Te ha sido útil? Déjanos tus datos”, con los campos de nombre y correo, el botón “Enviar y cerrar” y la opción “Cerrar sin dejar datos”."
+        class="captura captura--ventana"
+        loading="lazy"
+      />
+      <figcaption>Al cerrar</figcaption>
+    </figure>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">Decisiones de diseño</h2>
+        <p>Un asistente útil no sustituye al equipo: responde lo de siempre para que el equipo tenga tiempo para lo demás.</p>
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <h3>Primero, el nombre.</h3>
+          <p>La conversación empieza preguntando cómo llamar a quien escribe. El tono es el de alguien de la organización, no el de un formulario.</p>
+        </li>
+        <li>
+          <h3>Una barra, no un botón flotante.</h3>
+          <p>“Pregúntame lo que necesites” dice qué es y para qué sirve antes de pulsarla. Un icono en una esquina obliga a adivinarlo.</p>
+        </li>
+        <li>
+          <h3>Con la voz de cada organización.</h3>
+          <p>El nombre del asistente, los colores y el mensaje de bienvenida se adaptan a cada web, y responde en castellano, catalán o inglés.</p>
+        </li>
+        <li>
+          <h3>Lo instalamos nosotros.</h3>
+          <p>Sin programadores ni contratos largos: en 48 horas está en marcha en la web de la organización.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <CierreProyecto actual="itza" titulo={titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La ventana del hero, más alta que una ilustración (400): a ese tamaño
+     la conversación no se leía. Cabe en lo que deja libre el titular. */
+  .itza :global(.apertura__ilustracion) { block-size: 400px; }
+  @media (min-width: 768px) { .itza :global(.apertura__ilustracion) { block-size: 460px; } }
+  @media (min-width: 1024px) { .itza :global(.apertura__ilustracion) { block-size: 560px; } }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .itza :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { align-self: stretch; }
+  /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
+  .itza :global(.captura--movil) { width: min(360px, 100%); }
+  .itza :global(.captura--ventana) { width: min(420px, 100%); box-shadow: none; }
+  .pieza--derecha figcaption { width: min(420px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>
