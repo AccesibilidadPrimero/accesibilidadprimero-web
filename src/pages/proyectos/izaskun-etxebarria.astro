@@ -278,4 +278,16 @@ const datos = [
   .declaracion { display: block; max-width: none; padding: var(--space-64) var(--gutter-page); text-align: center; }
   .declaracion :global(.linea) { display: block; }
   @media (min-width: 768px) { .declaracion { padding-block: var(--space-96); } }
+
+  /* ---- Jerarquía por distancia (Johnny, 04/11/2026) --------------------
+     Con un solo tamaño y un solo peso, lo que dice «esto es un título» es el
+     espacio. El criterio es el de Foc i Cor: 48 entre un titular y su texto,
+     24 entre párrafos y 72 antes de un titular que corta el texto, para que
+     quede más cerca de lo que encabeza que de lo anterior. */
+  .bloque { row-gap: var(--space-48); }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista li { gap: var(--space-48); }
+  .testimonio > h2 + * { margin-block-start: var(--space-24); }
 </style>

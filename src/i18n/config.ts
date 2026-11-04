@@ -50,16 +50,10 @@ export type RouteKey =
     los productos propios viven dentro de Proyectos, con su filtro. Servicios
     entró el 30/10/2026, detrás de Proyectos: primero lo hecho, después lo que
     ofrecemos. Nuevo orden (Johnny, 03/11/2026): primero quiénes somos y qué
-    hacemos, después lo hecho. */
-export const NAV: RouteKey[] = ['estudio', 'servicios', 'proyectos', 'blog', 'contacto'];
-
-/** Apartados de un destino del menú (03/11/2026). Quien solo busca una
-    auditoría no tiene que recorrerse todo Servicios: cada apartado lleva a su
-    desplegable, ya abierto. La clave es el `id` del Bloque en la página. */
-export type SubKey = 'diseno' | 'auditoria' | 'formacion';
-export const SUBNAV: Partial<Record<RouteKey, SubKey[]>> = {
-  servicios: ['diseno', 'auditoria', 'formacion'],
-};
+    hacemos, después lo hecho. Sin submenús (Johnny, 04/11/2026).
+    Blog fuera del menú por ahora (04/11/2026): se replantea al terminar la
+    web. Las páginas siguen publicadas; solo deja de anunciarse aquí. */
+export const NAV: RouteKey[] = ['estudio', 'servicios', 'proyectos', 'contacto'];
 
 /** Las tres del pie. */
 export const NAV_LEGAL: RouteKey[] = ['privacidad', 'cookies', 'accesibilidad'];

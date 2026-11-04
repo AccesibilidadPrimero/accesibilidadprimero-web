@@ -29,14 +29,16 @@ const variante = proyecto.id.includes('foc') ? 'foc'
    área de rejilla, y el orden sigue teniendo sentido: en Izaskun el enlace
    está debajo del slider; en Foc i Cor se lee la columna de texto y luego
    las capturas. */
-const ctaAlFinal = variante !== 'eci';
+/* Desde el 04/11/2026 también en ECI va debajo del slider (Johnny): en los
+   tres proyectos el enlace al caso cierra el bloque. */
+const ctaAlFinal = true;
 /* El enlace lleva al CASO, dentro de la web (Johnny, 03/11/2026); antes,
    «Ir a …» abría la web del cliente en otra pestaña. La web del cliente
    sigue enlazada desde la ficha del caso. Si el caso no está publicado,
    queda el enlace externo de antes. */
 const enlaceCaso = d.casoPublicado ? `/proyectos/${proyecto.id}/` : null;
 const destino = enlaceCaso ?? d.web;
-const textoCta = enlaceCaso ? `Ver ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nombreCorto ?? d.titulo}`;
+const textoCta = enlaceCaso ? `Ver el caso de ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nombreCorto ?? d.titulo}`;
 ---
 
 <section
@@ -55,9 +57,17 @@ const textoCta = enlaceCaso ? `Ver ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nom
         vuelve a fluir, porque un corte pensado para 660 de ancho deja
         renglones cojos en un móvil. El lector de pantalla oye un párrafo
         seguido en los dos casos. */}
-    <p class="proyecto__resumen measure">
-      {d.resumen.split('\n').map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
-    </p>
+    <div class="proyecto__texto">
+      <p class="proyecto__resumen measure">
+        {d.resumen.split('\n').map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
+      </p>
+      {/* Lo que hicimos, a la vista sin desplegar (04/11/2026). */}
+      {d.aporte && (
+        <p class="proyecto__resumen measure">
+          {d.aporte.split('\n').map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}
+        </p>
+      )}
+    </div>
 
     <Disclosure id={`${id}-mas`} contexto={d.titulo} lang={lang}>
       <div class="proyecto__ampliacion measure"><slot /></div>
@@ -165,6 +175,8 @@ const textoCta = enlaceCaso ? `Ver ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nom
   /* Una línea en blanco entre párrafos: el hueco es el interlineado, no un
      número aparte, así que crece y encoge con el cuerpo de letra. */
   .proyecto__ampliacion :global(p + p) { margin-block-start: var(--texto-leading); }
+  .proyecto__texto { display: flex; flex-direction: column; gap: var(--texto-leading); }
+  .proyecto__texto p { margin: 0; }
 
   /* El 128 que separa este bloque del anterior, en todos los anchos. No hay
      relleno inferior: el aire de abajo es el 128 del bloque siguiente,

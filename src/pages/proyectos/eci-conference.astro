@@ -254,6 +254,8 @@ const datos = [
     .bloque--esquema .bloque__esquema { display: block; }
     .bloque--esquema :global(.esquema--columna) { position: sticky; top: var(--space-24); }
     .bloque--esquema :global(.esquema--linea) { display: none; }
+    /* Con el esquema de línea oculto, los 48 del titular los lleva el párrafo. */
+    .bloque__contenido > h2 + :global(.esquema--linea) + p { margin-block-start: var(--space-24); }
   }
 
   /* ---- Vídeos ---- */
@@ -294,4 +296,13 @@ const datos = [
      (Johnny, 29/10/2026; texto del 03/11/2026). */
   .eci :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
   @media (min-width: 768px) { .declaracion { padding-block: var(--space-96); } }
+
+  /* ---- Jerarquía por distancia (Johnny, 04/11/2026) --------------------
+     Con un solo tamaño y un solo peso, lo que dice «esto es un título» es el
+     espacio. El criterio es el de Foc i Cor: 48 entre un titular y su texto,
+     24 entre párrafos y 72 antes de un titular que corta el texto, para que
+     quede más cerca de lo que encabeza que de lo anterior. */
+  .bloque { row-gap: var(--space-48); }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
 </style>

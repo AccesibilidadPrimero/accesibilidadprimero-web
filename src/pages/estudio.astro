@@ -208,8 +208,12 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
      Se probó 32 / 64 y el nombre se quedaba suelto: la lista se leía como
      ocho trozos y no como cuatro servicios.
      El nombre es un <h3> pintado como el cuerpo: el nivel lo da el marcado. */
-  .servicios { display: flex; flex-direction: column; gap: var(--space-48); max-width: 888px; }
-  .servicios li { display: flex; flex-direction: column; gap: var(--space-16); }
+  /* Intermedio (Johnny, 04/11/2026): 24 del nombre a su texto (era 16) y 72
+     entre punto y punto (era 48): el triple, la regla de proximidad
+     (AGENTS.md §4). En los casos es 48; aquí los puntos son cortos y 48 los
+     partía en dos. */
+  .servicios { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); max-width: 888px; }
+  .servicios li { display: flex; flex-direction: column; gap: var(--space-24); }
   .servicio__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
 
   /* Equipo: el texto a la medida común (52ch; 718 en el Figma) y la persona 24 más abajo (48 en total, como en

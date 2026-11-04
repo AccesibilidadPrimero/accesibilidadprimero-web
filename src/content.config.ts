@@ -80,6 +80,9 @@ const proyectos = defineCollection({
       titulo: z.string(),
       /* Titulares sin antetítulo y sin mayúsculas sostenidas. */
       resumen: z.string(),
+      /* Lo que hizo AP, en una frase visible bajo el resumen de la home
+         (04/11/2026): el resumen presenta al cliente; esto, el trabajo. */
+      aporte: z.string().optional(),
       cliente: z.string(),
       web: z.string().url().optional(),
       /* El nombre para el enlace «Ir a …», cuando el título del caso es más
