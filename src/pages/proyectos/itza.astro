@@ -13,8 +13,8 @@
    sin llamar al servicio real; las preguntas sugeridas son las que tendría
    esta web. Lo dice el propio caso.
 
-   Off Escuela sale nombrada, sin captura: es la demo real en producción que
-   ya enseña la landing.
+   Off Escuela sale nombrada, sin captura: el widget se está instalando allí
+   y todavía no está activo (Johnny, 04/11/2026).
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
 import CierreProyecto from '../../components/CierreProyecto.astro';
@@ -29,11 +29,10 @@ import contacto from '../../assets/proyectos/itza/contacto.jpg';
 
 const titulo = 'Itza';
 const datos = [
-  ['Producto', 'Asistente accesible de Accesibilidad Primero'],
+  ['Producto', 'Asistente accesible'],
   ['Año', '2026'],
-  ['Rol', 'Diseño, contenidos y desarrollo'],
-  ['Estándar', 'WCAG 2.1 nivel AA'],
-  ['En uso', 'Off Escuela, Valencia'],
+  ['Rol', 'Desarrollo'],
+  ['Estándar', 'WCAG 2.2 A/AA'],
 ];
 const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
 ---
@@ -66,7 +65,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
       <div class="bloque__contenido">
         <p>Itza es un asistente que responde las preguntas de quienes visitan la web de una organización: qué hace, cómo apuntarse, qué horarios tiene, si quedan plazas. Atiende las 24 horas, orienta a cada persona y recoge los datos de quien quiere que le contacten.</p>
-        <p>Lo pensamos para asociaciones, fundaciones, centros educativos y proyectos culturales, que suelen responder esas preguntas a mano, una a una. Off Escuela, la escuela de artes escénicas de Off Valencia, lo usa para resolver las consultas sobre sus cursos.</p>
+        <p>Lo pensamos para asociaciones, fundaciones, centros educativos y proyectos culturales, que suelen responder esas preguntas a mano, una a una. Ahora lo estamos instalando en Off Escuela, la escuela de artes escénicas de Off Valencia.</p>
         <p>Las capturas de esta página son Itza instalado en esta misma web, con una conversación de ejemplo.</p>
       </div>
     </section>
@@ -112,7 +111,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       <div class="bloque__contenido">
         <h2 id="estructura">Una barra, una conversación y un contacto.</h2>
         <p>Itza vive en una barra al pie de la página: “Pregúntame lo que necesites”. Al pulsarla se abre la conversación. Primero pregunta cómo llamar a quien escribe y después ofrece preguntas sugeridas, las de cada organización.</p>
-        <p>Responde con la información de la propia organización y tiene la instrucción de no inventar datos. Al cerrar, propone dejar nombre y correo, y se puede cerrar sin dejarlos.</p>
+        <p>Responde con la información de la propia organización y tiene la instrucción de no inventar datos. Al cerrar, propone dejar nombre y correo, y se puede cerrar sin dejarlos. Si la persona envía sus datos, la conversación se guarda con ellos, para que el equipo sepa qué preguntó y pueda seguir desde ahí.</p>
       </div>
     </section>
 
@@ -145,11 +144,11 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
         </li>
         <li>
           <h3>Con la voz de cada organización.</h3>
-          <p>El nombre del asistente, los colores y el mensaje de bienvenida se adaptan a cada web, y responde en castellano, catalán o inglés.</p>
+          <p>El nombre del asistente, los colores y el mensaje de bienvenida se adaptan a cada web.</p>
         </li>
         <li>
           <h3>Lo instalamos nosotros.</h3>
-          <p>Sin programadores ni contratos largos: en 48 horas está en marcha en la web de la organización.</p>
+          <p>Sin programadores ni contratos largos: lo dejamos funcionando en la web de la organización.</p>
         </li>
       </ul>
     </section>
