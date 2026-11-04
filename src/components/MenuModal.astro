@@ -27,7 +27,7 @@
    botón muerto en pantalla.
    --------------------------------------------------------------------------- */
 
-import { NAV, SUBNAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
 import { t } from '../i18n/ui';
 
 interface Props {
@@ -79,7 +79,6 @@ const langs = alternates(current, slug);
         {
           NAV.map((key) => {
             const isCurrent = key === current;
-            const sub = SUBNAV[key];
             return (
               <li>
                 <a
@@ -89,16 +88,6 @@ const langs = alternates(current, slug);
                 >
                   {ui.nav[key]}
                 </a>
-                {/* En el modal los apartados van siempre a la vista, debajo
-                    de su página (03/11/2026): hay sitio, y un desplegable
-                    dentro de otro desplegable es un paso más para nadie. */}
-                {sub && (
-                  <ul class="menu__sub" aria-label={`${ui.submenuDe} ${ui.nav[key]}`}>
-                    {sub.map((s) => (
-                      <li><a href={`${path(key, lang)}#${s}`} class="menu__link menu__link--sub">{ui.subnav[s]}</a></li>
-                    ))}
-                  </ul>
-                )}
               </li>
             );
           })
@@ -252,16 +241,6 @@ const langs = alternates(current, slug);
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-  }
-
-  /* Los apartados, sangrados 24 bajo su página: la sangría dice de quién
-     cuelgan sin necesidad de otro tamaño ni otro peso. */
-  .menu__sub {
-    list-style: none;
-    margin: 0;
-    padding: 0 0 0 var(--space-24);
-    display: flex;
-    flex-direction: column;
   }
 
   .menu__link {
@@ -423,13 +402,6 @@ const langs = alternates(current, slug);
         first.focus();
       }
     }
-
-    // Un apartado de la página en la que ya estás no navega: sin esto el
-    // modal se quedaría abierto encima del desplegable que acaba de abrirse.
-    panel.addEventListener('click', (e) => {
-      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="#"]');
-      if (a && a.pathname === location.pathname && trigger.getAttribute('aria-expanded') === 'true') close();
-    });
 
     trigger.addEventListener('click', () => {
       if (trigger.getAttribute('aria-expanded') === 'true') close();

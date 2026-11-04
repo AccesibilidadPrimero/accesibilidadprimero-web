@@ -29,7 +29,9 @@ const variante = proyecto.id.includes('foc') ? 'foc'
    área de rejilla, y el orden sigue teniendo sentido: en Izaskun el enlace
    está debajo del slider; en Foc i Cor se lee la columna de texto y luego
    las capturas. */
-const ctaAlFinal = variante !== 'eci';
+/* Desde el 04/11/2026 también en ECI va debajo del slider (Johnny): en los
+   tres proyectos el enlace al caso cierra el bloque. */
+const ctaAlFinal = true;
 /* El enlace lleva al CASO, dentro de la web (Johnny, 03/11/2026); antes,
    «Ir a …» abría la web del cliente en otra pestaña. La web del cliente
    sigue enlazada desde la ficha del caso. Si el caso no está publicado,
