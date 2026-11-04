@@ -13,21 +13,26 @@
 
    Lo que cambia frente a un caso de cliente, y por qué:
    · Hero: no hay foto de ambiente, así que va la banda en el color del
-     producto (el amarillo de su tarjeta en Proyectos) con el panel de la
-     extensión dibujado encima, capturado a @2x de la landing.
+     producto (el amarillo de su tarjeta en Proyectos) con la extensión
+     abierta sobre una web real.
    · Sin «Web» en la ficha ni declaración en el cierre: la extensión está en
      revisión en la Chrome Web Store y no tiene página pública todavía.
-   · Las capturas son imágenes, no vídeos: las de la ficha de la tienda
-     (1280 × 800, por debajo de @2x; `npm run arte` lo avisa).
+   · Las capturas son imágenes, no vídeos. Son de la extensión de verdad
+     (v2.0.0, cargada en Chromium) sobre offvalencia.com, a @2x, con el panel
+     montado encima como lo pinta Chrome (Johnny, 04/11/2026: «puedes usar
+     la web de Off para los ejemplos visuales»).
+   · Sin la banda amarilla de los límites del final (Johnny, 04/11/2026:
+     «queda muy pobre»).
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
 import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import { DEFAULT_LANG } from '../../i18n/config';
-import panel from '../../assets/proyectos/a11y-primero/hero-panel.png';
-import resumen from '../../assets/proyectos/a11y-primero/resumen.png';
-import wcag from '../../assets/proyectos/a11y-primero/wcag.png';
+import hero from '../../assets/proyectos/a11y-primero/hero.jpg';
+import panelWcag from '../../assets/proyectos/a11y-primero/panel-wcag.png';
+import wcag from '../../assets/proyectos/a11y-primero/wcag.jpg';
+import verComo from '../../assets/proyectos/a11y-primero/ver-como.jpg';
 
 const titulo = 'A11y Primero';
 const datos = [
@@ -52,8 +57,8 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       golpes={['Entender qué falla', 'y cómo mejorarlo.']}
       texto={['A11y Primero · Caso de estudio']}
       superficie={{ fondo: 'var(--yellow-ap)', foco: 'var(--blue-ap)' }}
-      ilustracion={panel}
-      alt="El panel de A11y Primero sobre una página de ejemplo: la nota 70 de 100, “mejorable”, con imágenes a 88, estructura a 92, formularios a 100 y contraste a 90, y en la página, recuadrados en rojo con su criterio WCAG, los elementos que fallan."
+      ilustracion={hero}
+      alt="A11y Primero abierto sobre la portada de offvalencia.com: el panel da 90 de 100, “pocos fallos automáticos”, con imágenes, formularios y contraste a 100 y estructura a 90, y avisa de que una comprobación necesita revisión manual."
     />
 
     <section class="datos" aria-labelledby="datos">
@@ -73,15 +78,15 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
 
     <figure class="pieza pieza--derecha">
       <Picture
-        src={resumen}
+        src={panelWcag}
         formats={['avif', 'webp']}
-        widths={anchos(resumen.width, [640, 960])}
-        sizes="(min-width: 1440px) 660px, (min-width: 1024px) 46vw, calc(100vw - 48px)"
-        alt="La extensión abierta sobre la web de un taller de cerámica de ejemplo: a la derecha, el panel con la nota 72, “mejorable”, las cuatro categorías y un resumen con tres fallos; en la página, recuadrados en rojo, los textos con poco contraste (1.4.3) y las imágenes sin alternativa (1.1.1)."
-        class="captura"
+        widths={[panelWcag.width / 2, panelWcag.width]}
+        sizes="(min-width: 768px) 300px, calc(100vw - 48px)"
+        alt="La pestaña WCAG del panel: el fallo 1.4.4, que impide ampliar la página con el zum, y abierto el apartado “Revisar a mano”, con diez textos del menú sobre un fondo degradado que la herramienta no puede medir, cada uno con su selector."
+        class="captura captura--panel"
         loading="lazy"
       />
-      <figcaption>Resumen</figcaption>
+      <figcaption>WCAG</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="reto">
@@ -98,13 +103,13 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       <Picture
         src={wcag}
         formats={['avif', 'webp']}
-        widths={anchos(wcag.width, [640, 960])}
+        widths={anchos(wcag.width, [640, 1100, 1600, 2200])}
         sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
-        alt="La pestaña WCAG del panel: siete elementos con fallos en tres reglas y, abierto, el criterio 1.1.1 con su impacto crítico, la lista de lo que hay que corregir y los dos elementos afectados con su selector."
+        alt="La portada de offvalencia.com con los elementos marcados por la extensión: los textos del menú y del titular, recuadrados en azul con un interrogante porque están sobre una foto y hay que medirlos a mano, y el panel abierto a la derecha."
         class="captura"
         loading="lazy"
       />
-      <figcaption>WCAG</figcaption>
+      <figcaption>Marcar fallos en la página</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="estructura">
@@ -117,10 +122,23 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       </div>
     </section>
 
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={verComo}
+        formats={['avif', 'webp']}
+        widths={anchos(verComo.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt="La misma portada con la simulación de baja visión: la foto, el titular y el menú se ven borrosos y apagados, y el panel abierto en la pestaña “Ver como…” con sus cuatro simulaciones."
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>Ver como…</figcaption>
+    </figure>
+
     <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
       <div class="decisiones__enunciado">
         <h2 id="decisiones">Decisiones de diseño</h2>
-        <p>Una herramienta útil no resuelve la accesibilidad: ayuda a saber por dónde empezar. Cada decisión sale de ahí.</p>
+        <p>Una prueba automática detecta aproximadamente un tercio de las barreras. La herramienta no resuelve la accesibilidad: ayuda a saber por dónde empezar. Cada decisión sale de ahí.</p>
       </div>
       <ul class="decisiones__lista">
         <li>
@@ -142,17 +160,6 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
       </ul>
     </section>
 
-    {/* Los límites, sobre el amarillo del producto: es la frase que resume
-        el proyecto, y en los casos de clientes ese sitio lo ocupa el
-        testimonio. */}
-    <section class="banda banda--limites" aria-labelledby="limites">
-      <p class="banda__etiqueta">Lo que conviene saber</p>
-      <div class="banda__contenido">
-        <h2 id="limites">La accesibilidad no se resuelve con un clic.</h2>
-        <p>Una prueba automática detecta aproximadamente un tercio de las barreras. A11y Primero no sustituye una auditoría completa ni la revisión con teclado y lector de pantalla, y no puede decidir si una descripción es adecuada.</p>
-        <p>Tampoco modifica la página: no añade widgets ni altera el contenido. Señala las barreras y orienta sobre cómo corregirlas.</p>
-      </div>
-    </section>
   </div>
   <CierreProyecto actual="a11y-primero" titulo={titulo} />
 </Base>
@@ -193,6 +200,9 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
     .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
   }
 
+  /* La captura del hero, con el radio de las demás capturas. */
+  .a11y :global(.apertura__ilustracion) { border-radius: var(--radio); }
+
   /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
   .a11y :global(.captura) {
     display: block;
@@ -203,25 +213,13 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
   }
   .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
   .pieza figcaption { align-self: stretch; }
+  /* El panel solo, a su tamaño de Chrome (300): la captura es @2x de eso. */
+  .a11y :global(.captura--panel) { width: min(300px, 100%); }
+  .pieza--derecha figcaption { width: min(300px, 100%); }
   @media (min-width: 1024px) {
     .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
     .pieza--derecha > :global(*) { grid-column: 2; }
     .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
   }
 
-  /* ---- La banda de los límites ---- en el amarillo del producto, con la
-     misma fila «etiqueta | texto» que los bloques. Ink encima: el amarillo
-     es un fondo claro (contraste medido en `npm run contraste`). */
-  .banda {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-48);
-    padding: var(--space-64) var(--gutter-page);
-    background: var(--acento);
-    color: var(--texto-acento);
-  }
-  .banda__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
-  .banda__contenido > h2 + * { margin-block-start: var(--space-24); }
-  @media (min-width: 768px) { .banda { padding-block: var(--space-96); } }
-  @media (min-width: 1024px) { .banda { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
 </style>

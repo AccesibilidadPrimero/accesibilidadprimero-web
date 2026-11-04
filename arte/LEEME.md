@@ -148,12 +148,11 @@ y se comprueba el md5 contra el original (AGENTS.md §2, punto 7).
 
 ---
 
-## Caso A11y Primero · `arte/proyectos/a11y-primero/` · 3 PNG (04/11/2026)
+## Caso A11y Primero · `arte/proyectos/a11y-primero/` · 4 imágenes (04/11/2026)
 
 | Archivo | Qué es | Origen |
 |---|---|---|
-| `hero-panel.png` | El panel sobre la página de ejemplo, fondo transparente (1278 × 908, @2x de 639 × 454) | Capturado a @2x de la landing de la extensión |
-| `resumen.png` | Pestaña Resumen sobre la web de ejemplo (1280 × 800) | Ficha de la Chrome Web Store |
-| `wcag.png` | Pestaña WCAG, con un fallo abierto (1280 × 800) | Ficha de la Chrome Web Store |
+| `hero.jpg` | La extensión abierta sobre offvalencia.com, pestaña Resumen (1600 × 1000) | Capturada de la extensión v2.0.0 a @2x |
+| `panel-wcag.png` | El panel solo, pestaña WCAG (600 × 1200, @2x de 300) | Ídem |
+| `wcag.jpg` · `ver-como.jpg` | Fallos marcados en la página y simulación de baja visión (2560 × 1600) | Ídem |
 
-Las dos capturas de la tienda vienen por debajo de @2x: si hay versiones a 2560 × 1600, se sustituyen con el mismo nombre.
