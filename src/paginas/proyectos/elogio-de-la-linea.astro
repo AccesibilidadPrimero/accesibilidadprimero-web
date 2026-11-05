@@ -36,12 +36,147 @@ import CtaLink from '../../components/CtaLink.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
 import Testimonio from '../../components/Testimonio.astro';
 import { path } from '../../i18n/config';
-import { idiomaDe } from '../../i18n/idioma';
+import { idiomaDe, localizar } from '../../i18n/idioma';
 const lang = idiomaDe(Astro.url);
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  "es": {
+    "seccion": "Proyectos",
+    "cliente": "Cliente",
+    "anio": "Año",
+    "rol": "Rol",
+    "estandar": "Estándar",
+    "clienteV": "Pau Jordà, arquitecto",
+    "rolV": "Diseño y desarrollo",
+    "estandarV": "WCAG 2.2 nivel AA",
+    "c1": ["Una línea", "escribe el nombre y dibuja todos los proyectos"],
+    "c2": ["11 proyectos", "de diseño, arquitectura y construcción, cada uno con su recorrido"],
+    "c3": ["1.024 px", "por debajo de ese ancho, o con zoom, la web se lee en vertical"],
+    "heroTexto": "Pau Jordà. Arquitecto. Caso de estudio",
+    "datos": "Datos del proyecto",
+    "portadaAlt": "La portada de elogiodelalinea.com: el nombre escrito a mano con una sola línea y los dibujos de los proyectos sueltos sobre el blanco. El puntero pasa por encima de varios: una silla, una cúpula, unas porcelanas, un plano.",
+    "portadaNombre": "portada de elogiodelalinea.com",
+    "proyecto": "El proyecto",
+    "proyectoP": "Elogio de la línea es el portafolio del arquitecto Pau Jordà. Una sola línea escribe el nombre, dibuja once proyectos e invita a recorrer cada página, que avanza en horizontal y se lee igual con teclado, con zoom o en el móvil.",
+    "reto": "El reto",
+    "retoH": "Una línea que no se levanta del papel.",
+    "retoP": "Pau no quería un portafolio con rejilla de miniaturas. Quería que la web se pareciera a su forma de trabajar: una línea que no se levanta del papel. Y eso planteaba dos retos.",
+    "r1H": "Una web que se mira como un dibujo.",
+    "r1P": "La navegación horizontal, el vídeo de apertura y las ilustraciones son la idea del proyecto, no un adorno. Quitarlas para simplificar habría sido perderlo.",
+    "r2H": "Y que se pueda recorrer de todas las formas.",
+    "r2P": "Un recorrido horizontal suele romperse con el teclado, con el zoom o en una pantalla pequeña. Aquí tenía que funcionar con todo eso sin que nadie notara un modo aparte.",
+    "ajedrezAlt": "La página del ajedrez avanza en horizontal al bajar: la foto del tablero con las piezas cilíndricas, el texto de Pau sobre cómo aprendió a jugar, los bocetos de las piezas a partir de un cilindro y la caja del juego.",
+    "ajedrezNombre": "la tira del ajedrez",
+    "ajedrezPie": "Cada proyecto, un recorrido: el ajedrez",
+    "decisiones": "Decisiones de diseño",
+    "decisionesP": "Todo el proyecto sale de un gesto: el de una línea que dibuja sin levantarse.",
+    "d1H": "Todo sale de una línea.",
+    "d1P": "El logotipo, los iconos, las miniaturas y el vídeo están trazados con el mismo gesto. La portada no es una rejilla: los proyectos flotan como dibujos sueltos sobre una lámina en blanco.",
+    "d2H": "El vídeo es la portada.",
+    "d2P": "En 2:42 la línea escribe “Elogio de la línea” y se convierte en cada proyecto. Arranca sin sonido, se puede pausar y lleva su descripción en texto. Si el sistema pide menos movimiento, no se pone en marcha sola.",
+    "d3H": "Cada proyecto, un recorrido.",
+    "d3P": "Las páginas avanzan en horizontal, como una exposición: foto, texto, bocetos. Las imágenes se mueven un poco más despacio que el texto, como planos a distinta distancia.",
+    "d4H": "Horizontal solo cuando cabe.",
+    "d4P": "La tira se activa desde 1.024 px de ancho y 600 de alto. Con zoom fuerte, letra grande o en el móvil, la misma página se lee en vertical. Por debajo es el desplazamiento de siempre, así que el teclado sigue mandando.",
+    "sillaAlt": "La página de la silla de metal avanza en horizontal: la silla de varillas oxidadas, el texto del proyecto y los bocetos de la idea atornillada.",
+    "sillaNombre": "la tira de la silla de metal",
+    "sillaPie": "La silla de metal",
+    "porcelanaAlt": "La página de la serie de porcelana avanza en horizontal: la foto de las tres piezas blancas con frutas secas y especias, el título y el texto de Pau sobre comer en una hoja, y después los bocetos y las fotos de cada pieza.",
+    "porcelanaNombre": "la serie de porcelana"
+  },
+  "ca": {
+    "seccion": "Projectes",
+    "cliente": "Client",
+    "anio": "Any",
+    "rol": "Rol",
+    "estandar": "Estàndard",
+    "clienteV": "Pau Jordà, arquitecte",
+    "rolV": "Disseny i desenvolupament",
+    "estandarV": "WCAG 2.2 nivell AA",
+    "c1": ["Una línia", "escriu el nom i dibuixa tots els projectes"],
+    "c2": ["11 projectes", "de disseny, arquitectura i construcció, cadascun amb el seu recorregut"],
+    "c3": ["1.024 px", "per sota d’aquesta amplada, o amb zoom, el web es llegeix en vertical"],
+    "heroTexto": "Pau Jordà. Arquitecte. Cas d’estudi",
+    "datos": "Dades del projecte",
+    "portadaAlt": "La portada d’elogiodelalinea.com: el nom escrit a mà amb una sola línia i els dibuixos dels projectes solts sobre el blanc. El punter passa per damunt de diversos: una cadira, una cúpula, unes porcellanes, un plànol.",
+    "portadaNombre": "portada d’elogiodelalinea.com",
+    "proyecto": "El projecte",
+    "proyectoP": "Elogio de la línea és el portafoli de l’arquitecte Pau Jordà. Una sola línia escriu el nom, dibuixa onze projectes i convida a recórrer cada pàgina, que avança en horitzontal i es llegeix igual amb teclat, amb zoom o al mòbil.",
+    "reto": "El repte",
+    "retoH": "Una línia que no s’aixeca del paper.",
+    "retoP": "En Pau no volia un portafoli amb una graella de miniatures. Volia que el web s’assemblés a la seva manera de treballar: una línia que no s’aixeca del paper. I això plantejava dos reptes.",
+    "r1H": "Un web que es mira com un dibuix.",
+    "r1P": "La navegació horitzontal, el vídeo d’obertura i les il·lustracions són la idea del projecte, no un ornament. Treure-les per simplificar hauria estat perdre’l.",
+    "r2H": "I que es pugui recórrer de totes les maneres.",
+    "r2P": "Un recorregut horitzontal sol trencar-se amb el teclat, amb el zoom o en una pantalla petita. Aquí havia de funcionar amb tot això sense que ningú no notés un mode a part.",
+    "ajedrezAlt": "La pàgina dels escacs avança en horitzontal en baixar: la foto del tauler amb les peces cilíndriques, el text d’en Pau sobre com va aprendre a jugar-hi, els esbossos de les peces a partir d’un cilindre i la capsa del joc.",
+    "ajedrezNombre": "la tira dels escacs",
+    "ajedrezPie": "Cada projecte, un recorregut: els escacs",
+    "decisiones": "Decisions de disseny",
+    "decisionesP": "Tot el projecte surt d’un gest: el d’una línia que dibuixa sense aixecar-se.",
+    "d1H": "Tot surt d’una línia.",
+    "d1P": "El logotip, les icones, les miniatures i el vídeo estan traçats amb el mateix gest. La portada no és una graella: els projectes suren com a dibuixos solts sobre una làmina en blanc.",
+    "d2H": "El vídeo és la portada.",
+    "d2P": "En 2:42 la línia escriu “Elogio de la línea” i es transforma en cada projecte. Arrenca sense so, es pot pausar i porta la descripció en text. Si el sistema demana menys moviment, no es posa en marxa sol.",
+    "d3H": "Cada projecte, un recorregut.",
+    "d3P": "Les pàgines avancen en horitzontal, com una exposició: foto, text, esbossos. Les imatges es mouen una mica més a poc a poc que el text, com plans a diferent distància.",
+    "d4H": "Horitzontal només quan hi cap.",
+    "d4P": "La tira s’activa a partir de 1.024 px d’amplada i 600 d’alçada. Amb molt de zoom, lletra gran o al mòbil, la mateixa pàgina es llegeix en vertical. Per sota, és el desplaçament de sempre, així que el teclat continua manant.",
+    "sillaAlt": "La pàgina de la cadira de metall avança en horitzontal: la cadira de vares rovellades, el text del projecte i els esbossos de la idea cargolada.",
+    "sillaNombre": "la tira de la cadira de metall",
+    "sillaPie": "La cadira de metall",
+    "porcelanaAlt": "La pàgina de la sèrie de porcellana avança en horitzontal: la foto de les tres peces blanques amb fruita seca i espècies, el títol i el text d’en Pau sobre menjar en una fulla, i després els esbossos i les fotos de cada peça.",
+    "porcelanaNombre": "la sèrie de porcellana"
+  },
+  "en": {
+    "seccion": "Projects",
+    "cliente": "Client",
+    "anio": "Year",
+    "rol": "Role",
+    "estandar": "Standard",
+    "clienteV": "Pau Jordà, architect",
+    "rolV": "Design and development",
+    "estandarV": "WCAG 2.2 level AA",
+    "c1": ["One line", "writes the name and draws every project"],
+    "c2": ["11 projects", "in design, architecture and construction, each with its own journey"],
+    "c3": ["1,024 px", "below that width, or when zoomed in, the website reads vertically"],
+    "heroTexto": "Pau Jordà. Architect. Case study",
+    "datos": "Project details",
+    "portadaAlt": "The elogiodelalinea.com home page: the name handwritten in a single line and the project drawings scattered across the white page. The pointer passes over several of them: a chair, a dome, some porcelain pieces, a plan.",
+    "portadaNombre": "elogiodelalinea.com home page",
+    "proyecto": "The project",
+    "proyectoP": "Elogio de la línea is the portfolio of the architect Pau Jordà. A single line writes the name, draws eleven projects and invites you through each page, which moves horizontally and reads just as well with a keyboard, zoomed in or on a phone.",
+    "reto": "The challenge",
+    "retoH": "A line that never leaves the paper.",
+    "retoP": "Pau didn’t want a portfolio with a grid of thumbnails. He wanted the website to look like the way he works: a line that never leaves the paper. And that posed two challenges.",
+    "r1H": "A website you look at like a drawing.",
+    "r1P": "The horizontal navigation, the opening video and the illustrations are the idea behind the project, not decoration. Removing them to keep things simple would have meant losing it.",
+    "r2H": "And one you can explore in every way.",
+    "r2P": "A horizontal journey tends to break with a keyboard, with zoom or on a small screen. Here it had to work with all of them, without anyone noticing a separate mode.",
+    "ajedrezAlt": "The chess page moves sideways as you scroll down: the photo of the board with its cylindrical pieces, Pau’s text about how he learnt to play, the sketches of the pieces developed from a cylinder, and the box for the set.",
+    "ajedrezNombre": "the chess strip",
+    "ajedrezPie": "Each project, a journey: the chess set",
+    "decisiones": "Design decisions",
+    "decisionesP": "The whole project comes from one gesture: a line that draws without lifting.",
+    "d1H": "It all comes from one line.",
+    "d1P": "The logo, the icons, the thumbnails and the video are all traced with the same gesture. The home page is not a grid: the projects float like loose drawings on a blank sheet.",
+    "d2H": "The video is the home page.",
+    "d2P": "In 2:42 the line writes “Elogio de la línea” and turns into each project. It starts without sound, can be paused and comes with a text description. If the system asks for less motion, it doesn’t start on its own.",
+    "d3H": "Each project, a journey.",
+    "d3P": "Pages move horizontally, like an exhibition: photo, text, sketches. The images move slightly more slowly than the text, like planes at different distances.",
+    "d4H": "Horizontal only when it fits.",
+    "d4P": "The strip switches on from 1,024 px wide and 600 px high. With heavy zoom, large text or on a phone, the same page reads vertically. Below that it scrolls as usual, so the keyboard stays in charge.",
+    "sillaAlt": "The metal chair page moves horizontally: the chair made of rusted rods, the project text and the sketches of the bolted-together idea.",
+    "sillaNombre": "the metal chair strip",
+    "sillaPie": "The metal chair",
+    "porcelanaAlt": "The porcelain series page moves horizontally: the photo of the three white pieces with dried fruit and spices, the title and Pau’s text about eating from a leaf, then the sketches and photos of each piece.",
+    "porcelanaNombre": "the porcelain series"
+  }
+}[lang];
 import fraseFinal from '../../assets/proyectos/elogio-de-la-linea/hero-frase.png';
 
 const p = (await getEntry('proyectos', 'elogio-de-la-linea'))!;
-const d = p.data;
+const d = localizar(p.data, lang);
 
 const posters = import.meta.glob<{ default: ImageMetadata }>('../../assets/proyectos/elogio-de-la-linea/video-*.png', { eager: true });
 const video = (escena: string) => {
@@ -58,22 +193,18 @@ const vertical = { tableta: '360px', movil: '280px' };
 const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 
 const datos = [
-  ['Cliente', 'Pau Jordà, arquitecto'],
-  ['Año', '2026'],
-  ['Rol', 'Diseño y desarrollo'],
-  ['Estándar', 'WCAG 2.2 nivel AA'],
+  [T.cliente, T.clienteV],
+  [T.anio, '2026'],
+  [T.rol, T.rolV],
+  [T.estandar, T.estandarV],
 ];
-const cifras = [
-  ['Una línea', 'escribe el nombre y dibuja todos los proyectos'],
-  ['11 proyectos', 'de diseño, arquitectura y construcción, cada uno con su recorrido'],
-  ['1.024 px', 'por debajo de ese ancho, o con zoom, la web se lee en vertical'],
-];
+const cifras = [T.c1, T.c2, T.c3];
 ---
 
 <Base
   lang={lang}
   current="proyectos"
-  title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
+  title={`${d.titulo} · ${T.seccion} · Accesibilidad Primero`}
   description={d.resumen.replace(/\s+/g, ' ')}
 >
   <script>
@@ -86,7 +217,7 @@ const cifras = [
     <HeroPagina
       titulo="Elogio de la línea"
       golpes={['Elogio', 'de la línea']}
-      texto={['Pau Jordà. Arquitecto. Caso de estudio']}
+      texto={[T.heroTexto]}
       superficie={{ fondo: 'var(--white)', foco: 'var(--blue-ap)' }}
     >
       {/* aria-hidden: dibuja con la línea el mismo titular que dice el h1. */}
@@ -96,7 +227,7 @@ const cifras = [
     </HeroPagina>
 
     <section class="datos" aria-labelledby="datos">
-      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
       <dl class="datos__lista">
         {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
         {d.web && dominio && <div><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
@@ -109,17 +240,17 @@ const cifras = [
       <VideoPausable
         class="video video--portada"
         {...video('portada')}
-        alt="La portada de elogiodelalinea.com: el nombre escrito a mano con una sola línea y los dibujos de los proyectos sueltos sobre el blanco. El puntero pasa por encima de varios: una silla, una cúpula, unas porcelanas, un plano."
-        nombre="portada de elogiodelalinea.com"
+        alt={T.portadaAlt}
+        nombre={T.portadaNombre}
         lang={lang}
         sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
       />
     </div>
 
     <section class="bloque" aria-labelledby="proyecto">
-      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
       <div class="bloque__contenido">
-        <p>Elogio de la línea es el portafolio del arquitecto Pau Jordà. Una sola línea escribe el nombre, dibuja once proyectos e invita a recorrer cada página, que avanza en horizontal y se lee igual con teclado, con zoom o en el móvil.</p>
+        <p>{T.proyectoP}</p>
         <dl class="cifras">
           {cifras.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
         </dl>
@@ -127,14 +258,14 @@ const cifras = [
     </section>
 
     <section class="bloque" aria-labelledby="reto">
-      <p class="bloque__etiqueta">El reto</p>
+      <p class="bloque__etiqueta">{T.reto}</p>
       <div class="bloque__contenido">
-        <h2 id="reto">Una línea que no se levanta del papel.</h2>
-        <p>Pau no quería un portafolio con rejilla de miniaturas. Quería que la web se pareciera a su forma de trabajar: una línea que no se levanta del papel. Y eso planteaba dos retos.</p>
-        <h3>Una web que se mira como un dibujo.</h3>
-        <p>La navegación horizontal, el vídeo de apertura y las ilustraciones son la idea del proyecto, no un adorno. Quitarlas para simplificar habría sido perderlo.</p>
-        <h3>Y que se pueda recorrer de todas las formas.</h3>
-        <p>Un recorrido horizontal suele romperse con el teclado, con el zoom o en una pantalla pequeña. Aquí tenía que funcionar con todo eso sin que nadie notara un modo aparte.</p>
+        <h2 id="reto">{T.retoH}</h2>
+        <p>{T.retoP}</p>
+        <h3>{T.r1H}</h3>
+        <p>{T.r1P}</p>
+        <h3>{T.r2H}</h3>
+        <p>{T.r2P}</p>
       </div>
     </section>
 
@@ -142,35 +273,35 @@ const cifras = [
       <VideoPausable
         class="video"
         {...video('ajedrez')}
-        alt="La página del ajedrez avanza en horizontal al bajar: la foto del tablero con las piezas cilíndricas, el texto de Pau sobre cómo aprendió a jugar, los bocetos de las piezas a partir de un cilindro y la caja del juego."
-        nombre="la tira del ajedrez"
+        alt={T.ajedrezAlt}
+        nombre={T.ajedrezNombre}
         lang={lang}
         sizes={{ escritorio: '(min-width: 1440px) 1100px, 76vw', ...vertical }}
       />
-      <figcaption>Cada proyecto, un recorrido: el ajedrez</figcaption>
+      <figcaption>{T.ajedrezPie}</figcaption>
     </figure>
 
     <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
       <div class="decisiones__enunciado">
-        <h2 id="decisiones">Decisiones de diseño</h2>
-        <p>Todo el proyecto sale de un gesto: el de una línea que dibuja sin levantarse.</p>
+        <h2 id="decisiones">{T.decisiones}</h2>
+        <p>{T.decisionesP}</p>
       </div>
       <ul class="decisiones__lista">
         <li>
-          <h3>Todo sale de una línea.</h3>
-          <p>El logotipo, los iconos, las miniaturas y el vídeo están trazados con el mismo gesto. La portada no es una rejilla: los proyectos flotan como dibujos sueltos sobre una lámina en blanco.</p>
+          <h3>{T.d1H}</h3>
+          <p>{T.d1P}</p>
         </li>
         <li>
-          <h3>El vídeo es la portada.</h3>
-          <p>En 2:42 la línea escribe “Elogio de la línea” y se convierte en cada proyecto. Arranca sin sonido, se puede pausar y lleva su descripción en texto. Si el sistema pide menos movimiento, no se pone en marcha sola.</p>
+          <h3>{T.d2H}</h3>
+          <p>{T.d2P}</p>
         </li>
         <li>
-          <h3>Cada proyecto, un recorrido.</h3>
-          <p>Las páginas avanzan en horizontal, como una exposición: foto, texto, bocetos. Las imágenes se mueven un poco más despacio que el texto, como planos a distinta distancia.</p>
+          <h3>{T.d3H}</h3>
+          <p>{T.d3P}</p>
         </li>
         <li>
-          <h3>Horizontal solo cuando cabe.</h3>
-          <p>La tira se activa desde 1.024 px de ancho y 600 de alto. Con zoom fuerte, letra grande o en el móvil, la misma página se lee en vertical. Por debajo es el desplazamiento de siempre, así que el teclado sigue mandando.</p>
+          <h3>{T.d4H}</h3>
+          <p>{T.d4P}</p>
         </li>
       </ul>
     </section>
@@ -179,12 +310,12 @@ const cifras = [
       <VideoPausable
         class="video"
         {...video('silla')}
-        alt="La página de la silla de metal avanza en horizontal: la silla de varillas oxidadas, el texto del proyecto y los bocetos de la idea atornillada."
-        nombre="la tira de la silla de metal"
+        alt={T.sillaAlt}
+        nombre={T.sillaNombre}
         lang={lang}
         sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
       />
-      <figcaption>La silla de metal</figcaption>
+      <figcaption>{T.sillaPie}</figcaption>
     </figure>
 
     {/* La serie de porcelana recorrida, sobre la banda negra (03/11/2026):
@@ -193,8 +324,8 @@ const cifras = [
       <VideoPausable
         class="video video--portada"
         {...video('porcelana')}
-        alt="La página de la serie de porcelana avanza en horizontal: la foto de las tres piezas blancas con frutas secas y especias, el título y el texto de Pau sobre comer en una hoja, y después los bocetos y las fotos de cada pieza."
-        nombre="la serie de porcelana"
+        alt={T.porcelanaAlt}
+        nombre={T.porcelanaNombre}
         lang={lang}
         sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
       />

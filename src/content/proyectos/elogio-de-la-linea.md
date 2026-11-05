@@ -29,6 +29,38 @@ imagenes:
       línea y, debajo, los dibujos de los proyectos sueltos sobre el blanco,
       una silla, una cúpula, unas porcelanas, un plano y una figura que lleva
       a un niño de la mano.
+# Versiones en catalán e inglés (05/11/2026). Ver foc-i-cor.md.
+traducciones:
+  ca:
+    cliente: Pau Jordà, arquitecte
+    resumen: |-
+      Elogio de la línea és el portafoli de l’arquitecte Pau Jordà.
+      Una sola línia escriu el nom, dibuixa onze projectes
+      i traça el recorregut de cada pàgina.
+    linea: Un portafoli que es recorre com un dibuix.
+    imagenes:
+      - alt: >-
+          La portada d’elogiodelalinea.com: el nom escrit a mà amb una sola
+          línia i, a sota, els dibuixos dels projectes solts sobre el blanc,
+          una cadira, una cúpula, unes porcellanes, un plànol i una figura que
+          porta un infant de la mà.
+    cuerpo:
+      - Elogio de la línea és el portafoli de l’arquitecte Pau Jordà.
+  en:
+    cliente: Pau Jordà, architect
+    resumen: |-
+      Elogio de la línea is the portfolio of the architect Pau Jordà.
+      A single line writes the name, draws eleven projects
+      and traces the path through every page.
+    linea: A portfolio you explore like a drawing.
+    imagenes:
+      - alt: >-
+          The elogiodelalinea.com home page: the name handwritten in a single
+          line and, below, the project drawings scattered across the white
+          page: a chair, a dome, some porcelain pieces, a plan and a figure
+          leading a child by the hand.
+    cuerpo:
+      - Elogio de la línea is the portfolio of the architect Pau Jordà.
 ---
 
 Elogio de la línea es el portafolio del arquitecto Pau Jordà.

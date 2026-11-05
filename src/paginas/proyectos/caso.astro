@@ -25,13 +25,55 @@ import Base from '../../layouts/Base.astro';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { path } from '../../i18n/config';
-import { idiomaDe } from '../../i18n/idioma';
+import { idiomaDe, localizar } from '../../i18n/idioma';
 const lang = idiomaDe(Astro.url);
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  "es": {
+    "seccion": "Proyectos",
+    "casoEstudio": "Caso de estudio",
+    "portadaDe": "portada de ",
+    "portadaTras": "",
+    "ficha": "Ficha",
+    "cliente": "Cliente",
+    "anio": "Año",
+    "rol": "Rol",
+    "estandar": "Estándar",
+    "reto": "El reto",
+    "decisiones": "Decisiones de diseño"
+  },
+  "ca": {
+    "seccion": "Projectes",
+    "casoEstudio": "Cas d’estudi",
+    "portadaDe": "portada de ",
+    "portadaTras": "",
+    "ficha": "Fitxa",
+    "cliente": "Client",
+    "anio": "Any",
+    "rol": "Rol",
+    "estandar": "Estàndard",
+    "reto": "El repte",
+    "decisiones": "Decisions de disseny"
+  },
+  "en": {
+    "seccion": "Projects",
+    "casoEstudio": "Case study",
+    "portadaDe": "",
+    "portadaTras": " home page",
+    "ficha": "Project details",
+    "cliente": "Client",
+    "anio": "Year",
+    "rol": "Role",
+    "estandar": "Standard",
+    "reto": "The challenge",
+    "decisiones": "Design decisions"
+  }
+}[lang];
 import VideoPausable from '../../components/VideoPausable.astro';
 import Testimonio from '../../components/Testimonio.astro';
 
 const { p } = Astro.props as { p: CollectionEntry<'proyectos'> };
-const d = p.data;
+const d = localizar(p.data, lang);
 const c = d.caso!;
 const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 
@@ -62,7 +104,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
 <Base
   lang={lang}
   current="proyectos"
-  title={`${d.titulo} · Proyectos · Accesibilidad Primero`}
+  title={`${d.titulo} · ${T.seccion} · Accesibilidad Primero`}
   description={d.resumen}
 >
   <div class="caso" style={fondo}>
@@ -71,7 +113,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
     <HeroPagina
       titulo={c.titular}
       golpes={c.golpes}
-      texto={['Caso de estudio']}
+      texto={[T.casoEstudio]}
       foto={c.fotos.hero}
       superficie={c.fotos.hero ? undefined : { fondo: d.paleta.acento, foco: d.paleta.anilloFoco }}
     />
@@ -79,12 +121,12 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
     {/* Ficha en franja. El <h2> no está en el Figma: es invisible y solo
         sirve para saltar a la ficha por encabezados. */}
     <section class="ficha" aria-labelledby="ficha">
-      <h2 id="ficha" class="sr-only">Ficha</h2>
+      <h2 id="ficha" class="sr-only">{T.ficha}</h2>
       <dl class="ficha__datos">
-        <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>
-        <div><dt>Año</dt><dd>{c.anio}</dd></div>
-        <div><dt>Rol</dt><dd>{c.queHicimos}</dd></div>
-        <div><dt>Estándar</dt><dd>{c.conformidad}</dd></div>
+        <div><dt>{T.cliente}</dt><dd>{d.cliente}</dd></div>
+        <div><dt>{T.anio}</dt><dd>{c.anio}</dd></div>
+        <div><dt>{T.rol}</dt><dd>{c.queHicimos}</dd></div>
+        <div><dt>{T.estandar}</dt><dd>{c.conformidad}</dd></div>
         {d.web && dominio && <div class="ficha__web"><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
       </dl>
     </section>
@@ -98,7 +140,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
         <VideoPausable
           class="portada"
           escritorio={pv.escritorio} tableta={pv.tableta} movil={pv.movil}
-          alt={pv.alt} nombre={`portada de ${dominio ?? d.titulo}`} lang={lang}
+          alt={pv.alt} nombre={`${T.portadaDe}${dominio ?? d.titulo}${T.portadaTras}`} lang={lang}
           sizes={{ escritorio: '62vw', tableta: '360px', movil: '280px' }}
         />
       ) : portadaV ? (
@@ -131,7 +173,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
     )}
 
     <section class="seccion" aria-labelledby="reto">
-      <h2 id="reto" class="titular">El reto</h2>
+      <h2 id="reto" class="titular">{T.reto}</h2>
       {/* Un salto en el Markdown (`|-`) es un renglón fijo: cada línea en su
           <span> en bloque, una sola frase para el lector de pantalla. */}
       <p class="intro">{c.reto.intro.split('\n').map((l, i) => <>{i > 0 && ' '}<span class="linea">{l}</span></>)}</p>
@@ -152,7 +194,7 @@ const fondo = `--acento: ${d.paleta.acento}; --banda-equipo: ${c.bandaEquipo ?? 
     </div>
 
     <section class="seccion seccion--decisiones" aria-labelledby="decisiones">
-      <h2 id="decisiones" class="titular titular--filete">Decisiones de diseño</h2>
+      <h2 id="decisiones" class="titular titular--filete">{T.decisiones}</h2>
       <ol class="decisiones">
         {d.decisiones!.map((x) => (
           <li class="decision">
