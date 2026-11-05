@@ -312,7 +312,7 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
   .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
   /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
      separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
-  .pieza > :not(.vp) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
+  .pieza > :global(:not(.vp)) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
   .pieza figcaption { align-self: stretch; }
   /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
   .aa :global(.captura--movil) { width: min(360px, 100%); }

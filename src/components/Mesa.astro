@@ -1,4 +1,5 @@
 ---
+import CtaLink from './CtaLink.astro';
 /* ---------------------------------------------------------------------------
    «Sobre la mesa» · lo que el estudio tiene entre manos ahora mismo.
 
@@ -32,7 +33,10 @@ const medio = (n: string) => Object.entries(archivos).find(([r]) => r.endsWith(`
    sin ella, una convocatoria ya pasada se leía como algo de ahora. */
 const fecha = (iso: string) => new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }).format(new Date(iso));
 
-const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo)) : [];
+/* Las TRES últimas, en una rejilla quieta (Johnny, 05/11/2026): con cuatro, la
+   tira se desplazaba y aparecía la barra del navegador. Lo demás, en Mastodon. */
+const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo)).slice(0, 3) : [];
+const MASTODON = 'https://mastodon.social/@accesibilidadprimero';
 ---
 
 {notas.length > 0 && (
@@ -41,12 +45,9 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
       <h2 id="mesa-titulo" class="mesa__titulo">{ui.mesaTitulo}</h2>
     </div>
 
-    {/* `tabindex="0"` explícito y no confiado al navegador: Chromium da foco a
-        los contenedores con scroll, pero eso es reciente y no es universal, y
-        aquí el teclado no puede depender de a qué versión haya llegado cada
-        cual. Con `role="list"` la lista conserva su semántica pese al
-        tabindex. `npm run teclado` lo comprueba. */}
-    <ul class="mesa__lista" tabindex="0" role="list" aria-label={ui.mesaRegion}>
+    {/* Sin desplazamiento desde el 05/11/2026: ya no hace falta `tabindex` en
+        la lista. */}
+    <ul class="mesa__lista" aria-label={ui.mesaRegion}>
       {notas.map((n) => {
         const img = medio(n.imagen.archivo)!;
         return (
@@ -79,6 +80,7 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
         );
       })}
     </ul>
+    <div class="mesa__mas"><CtaLink href={MASTODON}>Ver más en Mastodon</CtaLink></div>
   </section>
 )}
 
@@ -89,42 +91,14 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
      Lo que destaca es el contenido, y aquí eso lo hacen las imágenes. */
   .mesa__titulo { font-size: var(--texto-size); line-height: var(--texto-leading); }
 
-  .mesa__lista {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 78%;
-    gap: var(--space-24);
-    align-items: start;
-    overflow-x: auto;
-    /* `min-width: 0` NO es decorativo. `.mesa` es una columna flex y sus
-       hijos llevan `min-width: auto`, o sea que se niegan a encoger por
-       debajo de su contenido mínimo: con tres notas la tira dejaba de
-       desplazarse por dentro y empujaba la PÁGINA, 176 px de scroll
-       horizontal a 320 (1.4.10). Con una sola nota no se veía, porque cabía.
-       Lo cazó `npm run a11y` en el Mac de Johnny en cuanto publicó la
-       segunda. */
-    min-width: 0;
-    scroll-snap-type: x proximity;
-    /* Sin esto, el imán colocaba la primera tarjeta contra el BORDE de la
-       ventana y no en el margen de 24: «start» se mide desde el borde del
-       carril, y el carril sangra hasta el borde a propósito (abajo). Lo vio
-       Claude en las capturas de tableta y móvil del 10/10. */
-    scroll-padding-inline: var(--gutter-page);
-    /* Sangra hasta el borde para que la siguiente nota ASOME: es lo que dice
-       «hay más» sin flechas ni puntos. El desbordamiento se queda dentro del
-       carril y no arrastra la página (1.4.10, medido a 320). */
-    margin-inline: calc(var(--gutter-page) * -1);
-    padding-inline: var(--gutter-page);
-    padding-block-end: var(--space-16);
-  }
-  /* `position: relative` NO es decorativo. La alternativa de cada imagen va en
-     un `.sr-only`, que es `position: absolute`; sin un ancestro posicionado se
-     coloca respecto a la PÁGINA, no respecto a la tarjeta, así que no la
-     recorta el contenedor con scroll y su posición estática —dentro del carril
-     desplazado— ensancha el documento. Con una nota no se veía porque caía
-     dentro de la ventana; con tres, la tercera aterrizaba en x=508 y provocaba
-     176 px de scroll horizontal a 320 (1.4.10). */
-  .mesa__nota { scroll-snap-align: start; position: relative; }
+  /* Una rejilla quieta (05/11/2026): una columna en móvil y tres desde
+     tableta, como los productos de encima. */
+  .mesa__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48) var(--space-24); align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none; }
+  @media (min-width: 768px) { .mesa__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .mesa__mas { padding-block-start: var(--space-48); }
+  /* `position: relative`: el `.sr-only` de la alternativa se coloca respecto a
+     la tarjeta y no a la página. */
+  .mesa__nota { position: relative; }
   .mesa__enlace { display: flex; flex-direction: column; gap: var(--space-16); text-decoration: none; }
   /* 16:9 porque es lo que se sube: el material real llega a 1920 × 1080. */
   .mesa__enlace img {
@@ -145,12 +119,4 @@ const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo))
 
   /* El ritmo, en todos los anchos (10/10). */
   .mesa { margin-block-start: var(--ritmo-seccion); }
-  @media (min-width: 1024px) {
-    /* Tres y pico: la cuarta asoma. */
-    .mesa__lista { grid-auto-columns: calc((100% - var(--space-24) * 3) / 3.4); }
-  }
-  /* Tableta: dos y pico, con la misma idea. */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .mesa__lista { grid-auto-columns: calc((100% - var(--space-24) * 2) / 2.4); }
-  }
 </style>
