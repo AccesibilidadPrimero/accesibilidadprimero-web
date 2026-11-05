@@ -29,6 +29,198 @@ import CtaLink from '../../components/CtaLink.astro';
 import { path } from '../../i18n/config';
 import { idiomaDe } from '../../i18n/idioma';
 const lang = idiomaDe(Astro.url);
+/* Los textos en los tres idiomas (05/11/2026). Glosario: src/i18n/GLOSARIO.md. */
+const T = {
+  es: {
+    seccion: "Proyectos",
+    descripcion: "Accesible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas.",
+    heroTitulo: "Complejo por dentro, sencillo por fuera.",
+    heroGolpe1: "Complejo por dentro,",
+    heroGolpe2: "sencillo por fuera.",
+    heroTexto: "Accesible Abstracts · Caso de estudio",
+    altHero: "Accesible Abstracts vista por una revisora: sus abstracts asignados, con referencia, título, tipo, línea temática y estado, y el aviso de que la revisión es doble ciego y los nombres, afiliaciones y correos de los autores están ocultos.",
+    datos: "Datos del proyecto",
+    producto: "Producto",
+    productoValor: "Plataforma de abstracts",
+    anio: "Año",
+    rol: "Rol",
+    rolValor: "Desarrollo",
+    estandar: "Estándar",
+    web: "Web",
+    conocer: "Conocer la plataforma",
+    proyecto: "El proyecto",
+    proyecto1: "Accesible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.",
+    proyecto2: "Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.",
+    proyecto3: "El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.",
+    verECI: "Ver el caso de ECI Conference",
+    altEnvioMovil: "El formulario de envío de ECI en el móvil: la cabecera con los logotipos de AEIPI y Eurlyaid, el título “Call for Abstracts” y los campos de título, tipo, línea temática y resumen, uno debajo de otro.",
+    pieEnvioMovil: "El envío, en el móvil",
+    reto: "El reto",
+    retoTitulo: "Mucho proceso, poca interfaz.",
+    reto1: "Un congreso así mueve envíos, autorías, conflictos de interés, revisión por pares, puntuaciones, avisos y decisiones. Las herramientas habituales lo resuelven con formularios largos y paneles llenos de opciones, y dejan fuera a quien usa teclado, lector de pantalla o zum.",
+    reto2: "Cada persona ve solo lo suyo.",
+    reto3: "Quien envía, un formulario sin crear cuenta. Quien revisa, sus abstracts y una escala de 1 a 5. El comité, el estado de todo y las decisiones. La complejidad se queda dentro.",
+    altEnvio: "El formulario de envío de ECI Conference Madrid 2027: el plazo, el título, el tipo de comunicación, la línea temática, el resumen con su contador de palabras, las palabras clave, la financiación, la declaración de conflictos de interés y los autores con su afiliación y correo.",
+    pieEnvio: "Enviar un abstract, sin cuenta",
+    estructura: "La estructura",
+    estructuraTitulo: "Del envío al programa, en cuatro pasos.",
+    estructura1: "Los autores envían el abstract y reciben una confirmación con su referencia. Cada abstract se asigna solo a dos revisores de su línea temática, repartiendo la carga y dejando fuera los conflictos de interés, declarados o por afiliación.",
+    estructura2: "Los revisores puntúan seis criterios de 1 a 5, pueden guardar a medias y dejar un comentario para el comité. El comité decide, los autores reciben la notificación y todo se exporta para el programa y la revista.",
+    altEvaluacion: "La evaluación de un abstract: el título, el tipo y la línea temática, el aviso de que los nombres, afiliaciones y correos de los autores están ocultos, el texto del abstract y los primeros criterios, cada uno con su escala de 1 a 5.",
+    pieEvaluacion: "Evaluar, en doble ciego",
+    aprendido: "Lo aprendido",
+    aprendidoTitulo: "Lo que nos enseñó ECI.",
+    aprendido1: "Tres de cada cuatro abstracts llegaron en la última semana del plazo, y más de la mitad en los tres últimos días. Por eso la revisión empieza mientras se envía: cada revisor recibe lo suyo a medida que entra, sin esperar al cierre.",
+    aprendido2: "Un congreso real también trae lo que ninguna especificación recoge: la misma propuesta enviada dos veces o por dos coautores, abstracts en otro idioma, o una persona que revisa y firma como autora con otro correo. Y la carga no se reparte sola: una línea temática puede tener tres veces más abstracts por revisor que otra.",
+    aprendido3: "La versión 2 parte de ahí.",
+    decisiones: "Decisiones de diseño",
+    decisionesIntro: "Lo difícil era el proceso, no las pantallas. Cada decisión quita un paso a alguien.",
+    mTitulo: "Intervención temprana en casa",
+    mAutores: "Ana Ruiz, Universidad de Sevilla",
+    mAviso: "Sin autores ni afiliaciones",
+    ciegoTitulo: "Doble ciego de verdad.",
+    ciego: "Los nombres, afiliaciones y correos de los autores no llegan a las páginas de revisión. No se esconden con diseño: no están.",
+    mEnviar: "Enviar abstract",
+    mRecibido: "Recibido",
+    mSinUsuario: "Sin usuario ni contraseña",
+    cuentaTitulo: "Sin cuenta para enviar.",
+    cuenta: "Quien envía un abstract no tiene que registrarse ni recordar una contraseña. Recibe una confirmación con su referencia y ya está.",
+    mAsignado: "Asignado",
+    continuaTitulo: "Revisión continua.",
+    continua: "Los abstracts se asignan a medida que llegan, con un resumen diario para cada revisor: sin avalancha al cierre del plazo.",
+    mNorte: "Congreso Norte",
+    mSur: "Jornadas del Sur",
+    mEnvia: "Envía tu abstract",
+    marcaTitulo: "Con la marca de cada congreso.",
+    marca: "Funciona en el dominio y con los colores de cada congreso, en un alojamiento normal y sin licencias por abstract. Los datos son del congreso.",
+  },
+  ca: {
+    seccion: "Projectes",
+    descripcion: "Accesible Abstracts, la plataforma d’Accesibilidad Primero per enviar, assignar i avaluar abstracts en congressos científics, amb revisió de doble cec i accessible per a totes les persones.",
+    heroTitulo: "Complex per dins, senzill per fora.",
+    heroGolpe1: "Complex per dins,",
+    heroGolpe2: "senzill per fora.",
+    heroTexto: "Accesible Abstracts · Cas d’estudi",
+    altHero: "Accesible Abstracts tal com la veu una revisora: els abstracts que té assignats, amb referència, títol, tipus, línia temàtica i estat, i l’avís que la revisió és de doble cec i que els noms, les afiliacions i els correus de l’autoria estan ocults.",
+    datos: "Dades del projecte",
+    producto: "Producte",
+    productoValor: "Plataforma d’abstracts",
+    anio: "Any",
+    rol: "Rol",
+    rolValor: "Desenvolupament",
+    estandar: "Estàndard",
+    web: "Web",
+    conocer: "Coneix la plataforma",
+    proyecto: "El projecte",
+    proyecto1: "Accesible Abstracts és la plataforma amb què un congrés científic rep, reparteix i avalua els seus abstracts. La vam fer per a ECI Conference Madrid 2027, d’AEIPI i Eurlyaid. A 2 de novembre de 2026 havia rebut 230 abstracts de 35 països, amb 826 signatures d’autoria, repartits en cinc línies temàtiques entre 29 persones revisores.",
+    proyecto2: "Després la vam convertir en un producte per a altres congressos. La versió 2 està en desenvolupament, amb el que vam aprendre a ECI.",
+    proyecto3: "El formulari d’enviament és el d’ECI en producció. Les pantalles de revisió i del comitè són la mateixa aplicació amb dades de prova.",
+    verECI: "Veure el cas d’ECI Conference",
+    altEnvioMovil: "El formulari d’enviament d’ECI al mòbil: la capçalera amb els logotips d’AEIPI i Eurlyaid, el títol “Call for Abstracts” i els camps de títol, tipus, línia temàtica i resum, l’un sota l’altre.",
+    pieEnvioMovil: "L’enviament, al mòbil",
+    reto: "El repte",
+    retoTitulo: "Molt procés, poca interfície.",
+    reto1: "Un congrés així mou enviaments, autories, conflictes d’interès, revisió per parells, puntuacions, avisos i decisions. Les eines habituals ho resolen amb formularis llargs i taulers plens d’opcions, i deixen fora qui fa servir el teclat, un lector de pantalla o el zoom.",
+    reto2: "Cada persona veu només el que li toca.",
+    reto3: "Qui envia, un formulari sense crear cap compte. Qui revisa, els seus abstracts i una escala de l’1 al 5. El comitè, l’estat de tot i les decisions. La complexitat es queda a dins.",
+    altEnvio: "El formulari d’enviament d’ECI Conference Madrid 2027: el termini, el títol, el tipus de comunicació, la línia temàtica, el resum amb el comptador de paraules, les paraules clau, el finançament, la declaració de conflictes d’interès i l’autoria amb l’afiliació i el correu.",
+    pieEnvio: "Enviar un abstract, sense compte",
+    estructura: "L’estructura",
+    estructuraTitulo: "De l’enviament al programa, en quatre passos.",
+    estructura1: "L’autoria envia l’abstract i rep una confirmació amb la seva referència. Cada abstract s’assigna automàticament a dues persones revisores de la seva línia temàtica, repartint la càrrega i deixant fora els conflictes d’interès, declarats o per afiliació.",
+    estructura2: "Qui revisa puntua sis criteris de l’1 al 5, pot desar a mitges i deixar un comentari per al comitè. El comitè decideix, l’autoria rep la notificació i tot s’exporta per al programa i la revista.",
+    altEvaluacion: "L’avaluació d’un abstract: el títol, el tipus i la línia temàtica, l’avís que els noms, les afiliacions i els correus de l’autoria estan ocults, el text de l’abstract i els primers criteris, cadascun amb la seva escala de l’1 al 5.",
+    pieEvaluacion: "Avaluar, en doble cec",
+    aprendido: "El que hem après",
+    aprendidoTitulo: "El que ens va ensenyar ECI.",
+    aprendido1: "Tres de cada quatre abstracts van arribar l’última setmana del termini, i més de la meitat els tres últims dies. Per això la revisió comença mentre s’envia: cada persona revisora rep el que li toca a mesura que entra, sense esperar el tancament.",
+    aprendido2: "Un congrés real també porta el que cap especificació recull: la mateixa proposta enviada dues vegades o per dues persones coautores, abstracts en un altre idioma, o una persona que revisa i signa com a autora amb un altre correu. I la càrrega no es reparteix sola: una línia temàtica pot tenir tres vegades més abstracts per persona revisora que una altra.",
+    aprendido3: "La versió 2 parteix d’aquí.",
+    decisiones: "Decisions de disseny",
+    decisionesIntro: "El difícil era el procés, no les pantalles. Cada decisió estalvia un pas a algú.",
+    mTitulo: "Atenció primerenca a casa",
+    mAutores: "Ana Ruiz, Universitat de Sevilla",
+    mAviso: "Sense autoria ni afiliacions",
+    ciegoTitulo: "Doble cec de debò.",
+    ciego: "Els noms, les afiliacions i els correus de l’autoria no arriben a les pàgines de revisió. No s’amaguen amb disseny: no hi són.",
+    mEnviar: "Envia l’abstract",
+    mRecibido: "Rebut",
+    mSinUsuario: "Sense usuari ni contrasenya",
+    cuentaTitulo: "Sense compte per enviar.",
+    cuenta: "Qui envia un abstract no s’ha de registrar ni recordar cap contrasenya. Rep una confirmació amb la seva referència i ja està.",
+    mAsignado: "Assignat",
+    continuaTitulo: "Revisió contínua.",
+    continua: "Els abstracts s’assignen a mesura que arriben, amb un resum diari per a cada persona revisora: sense allau al final del termini.",
+    mNorte: "Congrés Nord",
+    mSur: "Jornades del Sud",
+    mEnvia: "Envia el teu abstract",
+    marcaTitulo: "Amb la marca de cada congrés.",
+    marca: "Funciona al domini i amb els colors de cada congrés, en un allotjament normal i sense llicències per abstract. Les dades són del congrés.",
+  },
+  en: {
+    seccion: "Projects",
+    descripcion: "Accesible Abstracts, the Accesibilidad Primero platform for submitting, assigning and reviewing abstracts at scientific conferences, with double-blind review and accessible to everyone.",
+    heroTitulo: "Complex inside, simple outside.",
+    heroGolpe1: "Complex inside,",
+    heroGolpe2: "simple outside.",
+    heroTexto: "Accesible Abstracts · Case study",
+    altHero: "Accesible Abstracts as a reviewer sees it: her assigned abstracts, with reference, title, type, themed track and status, and a notice that the review is double-blind and the authors’ names, affiliations and email addresses are hidden.",
+    datos: "Project details",
+    producto: "Product",
+    productoValor: "Abstracts platform",
+    anio: "Year",
+    rol: "Role",
+    rolValor: "Development",
+    estandar: "Standard",
+    web: "Website",
+    conocer: "Discover the platform",
+    proyecto: "The project",
+    proyecto1: "Accesible Abstracts is the platform a scientific conference uses to receive, assign and review its abstracts. We built it for ECI Conference Madrid 2027, run by AEIPI and Eurlyaid. By 2 November 2026 it had received 230 abstracts from 35 countries, with 826 author credits, spread across five themed tracks and 29 reviewers.",
+    proyecto2: "We then turned it into a product for other conferences. Version 2 is in development, built on what we learnt at ECI.",
+    proyecto3: "The submission form is ECI’s live one. The reviewer and committee screens are the same application with test data.",
+    verECI: "See the ECI Conference case study",
+    altEnvioMovil: "ECI’s submission form on a phone: the header with the AEIPI and Eurlyaid logos, the title “Call for Abstracts” and the title, type, themed track and summary fields, one below the other.",
+    pieEnvioMovil: "Submitting, on a phone",
+    reto: "The challenge",
+    retoTitulo: "Lots of process, little interface.",
+    reto1: "A conference like this handles submissions, authorship, conflicts of interest, peer review, scores, notifications and decisions. The usual tools deal with it through long forms and dashboards full of options, and they shut out anyone using a keyboard, a screen reader or zoom.",
+    reto2: "Everyone sees only what’s theirs.",
+    reto3: "Authors get a form, with no account to create. Reviewers get their abstracts and a scale from 1 to 5. The committee gets the status of everything and the decisions. The complexity stays inside.",
+    altEnvio: "The ECI Conference Madrid 2027 submission form: the deadline, title, presentation type, themed track, summary with its word counter, keywords, funding, conflict of interest statement and the authors with their affiliation and email address.",
+    pieEnvio: "Submitting an abstract, no account needed",
+    estructura: "The structure",
+    estructuraTitulo: "From submission to programme, in four steps.",
+    estructura1: "Authors submit their abstract and receive a confirmation with its reference. Each abstract is automatically assigned to two reviewers from its themed track, spreading the workload and ruling out conflicts of interest, whether declared or by affiliation.",
+    estructura2: "Reviewers score six criteria from 1 to 5, can save halfway through and leave a comment for the committee. The committee decides, the authors are notified and everything is exported for the programme and the journal.",
+    altEvaluacion: "Reviewing an abstract: the title, type and themed track, the notice that the authors’ names, affiliations and email addresses are hidden, the text of the abstract and the first criteria, each with its own scale from 1 to 5.",
+    pieEvaluacion: "Reviewing, double-blind",
+    aprendido: "What we learnt",
+    aprendidoTitulo: "What ECI taught us.",
+    aprendido1: "Three out of four abstracts arrived in the last week before the deadline, and more than half in the final three days. That’s why review starts while submissions are still open: each reviewer gets their share as it comes in, without waiting for the deadline.",
+    aprendido2: "A real conference also brings what no specification covers: the same proposal submitted twice or by two co-authors, abstracts in another language, or someone who reviews and also signs as an author with a different email address. And the workload doesn’t balance itself: one themed track can have three times as many abstracts per reviewer as another.",
+    aprendido3: "Version 2 starts from there.",
+    decisiones: "Design decisions",
+    decisionesIntro: "The hard part was the process, not the screens. Every decision saves someone a step.",
+    mTitulo: "Early intervention at home",
+    mAutores: "Ana Ruiz, University of Seville",
+    mAviso: "No authors or affiliations",
+    ciegoTitulo: "Truly double-blind.",
+    ciego: "The authors’ names, affiliations and email addresses never reach the review pages. They aren’t hidden by design: they simply aren’t there.",
+    mEnviar: "Submit abstract",
+    mRecibido: "Received",
+    mSinUsuario: "No username or password",
+    cuentaTitulo: "No account to submit.",
+    cuenta: "Whoever submits an abstract doesn’t have to register or remember a password. They get a confirmation with its reference, and that’s it.",
+    mAsignado: "Assigned",
+    continuaTitulo: "Continuous review.",
+    continua: "Abstracts are assigned as they arrive, with a daily summary for each reviewer: no avalanche at the deadline.",
+    mNorte: "North Conference",
+    mSur: "South Symposium",
+    mEnvia: "Submit your abstract",
+    marcaTitulo: "With each conference’s own brand.",
+    marca: "It runs on each conference’s own domain and colours, on ordinary hosting and with no per-abstract licences. The data belongs to the conference.",
+  },
+}[lang];
 import hero from '../../assets/proyectos/accesible-abstracts/hero.jpg';
 import envioMovil from '../../assets/proyectos/accesible-abstracts/envio-movil.jpg';
 import envio from '../../assets/proyectos/accesible-abstracts/envio.jpg';
@@ -41,10 +233,10 @@ import evaluacionM from '../../assets/proyectos/accesible-abstracts/evaluacion-m
 
 const titulo = 'Accesible Abstracts';
 const datos = [
-  ['Producto', 'Plataforma de abstracts'],
-  ['Año', '2026'],
-  ['Rol', 'Desarrollo'],
-  ['Estándar', 'WCAG 2.2 A/AA'],
+  [T.producto, T.productoValor],
+  [T.anio, '2026'],
+  [T.rol, T.rolValor],
+  [T.estandar, 'WCAG 2.2 A/AA'],
 ];
 const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
 const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)';
@@ -53,14 +245,14 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
 <Base
   lang={lang}
   current="proyectos"
-  title={`${titulo} · Proyectos · Accesibilidad Primero`}
-  description="Accesible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas."
+  title={`${titulo} · ${T.seccion} · Accesibilidad Primero`}
+  description={T.descripcion}
 >
   <div class="aa">
     <HeroPagina
-      titulo="Complejo por dentro, sencillo por fuera."
-      golpes={['Complejo por dentro,', 'sencillo por fuera.']}
-      texto={['Accesible Abstracts · Caso de estudio']}
+      titulo={T.heroTitulo}
+      golpes={[T.heroGolpe1, T.heroGolpe2]}
+      texto={[T.heroTexto]}
       superficie={{ fondo: 'var(--rose-ap)', foco: 'var(--blue-ap)' }}
     >
       <CapturaArte
@@ -70,25 +262,25 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
         movil={heroM}
         sizes="(min-width: 1440px) 1100px, calc(100vw - 48px)"
         loading="eager"
-        alt="Accesible Abstracts vista por una revisora: sus abstracts asignados, con referencia, título, tipo, línea temática y estado, y el aviso de que la revisión es doble ciego y los nombres, afiliaciones y correos de los autores están ocultos."
+        alt={T.altHero}
       />
     </HeroPagina>
 
     <section class="datos" aria-labelledby="datos">
-      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
       <dl class="datos__lista">
         {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
-        <div><dt>Web</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">Conocer la plataforma</CtaLink></dd></div>
+        <div><dt>{T.web}</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">{T.conocer}</CtaLink></dd></div>
       </dl>
     </section>
 
     <section class="bloque" aria-labelledby="proyecto">
-      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
       <div class="bloque__contenido">
-        <p>Accesible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.</p>
-        <p>Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.</p>
-        <p>El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.</p>
-        <CtaLink href="/proyectos/eci-conference/">Ver el caso de ECI Conference</CtaLink>
+        <p>{T.proyecto1}</p>
+        <p>{T.proyecto2}</p>
+        <p>{T.proyecto3}</p>
+        <CtaLink href={path('proyectos', lang, 'eci-conference')}>{T.verECI}</CtaLink>
       </div>
     </section>
 
@@ -98,20 +290,20 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
         formats={['avif', 'webp']}
         widths={[envioMovil.width / 2, envioMovil.width]}
         sizes="(min-width: 768px) 360px, calc(100vw - 48px)"
-        alt="El formulario de envío de ECI en el móvil: la cabecera con los logotipos de AEIPI y Eurlyaid, el título “Call for Abstracts” y los campos de título, tipo, línea temática y resumen, uno debajo de otro."
+        alt={T.altEnvioMovil}
         class="captura captura--movil"
         loading="lazy"
       />
-      <figcaption>El envío, en el móvil</figcaption>
+      <figcaption>{T.pieEnvioMovil}</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="reto">
-      <p class="bloque__etiqueta">El reto</p>
+      <p class="bloque__etiqueta">{T.reto}</p>
       <div class="bloque__contenido">
-        <h2 id="reto">Mucho proceso, poca interfaz.</h2>
-        <p>Un congreso así mueve envíos, autorías, conflictos de interés, revisión por pares, puntuaciones, avisos y decisiones. Las herramientas habituales lo resuelven con formularios largos y paneles llenos de opciones, y dejan fuera a quien usa teclado, lector de pantalla o zum.</p>
-        <h3>Cada persona ve solo lo suyo.</h3>
-        <p>Quien envía, un formulario sin crear cuenta. Quien revisa, sus abstracts y una escala de 1 a 5. El comité, el estado de todo y las decisiones. La complejidad se queda dentro.</p>
+        <h2 id="reto">{T.retoTitulo}</h2>
+        <p>{T.reto1}</p>
+        <h3>{T.reto2}</h3>
+        <p>{T.reto3}</p>
       </div>
     </section>
 
@@ -120,18 +312,18 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
         src={envio}
         movil={envioM}
         sizes={centro}
-        alt="El formulario de envío de ECI Conference Madrid 2027: el plazo, el título, el tipo de comunicación, la línea temática, el resumen con su contador de palabras, las palabras clave, la financiación, la declaración de conflictos de interés y los autores con su afiliación y correo."
+        alt={T.altEnvio}
         class="captura"
       />
-      <figcaption>Enviar un abstract, sin cuenta</figcaption>
+      <figcaption>{T.pieEnvio}</figcaption>
     </figure>
 
     <section class="bloque" aria-labelledby="estructura">
-      <p class="bloque__etiqueta">La estructura</p>
+      <p class="bloque__etiqueta">{T.estructura}</p>
       <div class="bloque__contenido">
-        <h2 id="estructura">Del envío al programa, en cuatro pasos.</h2>
-        <p>Los autores envían el abstract y reciben una confirmación con su referencia. Cada abstract se asigna solo a dos revisores de su línea temática, repartiendo la carga y dejando fuera los conflictos de interés, declarados o por afiliación.</p>
-        <p>Los revisores puntúan seis criterios de 1 a 5, pueden guardar a medias y dejar un comentario para el comité. El comité decide, los autores reciben la notificación y todo se exporta para el programa y la revista.</p>
+        <h2 id="estructura">{T.estructuraTitulo}</h2>
+        <p>{T.estructura1}</p>
+        <p>{T.estructura2}</p>
       </div>
     </section>
 
@@ -140,69 +332,69 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
         src={evaluacion}
         movil={evaluacionM}
         sizes={centro}
-        alt="La evaluación de un abstract: el título, el tipo y la línea temática, el aviso de que los nombres, afiliaciones y correos de los autores están ocultos, el texto del abstract y los primeros criterios, cada uno con su escala de 1 a 5."
+        alt={T.altEvaluacion}
         class="captura"
       />
-      <figcaption>Evaluar, en doble ciego</figcaption>
+      <figcaption>{T.pieEvaluacion}</figcaption>
     </figure>
 
     {/* Sin la captura del comité (05/11/2026): el caso era muy largo y la
         evaluación ya enseña la revisión. */}
     <section class="bloque" aria-labelledby="aprendido">
-      <p class="bloque__etiqueta">Lo aprendido</p>
+      <p class="bloque__etiqueta">{T.aprendido}</p>
       <div class="bloque__contenido">
-        <h2 id="aprendido">Lo que nos enseñó ECI.</h2>
-        <p>Tres de cada cuatro abstracts llegaron en la última semana del plazo, y más de la mitad en los tres últimos días. Por eso la revisión empieza mientras se envía: cada revisor recibe lo suyo a medida que entra, sin esperar al cierre.</p>
-        <p>Un congreso real también trae lo que ninguna especificación recoge: la misma propuesta enviada dos veces o por dos coautores, abstracts en otro idioma, o una persona que revisa y firma como autora con otro correo. Y la carga no se reparte sola: una línea temática puede tener tres veces más abstracts por revisor que otra.</p>
-        <p>La versión 2 parte de ahí.</p>
+        <h2 id="aprendido">{T.aprendidoTitulo}</h2>
+        <p>{T.aprendido1}</p>
+        <p>{T.aprendido2}</p>
+        <p>{T.aprendido3}</p>
       </div>
     </section>
 
     <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
       <div class="decisiones__enunciado">
-        <h2 id="decisiones">Decisiones de diseño</h2>
-        <p>Lo difícil era el proceso, no las pantallas. Cada decisión quita un paso a alguien.</p>
+        <h2 id="decisiones">{T.decisiones}</h2>
+        <p>{T.decisionesIntro}</p>
       </div>
       <ul class="decisiones__lista">
         <li>
           <MicroDecision tipo="ciego">
             <span class="m-ficha">
               <span>ABS-0142</span>
-              <span>Intervención temprana en casa</span>
-              <span class="m-autores">Ana Ruiz, Universidad de Sevilla</span>
-              <span class="m-aviso">Sin autores ni afiliaciones</span>
+              <span>{T.mTitulo}</span>
+              <span class="m-autores">{T.mAutores}</span>
+              <span class="m-aviso">{T.mAviso}</span>
             </span>
           </MicroDecision>
-          <h3>Doble ciego de verdad.</h3>
-          <p>Los nombres, afiliaciones y correos de los autores no llegan a las páginas de revisión. No se esconden con diseño: no están.</p>
+          <h3>{T.ciegoTitulo}</h3>
+          <p>{T.ciego}</p>
         </li>
         <li>
           <MicroDecision tipo="cuenta">
-            <span class="m-boton">Enviar abstract</span>
-            <span class="m-fila"><span>Recibido</span><span>ABS-0142</span></span>
-            <span class="m-fila m-fila--2"><span>Sin usuario ni contraseña</span></span>
+            <span class="m-boton">{T.mEnviar}</span>
+            <span class="m-fila"><span>{T.mRecibido}</span><span>ABS-0142</span></span>
+            <span class="m-fila m-fila--2"><span>{T.mSinUsuario}</span></span>
           </MicroDecision>
-          <h3>Sin cuenta para enviar.</h3>
-          <p>Quien envía un abstract no tiene que registrarse ni recordar una contraseña. Recibe una confirmación con su referencia y ya está.</p>
+          <h3>{T.cuentaTitulo}</h3>
+          <p>{T.cuenta}</p>
         </li>
         <li>
           <MicroDecision tipo="continua">
-            <span class="m-fila"><span>ABS-0139</span><span>Asignado</span></span>
-            <span class="m-fila"><span>ABS-0140</span><span>Asignado</span></span>
-            <span class="m-fila"><span>ABS-0141</span><span>Asignado</span></span>
-            <span class="m-fila"><span>ABS-0142</span><span>Asignado</span></span>
+            <span class="m-fila"><span>ABS-0139</span><span>{T.mAsignado}</span></span>
+            <span class="m-fila"><span>ABS-0140</span><span>{T.mAsignado}</span></span>
+            <span class="m-fila"><span>ABS-0141</span><span>{T.mAsignado}</span></span>
+            <span class="m-fila"><span>ABS-0142</span><span>{T.mAsignado}</span></span>
           </MicroDecision>
-          <h3>Revisión continua.</h3>
-          <p>Los abstracts se asignan a medida que llegan, con un resumen diario para cada revisor: sin avalancha al cierre del plazo.</p>
+          <h3>{T.continuaTitulo}</h3>
+          <p>{T.continua}</p>
         </li>
         <li>
           <MicroDecision tipo="marca">
-            <span class="m-capa m-capa--1"><span class="m-cabecera">Congreso Norte</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
-            <span class="m-capa m-capa--2"><span class="m-cabecera">Jornadas del Sur</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
-            <span class="m-capa m-capa--3"><span class="m-cabecera">ECI Mad 2027</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
+            <span class="m-capa m-capa--1"><span class="m-cabecera">{T.mNorte}</span><span class="m-fila"><span>{T.mEnvia}</span></span></span>
+            <span class="m-capa m-capa--2"><span class="m-cabecera">{T.mSur}</span><span class="m-fila"><span>{T.mEnvia}</span></span></span>
+            <span class="m-capa m-capa--3"><span class="m-cabecera">ECI Mad 2027</span><span class="m-fila"><span>{T.mEnvia}</span></span></span>
           </MicroDecision>
-          <h3>Con la marca de cada congreso.</h3>
-          <p>Funciona en el dominio y con los colores de cada congreso, en un alojamiento normal y sin licencias por abstract. Los datos son del congreso.</p>
+          <h3>{T.marcaTitulo}</h3>
+          <p>{T.marca}</p>
         </li>
       </ul>
     </section>
