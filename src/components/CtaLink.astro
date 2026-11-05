@@ -91,6 +91,10 @@ const final = corte >= 0 ? html.slice(corte + 1) : html;
     /* Y además un mínimo explícito: con el interlineado fluido, el relleno
        calculado puede dejar el enlace en 43,99 y `npm run a11y` lo caza. */
     min-block-size: var(--touch-min);
+    /* Del ancho de su texto también dentro de una columna flex o de grid, que
+       lo estiraban: el anillo de foco medía hasta 968 px (grabación con
+       tabulador de Johnny, 05/11/2026). Si no cabe, sigue partiéndose. */
+    max-inline-size: max-content;
     font-size: var(--texto-size);
     line-height: var(--texto-leading);
     text-decoration: none;
