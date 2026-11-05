@@ -58,7 +58,7 @@ const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
 const datos = [
   ['Cliente', 'Pau Jordà, arquitecto'],
   ['Año', '2026'],
-  ['Rol', 'Diseño, navegación y desarrollo'],
+  ['Rol', 'Diseño y desarrollo'],
   ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 const cifras = [
@@ -130,7 +130,7 @@ const cifras = [
         <h2 id="reto">Una línea que no se levanta del papel.</h2>
         <p>Pau no quería un portafolio con rejilla de miniaturas. Quería que la web se pareciera a su forma de trabajar: una línea que no se levanta del papel. Y eso planteaba dos retos.</p>
         <h3>Una web que se mira como un dibujo.</h3>
-        <p>La navegación horizontal, la película de apertura y las ilustraciones son la idea del proyecto, no un adorno. Quitarlas para simplificar habría sido perderlo.</p>
+        <p>La navegación horizontal, el vídeo de apertura y las ilustraciones son la idea del proyecto, no un adorno. Quitarlas para simplificar habría sido perderlo.</p>
         <h3>Y que se pueda recorrer de todas las formas.</h3>
         <p>Un recorrido horizontal suele romperse con el teclado, con el zoom o en una pantalla pequeña. Aquí tenía que funcionar con todo eso sin que nadie notara un modo aparte.</p>
       </div>
@@ -156,10 +156,10 @@ const cifras = [
       <ul class="decisiones__lista">
         <li>
           <h3>Todo sale de una línea.</h3>
-          <p>El logotipo, los iconos, las miniaturas y la película están trazados con el mismo gesto. La portada no es una rejilla: los proyectos flotan como dibujos sueltos sobre una lámina en blanco.</p>
+          <p>El logotipo, los iconos, las miniaturas y el vídeo están trazados con el mismo gesto. La portada no es una rejilla: los proyectos flotan como dibujos sueltos sobre una lámina en blanco.</p>
         </li>
         <li>
-          <h3>La película es la portada.</h3>
+          <h3>El vídeo es la portada.</h3>
           <p>En 2:42 la línea escribe “Elogio de la línea” y se convierte en cada proyecto. Arranca sin sonido, se puede pausar y lleva su descripción en texto. Si el sistema pide menos movimiento, no se pone en marcha sola.</p>
         </li>
         <li>
@@ -225,6 +225,9 @@ const cifras = [
   /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
      vertical retrasaba la historia). La web, que es un enlace largo, entera. */
   @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
   .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
   @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
   @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

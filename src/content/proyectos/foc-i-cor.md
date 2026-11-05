@@ -63,7 +63,7 @@ caso:
     abril de 2027 a más de cien personas en riesgo de exclusión en los oficios
     de cocina, sala y barra.
   anio: 2026
-  queHicimos: Diseño, desarrollo y accesibilidad
+  queHicimos: Diseño y desarrollo
   # Johnny, 23/10: sin “parcialmente conforme”. La ficha lo presenta como
   # el estándar de trabajo (“Estándar”), como en el Figma de Archivo.
   conformidad: WCAG 2.2 nivel AA

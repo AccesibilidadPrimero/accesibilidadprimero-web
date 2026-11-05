@@ -49,11 +49,10 @@ const lang = DEFAULT_LANG;
   />
 
   <div class="servicios">
-  {/* Los tres cerrados al cargar (Johnny, 04/11/2026): se elige servicio
-      antes de leer ninguno. */}
-  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable resumen={DISENO.resumen}>
+  {/* Los tres cerrados al cargar (Johnny, 04/11/2026), cada uno con su párrafo
+      descriptivo a la vista y un + al final para el resto (05/11/2026). */}
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable resumen={DISENO.intro}>
     <div class="pila">
-      <p>{DISENO.intro}</p>
       <ul class="puntos">
         {DISENO.puntos.map((p) => (
           <li>
@@ -67,9 +66,8 @@ const lang = DEFAULT_LANG;
     </div>
   </Bloque>
 
-  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable resumen={AUDITORIA.resumen}>
+  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable resumen={AUDITORIA.intro}>
     <div class="pila">
-      <p>{AUDITORIA.intro}</p>
       <ul class="puntos">
         {AUDITORIA.revisamos.map((p) => (
           <li>
@@ -103,10 +101,9 @@ const lang = DEFAULT_LANG;
     </div>
   </Bloque>
 
-  <Bloque id="formacion" titulo="Formación" desplegable resumen={FORMACION.resumen}>
+  <Bloque id="formacion" titulo="Formación" desplegable resumen={FORMACION.intro}>
     <div class="pila">
       <Microanimacion tipo="dia" color="verde" />
-      <p>{FORMACION.intro}</p>
       <ul class="puntos">
         {FORMACION.puntos.map((p) => (
           <li>
@@ -123,8 +120,6 @@ const lang = DEFAULT_LANG;
 
 <style>
   p { margin: 0; }
-  /* Los desplegables, juntos y a 128 del hero (Bloque.astro). */
-  .servicios { margin-block-start: var(--ritmo-seccion); }
   ul { margin: 0; padding: 0; list-style: none; }
 
   /* Como en Estudio: 24 entre las piezas de un bloque. */

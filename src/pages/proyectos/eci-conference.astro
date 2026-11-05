@@ -56,7 +56,7 @@ const vertical = { tableta: '360px', movil: '280px' };
 const datos = [
   ['Cliente', 'AEIPI y Eurlyaid'],
   ['Año', '2026'],
-  ['Rol', 'Contenidos, diseño y desarrollo'],
+  ['Rol', 'Diseño y desarrollo'],
   ['Estándar', 'WCAG 2.2 nivel AA'],
 ];
 ---
@@ -225,6 +225,9 @@ const datos = [
   /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
      vertical retrasaba la historia). La web, que es un enlace largo, entera. */
   @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
   .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
   @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
   @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

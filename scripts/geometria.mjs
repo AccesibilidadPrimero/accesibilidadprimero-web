@@ -35,8 +35,7 @@ const CASOS = [
   ['.producto--itza',                   448,  'Productos · Itza'],
   ['.producto--a11y',                   448,  'Productos · A11y Primero'],
   ['.producto--aa',                     448,  'Productos · Accesible Abstracts'],
-  /* Estudio · la frase ya no tiene caja fija (04/11/2026): va a tamaño de
-     texto, una frase por renglón, y mide lo que mide. */
+  ['.estudio__texto',                  1068,  'Estudio · texto centrado (fijo)'],
   ['.contacto__titulo',                 962,  'Contacto · titular (tope fijo)'],
 ];
 const TOLERANCIA = 2;   // px. Por debajo de esto es redondeo del navegador.
@@ -428,6 +427,7 @@ console.log('\n── Móvil 390 (Figma → medido) ──\n');
       'Foc i Cor · enlace DESPUÉS': [1, debajo('.proyecto--foc .slider', '.proyecto--foc .proyecto__cta')],
       'Izaskun · enlace DESPUÉS': [1, debajo('.proyecto--izaskun .slider', '.proyecto--izaskun .proyecto__cta')],
       'Productos · columna': [342, w('.producto--itza')],
+      'Estudio · caja de la frase': [274, w('.estudio__texto')],
       'Productos · texto de móvil': [1, visible('.productos__intro').startsWith('También creamos') ? 1 : 0],
       'Estudio · texto de móvil': [1, visible('.estudio__texto').startsWith('Código, diseño') ? 1 : 0],
       'Pie · lema, legales, ©': [1, debajo('.pie__lema', '.pie__nav') && debajo('.pie__nav', '.pie__copy') ? 1 : 0],
