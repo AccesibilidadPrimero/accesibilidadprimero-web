@@ -239,7 +239,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
             'axe-core 4.14 en Chromium, a 390, 768 y 1440 píxeles de ancho, y Lighthouse.',
             'Contraste medido píxel a píxel sobre la página pintada, no leído del código.',
             'Tamaño de todo lo que se pulsa, y sin desplazamiento horizontal a 320 píxeles.',
-            'Recorrido con teclado del menú, del carrusel y de la tira de “Sobre la mesa”.',
+            'Recorrido con teclado del menú, del carrusel y de los desplegables.',
             'Cada vídeo y cada animación, con y sin la opción de reducir el movimiento. Lo que se mueve solo más de cinco segundos tiene botón de pausa, salvo el emblema de Estudio.',
             'El formulario de contacto, también con sus errores abiertos.',
           ],

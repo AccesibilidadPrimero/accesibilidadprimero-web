@@ -305,7 +305,7 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
   .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
   /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
      separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
-  .pieza > :not(.vp) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
+  .pieza > :global(:not(.vp)) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
   .pieza figcaption { align-self: stretch; }
   /* El panel solo, a su tamaño de Chrome (300): la captura es @2x de eso. */
   .a11y :global(.captura--panel) { width: min(300px, 100%); }

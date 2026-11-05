@@ -236,7 +236,8 @@ check('El alt describe la imagen y no repite la frase',
   await p.close();
 }
 
-/* 14. «Sobre la mesa»: la tira horizontal tiene que recorrerse sin ratón.
+/* 14. «Sobre la mesa» (rejilla de tres desde el 05/11/2026; antes, una tira
+   horizontal que tenía que recorrerse sin ratón).
    Es el fallo clásico de los feeds horizontales — se arrastran con el dedo y
    con nada más—. Y el desbordamiento tiene que quedarse DENTRO del carril: si
    arrastra la página entera, se rompe 1.4.10 a 320. Las dos cosas se afirman
@@ -246,24 +247,13 @@ check('El alt describe la imagen y no repite la frase',
   await p.goto(`http://localhost:${PUERTO}/`, { waitUntil: 'load' });
   const hay = await p.evaluate(() => !!document.querySelector('.mesa__lista'));
   if (hay) {
-    await p.evaluate(() => document.querySelector('.mesa__lista').focus());
-    const enfocada = await p.evaluate(() => document.activeElement?.classList.contains('mesa__lista'));
-    check('La tira de «Sobre la mesa» recibe el foco', !!enfocada);
-
-    /* Si todo cabe no hay nada que desplazar, y eso no es un fallo: a 1440
-       caben tres notas sin scroll. La condición mira si HAY scroll, no
-       cuántas notas hay — con el recuento, la comprobación fallaba sola en
-       cuanto cabían justas. */
-    const hayScroll = await p.evaluate(() => {
+    /* Desde el 05/11/2026 es una rejilla de tres, sin desplazamiento: ya no
+       hay tira que recorrer con las flechas. Se afirma que no se desplaza. */
+    const quieta = await p.evaluate(() => {
       const e = document.querySelector('.mesa__lista');
-      return e.scrollWidth > e.clientWidth + 1;
+      return e.scrollWidth <= e.clientWidth + 1 && document.querySelectorAll('.mesa__nota').length <= 3;
     });
-    const antes = await p.evaluate(() => document.querySelector('.mesa__lista').scrollLeft);
-    if (hayScroll) await p.keyboard.press('ArrowRight');
-    await p.waitForTimeout(300);
-    const despues = await p.evaluate(() => document.querySelector('.mesa__lista').scrollLeft);
-    check('…y se recorre con las flechas', !hayScroll || despues > antes,
-      hayScroll ? `${antes} → ${despues}` : 'todo cabe: no hay a dónde ir');
+    check('«Sobre la mesa»: tres notas como mucho y sin desplazamiento', quieta);
 
     /* Cada tarjeta enlaza a SU post: cuatro enlaces llamados igual serían
        cuatro destinos indistinguibles en la lista de enlaces (2.4.4). */
