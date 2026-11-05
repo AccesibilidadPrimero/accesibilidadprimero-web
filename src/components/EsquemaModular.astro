@@ -28,10 +28,9 @@
      de ECI en el módulo del programa. Sin texto dentro (§1).
    --------------------------------------------------------------------------- */
 import { t } from '../i18n/ui';
-import { DEFAULT_LANG } from '../i18n/config';
 interface Props { class?: string }
 const { class: clase } = Astro.props;
-const ui = t(DEFAULT_LANG);
+const ui = t(idiomaDe(Astro.url));
 
 type Pieza = [string, Record<string, number>];
 const L = (x: number, y: number, w: number): Pieza => ['linea', { left: x, top: y, width: w }];
@@ -83,6 +82,7 @@ const plan = MODULOS.map((m) => ({
   }),
 }));
 const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
+import { idiomaDe } from '../i18n/idioma';
 ---
 
 <div class:list={['esquema', clase]} data-esquema-modular data-estado={ULTIMO} data-plan={JSON.stringify(plan)}>

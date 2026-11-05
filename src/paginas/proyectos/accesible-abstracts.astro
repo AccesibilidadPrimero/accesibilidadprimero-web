@@ -1,0 +1,328 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Accesible Abstracts · el tercer caso de un producto propio (04/11/2026)
+
+   Johnny: «es el gran proyecto, por su complejidad y la sencillez que hemos
+   conseguido». Nació para ECI Conference Madrid 2027 y de ahí pasó a
+   producto; la versión 2 está en desarrollo con lo aprendido en ECI.
+
+   Misma maqueta y mismo tono que los demás casos. El contenido sale del
+   repositorio (README, MANIFEST, QA-CHECKLIST) y de la landing
+   aa.accesibilidadprimero.com, reescrito en la voz de los casos.
+
+   Las capturas:
+   · El formulario de envío es el de producción (abstracts.eciconference2027
+     .com/submit.php), que es público y está vacío.
+   · Las cifras y lo aprendido salen del “Informe de abstracts ECI 2027 (2 nov
+     2026)”, solo en agregado: sin nombres ni referencias de abstracts.
+   · Las de revisores y comité son la aplicación de verdad (el mismo código)
+     corriendo en local con DATOS DE PRUEBA: títulos, revisores y
+     puntuaciones inventados. Las de producción llevan datos reales de
+     autores y revisores, y no se publican. Lo dice el propio caso.
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import MicroDecision from '../../components/MicroDecision.astro';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { path } from '../../i18n/config';
+import { idiomaDe } from '../../i18n/idioma';
+const lang = idiomaDe(Astro.url);
+import hero from '../../assets/proyectos/accesible-abstracts/hero.jpg';
+import envioMovil from '../../assets/proyectos/accesible-abstracts/envio-movil.jpg';
+import envio from '../../assets/proyectos/accesible-abstracts/envio.jpg';
+import evaluacion from '../../assets/proyectos/accesible-abstracts/evaluacion.jpg';
+/* Las versiones para móvil (04/11/2026): la misma aplicación a 390. */
+import CapturaArte from '../../components/CapturaArte.astro';
+import heroM from '../../assets/proyectos/accesible-abstracts/hero-m.jpg';
+import envioM from '../../assets/proyectos/accesible-abstracts/envio-m.jpg';
+import evaluacionM from '../../assets/proyectos/accesible-abstracts/evaluacion-m.jpg';
+
+const titulo = 'Accesible Abstracts';
+const datos = [
+  ['Producto', 'Plataforma de abstracts'],
+  ['Año', '2026'],
+  ['Rol', 'Desarrollo'],
+  ['Estándar', 'WCAG 2.2 A/AA'],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)';
+---
+
+<Base
+  lang={lang}
+  current="proyectos"
+  title={`${titulo} · Proyectos · Accesibilidad Primero`}
+  description="Accesible Abstracts, la plataforma de Accesibilidad Primero para enviar, asignar y evaluar abstracts en congresos científicos, con revisión doble ciego y accesible para todas las personas."
+>
+  <div class="aa">
+    <HeroPagina
+      titulo="Complejo por dentro, sencillo por fuera."
+      golpes={['Complejo por dentro,', 'sencillo por fuera.']}
+      texto={['Accesible Abstracts · Caso de estudio']}
+      superficie={{ fondo: 'var(--rose-ap)', foco: 'var(--blue-ap)' }}
+    >
+      <CapturaArte
+        slot="ilustracion"
+        class="apertura__ilustracion"
+        src={hero}
+        movil={heroM}
+        sizes="(min-width: 1440px) 1100px, calc(100vw - 48px)"
+        loading="eager"
+        alt="Accesible Abstracts vista por una revisora: sus abstracts asignados, con referencia, título, tipo, línea temática y estado, y el aviso de que la revisión es doble ciego y los nombres, afiliaciones y correos de los autores están ocultos."
+      />
+    </HeroPagina>
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">Datos del proyecto</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        <div><dt>Web</dt><dd><CtaLink href="https://aa.accesibilidadprimero.com/">Conocer la plataforma</CtaLink></dd></div>
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">El proyecto</h2>
+      <div class="bloque__contenido">
+        <p>Accesible Abstracts es la plataforma con la que un congreso científico recibe, reparte y evalúa sus abstracts. La hicimos para ECI Conference Madrid 2027, de AEIPI y Eurlyaid. A 2 de noviembre de 2026 había recibido 230 abstracts de 35 países, con 826 firmas de autoría, repartidos en cinco líneas temáticas entre 29 revisores.</p>
+        <p>Después la convertimos en un producto para otros congresos. La versión 2 está en desarrollo, con lo que aprendimos en ECI.</p>
+        <p>El formulario de envío es el de ECI en producción. Las pantallas de revisores y comité son la misma aplicación con datos de prueba.</p>
+        <CtaLink href="/proyectos/eci-conference/">Ver el caso de ECI Conference</CtaLink>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={envioMovil}
+        formats={['avif', 'webp']}
+        widths={[envioMovil.width / 2, envioMovil.width]}
+        sizes="(min-width: 768px) 360px, calc(100vw - 48px)"
+        alt="El formulario de envío de ECI en el móvil: la cabecera con los logotipos de AEIPI y Eurlyaid, el título “Call for Abstracts” y los campos de título, tipo, línea temática y resumen, uno debajo de otro."
+        class="captura captura--movil"
+        loading="lazy"
+      />
+      <figcaption>El envío, en el móvil</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">El reto</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">Mucho proceso, poca interfaz.</h2>
+        <p>Un congreso así mueve envíos, autorías, conflictos de interés, revisión por pares, puntuaciones, avisos y decisiones. Las herramientas habituales lo resuelven con formularios largos y paneles llenos de opciones, y dejan fuera a quien usa teclado, lector de pantalla o zum.</p>
+        <h3>Cada persona ve solo lo suyo.</h3>
+        <p>Quien envía, un formulario sin crear cuenta. Quien revisa, sus abstracts y una escala de 1 a 5. El comité, el estado de todo y las decisiones. La complejidad se queda dentro.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <CapturaArte
+        src={envio}
+        movil={envioM}
+        sizes={centro}
+        alt="El formulario de envío de ECI Conference Madrid 2027: el plazo, el título, el tipo de comunicación, la línea temática, el resumen con su contador de palabras, las palabras clave, la financiación, la declaración de conflictos de interés y los autores con su afiliación y correo."
+        class="captura"
+      />
+      <figcaption>Enviar un abstract, sin cuenta</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">La estructura</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">Del envío al programa, en cuatro pasos.</h2>
+        <p>Los autores envían el abstract y reciben una confirmación con su referencia. Cada abstract se asigna solo a dos revisores de su línea temática, repartiendo la carga y dejando fuera los conflictos de interés, declarados o por afiliación.</p>
+        <p>Los revisores puntúan seis criterios de 1 a 5, pueden guardar a medias y dejar un comentario para el comité. El comité decide, los autores reciben la notificación y todo se exporta para el programa y la revista.</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <CapturaArte
+        src={evaluacion}
+        movil={evaluacionM}
+        sizes={centro}
+        alt="La evaluación de un abstract: el título, el tipo y la línea temática, el aviso de que los nombres, afiliaciones y correos de los autores están ocultos, el texto del abstract y los primeros criterios, cada uno con su escala de 1 a 5."
+        class="captura"
+      />
+      <figcaption>Evaluar, en doble ciego</figcaption>
+    </figure>
+
+    {/* Sin la captura del comité (05/11/2026): el caso era muy largo y la
+        evaluación ya enseña la revisión. */}
+    <section class="bloque" aria-labelledby="aprendido">
+      <p class="bloque__etiqueta">Lo aprendido</p>
+      <div class="bloque__contenido">
+        <h2 id="aprendido">Lo que nos enseñó ECI.</h2>
+        <p>Tres de cada cuatro abstracts llegaron en la última semana del plazo, y más de la mitad en los tres últimos días. Por eso la revisión empieza mientras se envía: cada revisor recibe lo suyo a medida que entra, sin esperar al cierre.</p>
+        <p>Un congreso real también trae lo que ninguna especificación recoge: la misma propuesta enviada dos veces o por dos coautores, abstracts en otro idioma, o una persona que revisa y firma como autora con otro correo. Y la carga no se reparte sola: una línea temática puede tener tres veces más abstracts por revisor que otra.</p>
+        <p>La versión 2 parte de ahí.</p>
+      </div>
+    </section>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">Decisiones de diseño</h2>
+        <p>Lo difícil era el proceso, no las pantallas. Cada decisión quita un paso a alguien.</p>
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <MicroDecision tipo="ciego">
+            <span class="m-ficha">
+              <span>ABS-0142</span>
+              <span>Intervención temprana en casa</span>
+              <span class="m-autores">Ana Ruiz, Universidad de Sevilla</span>
+              <span class="m-aviso">Sin autores ni afiliaciones</span>
+            </span>
+          </MicroDecision>
+          <h3>Doble ciego de verdad.</h3>
+          <p>Los nombres, afiliaciones y correos de los autores no llegan a las páginas de revisión. No se esconden con diseño: no están.</p>
+        </li>
+        <li>
+          <MicroDecision tipo="cuenta">
+            <span class="m-boton">Enviar abstract</span>
+            <span class="m-fila"><span>Recibido</span><span>ABS-0142</span></span>
+            <span class="m-fila m-fila--2"><span>Sin usuario ni contraseña</span></span>
+          </MicroDecision>
+          <h3>Sin cuenta para enviar.</h3>
+          <p>Quien envía un abstract no tiene que registrarse ni recordar una contraseña. Recibe una confirmación con su referencia y ya está.</p>
+        </li>
+        <li>
+          <MicroDecision tipo="continua">
+            <span class="m-fila"><span>ABS-0139</span><span>Asignado</span></span>
+            <span class="m-fila"><span>ABS-0140</span><span>Asignado</span></span>
+            <span class="m-fila"><span>ABS-0141</span><span>Asignado</span></span>
+            <span class="m-fila"><span>ABS-0142</span><span>Asignado</span></span>
+          </MicroDecision>
+          <h3>Revisión continua.</h3>
+          <p>Los abstracts se asignan a medida que llegan, con un resumen diario para cada revisor: sin avalancha al cierre del plazo.</p>
+        </li>
+        <li>
+          <MicroDecision tipo="marca">
+            <span class="m-capa m-capa--1"><span class="m-cabecera">Congreso Norte</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
+            <span class="m-capa m-capa--2"><span class="m-cabecera">Jornadas del Sur</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
+            <span class="m-capa m-capa--3"><span class="m-cabecera">ECI Mad 2027</span><span class="m-fila"><span>Envía tu abstract</span></span></span>
+          </MicroDecision>
+          <h3>Con la marca de cada congreso.</h3>
+          <p>Funciona en el dominio y con los colores de cada congreso, en un alojamiento normal y sin licencias por abstract. Los datos son del congreso.</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <CierreProyecto actual="accesible-abstracts" titulo={titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  /* La microanimación, a 24 de su titular (05/11/2026). */
+  .decisiones__lista li > :global(.micro) + h3 { margin-block-start: calc(var(--space-24) - var(--space-48)); }
+
+  /* ---- Microanimaciones de las decisiones (05/11/2026) ----
+     MicroDecision.astro pone el marco y las reglas (estado final por defecto,
+     arranque al entrar en pantalla, una vez). Aquí, las piezas. */
+  @keyframes m-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes m-aparece { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes m-sale { from { opacity: 1; } to { opacity: 0; } }
+  .m-fila { position: absolute; inset-inline: 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; white-space: nowrap; }
+  .m-barra { position: absolute; inset-inline: 16px; block-size: 8px; border-radius: 4px; background: var(--hairline); overflow: hidden; }
+  .m-barra i { display: block; block-size: 100%; inline-size: 100%; background: var(--ink); transform-origin: left center; }
+  .m-boton { position: absolute; display: inline-flex; align-items: center; justify-content: center; block-size: 44px; padding-inline: 16px; border: 1px solid var(--ink); border-radius: 22px; white-space: nowrap; background: var(--white); }
+  .m-capa { position: absolute; inset: 0; }
+
+  /* 1 · Doble ciego de verdad: la ficha llega a revisión y la línea de autores desaparece. */
+  .m-ficha { position: absolute; inset: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .m-ficha > span { white-space: nowrap; overflow: hidden; }
+  :global(.micro--ciego) .m-autores { animation: m-quita 900ms var(--ease-out) 1200ms; }
+  :global(.micro--ciego) .m-aviso { animation: m-entra 400ms var(--ease-out) 2200ms; }
+  @keyframes m-quita { from { opacity: 1; max-block-size: 30px; } 50% { opacity: 0; max-block-size: 30px; } to { opacity: 0; max-block-size: 0; } }
+  :global(.micro--ciego) .m-autores { opacity: 0; max-block-size: 0; }
+
+  /* 2 · Sin cuenta para enviar: se pulsa «Enviar» y llega la referencia. */
+  :global(.micro--cuenta) .m-boton { inset-block-start: 20px; inset-inline-start: 16px; animation: m-pulsa 300ms ease-in-out 900ms; }
+  :global(.micro--cuenta) .m-fila { inset-block-start: 96px; animation: m-entra 400ms var(--ease-out) 1500ms; }
+  :global(.micro--cuenta) .m-fila--2 { inset-block-start: 128px; animation-delay: 1900ms; }
+  @keyframes m-pulsa { 50% { transform: scale(0.94); } }
+
+  /* 3 · Revisión continua: los abstracts llegan a la lista uno a uno, no de golpe. */
+  :global(.micro--continua) .m-fila { animation: m-entra 400ms var(--ease-out); }
+  :global(.micro--continua) .m-fila:nth-child(1) { inset-block-start: 16px; animation-delay: 300ms; }
+  :global(.micro--continua) .m-fila:nth-child(2) { inset-block-start: 52px; animation-delay: 1200ms; }
+  :global(.micro--continua) .m-fila:nth-child(3) { inset-block-start: 88px; animation-delay: 2100ms; }
+  :global(.micro--continua) .m-fila:nth-child(4) { inset-block-start: 124px; animation-delay: 3000ms; }
+
+  /* 4 · Con la marca de cada congreso: la misma plataforma con tres marcas. */
+  .m-cabecera { position: absolute; inset: 0 0 auto 0; block-size: 64px; display: flex; align-items: center; padding-inline: 16px; }
+  :global(.micro--marca) .m-capa--1 .m-cabecera { background: var(--yellow-ap); }
+  :global(.micro--marca) .m-capa--2 .m-cabecera { background: var(--mint); }
+  :global(.micro--marca) .m-capa--3 .m-cabecera { background: var(--rose-ap); }
+  :global(.micro--marca) .m-capa .m-fila { inset-block-start: 88px; }
+  :global(.micro--marca) .m-capa--1, .micro--marca .m-capa--2 { opacity: 0; }
+  :global(.micro--marca) .m-capa--1 { animation: m-turno 1400ms linear 300ms; }
+  :global(.micro--marca) .m-capa--2 { animation: m-turno 1400ms linear 1700ms; }
+  :global(.micro--marca) .m-capa--3 { animation: m-aparece 400ms var(--ease-out) 3100ms; }
+  @keyframes m-turno { 0% { opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
+
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La captura del hero, apaisada: por ancho, con el radio de las demás. */
+  .aa :global(.apertura__ilustracion) { block-size: auto; inline-size: min(1100px, 100%); border-radius: var(--radio); box-shadow: 0 8px 24px rgb(23 23 23 / 0.12); }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .aa :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
+     separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
+  .pieza > :global(:not(.vp)) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
+  .pieza figcaption { align-self: stretch; }
+  /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
+  .aa :global(.captura--movil) { width: min(360px, 100%); }
+  .pieza--derecha figcaption { width: min(360px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>

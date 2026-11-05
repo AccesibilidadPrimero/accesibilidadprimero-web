@@ -1,0 +1,376 @@
+---
+/* ---------------------------------------------------------------------------
+   Contacto · Figma `Producción · Contacto` (2674:1081):
+   Desktop 2283:2 · Tablet 2657:409 · Móvil 2657:545.
+
+   Mismo sistema que la Home: un cuerpo, un peso, todo en Ink, ritmo 128/64.
+   La única frase en `--display` es el titular (Johnny, 10/10). Los textos son
+   los de Tablet y Móvil en los tres anchos (Johnny, 10/10: los de Desktop
+   eran anteriores).
+
+   Sin el bloque de contacto del final: esta página ES el contacto
+   (`conCta={false}`).
+
+   ENVÍO (Johnny, 10/10): el formulario va a /api/contacto, en el Worker
+   (worker/index.ts), que lo verifica con Turnstile invisible y lo manda con
+   Brevo a proyectos@. Turnstile necesita JavaScript, así que SIN JS EL
+   FORMULARIO NO SE PINTA (AGENTS.md §5): sale `hidden` en el HTML y lo
+   enseña src/scripts/formulario.ts. Sin JS queda el correo de
+   «Directamente», y un aviso en <noscript> que lo dice.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import CtaLink from '../components/CtaLink.astro';
+import lapiz from '../assets/contacto/lapiz.svg';
+import Bloque from '../components/Bloque.astro';
+import Redes from '../components/Redes.astro';
+import { path } from '../i18n/config';
+import { idiomaDe } from '../i18n/idioma';
+import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
+
+const lang = idiomaDe(Astro.url);
+const CORREO = CORREO_ESTUDIO;
+
+/* Los mensajes de error no están en el Figma: los pide 3.3.1 y 3.3.3. Van en
+   el mismo tono que el resto de la página, diciendo qué hacer y no qué ha
+   fallado. */
+const CAMPOS = [
+  {
+    id: 'nombre',
+    etiqueta: 'Nombre',
+    ayuda: '¿Qué nombre prefieres que usemos al responderte?',
+    /* Dentro de la casilla, más claro (Johnny, 03/11/2026). Un placeholder
+       se borra al escribir y no lo leen todos los lectores, así que la ayuda
+       sigue en el HTML para `aria-describedby`, oculta a la vista (sr-only).
+       El gris es Ink / Secondary: 5,60:1 sobre el blanco de la casilla. */
+    dentro: true,
+    /* La frase entera no cabe en la casilla a 390 (se cortaba en «al re…»):
+       dentro va corta y la ayuda completa la oye el lector. */
+    marcador: 'El nombre que prefieras',
+    tipo: 'text',
+    autocomplete: 'name',
+    obligatorio: true,
+    falta: 'Escribe tu nombre.',
+  },
+  {
+    id: 'correo',
+    etiqueta: 'Correo electrónico',
+    ayuda: 'Por ejemplo: nombre@correo.com',
+    /* Dentro de la casilla, como el nombre (03/11/2026). */
+    dentro: true,
+    marcador: 'nombre@correo.com',
+    tipo: 'email',
+    autocomplete: 'email',
+    obligatorio: true,
+    falta: 'Escribe tu correo electrónico.',
+    formato: 'Revisa el correo: tiene que llevar @ y un dominio, como nombre@correo.com.',
+  },
+  {
+    id: 'organizacion',
+    etiqueta: 'Organización o proyecto (opcional)',
+    tipo: 'text',
+    autocomplete: 'organization',
+    obligatorio: false,
+  },
+] as const;
+---
+
+<Base
+  lang={lang}
+  current="contacto"
+  conCta={false}
+  title="Contacto · Accesibilidad Primero"
+  description="No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar. Respondemos siempre."
+>
+  {/* SIN HERO desde el 04/11/2026 (auditoría de usabilidad: quien llega aquí
+      ya quiere escribir y la primera pantalla era una presentación). El
+      titular, a tamaño de texto en la columna de los rótulos, como un bloque
+      más; la introducción, el correo y el formulario, juntos en la otra. */}
+  <section class="pagina-contacto" aria-labelledby="contacto-titulo">
+    <div class="pagina-contacto__cabeza">
+      <h1 id="contacto-titulo" class="pagina-contacto__titulo">Cuéntanos a dónde quieres llegar.</h1>
+      {/* El lápiz del hero que había (05/11/2026), pequeño y sin ocupar
+          pantalla: devuelve el carácter a la página. Decorativo. */}
+      <img src={lapiz.src} width={lapiz.width} height={lapiz.height} alt="" class="pagina-contacto__lapiz" />
+    </div>
+    <div class="pagina-contacto__contenido">
+      <div class="pagina-contacto__intro">
+        <p>No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar.</p>
+        <p>Respondemos siempre, aunque sea para decirte que no somos el estudio adecuado.</p>
+        {/* El correo, ANTES del formulario: es la otra forma de empezar. */}
+        <div class="directo__correo">
+          <p>Si lo prefieres, escríbenos por correo:</p>
+          <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
+        </div>
+      </div>
+      <h2 class="sr-only">Escríbenos</h2>
+      <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
+           su etiqueta, «(opcional)». Así no hace falta explicar qué significa
+           un asterisco (3.3.2), y el lector de pantalla no lo lee en cada
+           etiqueta. -->
+      <noscript>
+        <p>Para usar el formulario hace falta JavaScript. Puedes escribirnos directamente a <a href={`mailto:${CORREO}`}>{CORREO}</a>.</p>
+      </noscript>
+      <form
+        class="formulario"
+        action="/api/contacto"
+        method="post"
+        data-formulario
+        data-sitekey={TURNSTILE_SITEKEY}
+        data-accion={TURNSTILE_ACCION}
+        hidden
+      >
+        <!-- Si el envío falla (red, verificación o correo), esto sustituye al
+             resumen de errores: no es culpa de quien escribe, así que no
+             señala ningún campo y le da el correo como salida. -->
+        <div class="resumen" data-error-envio hidden>
+          <p class="resumen__titulo" tabindex="-1">
+            No hemos podido enviarlo. Vuelve a intentarlo o escríbenos a <a href={`mailto:${CORREO}`}>{CORREO}</a>.
+          </p>
+        </div>
+
+        <!-- El resumen de errores. Oculto hasta que falla un envío; entonces
+             el script rellena la lista y pone el foco en su titular, que por
+             eso lleva tabindex="-1". Es un <h3> porque cuelga de
+             «Escríbenos» (h2). Sin ARIA: el foco en un encabezado ya se lee. -->
+        <div class="resumen" data-resumen hidden>
+          <h3 class="resumen__titulo" tabindex="-1">No hemos podido enviarlo. Revisa esto:</h3>
+          <ul class="resumen__lista"></ul>
+        </div>
+
+        {
+          CAMPOS.map((c) => (
+            <div class="campo">
+              <label for={c.id}>{c.etiqueta}</label>
+              {'ayuda' in c && <p id={`${c.id}-ayuda`} class:list={['campo__ayuda', 'dentro' in c && 'sr-only']}>{c.ayuda}</p>}
+              <p id={`${c.id}-error`} class="campo__error" hidden />
+              <input
+                id={c.id}
+                name={c.id}
+                type={c.tipo}
+                autocomplete={c.autocomplete}
+                placeholder={'marcador' in c ? c.marcador : undefined}
+                required={c.obligatorio}
+                aria-describedby={['ayuda' in c ? `${c.id}-ayuda` : '', `${c.id}-error`].filter(Boolean).join(' ')}
+                data-validar
+                data-falta-msg={'falta' in c ? c.falta : undefined}
+                data-formato-msg={'formato' in c ? c.formato : undefined}
+                class="campo__entrada"
+              />
+            </div>
+          ))
+        }
+
+        <div class="campo">
+          <label for="mensaje">Tu mensaje</label>
+          <p id="mensaje-ayuda" class="campo__ayuda">
+            ¿Qué necesitas o qué idea tienes? Con unas líneas basta.
+          </p>
+          <p id="mensaje-error" class="campo__error" hidden />
+          <textarea
+            id="mensaje"
+            name="mensaje"
+            rows="6"
+            required
+            aria-describedby="mensaje-ayuda mensaje-error"
+            data-validar
+            data-falta-msg="Escribe unas líneas sobre lo que necesitas."
+            class="campo__entrada campo__entrada--area"></textarea>
+        </div>
+
+        <div class="consentimiento">
+          <p id="consentimiento-error" class="campo__error" hidden />
+          <div class="consentimiento__fila">
+            <input
+              id="consentimiento"
+              name="consentimiento"
+              type="checkbox"
+              required
+              aria-describedby="consentimiento-error"
+              data-validar
+              data-falta-msg="Para contestarte necesitamos que aceptes la política de privacidad."
+              class="consentimiento__casilla"
+            />
+            <label for="consentimiento">
+              He leído la política de privacidad y acepto que uséis mis datos para responderme.
+            </label>
+          </div>
+        </div>
+
+        <!-- La política a la que se refiere la casilla. En su propia línea, no
+             dentro de la etiqueta: un enlace dentro de un <label> se lleva
+             el clic que debería marcar la casilla, y en un renglón mide 23
+             px (la regla del repo son 44). Figma: `CTA · Política de
+             privacidad`, 11/10/2026. -->
+        <CtaLink href={path('privacidad', lang)}>Política de privacidad</CtaLink>
+
+        <!-- Turnstile en modo invisible: no dibuja nada ni pide nada. Su
+             script se carga al empezar a rellenar el formulario, no al abrir
+             la página. -->
+        <div data-turnstile></div>
+
+        <button type="submit" class="boton">Enviar mensaje</button>
+      </form>
+
+      <!-- Confirmación. Al enviarse, el formulario desaparece y el foco viene
+           aquí (tabindex="-1"): si no, se quedaría en un botón que ya no
+           existe y quien usa lector de pantalla no sabría qué ha pasado. Al
+           llevar el foco no hace falta role="status": se lee al llegar. -->
+      <p class="confirmacion" data-confirmacion tabindex="-1" hidden>
+        Gracias, ya tenemos tu mensaje. Te responderemos a <span data-confirmacion-correo></span>.
+      </p>
+    </div>
+  </section>
+
+  {/* Sin el título visible «También puedes escribirnos directamente»
+      (Johnny, 03/11/2026). El h2 sigue para quien salta por encabezados. */}
+  <Bloque id="directamente" titulo="Redes" tituloOculto>
+    <div class="directo">
+      {/* La frase es de Johnny (10/10). El correo iba dentro de ella, pero un
+          enlace en un renglón de texto mide 23 px de alto y la regla del
+          repo son 44 en todo lo que se pulsa (AGENTS.md §4; WCAG lo
+          perdona en una frase, AP no). Así que el correo sale a su línea,
+          como enlace suelto con su flecha. El <wbr> deja partir la dirección
+          después de la arroba: sin espacios, a 320 no cabe (1.4.10). */}
+      {/* Ordenado (Johnny, 03/11/2026): la frase y el correo en una sola
+          línea, y las redes debajo en tres columnas. */}
+      {/* El correo subió arriba, junto al formulario (04/11/2026). */}
+      <Redes columnas />
+    </div>
+  </Bloque>
+</Base>
+
+<script>
+  import '../scripts/formulario';
+</script>
+
+<style>
+  /* La cabecera de la página: el ritmo de los bloques (Bloque.astro), con el
+     titular en la columna de los rótulos y a 64 de la cabecera, como el
+     listado de Proyectos. */
+  .pagina-contacto { padding: var(--ritmo-intro) var(--gutter-page) 0; display: flex; flex-direction: column; gap: var(--space-24); }
+  .pagina-contacto__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .pagina-contacto__cabeza { display: flex; flex-direction: column; gap: var(--space-24); }
+  .pagina-contacto__lapiz { display: block; inline-size: auto; block-size: 96px; max-inline-size: 100%; }
+  @media (min-width: 1024px) { .pagina-contacto__lapiz { block-size: 160px; } }
+  .pagina-contacto__contenido { display: flex; flex-direction: column; gap: var(--space-48); min-width: 0; }
+  .pagina-contacto__intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 560px; }
+  .pagina-contacto__intro p { margin: 0; }
+  @media (min-width: 1024px) {
+    .pagina-contacto { display: grid; grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); gap: 0; }
+    .pagina-contacto__cabeza { max-width: 204px; }
+  }
+
+  .directo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+  }
+  .directo p { margin: 0; }
+  /* La frase y su correo en una línea; si no caben (móvil), el correo baja
+     entero, con su flecha. */
+  /* El título del bloque está oculto, así que el contenido caía en la
+     primera columna (456 px a 1440) y las redes se salían. Va en la columna
+     del formulario, a plomo con él (03/11/2026). */
+  :global(.bloque__contenido:has(> .directo)) { grid-column: -2 / -1; min-width: 0; }
+  .directo__correo { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-12); row-gap: var(--space-8); }
+
+  /* ----- Formulario ----------------------------------------------------
+     Campos de 560 como máximo; 32 entre ellos; 6 dentro de cada uno. */
+  .formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-32);
+    max-width: 560px;
+    position: relative;
+  }
+  /* El contenedor de Turnstile no pinta nada (modo invisible), pero como hijo
+     del flex sumaba un hueco más: 64 en vez de 32 hasta el botón. Fuera del
+     flujo deja de ocupar sitio y Turnstile sigue teniendo dónde montarse. */
+  .formulario [data-turnstile] { position: absolute; inset-block-start: 0; inset-inline-start: 0; }
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    inline-size: 100%;
+  }
+  .campo__ayuda, .campo__error { margin: 0; }
+  .campo__entrada::placeholder { color: var(--grey); opacity: 1; }
+
+  /* Borde Ink / Secondary de 1,5: 5,60:1 sobre blanco, por encima del 3:1
+     que pide 1.4.11 para el contorno de un control. */
+  .campo__entrada {
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-block-size: 56px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--grey);
+    border-radius: 3px;
+    background: var(--white);
+    color: var(--text);
+    font: inherit;
+  }
+  .campo__entrada--area { min-block-size: 180px; resize: vertical; }
+
+  /* Error: el mensaje escrito encima del campo y el borde en Ink y al doble.
+     Nunca solo color (1.4.1). Con `forced-colors` la sombra desaparece, pero
+     el mensaje sigue ahí. */
+  [aria-invalid='true'] {
+    border-color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+
+  /* Casilla de 24 (Figma 2284:45) y 12 hasta su texto. La etiqueta entera
+     responde al toque, así que la zona útil es la fila completa y supera los
+     44 de la regla de AP. */
+  .consentimiento { display: flex; flex-direction: column; gap: 6px; }
+  .consentimiento__fila {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+  .consentimiento__casilla {
+    flex: 0 0 auto;
+    inline-size: 24px;
+    block-size: 24px;
+    margin: 0;
+    accent-color: var(--ink);
+  }
+  .consentimiento label { min-block-size: var(--touch-min); }
+
+  /* Botón: Ink con texto blanco, 16 · 32 de relleno, radio 3 (Figma 2284:47).
+     Al pasar, subrayado: el estado va en una línea, no en un cambio de color. */
+  .boton {
+    min-block-size: var(--touch-min);
+    padding: var(--space-16) var(--space-32);
+    border: 0;
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--white);
+    cursor: pointer;
+  }
+  .boton:hover {
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-rest);
+    text-underline-offset: var(--underline-offset);
+  }
+  @media (forced-colors: active) {
+    .boton { border: 1.5px solid ButtonText; }
+  }
+
+  /* Resumen de errores: un recuadro de tinta, el mismo grosor que el campo
+     en error. */
+  .resumen {
+    inline-size: 100%;
+    box-sizing: border-box;
+    padding: var(--space-16) var(--space-24);
+    border: 3px solid var(--ink);
+    border-radius: 3px;
+  }
+  .resumen[hidden], .formulario[hidden] { display: none; }
+  .confirmacion { margin: 0; max-width: 560px; }
+  .resumen__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .resumen__lista { margin: var(--space-8) 0 0; padding-inline-start: 1.2em; }
+  .resumen__lista a { display: inline-block; min-block-size: var(--touch-min); padding-block: var(--aire-control); }
+</style>

@@ -94,8 +94,11 @@ export interface Alternate {
  * Los idiomas en los que existe esta misma página. Devuelve lista vacía si
  * solo hay un idioma activo, para que quien la pinte no tenga que saberlo.
  */
+/** Rutas que solo existen en castellano (05/11/2026): el blog no se traduce. */
+const SOLO_ES: RouteKey[] = ['blog'];
+
 export function alternates(current: RouteKey, slug?: string): Alternate[] {
-  if (!hasMultipleLangs()) return [];
+  if (!hasMultipleLangs() || SOLO_ES.includes(current)) return [];
   return ACTIVE.map((lang) => ({
     lang,
     href: path(current, lang, slug),

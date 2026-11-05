@@ -1,0 +1,154 @@
+---
+/* ---------------------------------------------------------------------------
+   Servicios (Johnny, 30/10/2026). Página nueva, sin frame en el Figma todavía:
+   la estructura es la de Estudio (HeroPagina + Bloque) para que la geometría
+   viva en un solo sitio (AGENTS.md §8, «Páginas interiores»).
+
+   Hero: el planeta (arte/servicios/planeta.svg) al alto de las ilustraciones
+   de la Home, el titular en una línea (en móvil, partido antes de «y
+   Formación») y el fondo que recorre una vez los tres colores en 5 s y se
+   queda quieto: sin botón de pausa, porque no se mueve más de 5 s (2.2.2).
+   Con «reducir movimiento» no cambia (lo resuelve HeroPagina). Empieza y
+   acaba en rosa (05/11/2026): en menta se confundía con el hero de AP.
+
+   Revisión 2 y 3 (Johnny, 03/11/2026): cada servicio es un desplegable
+   (Bloque `desplegable`; Diseño y desarrollo carga abierto), las tarifas van
+   dentro de la auditoría, una por desplegable, y cada punto lleva su microanimación
+   con el color de su servicio: diseño en rosa, auditoría en amarillo y
+   formación en verde claro (Microanimacion.astro).
+
+   Orden de los servicios: Diseño y desarrollo, Auditoría, Formación. El
+   contenido está en src/data/servicios.ts.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import CtaLink from '../components/CtaLink.astro';
+import { path } from '../i18n/config';
+import { idiomaDe } from '../i18n/idioma';
+import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
+import Plegable from '../components/Plegable.astro';
+import Microanimacion from '../components/Microanimacion.astro';
+import planeta from '../assets/servicios/planeta.svg';
+
+const lang = idiomaDe(Astro.url);
+---
+<Base
+  lang={lang}
+  current="servicios"
+  title="Servicios · Accesibilidad Primero"
+  description="Diseño y desarrollo, auditoría de accesibilidad y formación. Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan."
+>
+  <HeroPagina
+    ilustracion={planeta}
+    alt="Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde."
+    titulo="Diseño, Auditoría y Formación."
+    golpes={['Diseño, Auditoría', 'y Formación.']}
+    texto={['Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan.']}
+    fondos={['var(--rose-ap)', 'var(--yellow-ap)', 'var(--mint)']}
+    fondosUnaVez
+    ilustracionComoHome
+  />
+
+  <div class="servicios">
+  {/* Los tres cerrados al cargar (Johnny, 04/11/2026), cada uno con su párrafo
+      descriptivo a la vista y un + al final para el resto (05/11/2026). */}
+  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable resumen={DISENO.intro}>
+    <div class="pila">
+      <ul class="puntos">
+        {DISENO.puntos.map((p) => (
+          <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="rosa" />}
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <CtaLink href={path('proyectos', lang)}>Ver casos de estudio</CtaLink>
+    </div>
+  </Bloque>
+
+  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable resumen={AUDITORIA.intro}>
+    <div class="pila">
+      <ul class="puntos">
+        {AUDITORIA.revisamos.map((p) => (
+          <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="amarillo" />}
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <p>{AUDITORIA.entregamos}</p>
+
+      {/* Las tarifas, DENTRO de la auditoría: son su precio (Johnny,
+          03/11/2026). Un <h3> como los puntos y un desplegable por tarifa,
+          con lo que se audita como título (<h4>). Dentro, el precio y lo que
+          incluye; sin el nombre de la tarifa ni recuadro. */}
+      <div class="tarifas">
+        <h3 class="punto__nombre">Tarifas</h3>
+        <p>{AUDITORIA.comun}</p>
+        <div class="tarifas__lista">
+          {AUDITORIA.tarifas.map((t, i) => (
+            <Plegable id={`tarifa-${i + 1}`} titulo={t.titulo} nivel={4}>
+              <p class="tarifa__precio">{t.precio}</p>
+              {t.para && <p>{t.para}</p>}
+              <ul class="tarifa__incluye">
+                {t.incluye.map((x) => <li>{x}</li>)}
+              </ul>
+            </Plegable>
+          ))}
+        </div>
+      </div>
+    </div>
+  </Bloque>
+
+  <Bloque id="formacion" titulo="Formación" desplegable resumen={FORMACION.intro}>
+    <div class="pila">
+      <Microanimacion tipo="dia" color="verde" />
+      <ul class="puntos">
+        {FORMACION.puntos.map((p) => (
+          <li>
+            {p.mic && <Microanimacion tipo={p.mic} color="verde" />}
+            <h3 class="punto__nombre">{p.nombre}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Bloque>
+  </div>
+</Base>
+
+<style>
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* Como en Estudio: 24 entre las piezas de un bloque. */
+  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; align-items: flex-start; }
+  .pila > :not(a) { align-self: stretch; }
+
+  /* Como los servicios de Estudio: 16 entre el nombre y su texto y 48 entre
+     punto y punto (AGENTS.md §4). El nombre es un <h3> al cuerpo del texto. */
+  /* Intermedio (Johnny, 04/11/2026): 24 del nombre a su texto (era 16) y 72
+     entre punto y punto (era 48): el triple, la regla de proximidad
+     (AGENTS.md §4). En los casos es 48; aquí los puntos son cortos y 48 los
+     partía en dos. */
+  .puntos { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); padding-block: var(--space-24); }
+  .puntos li { display: flex; flex-direction: column; gap: var(--space-24); }
+  .punto__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* Tarifas: dentro de la auditoría, desplegables seguidos, sin recuadro ni
+     filetes (03/11/2026). */
+  .tarifas { display: flex; flex-direction: column; gap: var(--space-16); padding-block-start: var(--space-24); }
+  .tarifa__precio { margin-block-end: var(--space-8); }
+  .tarifa__incluye { display: flex; flex-direction: column; gap: var(--space-4); margin-block-start: var(--space-16); }
+
+  /* El titular: en una línea en escritorio y tableta; en móvil, partido
+     antes de «y Formación» (Johnny, 03/11/2026). El golpe lo declara
+     HeroPagina, de ahí el :global (AGENTS.md §6). */
+  @media (max-width: 767px) {
+    :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
+  }
+  .puntos li > :global(.mic) { margin-block-end: 0; }
+</style>

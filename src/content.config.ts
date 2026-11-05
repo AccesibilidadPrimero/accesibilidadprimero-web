@@ -78,6 +78,9 @@ const proyectos = defineCollection({
   schema: ({ image }) => z
     .object({
       titulo: z.string(),
+      /* Las versiones en catalán e inglés (05/11/2026): la misma forma que el
+         original, solo los textos. Las mezcla `localizar` (i18n/idioma.ts). */
+      traducciones: z.record(z.enum(['ca', 'en']), z.any()).optional(),
       /* Titulares sin antetítulo y sin mayúsculas sostenidas. */
       resumen: z.string(),
       /* Lo que hizo AP, en una frase visible bajo el resumen de la home

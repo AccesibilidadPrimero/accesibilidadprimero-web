@@ -21,7 +21,7 @@ import HeroPagina from './HeroPagina.astro';
 import Bloque from './Bloque.astro';
 import CtaLink from './CtaLink.astro';
 import { conMarca } from '../i18n/marca';
-import { DEFAULT_LANG, type RouteKey } from '../i18n/config';
+import { type RouteKey } from '../i18n/config';
 import type { PaginaLegal } from '../data/legal';
 
 interface Props {
@@ -34,10 +34,11 @@ const escapar = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
 /* Una dirección de correo no tiene espacios y a 320 no cabe: se le deja
    partir después de la arroba (1.4.10), como en Contacto. */
 const textoEnlace = (s: string) => escapar(s).replace('@', '@<wbr>');
+import { idiomaDe } from '../i18n/idioma';
 ---
 
 <Base
-  lang={DEFAULT_LANG}
+  lang={idiomaDe(Astro.url)}
   current={ruta}
   conCta={false}
   title={`${pagina.titulo} · Accesibilidad Primero`}

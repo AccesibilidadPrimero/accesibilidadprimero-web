@@ -1,0 +1,17 @@
+---
+/* /proyectos/tipo/<clave>/ · un filtro del listado de Proyectos. Las claves
+   salen de src/data/proyectos.ts; solo se generan las que tienen algo. */
+import { getCollection } from 'astro:content';
+import ListadoProyectos from '../../../../components/ListadoProyectos.astro';
+import { CLAVES_TIPO, type Tipo } from '../../../../data/proyectos';
+import { PRODUCTOS } from '../../../../data/productos';
+
+export async function getStaticPaths() {
+  const casos = (await getCollection('proyectos')).filter((p) => p.data.casoPublicado);
+  const conAlgo = (t: Tipo) => casos.some((c) => c.data.tipo === t) || PRODUCTOS.some((p) => p.tipo === t);
+  return CLAVES_TIPO.filter(conAlgo).map((tipo) => ({ params: { tipo }, props: { tipo } }));
+}
+const { tipo } = Astro.props as { tipo: Tipo };
+---
+
+<ListadoProyectos tipo={tipo} />
