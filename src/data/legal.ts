@@ -17,6 +17,7 @@
    23 px de alto, y la regla del repo son 44 en todo lo que se pulsa.
    --------------------------------------------------------------------------- */
 import { DOMINIO } from './sitio';
+import type { Lang } from '../i18n/config';
 
 export type Pieza =
   | { p: string }
@@ -273,4 +274,495 @@ export const ACCESIBILIDAD: PaginaLegal = {
       ],
     },
   ],
+};
+
+/* ---------------------------------------------------------------------------
+   Catalán e inglés británico (05/11/2026). Traducción adaptada, no literal,
+   con los términos del modelo de declaración de la Directiva (UE) 2016/2102 y
+   el RD 1112/2018. Los datos reales (nombre, NIF, domicilio, correo) no se
+   traducen. En caso de discrepancia prevalece el castellano, y PaginaLegal lo
+   dice en la propia página.
+   --------------------------------------------------------------------------- */
+
+const PRIVACIDAD_CA: PaginaLegal = {
+  titulo: 'Política de privacitat',
+  entrada: [
+    'Quines dades recollim, per a què les fem servir i com ens pots demanar que les esborrem. Explicat perquè s’entengui a la primera.',
+  ],
+  fecha: 'Darrera actualització: 11 d’octubre de 2026.',
+  descripcion: `Quines dades recollim a ${DOMINIO}, per a què les fem servir i com pots exercir els teus drets.`,
+  bloques: [
+    {
+      id: 'quien',
+      titulo: 'Qui tracta les teves dades',
+      piezas: [
+        { p: 'Johnny Vale Vigas, que treballa amb el nom comercial Accesibilidad Primero.' },
+        {
+          datos: [
+            ['NIF', '23889384-C'],
+            ['Domicili', "Mare de Deu de l'Assumpció 4, bajo izquierdo, 46020 Valencia"],
+            ['Correu', CORREO],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'que',
+      titulo: 'Quines dades recollim',
+      piezas: [
+        { p: 'Només les que ens dones. Si fas servir el formulari: el teu nom, el teu correu, la teva organització si la indiques i el que ens expliquis. Si ens escrius per correu, el que hi hagi al teu missatge.' },
+        { p: 'Per protegir el formulari dels enviaments automàtics, Cloudflare Turnstile analitza dades tècniques de la teva connexió, com l’adreça IP i el navegador, sense demanar-te res. No les fem servir per identificar-te.' },
+        { p: 'Per saber quantes visites rep el web fem servir Cloudflare Web Analytics, que compta les pàgines vistes sense galetes i sense seguir ningú.' },
+      ],
+    },
+    {
+      id: 'para-que',
+      titulo: 'Per a què les fem servir',
+      piezas: [
+        { p: 'Per respondre’t. I, si de la conversa en surt un projecte, per gestionar-lo: pressupost, comunicació i facturació.' },
+        { p: 'No les fem servir per enviar-te publicitat i no les venem a ningú.' },
+      ],
+    },
+    {
+      id: 'base',
+      titulo: 'Amb quina base legal',
+      piezas: [
+        { p: 'El teu consentiment, quan ens escrius i marques la casella del formulari. El pots retirar quan vulguis.' },
+        { p: 'Si contractes un projecte, el contracte i les obligacions legals que comporta, com la facturació.' },
+        { p: 'La protecció del formulari i el recompte de visites es basen en el nostre interès legítim que el web funcioni i sigui segur.' },
+      ],
+    },
+    {
+      id: 'tiempo',
+      titulo: 'Quant de temps les conservem',
+      piezas: [
+        { p: 'Els missatges que no acaben en projecte, un any des de la darrera comunicació. Després s’esborren.' },
+        { p: 'Si treballem junts, mentre duri el projecte i, després, el temps que obliga la llei: sis anys la documentació comptable i quatre la fiscal.' },
+      ],
+    },
+    {
+      id: 'con-quien',
+      titulo: 'Amb qui les compartim',
+      piezas: [
+        { p: 'Amb ningú perquè les faci servir pel seu compte. Només amb els proveïdors que necessitem perquè tot això funcioni, que les tracten per encàrrec nostre:' },
+        {
+          lista: [
+            'Cloudflare: allotja el web, rep el formulari, el protegeix dels enviaments automàtics i compta les visites.',
+            'Brevo: ens fa arribar el missatge del formulari per correu.',
+            'Google Workspace: el nostre correu, on arriben i es guarden els missatges.',
+          ],
+        },
+        { p: 'Cloudflare i Google poden tractar dades fora de la Unió Europea. Ho fan amb les garanties del Marc de Privacitat de Dades UE-EUA i les clàusules contractuals tipus de la Comissió Europea. Brevo les tracta a la Unió Europea.' },
+      ],
+    },
+    {
+      id: 'derechos',
+      titulo: 'Quins drets tens',
+      piezas: [
+        { p: 'Ens pots demanar veure les teves dades, corregir-les, esborrar-les, limitar-ne l’ús, oposar-t’hi o endur-te-les a un altre lloc. També pots retirar el teu consentiment, sense que això afecti el que ja hàgim fet amb ell.' },
+        { p: 'Escriu-nos i digues-nos què vols. Et responem en un mes com a màxim.' },
+        enlaceCorreo,
+      ],
+    },
+    {
+      id: 'reclamar',
+      titulo: 'On reclamar',
+      piezas: [
+        { p: 'Si creus que no hem tractat bé les teves dades, pots presentar una reclamació davant l’autoritat de control.' },
+        { enlace: { texto: 'Agencia Española de Protección de Datos', href: 'https://www.aepd.es/' } },
+      ],
+    },
+  ],
+};
+
+const PRIVACIDAD_EN: PaginaLegal = {
+  titulo: 'Privacy policy',
+  entrada: [
+    'What data we collect, what we use it for and how you can ask us to delete it. Written so it makes sense the first time you read it.',
+  ],
+  fecha: 'Last updated: 11 October 2026.',
+  descripcion: `What data we collect on ${DOMINIO}, what we use it for and how to exercise your rights.`,
+  bloques: [
+    {
+      id: 'quien',
+      titulo: 'Who processes your data',
+      piezas: [
+        { p: 'Johnny Vale Vigas, who trades as Accesibilidad Primero.' },
+        {
+          datos: [
+            ['Tax ID (NIF)', '23889384-C'],
+            ['Address', "Mare de Deu de l'Assumpció 4, bajo izquierdo, 46020 Valencia, Spain"],
+            ['Email', CORREO],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'que',
+      titulo: 'What data we collect',
+      piezas: [
+        { p: 'Only what you give us. If you use the form: your name, your email address, your organisation if you include it and whatever you tell us. If you email us, whatever is in your message.' },
+        { p: 'To protect the form from automated submissions, Cloudflare Turnstile analyses technical data about your connection, such as your IP address and browser, without asking you to do anything. We do not use it to identify you.' },
+        { p: 'To find out how many visits the website gets, we use Cloudflare Web Analytics, which counts page views without cookies and without tracking anyone.' },
+      ],
+    },
+    {
+      id: 'para-que',
+      titulo: 'What we use it for',
+      piezas: [
+        { p: 'To reply to you. And, if the conversation turns into a project, to manage it: quote, communication and invoicing.' },
+        { p: 'We do not use it to send you advertising, and we do not sell it to anyone.' },
+      ],
+    },
+    {
+      id: 'base',
+      titulo: 'Our lawful basis',
+      piezas: [
+        { p: 'Your consent, when you write to us and tick the box on the form. You can withdraw it at any time.' },
+        { p: 'If you commission a project, the contract and the legal obligations that come with it, such as invoicing.' },
+        { p: 'Protecting the form and counting visits rely on our legitimate interest in keeping the website working and secure.' },
+      ],
+    },
+    {
+      id: 'tiempo',
+      titulo: 'How long we keep it',
+      piezas: [
+        { p: 'Messages that do not lead to a project are kept for one year from the last contact. Then they are deleted.' },
+        { p: 'If we work together, for as long as the project lasts and, afterwards, for as long as the law requires: six years for accounting records and four for tax records.' },
+      ],
+    },
+    {
+      id: 'con-quien',
+      titulo: 'Who we share it with',
+      piezas: [
+        { p: 'No one for their own purposes. Only with the providers we need to make all this work, who process it on our behalf:' },
+        {
+          lista: [
+            'Cloudflare: hosts the website, receives the form, protects it from automated submissions and counts visits.',
+            'Brevo: delivers the form message to us by email.',
+            'Google Workspace: our email, where messages arrive and are stored.',
+          ],
+        },
+        { p: 'Cloudflare and Google may process data outside the European Union. They do so under the safeguards of the EU-US Data Privacy Framework and the European Commission’s standard contractual clauses. Brevo processes it within the European Union.' },
+      ],
+    },
+    {
+      id: 'derechos',
+      titulo: 'Your rights',
+      piezas: [
+        { p: 'You can ask us to access your data, correct it, delete it, restrict its use, object to its use or take it elsewhere. You can also withdraw your consent, without affecting anything we have already done on the basis of it.' },
+        { p: 'Write to us and tell us what you would like. We reply within one month at most.' },
+        enlaceCorreo,
+      ],
+    },
+    {
+      id: 'reclamar',
+      titulo: 'Where to complain',
+      piezas: [
+        { p: 'If you believe we have not handled your data properly, you can lodge a complaint with the supervisory authority, the Spanish Data Protection Agency.' },
+        { enlace: { texto: 'Agencia Española de Protección de Datos', href: 'https://www.aepd.es/' } },
+      ],
+    },
+  ],
+};
+
+const COOKIES_CA: PaginaLegal = {
+  titulo: 'Política de galetes',
+  entrada: ['Què es guarda al teu navegador quan visites aquest web i per a què serveix. Gairebé res.'],
+  fecha: 'Darrera actualització: 11 d’octubre de 2026.',
+  descripcion: `${DOMINIO} no fa servir galetes. Què es guarda al teu navegador quan fas servir el formulari i per què.`,
+  bloques: [
+    {
+      id: 'que-es',
+      titulo: 'Què és una galeta',
+      piezas: [
+        { p: 'Un petit fitxer que un web deixa al teu navegador per recordar alguna cosa: que has iniciat la sessió, què hi ha a la teva cistella o, moltes vegades, per on et mous. Hi ha altres maneres de guardar coses al navegador, com l’emmagatzematge local, i la llei les tracta igual.' },
+      ],
+    },
+    {
+      id: 'cuales',
+      titulo: 'Quines fem servir',
+      piezas: [
+        { p: 'Cap. Ni pròpies ni de tercers, ni d’anàlisi ni de publicitat. Per això no et mostrem cap avís per acceptar-les: no hi ha res a acceptar.' },
+        { p: 'Les visites les comptem amb Cloudflare Web Analytics, que no guarda res al teu navegador.' },
+        { p: 'Només es guarda una cosa, i només si comences a omplir el formulari de contacte:' },
+        {
+          datos: [
+            ['Nom', 'cf.turnstile.u'],
+            ['De qui és', 'Cloudflare (Turnstile)'],
+            ['Per a què serveix', 'Comprovar que qui envia el formulari no és un programa automàtic.'],
+            ['Quant dura', 'Fins que esborres les dades del teu navegador.'],
+            ['Tipus', 'Emmagatzematge local, tècnic.'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'necesarias',
+      titulo: 'Quines són necessàries',
+      piezas: [
+        { p: 'Aquesta dada és tècnica: sense ella, el formulari no es pot protegir dels enviaments automàtics. La llei no demana consentiment per al que cal per oferir-te un servei que tu demanes, i aquí el servei és enviar-nos el teu missatge.' },
+        { p: 'Si no fas servir el formulari, no es guarda res.' },
+      ],
+    },
+    {
+      id: 'cambiar',
+      titulo: 'Com canviar la teva elecció',
+      piezas: [
+        { p: 'No hi ha cap tauler de preferències perquè no hi ha res a activar ni a desactivar. Si vols esborrar la dada de Turnstile, ho pots fer des de la configuració de privacitat del teu navegador, a les dades dels llocs web.' },
+        { p: 'I si prefereixes que no es guardi res, escriu-nos per correu en lloc de fer servir el formulari.' },
+        enlaceCorreo,
+        { p: 'Si algun dia hi afegim alguna cosa que necessiti el teu permís, te’l demanarem abans i ho explicarem aquí.' },
+      ],
+    },
+  ],
+};
+
+const COOKIES_EN: PaginaLegal = {
+  titulo: 'Cookie policy',
+  entrada: ['What is stored in your browser when you visit this website, and what it is for. Next to nothing.'],
+  fecha: 'Last updated: 11 October 2026.',
+  descripcion: `${DOMINIO} does not use cookies. What is stored in your browser when you use the form, and why.`,
+  bloques: [
+    {
+      id: 'que-es',
+      titulo: 'What a cookie is',
+      piezas: [
+        { p: 'A small file that a website leaves in your browser to remember something: that you are signed in, what is in your basket or, quite often, where you go. There are other ways of storing things in the browser, such as local storage, and the law treats them the same way.' },
+      ],
+    },
+    {
+      id: 'cuales',
+      titulo: 'Which ones we use',
+      piezas: [
+        { p: 'None. No first-party or third-party cookies, no analytics cookies and no advertising cookies. That is why we do not show you a banner asking you to accept them: there is nothing to accept.' },
+        { p: 'We count visits with Cloudflare Web Analytics, which stores nothing in your browser.' },
+        { p: 'Only one thing is stored, and only if you start filling in the contact form:' },
+        {
+          datos: [
+            ['Name', 'cf.turnstile.u'],
+            ['Set by', 'Cloudflare (Turnstile)'],
+            ['Purpose', 'To check that whoever is sending the form is not an automated program.'],
+            ['Duration', 'Until you clear your browser data.'],
+            ['Type', 'Local storage, strictly necessary.'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'necesarias',
+      titulo: 'Which ones are necessary',
+      piezas: [
+        { p: 'That item is strictly necessary: without it, the form cannot protect itself from automated submissions. The law does not require consent for what is needed to provide a service you have asked for, and here the service is sending us your message.' },
+        { p: 'If you do not use the form, nothing is stored.' },
+      ],
+    },
+    {
+      id: 'cambiar',
+      titulo: 'How to change your choice',
+      piezas: [
+        { p: 'There is no preferences panel because there is nothing to switch on or off. If you want to delete the Turnstile item, you can do so in your browser’s privacy settings, under site data.' },
+        { p: 'And if you would rather nothing were stored at all, email us instead of using the form.' },
+        enlaceCorreo,
+        { p: 'If we ever add anything that needs your permission, we will ask you first and explain it here.' },
+      ],
+    },
+  ],
+};
+
+const ACCESIBILIDAD_CA: PaginaLegal = {
+  titulo: 'Declaració d’accessibilitat',
+  entrada: [
+    'Ens dediquem a això, així que aquesta pàgina no pot ser un tràmit. Aquí hi ha l’estat real d’accessibilitat del nostre propi web, inclòs el que encara no compleix.',
+  ],
+  fecha: 'Darrera revisió: 4 de novembre de 2026.',
+  descripcion: `Estat real d’accessibilitat de ${DOMINIO}: situació de compliment amb les WCAG 2.2 AA, limitacions conegudes i com avisar-nos.`,
+  bloques: [
+    {
+      id: 'compromiso',
+      titulo: 'Compromís',
+      piezas: [
+        { p: `Accesibilidad Primero es compromet que ${DOMINIO} el pugui fer servir el màxim nombre de persones possible, tant si naveguen amb teclat com amb lector de pantalla, amb la lletra ampliada o amb el moviment reduït. Aquesta declaració s’aplica a tot el lloc web.` },
+      ],
+    },
+    {
+      id: 'conformidad',
+      titulo: 'Situació de compliment',
+      piezas: [
+        { p: 'Aquest lloc web és parcialment conforme amb les Pautes d’Accessibilitat per al Contingut Web (WCAG) 2.2, nivell AA.' },
+        { p: 'Parcialment per dues raons: encara no s’ha fet la revisió manual completa, ho expliquem a “Com s’ha comprovat”, i hi ha un incompliment que coneixem i hem decidit mantenir, ho expliquem a “Contingut no accessible”.' },
+        { p: 'A més, ens posem una regla més exigent que la norma: tot el que es prem fa almenys 44 píxels. Les WCAG en demanen 24.' },
+      ],
+    },
+    {
+      id: 'no-accesible',
+      titulo: 'Contingut no accessible',
+      piezas: [
+        { p: 'Coneixem un incompliment, i és una decisió nostra:' },
+        {
+          lista: [
+            'L’emblema de la pàgina AP està sempre animat: els seus quadrats s’apaguen i s’encenen a poc a poc, sense parar, i no hi ha cap botó per aturar-lo. Incompleix el criteri 2.2.2 (Posar en pausa, aturar, amagar). És una llicència de disseny que ens permetem en aquest únic dibuix. Si tens activada l’opció de reduir el moviment al teu dispositiu, l’emblema es queda quiet. Si et molesta o et distreu, escriu-nos i ho reconsiderarem.',
+          ],
+        },
+        { p: 'I coneixem aquestes limitacions:' },
+        {
+          lista: [
+            'El formulari de contacte necessita JavaScript, perquè la protecció contra els enviaments automàtics el necessita. Sense JavaScript no apareix, i en el seu lloc s’ofereix el correu.',
+            'Si aquesta protecció no pot comprovar l’enviament, per exemple amb alguns blocadors, el formulari no s’envia. Ho diem a la pantalla i donem el correu com a alternativa.',
+            'Les imatges de “Sobre la taula” vénen de les nostres publicacions a Mastodon. Només hi apareixen les que tenen text alternatiu, però la seva qualitat es revisa quan es publiquen, no aquí.',
+            'Els vídeos dels casos d’estudi no tenen so. El que mostren està descrit al seu text alternatiu.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'comprobado',
+      titulo: 'Com s’ha comprovat',
+      piezas: [
+        { p: 'La primera revisió es va fer l’11 d’octubre de 2026. Des d’aleshores el web té pàgines noves, com els casos d’estudi, els vídeos i les animacions, i el 4 de novembre de 2026 el vam tornar a comprovar sencer, amb el web ja construït:' },
+        {
+          lista: [
+            'axe-core 4.14 a Chromium, a 390, 768 i 1440 píxels d’amplada, i Lighthouse.',
+            'Contrast mesurat píxel a píxel sobre la pàgina pintada, no llegit del codi.',
+            'Mida de tot el que es prem, i sense desplaçament horitzontal a 320 píxels.',
+            'Recorregut amb teclat del menú, del carrusel i dels desplegables.',
+            'Cada vídeo i cada animació, amb l’opció de reduir el moviment i sense. El que es mou tot sol més de cinc segons té botó de pausa, llevat de l’emblema de la pàgina AP.',
+            'El formulari de contacte, també amb els errors oberts.',
+          ],
+        },
+        { p: 'Totes aquestes comprovacions es superen, llevat de l’incompliment de l’emblema que expliquem més amunt.' },
+        { p: 'Aquestes proves automàtiques cobreixen al voltant d’un terç dels criteris de les WCAG. La revisió manual amb teclat i amb lectors de pantalla està pendent. Quan estigui feta, actualitzarem aquesta pàgina amb la data i el resultat.' },
+      ],
+    },
+    {
+      id: 'barrera',
+      titulo: 'Si trobes una barrera',
+      piezas: [
+        { p: 'Escriu-nos i explica’ns què intentaves fer, en quina pàgina i amb quin navegador o tecnologia de suport. Responem en un màxim de vint dies hàbils i, si l’arranjament trigarà més, et diem quant.' },
+        enlaceCorreo,
+      ],
+    },
+    {
+      id: 'sin-respuesta',
+      titulo: 'Si no et responem',
+      piezas: [
+        { p: 'Accesibilidad Primero és una microempresa, i la Llei 11/2023, que obliga determinats serveis a ser accessibles, n’eximeix les microempreses que presten serveis. Volem complir igualment, i per això existeix aquesta pàgina.' },
+        { p: 'Si consideres que has patit una discriminació per motiu de discapacitat, et pots adreçar a l’Oficina d’Atenció a la Discapacitat.' },
+        { enlace: { texto: 'Oficina de Atención a la Discapacidad (OADIS)', href: 'https://www.rpdiscapacidad.gob.es/organismos/oadis.htm' } },
+      ],
+    },
+    {
+      id: 'compatibilidad',
+      titulo: 'Compatibilitat',
+      piezas: [
+        { p: 'Provat a Chromium, el navegador sobre el qual funcionen Chrome i Edge, a tres amplades de pantalla. Les proves amb Safari, amb Firefox i amb lectors de pantalla formen part de la revisió manual pendent.' },
+      ],
+    },
+  ],
+};
+
+const ACCESIBILIDAD_EN: PaginaLegal = {
+  titulo: 'Accessibility statement',
+  entrada: [
+    'This is what we do for a living, so this page cannot be a formality. Here is the real accessibility status of our own website, including what it does not yet meet.',
+  ],
+  fecha: 'Last reviewed: 4 November 2026.',
+  descripcion: `The real accessibility status of ${DOMINIO}: compliance status with WCAG 2.2 AA, known limitations and how to let us know.`,
+  bloques: [
+    {
+      id: 'compromiso',
+      titulo: 'Commitment',
+      piezas: [
+        { p: `Accesibilidad Primero is committed to making ${DOMINIO} usable by as many people as possible, whether they browse with a keyboard, a screen reader, enlarged text or reduced motion. This statement applies to the whole website.` },
+      ],
+    },
+    {
+      id: 'conformidad',
+      titulo: 'Compliance status',
+      piezas: [
+        { p: 'This website is partially compliant with the Web Content Accessibility Guidelines (WCAG) 2.2, level AA.' },
+        { p: 'Partially, for two reasons: the full manual review has not been done yet, as we explain in “How it was tested”, and there is one non-compliance we know about and have chosen to keep, as we explain in “Non-accessible content”.' },
+        { p: 'We also hold ourselves to a stricter rule than the standard: everything you can tap or click is at least 44 pixels. WCAG asks for 24.' },
+      ],
+    },
+    {
+      id: 'no-accesible',
+      titulo: 'Non-accessible content',
+      piezas: [
+        { p: 'We know of one non-compliance, and it is our own decision:' },
+        {
+          lista: [
+            'The emblem on the AP page is always animated: its squares fade out and back in slowly, without stopping, and there is no button to stop it. It fails success criterion 2.2.2 (Pause, Stop, Hide). It is a design licence we allow ourselves in that single drawing. If you have the reduce motion setting turned on on your device, the emblem stays still. If it bothers or distracts you, write to us and we will reconsider it.',
+          ],
+        },
+        { p: 'And we know of these limitations:' },
+        {
+          lista: [
+            'The contact form needs JavaScript, because its protection against automated submissions needs it. Without JavaScript the form does not appear, and our email address is offered instead.',
+            'If that protection cannot verify the submission, for example with some content blockers, the form is not sent. We say so on screen and give our email address as an alternative.',
+            'The images in “Work in progress” come from our posts on Mastodon. Only those with alt text are shown, but their quality is checked when they are posted, not here.',
+            'The videos in the case studies have no sound. What they show is described in their alt text.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'comprobado',
+      titulo: 'How it was tested',
+      piezas: [
+        { p: 'The first review was on 11 October 2026. Since then the website has gained new pages, such as the case studies, the videos and the animations, and on 4 November 2026 we tested all of it again, on the built website:' },
+        {
+          lista: [
+            'axe-core 4.14 in Chromium, at 390, 768 and 1440 pixels wide, and Lighthouse.',
+            'Contrast measured pixel by pixel on the rendered page, not read from the code.',
+            'The size of everything you can tap or click, and no horizontal scrolling at 320 pixels.',
+            'Keyboard navigation of the menu, the carousel and the expandable sections.',
+            'Every video and every animation, with and without the reduce motion setting. Anything that moves on its own for more than five seconds has a pause button, except the emblem on the AP page.',
+            'The contact form, including with its error messages showing.',
+          ],
+        },
+        { p: 'All of these checks pass, except for the emblem non-compliance explained above.' },
+        { p: 'These automated tests cover around a third of the WCAG success criteria. The manual review with a keyboard and with screen readers is still to be done. When it is, we will update this page with its date and its result.' },
+      ],
+    },
+    {
+      id: 'barrera',
+      titulo: 'If you find a barrier',
+      piezas: [
+        { p: 'Write to us and tell us what you were trying to do, on which page and with which browser or assistive technology. We reply within twenty working days at most and, if the fix will take longer, we tell you how long.' },
+        enlaceCorreo,
+      ],
+    },
+    {
+      id: 'sin-respuesta',
+      titulo: 'If we do not reply',
+      piezas: [
+        { p: 'Accesibilidad Primero is a micro-enterprise, and Spain’s Act 11/2023, which requires certain services to be accessible, exempts micro-enterprises that provide services. We want to comply all the same, and that is why this page exists.' },
+        { p: 'If you believe you have been discriminated against on the grounds of disability, you can contact the Spanish Office for Disability Assistance.' },
+        { enlace: { texto: 'Oficina de Atención a la Discapacidad (OADIS)', href: 'https://www.rpdiscapacidad.gob.es/organismos/oadis.htm' } },
+      ],
+    },
+    {
+      id: 'compatibilidad',
+      titulo: 'Compatibility',
+      piezas: [
+        { p: 'Tested in Chromium, the browser that Chrome and Edge are built on, at three screen widths. Testing with Safari, Firefox and screen readers is part of the pending manual review.' },
+      ],
+    },
+  ],
+};
+
+export type ClaveLegal = 'privacidad' | 'cookies' | 'accesibilidad';
+
+/** Las tres páginas legales en cada idioma. */
+export const LEGALES: Record<ClaveLegal, Record<Lang, PaginaLegal>> = {
+  privacidad: { es: PRIVACIDAD, ca: PRIVACIDAD_CA, en: PRIVACIDAD_EN },
+  cookies: { es: COOKIES, ca: COOKIES_CA, en: COOKIES_EN },
+  accesibilidad: { es: ACCESIBILIDAD, ca: ACCESIBILIDAD_CA, en: ACCESIBILIDAD_EN },
+};
+
+/** El aviso de las versiones traducidas: manda el castellano. */
+export const AVISO_IDIOMA: Record<Exclude<Lang, 'es'>, { titulo: string; texto: string; enlace: string }> = {
+  ca: { titulo: 'Versió de referència', texto: 'En cas de discrepància, preval la versió en castellà.', enlace: 'Llegir la versió en castellà' },
+  en: { titulo: 'Reference version', texto: 'In case of any discrepancy, the Spanish version prevails.', enlace: 'Read the Spanish version' },
 };

@@ -1,7 +1,7 @@
 ---
-/* Texto en src/data/legal.ts; plantilla en src/components/PaginaLegal.astro. */
+/* Texto en src/data/legal.ts (los tres idiomas); plantilla en
+   src/components/PaginaLegal.astro, que elige el idioma por la URL. */
 import PaginaLegal from '../components/PaginaLegal.astro';
-import { PRIVACIDAD } from '../data/legal';
 ---
 
-<PaginaLegal pagina={PRIVACIDAD} ruta="privacidad" />
+<PaginaLegal ruta="privacidad" />
