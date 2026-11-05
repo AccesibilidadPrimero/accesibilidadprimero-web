@@ -89,7 +89,8 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
      texto, en su renglón. El botón mide 44 × 44 (la zona táctil) y se sale
      del renglón por arriba y por abajo con márgenes negativos, para no
      abrirlo. Lo desplegado va a 24 del párrafo, como entre párrafos. */
-  .bloque__resumen { margin: 0; max-width: 888px; }
+  /* La medida común de los párrafos (base.css, --measure), como antes. */
+  .bloque__resumen { margin: 0; }
   /* Como el botón de Disclosure.astro: texto, + a 8, 44 de alto. */
   .bloque__mas {
     display: block; align-self: flex-start;
