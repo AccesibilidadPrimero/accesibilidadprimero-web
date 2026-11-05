@@ -18,6 +18,9 @@ document.querySelectorAll<HTMLButtonElement>('[data-plegable-boton]').forEach((b
     const abierto = boton.getAttribute('aria-expanded') === 'true';
     boton.setAttribute('aria-expanded', String(!abierto));
     panel.hidden = abierto;
+    // «Leer más» / «Leer menos» (Bloque `desplegable`, 05/11/2026).
+    const label = boton.querySelector<HTMLElement>('[data-plegable-label]');
+    if (label) label.textContent = abierto ? (boton.dataset.labelAbierto ?? 'Leer más') : (boton.dataset.labelCerrado ?? 'Leer menos');
     // El foco se queda en el botón. Moverlo solo se justifica en diálogos.
   });
 });
@@ -37,6 +40,8 @@ function abrirDesdeAncla() {
   if (!panel) return;
   boton.setAttribute('aria-expanded', 'true');
   panel.hidden = false;
+  const etiqueta = boton.querySelector<HTMLElement>('[data-plegable-label]');
+  if (etiqueta) etiqueta.textContent = boton.dataset.labelCerrado ?? 'Leer menos';
   boton.focus({ preventScroll: true });
   (destino ?? boton).scrollIntoView({ block: 'start' });
 }
