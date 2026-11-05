@@ -37,7 +37,8 @@ function mezclar(base: unknown, encima: unknown): unknown {
   }
   return encima;
 }
-export function localizar<T extends { traducciones?: Partial<Record<Lang, unknown>> }>(datos: T, lang: Lang): T {
-  if (lang === 'es' || !datos.traducciones?.[lang]) return datos;
-  return mezclar(datos, datos.traducciones[lang]) as T;
+export function localizar<T extends object>(datos: T, lang: Lang): T {
+  const tr = (datos as { traducciones?: Partial<Record<Lang, unknown>> }).traducciones;
+  if (lang === 'es' || !tr?.[lang]) return datos;
+  return mezclar(datos, tr[lang]) as T;
 }

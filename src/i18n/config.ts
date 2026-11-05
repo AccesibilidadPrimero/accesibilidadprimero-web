@@ -21,7 +21,7 @@ export type Lang = (typeof LANGS)[number];
 export const DEFAULT_LANG: Lang = 'es';
 
 /** Idiomas con contenido publicado. */
-export const ACTIVE: Lang[] = ['es'];
+export const ACTIVE: Lang[] = ['es', 'ca', 'en'];
 
 export const hasMultipleLangs = (): boolean => ACTIVE.length > 1;
 
