@@ -46,15 +46,15 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
   <section class:list={['bloque', 'bloque--masinfo', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
     <h2 id={id} class="bloque__titulo">{titulo}</h2>
     <div class="bloque__contenido">
-      <p class="bloque__resumen">
-        {resumen}{' '}
-        <button type="button" class="bloque__mas" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} aria-label={`Más sobre ${titulo.charAt(0).toLowerCase() + titulo.slice(1)}`} data-plegable-boton data-ancla={id}>
-          {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
-          <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
-            <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
-          </svg>
-        </button>
-      </p>
+      <p class="bloque__resumen">{resumen}</p>
+      {/* «Leer más +», el mismo gesto que en la Home (Disclosure.astro; Johnny,
+          05/11/2026): la palabra cambia a «Leer menos» y el + gira a ×. */}
+      <button type="button" class="bloque__mas" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} data-plegable-boton data-ancla={id} data-label-abierto="Leer más" data-label-cerrado="Leer menos">
+        <span data-plegable-label>{abierto ? 'Leer menos' : 'Leer más'}</span><span class="sr-only"> sobre {titulo.charAt(0).toLowerCase() + titulo.slice(1)}</span>
+        <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+          <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
       <div id={`${id}-panel`} class="bloque__panel" hidden={!abierto} data-mov-propio><slot /></div>
     </div>
   </section>
@@ -90,19 +90,22 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
      del renglón por arriba y por abajo con márgenes negativos, para no
      abrirlo. Lo desplegado va a 24 del párrafo, como entre párrafos. */
   .bloque__resumen { margin: 0; max-width: 888px; }
+  /* Como el botón de Disclosure.astro: texto, + a 8, 44 de alto. */
   .bloque__mas {
-    display: inline-flex; align-items: center; justify-content: center;
-    inline-size: var(--touch-min); block-size: var(--touch-min);
-    margin-block: calc((var(--texto-leading) - var(--touch-min)) / 2);
-    margin-inline-start: calc((12px - var(--touch-min)) / 2 + var(--space-4));
-    vertical-align: middle;
-    padding: 0; background: none; border: 0; color: var(--text); cursor: pointer;
+    display: block; align-self: flex-start;
+    background: none; border: 0; cursor: pointer; text-decoration: none; color: var(--text);
+    padding: var(--space-12) var(--space-8);
+    margin-inline-start: calc(var(--space-8) * -1);
+    margin-block-start: calc(var(--space-16) - var(--space-12));
+    min-height: var(--touch-min);
+    font-size: var(--texto-size); line-height: var(--texto-leading);
   }
-  .bloque__mas:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: -4px; border-radius: 50%; }
+  .bloque__mas .bloque__signo { display: inline-block; margin-inline-start: var(--space-8); vertical-align: 0.05em; }
   .bloque__signo { flex: none; transition: transform var(--dur-base) var(--ease-out); }
   .bloque__mas:hover .bloque__signo, .bloque__mas:focus-visible .bloque__signo { transform: scale(1.2); }
   .bloque__mas[aria-expanded='true'] .bloque__signo { transform: rotate(45deg); }
-  .bloque__panel { padding-block-start: var(--space-24); }
+  .bloque__mas[aria-expanded='true']:is(:hover, :focus-visible) .bloque__signo { transform: rotate(45deg) scale(1.2); }
+  .bloque__panel { padding-block-start: var(--space-16); }
   :global(html:not(.js)) .bloque__panel[hidden] { display: block; }
   :global(html:not(.js)) .bloque__mas { display: none; }
   @media (prefers-reduced-motion: no-preference) {
