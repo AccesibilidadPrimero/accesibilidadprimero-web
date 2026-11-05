@@ -31,4 +31,4 @@ Visualmente, cada botón tiene contexto porque está al lado del nombre. Un lect
 
 No sabe cuál es cuál. No puede elegir con información.
 
-Esto no es un fallo de usuario. Es un fallo de diseño.
+Esto no es un fallo de quien la usa. Es un fallo de diseño.

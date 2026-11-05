@@ -43,10 +43,10 @@ Parece un detalle técnico. No lo es.
 </figure>
 
 Los píxeles (px) son unidades absolutas.  
-Si escribes font-size: 16px, el texto siempre mide 16 píxeles, pase lo que pase. El problema: muchas personas ajustan el tamaño de fuente predeterminado de su navegador, a 18px, 20px o más, porque lo necesitan para leer cómodamente. Si usas píxeles, esa configuración no tiene ningún efecto en tu web. Estás ignorando activamente la preferencia del usuario.
+Si escribes font-size: 16px, el texto siempre mide 16 píxeles, pase lo que pase. El problema: muchas personas ajustan el tamaño de fuente predeterminado de su navegador, a 18px, 20px o más, porque lo necesitan para leer cómodamente. Si usas píxeles, esa configuración no tiene ningún efecto en tu web. Estás ignorando activamente la preferencia de la persona usuaria.
 
 Los rem son relativos al tamaño base del navegador (normalmente 16px por defecto).  
-Si el usuario tiene configurado 20px, tu 1rem equivaldrá a 20px automáticamente. Respetas su elección sin hacer nada extra.
+Si alguien tiene configurado 20px, tu 1rem equivaldrá a 20px automáticamente. Respetas su elección sin hacer nada extra.
 
 | Elemento | px equiv. | Lo que usábamos | Rango recomendado |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Puedes tener la mejor fuente del mundo y el tamaño perfecto, y si el interlinea
 
 Lo comprobamos en nuestra propia web durante el proceso de construcción.
 
-Las WCAG 1.4.12 “Espaciado del texto” son claras: el contenido no debe romperse si el usuario aplica estos valores mínimos:
+Las WCAG 1.4.12 “Espaciado del texto” son claras: el contenido no debe romperse si la persona usuaria aplica estos valores mínimos:
 
 | Propiedad CSS | Valor mínimo WCAG | En em (base 16px) |
 |---|---|---|

@@ -15,7 +15,7 @@ urlAntigua: /a11yprimero/
 
 Herramientas de accesibilidad web hay muchas. [WAVE](https://wave.webaim.org/), [axe DevTools](https://www.levelaccess.com/audit-test/), Lighthouse, [Accessibility Insights](https://accessibilityinsights.io/)… las conocemos y las usamos. Son potentes, están bien mantenidas y tienen comunidades enormes detrás.
 
-Pero todas comparten algo en común: están pensadas para desarrolladores.
+Pero todas comparten algo en común: están pensadas para quien programa.
 
 Cuando trabajamos en Accesibilidad Primero nos encontramos siempre ante dos situaciones muy distintas que ninguna herramienta cubría a la vez:
 
@@ -24,11 +24,11 @@ Cuando trabajamos en Accesibilidad Primero nos encontramos siempre ante dos situ
 
 Ninguna herramienta existente resolvía estas dos necesidades en el mismo sitio. Así que decidimos construir la nuestra.
 
-![Esquema “El hueco que ninguna herramienta cubría”. A la izquierda, las herramientas existentes (WAVE, axe, Lighthouse): detectan errores, con lenguaje técnico y para desarrolladores, sin resumen para cliente, sin historial y sin PDF. A la derecha, A11y Primero, dos modos en una sola herramienta: resumen para el cliente con puntuación y semáforo, historial comparativo, auditoría WCAG con criterio, nivel y selector CSS, e informe PDF. Todo en el mismo sitio, sin salir de la página.](../../assets/blog/a11yprimero/5510.png)
+![Esquema “El hueco que ninguna herramienta cubría”. A la izquierda, las herramientas existentes (WAVE, axe, Lighthouse): detectan errores, con lenguaje técnico y para quien programa, sin resumen para la clientela, sin historial y sin PDF. A la derecha, A11y Primero, dos modos en una sola herramienta: resumen para el cliente con puntuación y semáforo, historial comparativo, auditoría WCAG con criterio, nivel y selector CSS, e informe PDF. Todo en el mismo sitio, sin salir de la página.](../../assets/blog/a11yprimero/5510.png)
 
 ![Esquema “Cómo fue la colaboración” en tres columnas. Accesibilidad Primero aporta el conocimiento: criterios WCAG, flujo de trabajo real, necesidades del cliente y decisiones de diseño. Claude aporta la implementación: código JS, CSS y HTML, diagnóstico de errores, propuestas de mejora y esquemas. El resultado es una iteración continua: probar en Chrome, detectar el problema, pedir la corrección y tener una nueva versión lista.](../../assets/blog/a11yprimero/5526.png)
 
-No somos desarrolladores de formación. Pero llevamos tiempo explorando cómo la IA puede actuar como un colaborador técnico que amplía lo que somos capaces de hacer.
+No venimos de la programación. Pero llevamos tiempo explorando cómo la IA puede actuar como un colaborador técnico que amplía lo que somos capaces de hacer.
 
 La propuesta fue clara: usar Claude (el modelo de IA de Anthropic) como compañero de desarrollo. Nosotros aportaríamos el conocimiento de dominio (qué debe hacer la herramienta, cómo debe comunicarse, qué criterios WCAG importan y por qué) y Claude aportaría la implementación técnica.
 
@@ -114,7 +114,7 @@ La auditoría WCAG muestra cada violación como un bloque expandible que incluye
 
 ### Pestaña Ver como…
 
-Las simulaciones de visión permiten ver la página como la percibiría una persona con daltonismo, baja visión, visión borrosa, o en modo alto contraste. Son especialmente útiles en reuniones con clientes para generar empatía con los usuarios afectados.
+Las simulaciones de visión permiten ver la página como la percibiría una persona con daltonismo, baja visión, visión borrosa, o en modo alto contraste. Son especialmente útiles en reuniones con la clientela para generar empatía con las personas usuarias afectados.
 
 ### Pestaña Historial
 
@@ -151,7 +151,7 @@ Todos los botones tienen estados focus-visible, el contraste cumple WCAG AA, los
 Algunas de las mejoras que tenemos en mente:
 
 - Informe PDF con el logotipo personalizable para agencias y consultoras.
-- Exportar los selectores CSS directamente como lista de correcciones para el desarrollador.
+- Exportar los selectores CSS directamente como lista de correcciones para quien desarrolla.
 - Integración con el widget de accesibilidad de nuestra web para coherencia entre herramientas.
 - Publicación en la Chrome Web Store.
 
