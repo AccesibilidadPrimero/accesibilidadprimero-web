@@ -74,7 +74,11 @@ if (destacados.length !== 3) {
 const conCuerpo = await Promise.all(
   destacados.map(async (p) => {
     const { Content } = await render(p);
-    return { proyecto: p, Content };
+    /* En catalán e inglés, el mismo texto viene párrafo a párrafo en
+       `traducciones.<lang>.cuerpo` del propio Markdown (05/11/2026). */
+    const cuerpo = lang === 'es' ? null : ((localizar(p.data, lang) as { cuerpo?: string | string[] }).cuerpo ?? null);
+    if (lang !== 'es' && !cuerpo) throw new Error(`Falta traducciones.${lang}.cuerpo en ${p.id}.md: es el «Leer más» de la Home.`);
+    return { proyecto: p, Content, cuerpo: cuerpo && [cuerpo].flat() };
   }),
 );
 
@@ -111,9 +115,9 @@ const conCuerpo = await Promise.all(
   />
 
   <h2 class="sr-only">{T.destacados}</h2>
-  {conCuerpo.map(({ proyecto, Content }) => (
+  {conCuerpo.map(({ proyecto, Content, cuerpo }) => (
     <ProjectSection proyecto={proyecto} lang={lang}>
-      <Content />
+      {cuerpo ? cuerpo.map((parrafo) => <p>{parrafo}</p>) : <Content />}
     </ProjectSection>
   ))}
 

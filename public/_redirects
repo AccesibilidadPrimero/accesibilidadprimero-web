@@ -49,31 +49,23 @@
 /tether-landing/  /  301
 /accesibilidad-primero-english/  /  301
 
-# ── Catalán e inglés: TEMPORALES (302) al castellano mientras no estén activos ──
-# Cuando se activen, /ca/projectes/ y /en/projects/ ya son su dirección (src/i18n/config.ts).
-/ca/  /  302
-/ca/inici/  /  302
-/en/  /  302
-/en/home/  /  302
-/ca/projectes/  /proyectos/  302
-/en/projects/  /proyectos/  302
-/ca/contacte/  /contacto/  302
-/en/contact/  /contacto/  302
-/ca/formulari/  /contacto/  302
-/en/form/  /contacto/  302
-/en/form  /contacto/  302
-/ca/serveis/  /estudio/  302
-/en/services/  /estudio/  302
-/ca/qui-som/  /estudio/  302
-/en/who-we-are/  /estudio/  302
-/ca/manifest/  /estudio/  302
-/ca/formacio/  /estudio/  302
-/en/training/  /estudio/  302
-/ca/comunicacio-inclusiva/  /estudio/  302
-/en/inclusive-communication/  /estudio/  302
-/ca/disseny-i-tecnologia/  /estudio/  302
-/en/design-tech/  /estudio/  302
-/ca/auditoria-daccessibilitat/  /estudio/  302
-/en/wcag-accessibility-audit/  /estudio/  302
-/en/accessibility-policy/  /declaracion-de-accesibilidad/  302
-/en/statement/  /declaracion-de-accesibilidad/  302
+# ── Catalán e inglés (05/11/2026): ya tienen sus páginas. Las URL antiguas
+# del WordPress en catalán e inglés van a su página traducida. ──
+/ca/inici/  /ca/  301
+/en/home/  /en/  301
+/ca/formulari/  /ca/contacte/  301
+/en/form/  /en/contact/  301
+/en/form  /en/contact/  301
+/ca/qui-som/  /ca/estudi/  301
+/en/who-we-are/  /en/studio/  301
+/ca/manifest/  /ca/estudi/  301
+/ca/formacio/  /ca/serveis/  301
+/en/training/  /en/services/  301
+/ca/comunicacio-inclusiva/  /ca/serveis/  301
+/en/inclusive-communication/  /en/services/  301
+/ca/disseny-i-tecnologia/  /ca/serveis/  301
+/en/design-tech/  /en/services/  301
+/ca/auditoria-daccessibilitat/  /ca/serveis/  301
+/en/wcag-accessibility-audit/  /en/services/  301
+/en/accessibility-policy/  /en/accessibility-statement/  301
+/en/statement/  /en/accessibility-statement/  301
