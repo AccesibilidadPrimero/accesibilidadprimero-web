@@ -88,6 +88,44 @@ const ILUSTRACIONES: { archivo: string; frase?: string; fraseLang?: string; alt:
     alt: 'Una rampa curva que se desdibuja en su extremo, como si aún estuviera construyéndose.' },
 ];
 
+/* Catalán e inglés (05/11/2026): la misma frase y la misma descripción,
+   escritas en cada idioma. «Estimem les diferències» no se traduce en
+   ninguno: la frase es catalana y así se queda (Johnny). */
+const TRADUCCIONES: Record<'ca' | 'en', Record<string, { frase?: string; alt: string }>> = {
+  ca: {
+    '00-claim':       { alt: 'Una flor enorme vista des de dalt, amb dues persones diminutes treballant sobre els pètals.' },
+    '01-diferencies': { alt: 'Una planta en un test, cuidada per una figura diminuta enfilada a una de les fulles.' },
+    '02-comunicamos': { frase: 'La manera com comuniquem construeix realitats.',
+      alt: 'Una trompeta gegantina sostinguda per diverses persones, que apunta cap a un grup que escolta.' },
+    '03-narrativas':  { frase: 'Construïm relats que ajudin a trencar estereotips.',
+      alt: 'Dues persones conversen a través d’un embolic de bafarades que s’encreuen: unes amb signes d’interrogació, altres amb gargots il·legibles.' },
+    '04-diversidad':  { frase: 'La comunicació ha de representar, respectar i donar espai a la diversitat.',
+      alt: 'Una persona emet un embolic de línies que, quan arriba a l’altra, s’ha ordenat en una espiral regular.' },
+    '05-semantica':   { frase: 'Cap al disseny universal i la tecnologia semàntica.',
+      alt: 'Una estructura de mòduls triangulars grocs i negres que dues persones acaben de muntar.' },
+    '06-proposito':   { frase: 'Només projectes amb propòsit.',
+      alt: 'Una regadora rosa de la qual surten dos raigs: un rega un brot, l’altre cau al buit.' },
+    '07-siempre':     { frase: 'L’accessibilitat, primer. Sempre.',
+      alt: 'Una rampa corba que es desdibuixa a l’extrem, com si encara s’estigués construint.' },
+  },
+  en: {
+    '00-claim':       { alt: 'An enormous flower seen from above, with two tiny people working on its petals.' },
+    '01-diferencies': { alt: 'A potted plant, tended by a tiny figure perched on one of its leaves.' },
+    '02-comunicamos': { frase: 'The way we communicate shapes reality.',
+      alt: 'A gigantic trumpet held up by several people, pointing towards a group that listens.' },
+    '03-narrativas':  { frase: 'We build stories that help break stereotypes.',
+      alt: 'Two people talk through a tangle of crossing speech bubbles: some with question marks, others with illegible scribbles.' },
+    '04-diversidad':  { frase: 'Communication should represent, respect and make room for diversity.',
+      alt: 'One person sends out a tangled mass of lines that, by the time it reaches the other, has settled into a regular spiral.' },
+    '05-semantica':   { frase: 'Towards universal design and semantic technology.',
+      alt: 'A structure of yellow and black triangular modules that two people are finishing putting together.' },
+    '06-proposito':   { frase: 'Only projects with purpose.',
+      alt: 'A pink watering can with two streams: one waters a seedling, the other falls into the void.' },
+    '07-siempre':     { frase: 'Accessibility first. Always.',
+      alt: 'A curved ramp that blurs at its far end, as if it were still being built.' },
+  },
+};
+
 /* Los compila `npm run arte` desde arte/; no se editan aquí. Las ocho son
    vectoriales desde el 08/10/2026 —la primera era un WebP provisional—, pero
    el glob sigue admitiendo mapas de bits por si alguna vuelve a serlo.
@@ -123,7 +161,8 @@ if (faltan.length) {
     );
   }
 }
-const ACTIVAS = ILUSTRACIONES.filter((i) => buscar(i.archivo));
+const ACTIVAS = ILUSTRACIONES.filter((i) => buscar(i.archivo))
+  .map((i) => (lang === 'es' ? i : { ...i, ...TRADUCCIONES[lang][i.archivo] }));
 
 const meta = (nombre: string) => buscar(nombre)!.default;
 ---

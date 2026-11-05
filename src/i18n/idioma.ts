@@ -42,3 +42,9 @@ export function localizar<T extends object>(datos: T, lang: Lang): T {
   if (lang === 'es' || !tr?.[lang]) return datos;
   return mezclar(datos, tr[lang]) as T;
 }
+
+/** «de ECI» en castellano; en catalán, «d’ECI» delante de vocal o hache
+    (05/11/2026). Solo para es y ca: el inglés construye la frase de otra forma. */
+export function de(lang: Lang, nombre: string): string {
+  return lang === 'ca' && /^[aeiouàèéíïòóúüh]/i.test(nombre) ? `d’${nombre}` : `de ${nombre}`;
+}

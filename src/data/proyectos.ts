@@ -17,3 +17,11 @@ export const TIPOS = {
 } as const;
 export type Tipo = keyof typeof TIPOS;
 export const CLAVES_TIPO = Object.keys(TIPOS) as [Tipo, ...Tipo[]];
+
+/* Los mismos filtros en catalán e inglés (05/11/2026). La clave de la URL no
+   cambia en ningún idioma: /ca/projectes/tipo/webs/. */
+export const TIPOS_IDIOMA: Record<'es' | 'ca' | 'en', Record<Tipo, string>> = {
+  es: TIPOS,
+  ca: { webs: 'Webs', aplicaciones: 'Aplicacions', extensiones: 'Extensions' },
+  en: { webs: 'Websites', aplicaciones: 'Apps', extensiones: 'Extensions' },
+};

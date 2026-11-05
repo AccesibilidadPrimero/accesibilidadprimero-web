@@ -26,6 +26,12 @@ export interface Producto {
   caso?: string;
   /** La tarjeta del listado de Proyectos. */
   tarjeta: { captura: string; color: string; linea: string };
+  /** Catalán e inglés (05/11/2026): solo los textos y el enlace. Los mezcla
+      `localizar(producto, lang)` de src/i18n/idioma.ts. */
+  traducciones?: Partial<Record<'ca' | 'en', {
+    descripcion?: string; descripcionMovil?: string; cta?: string; href?: string; alt?: string;
+    video?: { descripcion: string }; tarjeta?: { linea: string };
+  }>>;
 }
 
 /* TEXTOS DE MÓVIL (Johnny, 09/10): ver `descripcionMovil` y las clases
@@ -61,6 +67,34 @@ export const PRODUCTOS: Producto[] = [
       color: 'var(--mint)',
       linea: 'Un asistente accesible para orientar a quienes visitan tu web.',
     },
+    traducciones: {
+      ca: {
+        descripcion: 'Un assistent accessible per orientar qui visita el teu web.',
+        cta: 'Veure Itza',
+        href: '/ca/projectes/itza/',
+        video: {
+          descripcion:
+            'L’assistent Itza obert: la Marta prem la pregunta suggerida “¿Hacéis auditorías ' +
+            'de accesibilidad?” i l’assistent li respon que auditem el web amb les WCAG 2.2 i ' +
+            'la normativa vigent, expliquem cada barrera, donem un pla per eliminar-les i ' +
+            'preparem la declaració d’accessibilitat. La conversa és en castellà.',
+        },
+        tarjeta: { linea: 'Un assistent accessible per orientar qui visita el teu web.' },
+      },
+      en: {
+        descripcion: 'An accessible assistant that guides the people who visit your website.',
+        cta: 'See Itza',
+        href: '/en/projects/itza/',
+        video: {
+          descripcion:
+            'The Itza assistant open: Marta taps the suggested question “¿Hacéis auditorías ' +
+            'de accesibilidad?” (Do you do accessibility audits?) and the assistant replies that ' +
+            'we audit the website against WCAG 2.2 and current regulations, explain each barrier, ' +
+            'give a plan to remove them and prepare the accessibility statement. The conversation is in Spanish.',
+        },
+        tarjeta: { linea: 'An accessible assistant that guides the people who visit your website.' },
+      },
+    },
   },
   {
     nombre: 'A11y Primero',
@@ -87,6 +121,28 @@ export const PRODUCTOS: Producto[] = [
       color: 'var(--yellow-ap)',
       linea: 'Una extensión de Chrome para ver, entender y corregir barreras de accesibilidad.',
     },
+    traducciones: {
+      ca: {
+        descripcion: 'Una extensió de Chrome per veure, entendre i corregir barreres d’accessibilitat.',
+        cta: 'Veure A11y Primero',
+        href: '/ca/projectes/a11y-primero/',
+        alt:
+          'El panell de l’extensió A11y Primero sobre un web d’exemple: 92, pocs errors ' +
+          'automàtics, i les quatre barres per apartat: imatges 100 i formularis 94 en ' +
+          'verd, estructura 86 i contrast 74 en taronja.',
+        tarjeta: { linea: 'Una extensió de Chrome per veure, entendre i corregir barreres d’accessibilitat.' },
+      },
+      en: {
+        descripcion: 'A Chrome extension to see, understand and fix accessibility barriers.',
+        cta: 'See A11y Primero',
+        href: '/en/projects/a11y-primero/',
+        alt:
+          'The A11y Primero extension panel over a sample website: 92, few automated ' +
+          'failures, and the four bars by section: images 100 and forms 94 in green, ' +
+          'structure 86 and contrast 74 in orange.',
+        tarjeta: { linea: 'A Chrome extension to see, understand and fix accessibility barriers.' },
+      },
+    },
   },
   {
     nombre: 'Accesible Abstracts',
@@ -112,6 +168,30 @@ export const PRODUCTOS: Producto[] = [
       captura: 'accesible-abstracts',
       color: 'var(--rose-ap)',
       linea: 'Una plataforma accesible para enviar, revisar y gestionar abstracts.',
+    },
+    traducciones: {
+      ca: {
+        descripcion: 'Una plataforma accessible per enviar, revisar i gestionar abstracts.',
+        descripcionMovil: 'Una plataforma accessible per enviar, revisar i gestionar abstracts.',
+        cta: 'Veure Accesible Abstracts',
+        href: '/ca/projectes/accesible-abstracts/',
+        alt:
+          'El formulari d’enviament d’Accesible Abstracts al mòbil, amb la marca d’ECI ' +
+          'Conference Madrid 2027: “Call for Abstracts, Submit your abstract”, el termini ' +
+          'd’enviament i el primer camp, el títol.',
+        tarjeta: { linea: 'Una plataforma accessible per enviar, revisar i gestionar abstracts.' },
+      },
+      en: {
+        descripcion: 'An accessible platform to submit, review and manage abstracts.',
+        descripcionMovil: 'An accessible platform to submit, review and manage abstracts.',
+        cta: 'See Accesible Abstracts',
+        href: '/en/projects/accesible-abstracts/',
+        alt:
+          'The Accesible Abstracts submission form on a mobile phone, with the ECI ' +
+          'Conference Madrid 2027 branding: “Call for Abstracts, Submit your abstract”, the ' +
+          'submission deadline and the first field, the title.',
+        tarjeta: { linea: 'An accessible platform to submit, review and manage abstracts.' },
+      },
     },
   },
 ];

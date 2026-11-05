@@ -19,6 +19,8 @@
      mismo relleno que la banda de Estudio en la Home (96 arriba y abajo; 64
      en móvil). El texto sigue en Ink: rinde sobre los dos.
    --------------------------------------------------------------------------- */
+import { idiomaDe } from '../i18n/idioma';
+import { t } from '../i18n/ui';
 interface Props {
   id: string;
   titulo: string;
@@ -35,6 +37,7 @@ interface Props {
   fondo?: 'rosa' | 'gris';
 }
 const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = false, resumen } = Astro.props;
+const ui = t(idiomaDe(Astro.url));
 ---
 
 {desplegable ? (
@@ -49,8 +52,8 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
       <p class="bloque__resumen">{resumen}</p>
       {/* «Leer más +», el mismo gesto que en la Home (Disclosure.astro; Johnny,
           05/11/2026): la palabra cambia a «Leer menos» y el + gira a ×. */}
-      <button type="button" class="bloque__mas" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} data-plegable-boton data-ancla={id} data-label-abierto="Leer más" data-label-cerrado="Leer menos">
-        <span data-plegable-label>{abierto ? 'Leer menos' : 'Leer más'}</span><span class="sr-only"> sobre {titulo.charAt(0).toLowerCase() + titulo.slice(1)}</span>
+      <button type="button" class="bloque__mas" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} data-plegable-boton data-ancla={id} data-label-abierto={ui.readMore} data-label-cerrado={ui.readLess}>
+        <span data-plegable-label>{abierto ? ui.readLess : ui.readMore}</span><span class="sr-only">{ui.sobre}{titulo.charAt(0).toLowerCase() + titulo.slice(1)}</span>
         <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
           <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
         </svg>

@@ -19,6 +19,8 @@
 
    La flecha es decorativa (aria-hidden): el nombre accesible es el texto.
    --------------------------------------------------------------------------- */
+import { idiomaDe } from '../i18n/idioma';
+import { t as textos } from '../i18n/ui';
 interface Props {
   href: string;
   size?: 'small' | 'default' | 'large';
@@ -26,6 +28,7 @@ interface Props {
   class?: string;
 }
 const { href, size = 'default', external = false, class: className } = Astro.props;
+const ui = textos(idiomaDe(Astro.url));
 const esExterno = external || /^https?:\/\//.test(href);
 
 /* LA FLECHA NUNCA SE QUEDA SOLA EN UN RENGLÓN (10/10). Con «Ver Accesible
@@ -72,7 +75,7 @@ const final = corte >= 0 ? html.slice(corte + 1) : html;
     esExterno && (
       /* «se abre en una ventana nueva» no es decorativo: cambia lo que va a
          pasar al pulsar, y quien no ve la pestaña necesita saberlo (3.2.5). */
-      <span class="sr-only"> (se abre en una ventana nueva)</span>
+      <span class="sr-only">{ui.nuevaVentana}</span>
     )
   }
 </a>

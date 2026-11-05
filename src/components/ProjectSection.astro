@@ -13,9 +13,11 @@ import Disclosure from './Disclosure.astro';
 import CtaLink from './CtaLink.astro';
 import ProjectSlider from './ProjectSlider.astro';
 
+import { path } from '../i18n/config';
+import { localizar, de } from '../i18n/idioma';
 interface Props { proyecto: CollectionEntry<'proyectos'>; lang: Lang }
 const { proyecto, lang } = Astro.props;
-const d = proyecto.data;
+const d = localizar(proyecto.data, lang);
 const id = `proyecto-${proyecto.id}`;
 /* Cada caso tiene su composición en el Figma, no es el mismo bloque tres
    veces: Foc i Cor va en horizontal y los otros dos en vertical. */
@@ -36,9 +38,14 @@ const ctaAlFinal = true;
    «Ir a …» abría la web del cliente en otra pestaña. La web del cliente
    sigue enlazada desde la ficha del caso. Si el caso no está publicado,
    queda el enlace externo de antes. */
-const enlaceCaso = d.casoPublicado ? `/proyectos/${proyecto.id}/` : null;
+const enlaceCaso = d.casoPublicado ? path('proyectos', lang, proyecto.id) : null;
 const destino = enlaceCaso ?? d.web;
-const textoCta = enlaceCaso ? `Ver el caso de ${d.nombreCorto ?? d.titulo}` : `Ir a ${d.nombreCorto ?? d.titulo}`;
+const corto = d.nombreCorto ?? d.titulo;
+const textoCta = lang === 'en'
+  ? (enlaceCaso ? `See the ${corto} case study` : `Go to ${corto}`)
+  : lang === 'ca'
+    ? (enlaceCaso ? `Veure el cas ${de(lang, corto)}` : `Anar a ${corto}`)
+    : (enlaceCaso ? `Ver el caso de ${corto}` : `Ir a ${corto}`);
 ---
 
 <section

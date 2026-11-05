@@ -31,7 +31,7 @@ const medio = (n: string) => Object.entries(archivos).find(([r]) => r.endsWith(`
 
 /* La fecha de cada publicación, visible (auditoría de usabilidad, 04/11/2026):
    sin ella, una convocatoria ya pasada se leía como algo de ahora. */
-const fecha = (iso: string) => new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }).format(new Date(iso));
+const fecha = (iso: string) => new Intl.DateTimeFormat(ui.locale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Madrid' }).format(new Date(iso));
 
 /* Las TRES últimas, en una rejilla quieta (Johnny, 05/11/2026): con cuatro, la
    tira se desplazaba y aparecía la barra del navegador. Lo demás, en Mastodon. */
@@ -80,7 +80,7 @@ const MASTODON = 'https://mastodon.social/@accesibilidadprimero';
         );
       })}
     </ul>
-    <div class="mesa__mas"><CtaLink href={MASTODON}>Ver más en Mastodon</CtaLink></div>
+    <div class="mesa__mas"><CtaLink href={MASTODON}>{ui.mesaMas}</CtaLink></div>
   </section>
 )}
 

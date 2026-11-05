@@ -46,7 +46,7 @@ import { idiomaDe } from '../i18n/idioma';
       <g class="reticula__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
       <path class="reticula__play" d="M1 0 10 6 1 12z" />
     </svg>
-    <span class="sr-only"><span data-reticula-label>{ui.carouselPause}</span> · retícula editorial</span>
+    <span class="sr-only"><span data-reticula-label>{ui.carouselPause}</span> · {({ es: 'retícula editorial', ca: 'retícula editorial', en: 'editorial grid' } as const)[idiomaDe(Astro.url)]}</span>
   </button>
 </div>
 

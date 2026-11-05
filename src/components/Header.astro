@@ -9,9 +9,9 @@
    valor: aquí y en MenuModal.astro (CSS y script).
 
    Medido el 09/10 con la barra forzada: a 1024 el logotipo acaba en 252 y la
-   navegación empieza en 353. OJO: hoy el selector de idioma no se pinta
-   porque solo hay un idioma activo. Cuando se activen catalán e inglés suma
-   ~200 px y entre 1024 y ~1200 NO cabe: habrá que volver a medir.
+   navegación empieza en 353. Con los tres idiomas activos (05/11/2026),
+   medido otra vez a 1024: el logotipo acaba en 216 y la navegación empieza
+   en 314 (es), 376 (en) y 380 (ca). Cabe, sin desbordar.
    --------------------------------------------------------------------------- */
 import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
 import { t } from '../i18n/ui';
@@ -24,7 +24,7 @@ const langs = alternates(current, slug);
 ---
 
 <header class="header">
-  <a href={path('home', lang)} class="header__logo" aria-label="Accesibilidad Primero, ir a la portada">
+  <a href={path('home', lang)} class="header__logo" aria-label={ui.logoLabel}>
     <span aria-hidden="true">Accesibilidad Primero<sup>®</sup></span>
   </a>
 

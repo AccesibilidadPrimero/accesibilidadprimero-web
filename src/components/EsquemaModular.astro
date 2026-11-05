@@ -110,7 +110,7 @@ import { idiomaDe } from '../i18n/idioma';
       <g class="esquema__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
       <path class="esquema__play" d="M1 0 10 6 1 12z" />
     </svg>
-    <span class="sr-only"><span data-esquema-label>{ui.carouselPause}</span> · esquema del sistema modular</span>
+    <span class="sr-only"><span data-esquema-label>{ui.carouselPause}</span> · {({ es: 'esquema del sistema modular', ca: 'esquema del sistema modular', en: 'modular system diagram' } as const)[idiomaDe(Astro.url)]}</span>
   </button>
 </div>
 

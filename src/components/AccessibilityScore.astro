@@ -18,14 +18,28 @@
    La nota enlaza a la declaración cuando la hay. Cuando no, se pinta igual
    pero sin enlace: un enlace que lleva a un 404 es peor que no tenerlo.
    --------------------------------------------------------------------------- */
+import { idiomaDe } from '../i18n/idioma';
+import { t } from '../i18n/ui';
 interface Props {
   nota?: { valor: number; medidaEl: Date; declaracion?: string; conformidad?: string };
   proyecto: string;
 }
 const { nota, proyecto } = Astro.props;
+const lang = idiomaDe(Astro.url);
+const ui = t(lang);
 const fecha = nota
-  ? new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(nota.medidaEl)
+  ? new Intl.DateTimeFormat(ui.locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(nota.medidaEl)
   : '';
+const DESCRIBE = {
+  es: (p: string, f: string) => `, la puntuación automática de nuestra extensión, para ${p}. Medida el ${f}`,
+  ca: (p: string, f: string) => `, la puntuació automàtica de la nostra extensió, per a ${p}. Mesurada el ${f}`,
+  en: (p: string, f: string) => `, the automated score from our extension, for ${p}. Measured on ${f}`,
+};
+const DECLARACION = {
+  es: '. Ver la declaración de accesibilidad (se abre en una ventana nueva)',
+  ca: '. Veure la declaració d’accessibilitat (s’obre en una finestra nova)',
+  en: '. See the accessibility statement (opens in a new window)',
+};
 ---
 
 {
@@ -39,13 +53,13 @@ const fecha = nota
           <a href={nota.declaracion} class="meta__enlace" target="_blank" rel="noopener">
             <span>{nota.valor} / 100 · A11y Primero</span>
             <span class="sr-only">
-              {`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}. Ver la declaración de accesibilidad (se abre en una ventana nueva)`}
+              {DESCRIBE[lang](proyecto, fecha) + DECLARACION[lang]}
             </span>
           </a>
         ) : (
           <span>
             <span>{nota.valor} / 100 · A11y Primero</span>
-            <span class="sr-only">{`, la puntuación automática de nuestra extensión, para ${proyecto}. Medida el ${fecha}`}</span>
+            <span class="sr-only">{DESCRIBE[lang](proyecto, fecha)}</span>
           </span>
         )}
         <span class="meta__punto" aria-hidden="true" />
