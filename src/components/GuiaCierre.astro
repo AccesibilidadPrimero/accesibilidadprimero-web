@@ -1,0 +1,46 @@
+---
+/* ---------------------------------------------------------------------------
+   La guía en vídeo, antes del cierre de contacto de todas las páginas
+   (Johnny, 05/11/2026), con la carita feliz del vídeo: la que sale cuando
+   algo “Es accesible”.
+
+   El enlace ES la pregunta, así dice adónde lleva por sí solo: es lo que
+   enseña el propio vídeo (2.4.9). La carita es decoración (`aria-hidden`):
+   repite lo que dice el texto. No se pinta en la página de la guía.
+   --------------------------------------------------------------------------- */
+import { path, type Lang } from '../i18n/config';
+import CtaLink from './CtaLink.astro';
+
+const { lang } = Astro.props as { lang: Lang };
+const TEXTO: Record<Lang, string> = {
+  es: '¿Qué hace que tu web sea o no accesible?',
+  ca: 'Què fa que el teu web sigui accessible o no?',
+  en: 'What makes your website accessible, or not?',
+};
+---
+
+<section class="guia-cierre" aria-label={TEXTO[lang]}>
+  <svg class="guia-cierre__cara" aria-hidden="true" focusable="false" viewBox="0 0 48 48" width="48" height="48">
+    <circle cx="24" cy="24" r="22" fill="#E6E680" stroke="currentColor" stroke-width="2" />
+    <circle cx="17" cy="20" r="2.2" fill="currentColor" />
+    <circle cx="31" cy="20" r="2.2" fill="currentColor" />
+    <path d="M15 28.5c2.2 3.6 5.3 5.5 9 5.5s6.8-1.9 9-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  </svg>
+  <CtaLink href={path('guia', lang)}>{TEXTO[lang]}</CtaLink>
+</section>
+
+<style>
+  .guia-cierre {
+    display: flex;
+    align-items: center;
+    /* Centrada (Johnny, 05/11/2026). */
+    justify-content: center;
+    gap: var(--space-24);
+    margin: var(--ritmo-seccion) var(--gutter-page) 0;
+    padding: var(--space-24);
+    background: var(--silk);
+    border-radius: var(--radio);
+    color: var(--ink);
+  }
+  .guia-cierre__cara { flex: 0 0 auto; display: block; }
+</style>

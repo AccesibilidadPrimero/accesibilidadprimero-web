@@ -39,6 +39,7 @@ export type RouteKey =
   | 'home'
   | 'proyectos'
   | 'servicios'
+  | 'guia'
   | 'estudio'
   | 'blog'
   | 'contacto'
@@ -65,6 +66,8 @@ const SEGMENT: Record<RouteKey, Record<Lang, string>> = {
   home:          { es: '',                          ca: '',                          en: '' },
   proyectos:     { es: 'proyectos',                 ca: 'projectes',                 en: 'projects' },
   servicios:     { es: 'servicios',                 ca: 'serveis',                   en: 'services' },
+  /* La guía en vídeo (Johnny, 05/11/2026). */
+  guia:          { es: 'que-hace-una-web-accesible', ca: 'que-fa-un-web-accessible',  en: 'what-makes-a-website-accessible' },
   estudio:       { es: 'estudio',                   ca: 'estudi',                    en: 'studio' },
   blog:          { es: 'blog',                      ca: 'blog',                      en: 'blog' },
   contacto:      { es: 'contacto',                  ca: 'contacte',                  en: 'contact' },
