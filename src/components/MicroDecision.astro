@@ -1,0 +1,45 @@
+---
+/* ---------------------------------------------------------------------------
+   Microanimación de una decisión de diseño (05/11/2026; la primera tanda,
+   en el caso de Itza, vive en itza.astro).
+
+   Un dibujo en HTML y CSS, en tinta y con una sola línea, que explica la
+   decisión de al lado. Las reglas:
+   · El estado por DEFECTO es el final: es lo que se ve sin JS y con «reducir
+     movimiento».
+   · Con JS, la animación se monta en pausa (enseña su primer fotograma) y
+     arranca al entrar en pantalla, UNA vez. Dura menos de 5 s, así que no
+     necesita botón (2.2.2).
+   · `aria-hidden`: lo que enseña ya lo dice el texto de al lado.
+   Las piezas de dentro las dibuja y anima cada página con sus estilos.
+   --------------------------------------------------------------------------- */
+interface Props { tipo: string }
+const { tipo } = Astro.props;
+---
+<div class={`micro micro--${tipo}`} aria-hidden="true" data-micro><slot /></div>
+
+<script>
+  const ver = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    // Un respiro para que termine la aparición del bloque.
+    setTimeout(() => e.target.classList.add('is-vista'), 500);
+    ver.unobserve(e.target);
+  }), { threshold: 0.6 });
+  document.querySelectorAll('[data-micro]').forEach((m) => ver.observe(m));
+</script>
+
+<style>
+  .micro {
+    position: relative;
+    inline-size: min(100%, 400px);
+    block-size: 176px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radio);
+    overflow: hidden;
+  }
+  /* `!important` en los longhand: el `animation:` de cada pieza los reiniciaría. */
+  .micro :global(*) { animation-fill-mode: both !important; animation-play-state: paused !important; }
+  :global(html:not(.js)) .micro :global(*) { animation: none !important; }
+  .micro:global(.is-vista) :global(*) { animation-play-state: running !important; }
+  @media (prefers-reduced-motion: reduce) { .micro :global(*) { animation: none !important; } }
+</style>

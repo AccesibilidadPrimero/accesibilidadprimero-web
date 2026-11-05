@@ -183,7 +183,7 @@ const conCuerpo = await Promise.all(
     </div>
     <h2 id="estudio-titulo" class="estudio__texto">
       {/* Un solo texto en todos los anchos (Johnny, 03/11/2026). */}
-      <span>Código, diseño y palabra.</span> <span>La accesibilidad como punto de partida.</span>
+      Código, diseño y palabra. La accesibilidad como punto de partida.
     </h2>
     <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero<Fragment set:html={REGISTRADA} /></CtaLink>
   </section>
@@ -203,16 +203,14 @@ const conCuerpo = await Promise.all(
     padding-inline: var(--gutter-page);
     display: flex;
     flex-direction: column;
-    /* Del titular a las tarjetas, lo mismo que en «Sobre la mesa». */
-    gap: var(--ritmo-intro);
+    gap: var(--space-64);
   }
-  /* A tamaño de texto (Johnny, 04/11/2026: «aparece de forma muy poco
-     orgánica»). Eran las dos únicas frases en display de una Home que va
-     entera a un solo tamaño, y pesaban más que el propio h1. */
   .productos__intro {
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
     font-weight: 400;
+    max-width: 1002px;   /* medida del Figma */
   }
 
   /* El reparto de columnas vive en home.css. */
@@ -263,12 +261,11 @@ const conCuerpo = await Promise.all(
     flex-direction: column;
   }
   .estudio__texto {
-    font-size: var(--texto-size);
-    line-height: var(--texto-leading);
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
     font-weight: 400;
   }
-  /* Una frase por renglón donde quepa. */
-  .estudio__texto span { display: block; }
   /* El marco de 60 × 60 del Figma, con el símbolo centrado dentro a 50 de
      ancho. La geometría vive aquí y no en home.css: Astro da scope a los
      estilos de componente y eso gana por especificidad, así que una regla
@@ -304,7 +301,13 @@ const conCuerpo = await Promise.all(
 
   /* Tableta: la frase de Estudio en la caja de 572 del Figma de Tablet
      (2201:558). */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .estudio__texto { max-width: 572px; }
+  }
 
+  @media (max-width: 767px) {
+    .estudio__texto { width: 274px; max-width: 100%; }
+  }
 </style>
 
 <script>

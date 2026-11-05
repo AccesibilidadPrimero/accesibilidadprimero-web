@@ -6,9 +6,8 @@
 
      · `--texto`   17 · 18 · 19   TODO: titulares de proyecto, resúmenes,
                                   navegación, la nota de accesibilidad.
-     · `--display` 34 · 40 · 48   SOLO los titulares de las páginas interiores.
-                                  En la Home, ninguno desde el 04/11/2026: los
-                                  de Productos y Estudio pasaron a texto.
+     · `--display` 34 · 40 · 48   SOLO dos frases: el titular de Productos y
+                                  el de Estudio.
      · `--meta`    15 · 15 · 16   SOLO los créditos del pie. La norma se rompe
                                   ahí a propósito: no se leen, se consultan.
      · peso 400 en todo.
@@ -26,10 +25,13 @@ import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
 
-/* En la Home ya no hay excepciones (Johnny, 04/11/2026): los titulares de
-   Productos y Estudio, que eran las dos únicas frases en display, van a
-   tamaño de texto como todo lo demás. */
-const EXCEPCIONES = [];
+/* Las DOS únicas frases que se salen del tamaño único. Si alguien añade una
+   tercera, el barrido de más abajo la caza igual, pero esto nombra las que
+   están autorizadas. */
+const EXCEPCIONES = [
+  { quien: 'Productos · titular', sel: '.productos__intro' },
+  { quien: 'Estudio · titular',   sel: '.estudio__texto' },
+];
 const DISPLAY = { 390: [34, 40], 768: [40, 48], 1440: [48, 56] };
 const META    = { 390: [15, 20], 768: [15, 20], 1440: [16, 20] };
 const TEXTO   = { 390: [17, 24], 768: [18, 22], 1440: [19, 26] };   // 1440: 22/28 hasta el 09/10
@@ -43,8 +45,6 @@ const AL_TAMANO_UNICO = [
   ['.proyecto__resumen',   'Proyecto · resumen'],
   ['.contacto__titulo',    'Contacto · titular'],
   ['.producto__nombre',    'Producto · nombre'],
-  ['.productos__intro',    'Productos · titular'],
-  ['.estudio__texto',      'Estudio · titular'],
   ['.header__link',        'Navegación'],
   ['.meta',                'Nota de accesibilidad'],
 ];

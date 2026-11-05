@@ -38,18 +38,25 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
 ---
 
 {desplegable ? (
-  <section class:list={['bloque', 'bloque--desplegable', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
-    <h2 class="bloque__titulo">
-      <button type="button" id={id} class="bloque__boton" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} aria-describedby={resumen ? `${id}-resumen` : undefined} data-plegable-boton>
-        <span>{titulo}</span>
-        {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
-        <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
-          <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
-        </svg>
-      </button>
-    </h2>
-    {resumen && <p id={`${id}-resumen`} class="bloque__resumen">{resumen}</p>}
-    <div id={`${id}-panel`} class="bloque__contenido" hidden={!abierto} data-mov-propio><slot /></div>
+  /* Desde el 05/11/2026 (Johnny: «me gustaba más cómo estaba diseñado
+     antes»): el bloque de siempre, con el título en su columna y su ritmo de
+     128, el párrafo descriptivo a la vista y, al final del texto, un + que
+     despliega el resto. El + es el botón del patrón de la WAI, con
+     `aria-expanded` y `aria-controls`. */
+  <section class:list={['bloque', 'bloque--masinfo', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
+    <h2 id={id} class="bloque__titulo">{titulo}</h2>
+    <div class="bloque__contenido">
+      <p class="bloque__resumen">
+        {resumen}{' '}
+        <button type="button" class="bloque__mas" aria-expanded={abierto ? 'true' : 'false'} aria-controls={`${id}-panel`} aria-label={`Más sobre ${titulo.charAt(0).toLowerCase() + titulo.slice(1)}`} data-plegable-boton data-ancla={id}>
+          {/* El + de Disclosure.astro: el gesto de «desplegar» de la web. */}
+          <svg class="bloque__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+            <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+        </button>
+      </p>
+      <div id={`${id}-panel`} class="bloque__panel" hidden={!abierto} data-mov-propio><slot /></div>
+    </div>
   </section>
 ) : (
   <section class:list={['bloque', fondo && `bloque--${fondo}`]} aria-labelledby={id}>
@@ -77,39 +84,33 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
   .bloque__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .bloque__contenido { min-width: 0; }
 
-  /* ---- Desplegable (03/11/2026) ----
-     Los bloques plegados van seguidos, separados solo por un filete: con 128
-     de aire, una lista de títulos cerrados se deshace. El 128 que los separa
-     del hero lo pone la página en el contenedor (servicios.astro): entre dos
-     bloques Astro puede dejar un <script>, y un `+` de CSS no lo salta. */
-  .bloque--desplegable { gap: 0; margin-block-start: 0; }
-  /* El filete va en el título y no en la sección: así respeta los márgenes de
-     la página en vez de ir de borde a borde. */
-  .bloque--desplegable .bloque__titulo { border-block-start: 1px solid var(--rule); }
-  .bloque__boton {
-    display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);
-    inline-size: 100%; min-height: var(--touch-min); padding: var(--space-24) 0;
-    background: none; border: 0; color: var(--text); font: inherit; text-align: start; cursor: pointer;
+  /* ---- Más información (05/11/2026) ----
+     El bloque normal; el párrafo descriptivo a la vista y el + al final del
+     texto, en su renglón. El botón mide 44 × 44 (la zona táctil) y se sale
+     del renglón por arriba y por abajo con márgenes negativos, para no
+     abrirlo. Lo desplegado va a 24 del párrafo, como entre párrafos. */
+  .bloque__resumen { margin: 0; max-width: 888px; }
+  .bloque__mas {
+    display: inline-flex; align-items: center; justify-content: center;
+    inline-size: var(--touch-min); block-size: var(--touch-min);
+    margin-block: calc((var(--texto-leading) - var(--touch-min)) / 2);
+    margin-inline-start: calc((12px - var(--touch-min)) / 2 + var(--space-4));
+    vertical-align: middle;
+    padding: 0; background: none; border: 0; color: var(--text); cursor: pointer;
   }
-  .bloque__boton:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: 2px; }
+  .bloque__mas:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: -4px; border-radius: 50%; }
   .bloque__signo { flex: none; transition: transform var(--dur-base) var(--ease-out); }
-  .bloque__boton:is(:hover, :focus-visible) .bloque__signo { transform: scale(1.2); }
-  .bloque__boton[aria-expanded='true'] .bloque__signo { transform: rotate(45deg); }
-  .bloque--desplegable .bloque__contenido { padding-block-end: var(--space-48); }
-  /* El resumen, visible con el bloque cerrado (auditoría de usabilidad,
-     04/11/2026): se elige servicio sabiendo qué es cada uno. */
-  .bloque__resumen { margin: 0; padding-block-end: var(--space-24); margin-block-start: calc(var(--space-8) - var(--space-24)); }
-  :global(html:not(.js)) .bloque--desplegable .bloque__contenido[hidden] { display: block; }
-  :global(html:not(.js)) .bloque__signo { display: none; }
+  .bloque__mas:hover .bloque__signo, .bloque__mas:focus-visible .bloque__signo { transform: scale(1.2); }
+  .bloque__mas[aria-expanded='true'] .bloque__signo { transform: rotate(45deg); }
+  .bloque__panel { padding-block-start: var(--space-24); }
+  :global(html:not(.js)) .bloque__panel[hidden] { display: block; }
+  :global(html:not(.js)) .bloque__mas { display: none; }
   @media (prefers-reduced-motion: no-preference) {
-    :global(html.js) .bloque--desplegable .bloque__contenido:not([hidden]) { animation: bloque-despliega var(--dur-despliegue) var(--ease-asentar); }
+    :global(html.js) .bloque__panel:not([hidden]) { animation: bloque-despliega var(--dur-despliegue) var(--ease-asentar); }
   }
-  /* Reducir no es eliminar (AGENTS.md §2.3, 04/11/2026): sin desplazamiento,
-     el fundido de 300 ms. El panel lleva data-mov-propio, así que la regla
-     global no lo deja en 0,01 ms; sin esto, con reducir movimiento se abría
-     de golpe. */
+  /* Reducir no es eliminar (AGENTS.md §2.3): sin desplazamiento, el fundido. */
   @media (prefers-reduced-motion: reduce) {
-    :global(html.js) .bloque--desplegable .bloque__contenido:not([hidden]) { animation: bloque-funde var(--dur-fundido-reducido) linear; }
+    :global(html.js) .bloque__panel:not([hidden]) { animation: bloque-funde var(--dur-fundido-reducido) linear; }
   }
   @keyframes bloque-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
   @keyframes bloque-funde { from { opacity: 0; } }
@@ -123,14 +124,8 @@ const { id, titulo, fondo, desplegable = false, abierto = false, tituloOculto = 
     /* El nombre en su columna de 204, aunque sea largo («Organizaciones y
        proyectos» parte en dos renglones, como en el Figma). */
     .bloque__titulo { max-width: 204px; }
-    /* Plegado, el título ocupa la fila entera: el + a la derecha del todo,
-       y el contenido abierto debajo, en su columna. */
-    .bloque--desplegable { grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); }
-    .bloque--desplegable .bloque__titulo { grid-column: 1 / -1; max-width: none; }
-    .bloque--desplegable .bloque__contenido { grid-column: 2; }
-    .bloque--desplegable .bloque__resumen { grid-column: 2; }
   }
   /* Al llegar con un ancla (submenú de Servicios) el título no queda pegado
      al borde de la ventana. */
-  .bloque__boton { scroll-margin-block-start: var(--space-48); }
+  .bloque__titulo { scroll-margin-block-start: var(--space-48); }
 </style>

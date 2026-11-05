@@ -79,6 +79,12 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   { nombre: 'Elogio de la línea' },
   { nombre: 'WKND', proyecto: 'GUS, el perro guía' },
 ];
+/* Los productos, nombre y una frase (Johnny, 05/11/2026). */
+const PRODUCTOS_ESTUDIO = [
+  { nombre: 'Itza', descripcion: 'Un asistente accesible para la web de cada organización.' },
+  { nombre: 'A11y Primero', descripcion: 'Una extensión de Chrome que evalúa la accesibilidad de una página.' },
+  { nombre: 'Accesible Abstracts', descripcion: 'Una plataforma para gestionar los abstracts de un congreso.' },
+];
 ---
 
 <Base
@@ -174,6 +180,18 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
         ))
       }
     </ul>
+    {/* Los productos del estudio, con la misma fila (Johnny, 05/11/2026). */}
+    <h3 class="organizaciones__subtitulo">Productos</h3>
+    <ul class="filas filas--cerradas">
+      {
+        PRODUCTOS_ESTUDIO.map((o) => (
+          <li class="fila fila--organizacion">
+            <span>{o.nombre}</span>
+            <span>{o.descripcion}</span>
+          </li>
+        ))
+      }
+    </ul>
   </Bloque>
 
   <Bloque id="contacto-estudio" titulo="Contacto">
@@ -187,6 +205,9 @@ const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
 </Base>
 
 <style>
+  /* «Productos» dentro de Organizaciones: 72 antes de un titular dentro del
+     texto y 24 hasta la lista (el ritmo de Estudio). */
+  .organizaciones__subtitulo { margin: calc(var(--space-48) + var(--space-24)) 0 var(--space-24); font-size: inherit; line-height: inherit; font-weight: 400; }
   /* El correo, en la misma línea base que «Contacto» (Johnny, 04/11/2026). El
      enlace mide 44 de alto (zona táctil) con el texto centrado, así que su
      renglón caía 10 px más abajo que el del título. Se sube esa diferencia;

@@ -92,7 +92,7 @@ const etiqueta = (await page.textContent('[data-carrusel-control-label]'))?.trim
 check('Al pausar, el control dice «Reproducir»', etiqueta === 'Reproducir', etiqueta);
 
 const antes = await page.getAttribute('.hero__lamina[data-activa]', 'data-indice');
-await page.waitForTimeout(3200);   // más de dos ciclos de 1,5 s
+await page.waitForTimeout(6400);   // más de dos ciclos de 3 s
 const despues = await page.getAttribute('.hero__lamina[data-activa]', 'data-indice');
 check('Pausar detiene el temporizador, no solo la animación', antes === despues, `${antes} → ${despues}`);
 

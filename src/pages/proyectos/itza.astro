@@ -220,6 +220,9 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
   /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
      vertical retrasaba la historia). La web, que es un enlace largo, entera. */
   @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
   .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
   @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
   @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
@@ -349,6 +352,9 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
     box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
   }
   .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
+     separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
+  .pieza > :not(.vp) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
   .pieza figcaption { align-self: stretch; }
   /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
   .itza :global(.captura--movil) { width: min(360px, 100%); }

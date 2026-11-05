@@ -28,10 +28,7 @@ export interface Tarifa {
   incluye: string[];
 }
 
-/* Las frases visibles con el bloque cerrado (auditoría de usabilidad,
-   04/11/2026). */
 export const DISENO = {
-  resumen: 'Webs accesibles a medida, del concepto al código.',
   intro:
     'Diseñamos y desarrollamos webs del concepto al código. La accesibilidad está en cada decisión desde la primera línea de código, no se añade al final. También hacemos accesibles documentos y presentaciones, incluidos los PDF.',
   puntos: [
@@ -74,7 +71,6 @@ export const DISENO = {
 };
 
 export const AUDITORIA = {
-  resumen: 'Revisamos tu web, te explicamos cada barrera y te damos un plan para quitarlas.',
   /* Los tres alcances son la misma auditoría; cambia el número de páginas
      (Johnny, 04/11/2026). Lo común, una vez y fuera de las tarifas. */
   comun:
@@ -138,7 +134,6 @@ export const AUDITORIA = {
 };
 
 export const FORMACION = {
-  resumen: 'Para que tu equipo mantenga la accesibilidad en el día a día.',
   intro:
     'La accesibilidad no termina con la entrega. Formamos a los equipos que gestionan y actualizan la web para que puedan mantener la accesibilidad en el día a día.',
   puntos: [

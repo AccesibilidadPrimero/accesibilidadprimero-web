@@ -28,14 +28,17 @@ document.querySelectorAll<HTMLButtonElement>('[data-plegable-boton]').forEach((b
 function abrirDesdeAncla() {
   const id = decodeURIComponent(location.hash.slice(1));
   if (!id) return;
-  const boton = document.getElementById(id);
+  // El ancla puede ser el botón o, desde el 05/11/2026, el título del bloque
+  // (Bloque `desplegable`), cuyo + lleva `data-ancla`.
+  const destino = document.getElementById(id);
+  const boton = destino instanceof HTMLButtonElement ? destino : document.querySelector<HTMLButtonElement>(`[data-plegable-boton][data-ancla="${CSS.escape(id)}"]`);
   if (!(boton instanceof HTMLButtonElement) || !boton.hasAttribute('data-plegable-boton')) return;
   const panel = document.getElementById(boton.getAttribute('aria-controls') ?? '');
   if (!panel) return;
   boton.setAttribute('aria-expanded', 'true');
   panel.hidden = false;
   boton.focus({ preventScroll: true });
-  boton.scrollIntoView({ block: 'start' });
+  (destino ?? boton).scrollIntoView({ block: 'start' });
 }
 abrirDesdeAncla();
 window.addEventListener('hashchange', abrirDesdeAncla);

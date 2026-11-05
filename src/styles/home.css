@@ -89,7 +89,7 @@
 }
 /* El icono de Estudio ya no está aquí: su geometría vive en index.astro,
    que es quien declara la clase. Ver AGENTS.md §6. */
-/* Sin caja fija desde el 04/11/2026: a tamaño de texto, una frase por renglón. */
+.estudio__texto { max-width: 1068px; }
 
 /* ---- Cierre de contacto --------------------------------------------------- */
 /* Igual que el Hero: la geometría de .contacto* está en ContactCTA.astro. */
