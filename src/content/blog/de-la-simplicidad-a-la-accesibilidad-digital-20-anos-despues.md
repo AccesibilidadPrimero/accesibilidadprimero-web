@@ -57,7 +57,7 @@ Cuando la información está bien organizada, se entiende sin fricción.
 Un encabezado H1 no es una letra grande. Es el título del documento.  
 Cuando usamos la jerarquía de encabezados correctamente, quien navega con un lector de pantalla puede saltar directamente a la sección que le interesa.
 
-Es exactamente lo mismo que hace visualmente cualquier lector cuando escanea una página. La estructura semántica no es una capa encima del diseño.
+Es exactamente lo mismo que hace visualmente cualquier persona cuando lee y escanea una página. La estructura semántica no es una capa encima del diseño.
 
 Es el diseño.
 

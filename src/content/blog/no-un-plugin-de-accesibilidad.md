@@ -21,7 +21,7 @@ Es un error que se repite constantemente en el mercado, y la responsabilidad no 
 
 ## Qué hace bien un plugin de accesibilidad
 
-Antes de explicar sus límites, conviene ser justos con lo que estos plugins sí aportan. Su función principal es dar al usuario final una capa de personalización visual: aumentar el tamaño del texto, activar un modo de alto contraste, cambiar el cursor, detener animaciones, o en algunos casos leer el contenido de la página en voz alta.
+Antes de explicar sus límites, conviene ser justos con lo que estos plugins sí aportan. Su función principal es dar a la persona usuaria una capa de personalización visual: aumentar el tamaño del texto, activar un modo de alto contraste, cambiar el cursor, detener animaciones, o en algunos casos leer el contenido de la página en voz alta.
 
 Son herramientas de presentación. Actúan sobre cómo se muestra la web, no sobre cómo está construida.  
 Y dentro de ese marco, algunos lo hacen bien.
@@ -40,7 +40,7 @@ Está presente en webs de la administración y del tercer sector.
 
 Es un plugin para WordPress muy extendido entre sitios de mediana escala.
 
-Proporciona un conjunto de ajustes visuales activables por el usuario, incluyendo opciones para dislexia y bajo contraste.
+Proporciona un conjunto de ajustes visuales que cada persona puede activar, incluyendo opciones para dislexia y bajo contraste.
 
 ![Logotipo de UserWay.](../../assets/blog/no-un-plugin-de-accesibilidad/5927.png)
 
@@ -63,13 +63,13 @@ Algunos ejemplos concretos:
 
 ### Tipografía en unidades relativas _(REM)_.
 
-Si los tamaños de texto están definidos en píxeles fijos, el usuario puede aumentar el tamaño desde su navegador o desde el plugin, pero el diseño se romperá, el texto se solapará, o simplemente el plugin no podrá escalar lo que el código no permite escalar.
+Si los tamaños de texto están definidos en píxeles fijos, la persona usuaria puede aumentar el tamaño desde su navegador o desde el plugin, pero el diseño se romperá, el texto se solapará, o simplemente el plugin no podrá escalar lo que el código no permite escalar.
 
 Esta decisión se toma en el CSS, no en el panel de control del plugin.
 
 ### Texto alternativo en imágenes
 
-Un plugin puede añadir un campo para que el usuario active un “modo descripción”, pero si las imágenes no tienen atributo alt escrito en el HTML, un lector de pantalla simplemente no tiene nada que leer.
+Un plugin puede añadir un campo para que la persona usuaria active un “modo descripción”, pero si las imágenes no tienen atributo alt escrito en el HTML, un lector de pantalla simplemente no tiene nada que leer.
 
 El plugin no puede inventar el contexto que la imagen no tiene declarado.
 
@@ -83,7 +83,7 @@ El plugin no puede reconstruir una arquitectura que no existe.
 
 ### Etiquetas en formularios
 
-Un formulario de contacto con campos sin label correctamente asociado es invisible para los usuarios de lectores de pantalla.
+Un formulario de contacto con campos sin label correctamente asociado es invisible para quienes usan lectores de pantalla.
 
 No saben qué dato se les está pidiendo en cada campo.
 
@@ -134,7 +134,7 @@ Y lo hemos construido con una filosofía exactamente opuesta a la que acabamos d
 
 ![La web de Accesibilidad Primero con el panel del widget A11y abierto: tamaño de letra, alto contraste, lectura simplificada, simulación de daltonismo, de baja visión y de visión borrosa, evaluación de accesibilidad de la página y restablecer.](../../assets/blog/no-un-plugin-de-accesibilidad/5921.png)
 
-El widget A11y no es una solución. Es una capa adicional de personalización para usuarios con baja visión o daltonismo, diseñada para funcionar encima de una base ya accesible. No tapa agujeros.
+El widget A11y no es una solución. Es una capa adicional de personalización para personas con baja visión o daltonismo, diseñada para funcionar encima de una base ya accesible. No tapa agujeros.
 
 No imposta semántica que no existe. Simplemente añade opciones de presentación para quien las necesita, en una web que ya cumple los criterios técnicos sin él.
 

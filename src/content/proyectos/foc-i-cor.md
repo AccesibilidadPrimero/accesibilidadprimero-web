@@ -111,7 +111,7 @@ caso:
           embarcadero de la Albufera con el lema “Cuina feta amb Foc i Cor”;
           “Un restaurant per gaudir, un projecte per créixer” con sus tres
           tarjetas; el restaurante con fotos del equipo en la cocina; el
-          proyecto de Cesal con sus cifras y sus financiadores; las noticias,
+          proyecto de Cesal con sus cifras y las entidades que lo financian; las noticias,
           y el formulario de contacto.
     par:
       - archivo: ../../assets/proyectos/foc-i-cor/cocina.jpg
@@ -244,8 +244,8 @@ traducciones:
               l’embarcador de l’Albufera amb el lema “Cuina feta amb Foc i
               Cor”; “Un restaurant per gaudir, un projecte per créixer” amb
               les seves tres targetes; el restaurant amb fotos de l’equip a la
-              cuina; el projecte de Cesal amb les seves xifres i els seus
-              finançadors; les notícies, i el formulari de contacte.
+              cuina; el projecte de Cesal amb les seves xifres i les entitats
+              que el financen; les notícies, i el formulari de contacte.
         par:
           - alt: >-
               Part de l’equip treballa d’esquena a la cuina del restaurant,

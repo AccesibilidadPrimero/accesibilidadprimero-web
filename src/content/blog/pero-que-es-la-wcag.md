@@ -68,7 +68,7 @@ Ejemplo concreto:
 
 ### ¿Por qué las WCAG se han convertido en el estándar?
 
-Porque llevan décadas de trabajo real detrás. Cada criterio ha sido debatido, probado y validado por investigadores, personas con discapacidad, desarrolladores y diseñadores de todo el mundo. No son opiniones: son evidencia acumulada sobre qué funciona y qué no.
+Porque llevan décadas de trabajo real detrás. Cada criterio ha sido debatido, probado y validado por personas investigadoras, personas con discapacidad y profesionales del desarrollo y del diseño de todo el mundo. No son opiniones: son evidencia acumulada sobre qué funciona y qué no.
 
 Además, son tecnológicamente neutras. No te dicen “usa este framework” ni “escribe el código así”. Te dicen qué tiene que conseguir tu implementación, sea cual sea la tecnología que uses. Y son versionadas. Cuando la web cambia,y cambia constantemente, las WCAG se actualizan. La versión 2.2 añadió criterios nuevos precisamente porque la web de 2023 no es la web de 2008.Cuando la normativa española o europea habla de accesibilidad web, el nivel exigido es el AA.  
 Es el punto de referencia real para la mayoría de proyectos.
@@ -114,7 +114,7 @@ Este es uno de los puntos que más sorprende a quien se acerca a las WCAG por pr
 | Jerarquía de encabezados (1.3.1) | Facilita la navegación con lector de pantalla | Estructura el contenido para los rastreadores |
 | Títulos de página descriptivos (2.4.2) | Orientan a quien llega a la página | Son el primer elemento que Google evalúa |
 | Texto de enlaces descriptivo (2.4.4) | “Descargar informe” en vez de “clic aquí” | Palabras clave en los textos de enlace mejoran el posicionamiento |
-| Velocidad y código limpio (robusto) | Mejor experiencia para todos | Factor de posicionamiento directo |
+| Velocidad y código limpio (robusto) | Mejor experiencia para todas las personas | Factor de posicionamiento directo |
 
 Una web construida siguiendo las WCAG es, casi por definición, una web con código semántico, bien estructurada y fácil de interpretar. Eso no solo ayuda a las personas: también le habla con claridad a Google.
 

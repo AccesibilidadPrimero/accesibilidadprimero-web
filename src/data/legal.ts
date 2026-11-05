@@ -102,7 +102,7 @@ export const PRIVACIDAD: PaginaLegal = {
       id: 'con-quien',
       titulo: 'Con quién los compartimos',
       piezas: [
-        { p: 'Con nadie para su propio uso. Solo con los proveedores que necesitamos para que esto funcione, que los tratan por encargo nuestro:' },
+        { p: 'Con nadie para su propio uso. Solo con las empresas proveedoras que necesitamos para que esto funcione, que los tratan por encargo nuestro:' },
         {
           lista: [
             'Cloudflare: aloja la web, recibe el formulario, lo protege de los envíos automáticos y cuenta las visitas.',
@@ -190,7 +190,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
   entrada: [
     'Nos dedicamos a esto, así que esta página no puede ser un trámite. Aquí está el estado real de accesibilidad de nuestra propia web, incluido lo que todavía no cumple.',
   ],
-  fecha: 'Última revisión: 4 de noviembre de 2026.',
+  fecha: 'Última revisión: 5 de noviembre de 2026.',
   descripcion: `Estado real de accesibilidad de ${DOMINIO}: grado de conformidad con WCAG 2.2 AA, limitaciones conocidas y cómo avisarnos.`,
   bloques: [
     {
@@ -246,7 +246,7 @@ export const ACCESIBILIDAD: PaginaLegal = {
           ],
         },
         { p: 'Todas estas comprobaciones pasan, salvo el incumplimiento del emblema que explicamos arriba.' },
-        { p: 'Estas pruebas automáticas cubren alrededor de un tercio de los criterios de WCAG. La revisión manual con teclado y con lectores de pantalla está pendiente. Cuando esté hecha, actualizaremos esta página con su fecha y su resultado.' },
+        { p: 'Estas pruebas automáticas cubren alrededor de un tercio de los criterios de WCAG. La revisión manual con teclado está hecha: el 5 de noviembre de 2026 recorrimos la web entera con el tabulador, con el orden del foco, su anillo visible y sin paradas de más. La revisión con lectores de pantalla está pendiente. Cuando esté hecha, actualizaremos esta página con su fecha y su resultado.' },
       ],
     },
     {
@@ -344,7 +344,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
       id: 'con-quien',
       titulo: 'Amb qui les compartim',
       piezas: [
-        { p: 'Amb ningú perquè les faci servir pel seu compte. Només amb els proveïdors que necessitem perquè tot això funcioni, que les tracten per encàrrec nostre:' },
+        { p: 'Amb ningú perquè les faci servir pel seu compte. Només amb les empreses proveïdores que necessitem perquè tot això funcioni, que les tracten per encàrrec nostre:' },
         {
           lista: [
             'Cloudflare: allotja el web, rep el formulari, el protegeix dels enviaments automàtics i compta les visites.',
@@ -575,7 +575,7 @@ const ACCESIBILIDAD_CA: PaginaLegal = {
   entrada: [
     'Ens dediquem a això, així que aquesta pàgina no pot ser un tràmit. Aquí hi ha l’estat real d’accessibilitat del nostre propi web, inclòs el que encara no compleix.',
   ],
-  fecha: 'Darrera revisió: 4 de novembre de 2026.',
+  fecha: 'Darrera revisió: 5 de novembre de 2026.',
   descripcion: `Estat real d’accessibilitat de ${DOMINIO}: situació de compliment amb les WCAG 2.2 AA, limitacions conegudes i com avisar-nos.`,
   bloques: [
     {
@@ -631,7 +631,7 @@ const ACCESIBILIDAD_CA: PaginaLegal = {
           ],
         },
         { p: 'Totes aquestes comprovacions es superen, llevat de l’incompliment de l’emblema que expliquem més amunt.' },
-        { p: 'Aquestes proves automàtiques cobreixen al voltant d’un terç dels criteris de les WCAG. La revisió manual amb teclat i amb lectors de pantalla està pendent. Quan estigui feta, actualitzarem aquesta pàgina amb la data i el resultat.' },
+        { p: 'Aquestes proves automàtiques cobreixen al voltant d’un terç dels criteris de les WCAG. La revisió manual amb teclat està feta: el 5 de novembre de 2026 vam recórrer tot el web amb el tabulador, amb l’ordre del focus, l’anell visible i sense parades de més. La revisió amb lectors de pantalla està pendent. Quan estigui feta, actualitzarem aquesta pàgina amb la data i el resultat.' },
       ],
     },
     {
@@ -666,7 +666,7 @@ const ACCESIBILIDAD_EN: PaginaLegal = {
   entrada: [
     'This is what we do for a living, so this page cannot be a formality. Here is the real accessibility status of our own website, including what it does not yet meet.',
   ],
-  fecha: 'Last reviewed: 4 November 2026.',
+  fecha: 'Last reviewed: 5 November 2026.',
   descripcion: `The real accessibility status of ${DOMINIO}: compliance status with WCAG 2.2 AA, known limitations and how to let us know.`,
   bloques: [
     {
@@ -722,7 +722,7 @@ const ACCESIBILIDAD_EN: PaginaLegal = {
           ],
         },
         { p: 'All of these checks pass, except for the emblem non-compliance explained above.' },
-        { p: 'These automated tests cover around a third of the WCAG success criteria. The manual review with a keyboard and with screen readers is still to be done. When it is, we will update this page with its date and its result.' },
+        { p: 'These automated tests cover around a third of the WCAG success criteria. The manual keyboard review is done: on 5 November 2026 we went through the whole website with the Tab key, checking the focus order, a visible focus ring and no unnecessary stops. The review with screen readers is still to be done. When it is, we will update this page with its date and its result.' },
       ],
     },
     {
