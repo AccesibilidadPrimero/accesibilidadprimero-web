@@ -21,7 +21,7 @@ import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
 import Redes from '../components/Redes.astro';
-import { DEFAULT_LANG } from '../i18n/config';
+import { DEFAULT_LANG, path } from '../i18n/config';
 import { conMarca } from '../i18n/marca';
 import { CORREO_ESTUDIO } from '../data/contacto';
 /* Las dos las compila `npm run arte` desde arte/estudio/. */
@@ -29,34 +29,17 @@ import SimboloAnimado from '../components/SimboloAnimado.astro';
 import Microanimacion from '../components/Microanimacion.astro';
 import type { Tipo } from '../components/Microanimacion.astro';
 import retrato from '../assets/estudio/johnny-vigas.jpg';
+import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
 
 const lang = DEFAULT_LANG;
 
+/* Los mismos tres servicios que Qué hacemos, con el mismo nombre y el mismo
+   texto (Johnny, 05/11/2026): antes eran cuatro, con otros nombres. Los
+   documentos y PDF van dentro de Diseño y desarrollo, como allí. */
 const SERVICIOS = [
-  {
-    nombre: 'Diseño y desarrollo web accesible.',
-    mic: 'medida' as Tipo,
-    color: 'rosa' as const,
-    texto: 'Diseñamos y desarrollamos webs del concepto al código, con WCAG 2.2 AA como referencia mínima. Es lo que hacemos cada día.',
-  },
-  {
-    nombre: 'Auditorías de accesibilidad.',
-    mic: 'jerarquia' as Tipo,
-    color: 'amarillo' as const,
-    texto: 'Analizamos tu web, identificamos las barreras, te las explicamos y definimos un plan para aplicar las mejoras. Es el primer paso si quieres que tu web actual sea accesible sin diseñarla desde cero.',
-  },
-  {
-    nombre: 'Formación y consultoría.',
-    mic: 'dia' as Tipo,
-    color: 'verde' as const,
-    texto: 'Ayudamos a tu equipo a crear y mantener contenidos y servicios digitales accesibles. Creamos un protocolo para que cada contenido nuevo de tu web sea accesible.',
-  },
-  {
-    nombre: 'Documentos y comunicación inclusiva.',
-    mic: 'declaracion' as Tipo,
-    color: 'rosa' as const,
-    texto: 'Creamos y adaptamos presentaciones y documentos PDF accesibles. Ayudamos a cumplir los requisitos de accesibilidad aplicables a administraciones y proyectos con financiación pública.',
-  },
+  { nombre: 'Diseño y desarrollo.', mic: 'medida' as Tipo, color: 'rosa' as const, texto: DISENO.intro },
+  { nombre: 'Auditoría de accesibilidad.', mic: 'jerarquia' as Tipo, color: 'amarillo' as const, texto: AUDITORIA.intro },
+  { nombre: 'Formación.', mic: 'dia' as Tipo, color: 'verde' as const, texto: FORMACION.intro },
 ];
 
 /* La barra y el año van pegados a la última palabra con espacios que no se
@@ -75,8 +58,8 @@ const CATEDRA = [
 const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
   { nombre: 'CESAL', proyecto: 'Foc i Cor, restaurante escuela en Catarroja' },
   { nombre: 'AEIPI y Eurlyaid', proyecto: 'ECI Conference Madrid 2027' },
-  { nombre: 'Izaskun Etxebarria' },
-  { nombre: 'Elogio de la línea' },
+  { nombre: 'Izaskun Etxebarria', proyecto: 'Su web de artista y comisaria' },
+  { nombre: 'Pau Jordà, arquitecto', proyecto: 'Elogio de la línea, su portafolio' },
   { nombre: 'WKND', proyecto: 'GUS, el perro guía' },
 ];
 /* Los productos, nombre y una frase (Johnny, 05/11/2026). */
@@ -118,6 +101,7 @@ const PRODUCTOS_ESTUDIO = [
   {/* Sin la banda rosa (03/11/2026): con las microanimaciones, el rosa
       competía con el detalle de diseño y era la única banda de color. */}
   <Bloque id="servicios" titulo="Servicios">
+    <div class="pila">
     <ul class="servicios">
       {
         SERVICIOS.map((s) => (
@@ -131,6 +115,8 @@ const PRODUCTOS_ESTUDIO = [
         ))
       }
     </ul>
+    <CtaLink href={path('servicios', lang)}>Ver qué hacemos</CtaLink>
+    </div>
   </Bloque>
 
   <Bloque id="equipo" titulo="Equipo">

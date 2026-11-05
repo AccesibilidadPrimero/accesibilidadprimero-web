@@ -125,17 +125,19 @@ caso:
     # Original de Johnny (2338 × 1067), sin EXIF ni XMP, 23/10/2026.
     hero: ../../assets/proyectos/foc-i-cor/hero.jpg
     capturas:
-      - archivo: ../../assets/proyectos/foc-i-cor/almuerzos.jpg
+      # Capturas de focicor.es en catalán, de Johnny (05/11/2026).
+      - archivo: ../../assets/proyectos/foc-i-cor/esmorzars.jpg
         alt: >-
-          La página de los almuerzos de focicor.es: el titular “Almorzar de
-          verdad para tener energía durante todo el día”, qué incluye cada
-          almuerzo y, al lado, la foto de un bocadillo con queso fundido.
-      # Captura de focicor.es/la-carta/ del 23/10/2026, a 2x, pestaña Principals.
-      - archivo: ../../assets/proyectos/foc-i-cor/carta.png
+          La página de los esmorzars de focicor.es: el titular “Esmorzar de
+          veritat per a tindre energia tot el dia”, qué incluye cada esmorzar
+          y que se sirven hasta las 12:00; al lado, el vídeo de un bocadillo
+          con queso fundido, y debajo los primeros platos con sus alérgenos.
+      - archivo: ../../assets/proyectos/foc-i-cor/carta.jpg
         alt: >-
-          La carta de focicor.es: a la izquierda, las pestañas por categoría
-          con “Principals” activa; a la derecha, cinco platos con su precio y
-          los alérgenos de cada uno en etiquetas a la vista.
+          La carta de focicor.es: el titular “Cuina de proximitat i
+          temporada” con tres fotos de platos; debajo, las pestañas por
+          categoría con “Arrossos” activa y tres arroces con su precio por
+          persona y sus alérgenos en etiquetas a la vista.
     cierre:
       archivo: ../../assets/proyectos/foc-i-cor/equipo.jpg
       alt: >-

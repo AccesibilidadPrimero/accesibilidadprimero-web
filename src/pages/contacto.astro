@@ -20,6 +20,7 @@
    --------------------------------------------------------------------------- */
 import Base from '../layouts/Base.astro';
 import CtaLink from '../components/CtaLink.astro';
+import lapiz from '../assets/contacto/lapiz.svg';
 import Bloque from '../components/Bloque.astro';
 import Redes from '../components/Redes.astro';
 import { DEFAULT_LANG, path } from '../i18n/config';
@@ -84,7 +85,12 @@ const CAMPOS = [
       titular, a tamaño de texto en la columna de los rótulos, como un bloque
       más; la introducción, el correo y el formulario, juntos en la otra. */}
   <section class="pagina-contacto" aria-labelledby="contacto-titulo">
-    <h1 id="contacto-titulo" class="pagina-contacto__titulo">Cuéntanos a dónde quieres llegar.</h1>
+    <div class="pagina-contacto__cabeza">
+      <h1 id="contacto-titulo" class="pagina-contacto__titulo">Cuéntanos a dónde quieres llegar.</h1>
+      {/* El lápiz del hero que había (05/11/2026), pequeño y sin ocupar
+          pantalla: devuelve el carácter a la página. Decorativo. */}
+      <img src={lapiz.src} width={lapiz.width} height={lapiz.height} alt="" class="pagina-contacto__lapiz" />
+    </div>
     <div class="pagina-contacto__contenido">
       <div class="pagina-contacto__intro">
         <p>No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar.</p>
@@ -242,12 +248,15 @@ const CAMPOS = [
      listado de Proyectos. */
   .pagina-contacto { padding: var(--ritmo-intro) var(--gutter-page) 0; display: flex; flex-direction: column; gap: var(--space-24); }
   .pagina-contacto__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .pagina-contacto__cabeza { display: flex; flex-direction: column; gap: var(--space-24); }
+  .pagina-contacto__lapiz { display: block; inline-size: auto; block-size: 96px; max-inline-size: 100%; }
+  @media (min-width: 1024px) { .pagina-contacto__lapiz { block-size: 160px; } }
   .pagina-contacto__contenido { display: flex; flex-direction: column; gap: var(--space-48); min-width: 0; }
   .pagina-contacto__intro { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 560px; }
   .pagina-contacto__intro p { margin: 0; }
   @media (min-width: 1024px) {
     .pagina-contacto { display: grid; grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); gap: 0; }
-    .pagina-contacto__titulo { max-width: 204px; }
+    .pagina-contacto__cabeza { max-width: 204px; }
   }
 
   .directo {

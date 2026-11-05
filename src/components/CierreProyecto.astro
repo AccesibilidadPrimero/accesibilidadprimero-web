@@ -20,6 +20,7 @@
 import { getCollection } from 'astro:content';
 import CtaLink from './CtaLink.astro';
 import { PRODUCTOS } from '../data/productos';
+import { CLAVES_TIPO } from '../data/proyectos';
 
 interface Props {
   actual: string;
@@ -36,7 +37,12 @@ const casos = [
     .filter((p) => p.data.casoPublicado)
     .sort((a, b) => a.data.orden - b.data.orden)
     .map((p) => ({ id: p.id, nombre: p.data.nombreCorto ?? p.data.titulo })),
-  ...PRODUCTOS.filter((p) => p.caso).map((p) => ({ id: p.caso!, nombre: p.nombre })),
+  /* Los productos en el mismo orden que el listado de Casos de estudio, por
+     tipo (05/11/2026): Itza, Accesible Abstracts, A11y Primero. */
+  ...PRODUCTOS.filter((p) => p.caso)
+    .map((p, n) => ({ p, n }))
+    .sort((a, b) => CLAVES_TIPO.indexOf(a.p.tipo) - CLAVES_TIPO.indexOf(b.p.tipo) || a.n - b.n)
+    .map(({ p }) => ({ id: p.caso!, nombre: p.nombre })),
 ];
 const i = casos.findIndex((c) => c.id === actual);
 if (i < 0) throw new Error(`CierreProyecto: «${actual}» no es un caso publicado.`);
