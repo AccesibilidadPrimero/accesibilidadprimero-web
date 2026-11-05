@@ -22,7 +22,7 @@ import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
 import Redes from '../components/Redes.astro';
 import { path } from '../i18n/config';
-import { idiomaDe } from '../i18n/idioma';
+import { idiomaDe, localizar } from '../i18n/idioma';
 import { conMarca } from '../i18n/marca';
 import { CORREO_ESTUDIO } from '../data/contacto';
 /* Las dos las compila `npm run arte` desde arte/estudio/. */
@@ -30,78 +30,207 @@ import SimboloAnimado from '../components/SimboloAnimado.astro';
 import Microanimacion from '../components/Microanimacion.astro';
 import type { Tipo } from '../components/Microanimacion.astro';
 import retrato from '../assets/estudio/johnny-vigas.jpg';
-import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
+import { DISENO as DISENO_ES, AUDITORIA as AUDITORIA_ES, FORMACION as FORMACION_ES } from '../data/servicios';
 
 const lang = idiomaDe(Astro.url);
+const DISENO = localizar(DISENO_ES, lang);
+const AUDITORIA = localizar(AUDITORIA_ES, lang);
+const FORMACION = localizar(FORMACION_ES, lang);
+
+/* Los textos de la página en los tres idiomas (05/11/2026). Los nombres de
+   organizaciones, proyectos y productos no se traducen. */
+const T = {
+  es: {
+    title: 'Estudio · Accesibilidad Primero',
+    description: 'Estudio de diseño que crea webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás.',
+    titulo: 'Código, diseño y palabra.',
+    golpes: ['Código, diseño', 'y palabra.'],
+    entrada: 'La forma en que comunicamos construye realidades.',
+    servicios: ['Diseño y desarrollo.', 'Auditoría de accesibilidad.', 'Formación.'],
+    catedra: [
+      'Exposición “Arte y Metaverso”',
+      'Aplicación MUCAES UPV',
+      'Protocolo de actuación ante una emergencia para personas con discapacidad',
+      'MOOC “Introducción a la IA en la creación artística para personas con discapacidad”',
+      'Hackathon accesible UPV',
+    ],
+    organizaciones: [
+      'Foc i Cor, restaurante escuela en Catarroja',
+      'ECI Conference Madrid 2027',
+      'Su web de artista y comisaria',
+      'Elogio de la línea, su portafolio',
+      'GUS, el perro guía',
+    ],
+    pauJorda: 'Pau Jordà, arquitecto',
+    productos: [
+      'Un asistente accesible para la web de cada organización.',
+      'Una extensión de Chrome que evalúa la accesibilidad de una página.',
+      'Una plataforma para gestionar los abstracts de un congreso.',
+    ],
+    hEstudio: 'Estudio',
+    estudio1: 'Creamos webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás.',
+    estudio2: 'Accesibilidad Primero. Siempre.',
+    estudio3: 'Cada decisión de diseño facilita el acceso o levanta una barrera; invita a participar o excluye. La accesibilidad no es una capa que añadimos al final, sino el principio desde el que pensamos cada proyecto.',
+    hServicios: 'Servicios',
+    verQueHacemos: 'Ver qué hacemos',
+    hEquipo: 'Equipo',
+    equipo: 'Accesibilidad Primero nació en marzo de 2026. Somos un estudio pequeño: hablas directamente con quien diseña y desarrolla tu web.',
+    retratoAlt: 'Retrato: sonríe a cámara, con gafas de pasta negras, barba y chaqueta oscura, ante un fondo gris azulado.',
+    cargo: ['Fundador', 'y director creativo.'],
+    hCatedra: 'Cátedra dicaTIC',
+    catedraTexto: 'Participamos en la dirección de la Cátedra dicaTIC de Brecha Digital y Discapacidad de la Universitat Politècnica de València. Desde allí impulsamos proyectos de diseño, tecnología y accesibilidad digital como estos:',
+    hOrganizaciones: 'Organizaciones y proyectos',
+    hProductos: 'Productos',
+    hContacto: 'Contacto',
+  },
+  ca: {
+    title: 'Estudi · Accesibilidad Primero',
+    description: 'Estudi de disseny que crea webs i aplicacions que funcionen, s’entenen i representen els valors de qui hi ha al darrere.',
+    titulo: 'Codi, disseny i paraula.',
+    golpes: ['Codi, disseny', 'i paraula.'],
+    entrada: 'La manera com comuniquem construeix realitats.',
+    servicios: ['Disseny i desenvolupament.', 'Auditoria d’accessibilitat.', 'Formació.'],
+    catedra: [
+      'Exposició “Arte y Metaverso”',
+      'Aplicació MUCAES UPV',
+      'Protocol d’actuació davant d’una emergència per a persones amb discapacitat',
+      'MOOC “Introducción a la IA en la creación artística para personas con discapacidad”',
+      'Hackató accessible UPV',
+    ],
+    organizaciones: [
+      'Foc i Cor, restaurant escola a Catarroja',
+      'ECI Conference Madrid 2027',
+      'La seva web d’artista i comissària',
+      'Elogio de la línea, el seu portafoli',
+      'GUS, el gos pigall',
+    ],
+    pauJorda: 'Pau Jordà, arquitecte',
+    productos: [
+      'Un assistent accessible per a la web de cada organització.',
+      'Una extensió de Chrome que avalua l’accessibilitat d’una pàgina.',
+      'Una plataforma per gestionar els abstracts d’un congrés.',
+    ],
+    hEstudio: 'Estudi',
+    estudio1: 'Creem webs i aplicacions que funcionen, s’entenen i representen els valors de qui hi ha al darrere.',
+    estudio2: 'Accesibilidad Primero. Sempre.',
+    estudio3: 'Cada decisió de disseny facilita l’accés o aixeca una barrera; convida a participar o exclou. L’accessibilitat no és una capa que afegim al final, sinó el principi des del qual pensem cada projecte.',
+    hServicios: 'Serveis',
+    verQueHacemos: 'Veure què fem',
+    hEquipo: 'Equip',
+    equipo: 'Accesibilidad Primero va néixer el març del 2026. Som un estudi petit: parles directament amb qui dissenya i desenvolupa la teva web.',
+    retratoAlt: 'Retrat: somriu a càmera, amb ulleres de pasta negres, barba i jaqueta fosca, davant d’un fons gris blavós.',
+    cargo: ['Fundador', 'i director creatiu.'],
+    hCatedra: 'Càtedra dicaTIC',
+    catedraTexto: 'Participem en la direcció de la Càtedra dicaTIC de Bretxa Digital i Discapacitat de la Universitat Politècnica de València. Des d’allà impulsem projectes de disseny, tecnologia i accessibilitat digital com aquests:',
+    hOrganizaciones: 'Organitzacions i projectes',
+    hProductos: 'Productes',
+    hContacto: 'Contacte',
+  },
+  en: {
+    title: 'Studio · Accesibilidad Primero',
+    description: 'A design studio that creates websites and apps that work, make sense and reflect the values of the people behind them.',
+    titulo: 'Code, design and words.',
+    golpes: ['Code, design', 'and words.'],
+    entrada: 'The way we communicate shapes reality.',
+    servicios: ['Design and development.', 'Accessibility audit.', 'Training.'],
+    catedra: [
+      '“Arte y Metaverso” exhibition',
+      'MUCAES UPV app',
+      'Emergency protocol for disabled people',
+      'MOOC “Introduction to AI in artistic creation for disabled people”',
+      'UPV accessible hackathon',
+    ],
+    organizaciones: [
+      'Foc i Cor, a training restaurant in Catarroja',
+      'ECI Conference Madrid 2027',
+      'Her website as an artist and curator',
+      'Elogio de la línea, his portfolio',
+      'GUS, the guide dog',
+    ],
+    pauJorda: 'Pau Jordà, architect',
+    productos: [
+      'An accessible assistant for each organisation’s website.',
+      'A Chrome extension that evaluates the accessibility of a page.',
+      'A platform for managing conference abstracts.',
+    ],
+    hEstudio: 'Studio',
+    estudio1: 'We create websites and apps that work, make sense and reflect the values of the people behind them.',
+    estudio2: 'Accesibilidad Primero. Always.',
+    estudio3: 'Every design decision either opens access or puts up a barrier; it invites people in or shuts them out. Accessibility isn’t a layer we add at the end. It’s the starting point for every project.',
+    hServicios: 'Services',
+    verQueHacemos: 'See what we do',
+    hEquipo: 'Team',
+    equipo: 'Accesibilidad Primero was founded in March 2026. We’re a small studio: you talk directly to the person who designs and builds your website.',
+    retratoAlt: 'Portrait: smiling at the camera, with black thick-rimmed glasses, a beard and a dark jacket, against a blue-grey background.',
+    cargo: ['Founder', 'and creative director.'],
+    hCatedra: 'dicaTIC Chair',
+    catedraTexto: 'We are part of the leadership of the dicaTIC Chair on the Digital Divide and Disability at the Universitat Politècnica de València. From there we drive design, technology and digital accessibility projects such as these:',
+    hOrganizaciones: 'Organisations and projects',
+    hProductos: 'Products',
+    hContacto: 'Contact',
+  },
+}[lang];
 
 /* Los mismos tres servicios que Qué hacemos, con el mismo nombre y el mismo
    texto (Johnny, 05/11/2026): antes eran cuatro, con otros nombres. Los
    documentos y PDF van dentro de Diseño y desarrollo, como allí. */
 const SERVICIOS = [
-  { nombre: 'Diseño y desarrollo.', mic: 'medida' as Tipo, color: 'rosa' as const, texto: DISENO.intro },
-  { nombre: 'Auditoría de accesibilidad.', mic: 'jerarquia' as Tipo, color: 'amarillo' as const, texto: AUDITORIA.intro },
-  { nombre: 'Formación.', mic: 'dia' as Tipo, color: 'verde' as const, texto: FORMACION.intro },
+  { nombre: T.servicios[0], mic: 'medida' as Tipo, color: 'rosa' as const, texto: DISENO.intro },
+  { nombre: T.servicios[1], mic: 'jerarquia' as Tipo, color: 'amarillo' as const, texto: AUDITORIA.intro },
+  { nombre: T.servicios[2], mic: 'dia' as Tipo, color: 'verde' as const, texto: FORMACION.intro },
 ];
 
 /* La barra y el año van pegados a la última palabra con espacios que no se
    parten (U+00A0): en móvil el año bajaba solo al renglón siguiente y la
    barra se quedaba colgando al final del anterior. */
-const CATEDRA = [
-  ['Exposición “Arte y Metaverso”', 2024],
-  ['Aplicación MUCAES UPV', 2025],
-  ['Protocolo de actuación ante una emergencia para personas con discapacidad', 2025],
-  ['MOOC “Introducción a la IA en la creación artística para personas con discapacidad”', 2026],
-  ['Hackathon accesible UPV', 2026],
-].map(([t, a]) => `${t}\u00a0|\u00a0${a}`);
+const CATEDRA = [2024, 2025, 2025, 2026, 2026].map((a, i) => `${T.catedra[i]}\u00a0|\u00a0${a}`);
 
 /* Organización y, cuando lo hay, el proyecto que hicimos con ella. Sin
    enlaces: no están en el Figma (AGENTS.md §1). */
 const ORGANIZACIONES: { nombre: string; proyecto?: string }[] = [
-  { nombre: 'CESAL', proyecto: 'Foc i Cor, restaurante escuela en Catarroja' },
-  { nombre: 'AEIPI y Eurlyaid', proyecto: 'ECI Conference Madrid 2027' },
-  { nombre: 'Izaskun Etxebarria', proyecto: 'Su web de artista y comisaria' },
-  { nombre: 'Pau Jordà, arquitecto', proyecto: 'Elogio de la línea, su portafolio' },
-  { nombre: 'WKND', proyecto: 'GUS, el perro guía' },
+  { nombre: 'CESAL', proyecto: T.organizaciones[0] },
+  { nombre: { es: 'AEIPI y Eurlyaid', ca: 'AEIPI i Eurlyaid', en: 'AEIPI and Eurlyaid' }[lang], proyecto: T.organizaciones[1] },
+  { nombre: 'Izaskun Etxebarria', proyecto: T.organizaciones[2] },
+  { nombre: T.pauJorda, proyecto: T.organizaciones[3] },
+  { nombre: 'WKND', proyecto: T.organizaciones[4] },
 ];
 /* Los productos, nombre y una frase (Johnny, 05/11/2026). */
 const PRODUCTOS_ESTUDIO = [
-  { nombre: 'Itza', descripcion: 'Un asistente accesible para la web de cada organización.' },
-  { nombre: 'A11y Primero', descripcion: 'Una extensión de Chrome que evalúa la accesibilidad de una página.' },
-  { nombre: 'Accesible Abstracts', descripcion: 'Una plataforma para gestionar los abstracts de un congreso.' },
+  { nombre: 'Itza', descripcion: T.productos[0] },
+  { nombre: 'A11y Primero', descripcion: T.productos[1] },
+  { nombre: 'Accesible Abstracts', descripcion: T.productos[2] },
 ];
 ---
 
 <Base
   lang={lang}
   current="estudio"
-  title="Estudio · Accesibilidad Primero"
-  description="Estudio de diseño que crea webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás."
+  title={T.title}
+  description={T.description}
 >
   <!-- El símbolo de AP, con los cuadrados chispeando una vez (Johnny,
        13/10/2026; antes, la casa). Mismo alto que las ilustraciones de la Home:
        400 · 320 · 240. Decorativo: ver SimboloAnimado.astro. -->
   <HeroPagina
-    titulo="Código, diseño y palabra."
-    golpes={['Código, diseño', 'y palabra.']}
+    titulo={T.titulo}
+    golpes={T.golpes}
     enParrafos
-    texto={[
-      'La forma en que comunicamos construye realidades.',
-    ]}
+    texto={[T.entrada]}
   >
     <SimboloAnimado slot="ilustracion" class="apertura__ilustracion" />
   </HeroPagina>
 
-  <Bloque id="estudio" titulo="Estudio">
+  <Bloque id="estudio" titulo={T.hEstudio}>
     <div class="pila">
-      <p>Creamos webs y aplicaciones que funcionan, se entienden y representan los valores de quienes están detrás.</p>
-      <p set:html={conMarca('Accesibilidad Primero. Siempre.')} />
-      <p>Cada decisión de diseño facilita el acceso o levanta una barrera; invita a participar o excluye. La accesibilidad no es una capa que añadimos al final, sino el principio desde el que pensamos cada proyecto.</p>
+      <p>{T.estudio1}</p>
+      <p set:html={conMarca(T.estudio2)} />
+      <p>{T.estudio3}</p>
     </div>
   </Bloque>
 
   {/* Sin la banda rosa (03/11/2026): con las microanimaciones, el rosa
       competía con el detalle de diseño y era la única banda de color. */}
-  <Bloque id="servicios" titulo="Servicios">
+  <Bloque id="servicios" titulo={T.hServicios}>
     <div class="pila">
     <ul class="servicios">
       {
@@ -116,13 +245,13 @@ const PRODUCTOS_ESTUDIO = [
         ))
       }
     </ul>
-    <CtaLink href={path('servicios', lang)}>Ver qué hacemos</CtaLink>
+    <CtaLink href={path('servicios', lang)}>{T.verQueHacemos}</CtaLink>
     </div>
   </Bloque>
 
-  <Bloque id="equipo" titulo="Equipo">
+  <Bloque id="equipo" titulo={T.hEquipo}>
     <div class="pila">
-      <p class="equipo__texto" set:html={conMarca('Accesibilidad Primero nació en marzo de 2026. Somos un estudio pequeño: hablas directamente con quien diseña y desarrolla tu web.')} />
+      <p class="equipo__texto" set:html={conMarca(T.equipo)} />
       <div class="persona">
         <!-- El nombre va al lado, así que el `alt` no lo repite: dice lo que
              la foto añade. -->
@@ -133,7 +262,7 @@ const PRODUCTOS_ESTUDIO = [
           sizes="178px"
           width={178}
           height={206}
-          alt="Retrato: sonríe a cámara, con gafas de pasta negras, barba y chaqueta oscura, ante un fondo gris azulado."
+          alt={T.retratoAlt}
           class="persona__foto"
         />
         {/* `libre`: al lado de la foto, a 320 px la columna mide unos 70 px y
@@ -141,22 +270,22 @@ const PRODUCTOS_ESTUDIO = [
             (src/lib/particulas.ts). */}
         <div class="persona__datos" data-renglones="libre">
           <p>Johnny Vigas</p>
-          <p><span class="linea">Fundador</span> <span class="linea">y director creativo.</span></p>
+          <p><span class="linea">{T.cargo[0]}</span> <span class="linea">{T.cargo[1]}</span></p>
         </div>
       </div>
     </div>
   </Bloque>
 
-  <Bloque id="catedra" titulo="Cátedra dicaTIC">
+  <Bloque id="catedra" titulo={T.hCatedra}>
     <div class="pila">
-      <p>Participamos en la dirección de la Cátedra dicaTIC de Brecha Digital y Discapacidad de la Universitat Politècnica de València. Desde allí impulsamos proyectos de diseño, tecnología y accesibilidad digital como estos:</p>
+      <p>{T.catedraTexto}</p>
       <ul class="filas">
         {CATEDRA.map((p) => <li class="fila">{p}</li>)}
       </ul>
     </div>
   </Bloque>
 
-  <Bloque id="organizaciones" titulo="Organizaciones y proyectos" fondo="gris">
+  <Bloque id="organizaciones" titulo={T.hOrganizaciones} fondo="gris">
     <ul class="filas filas--cerradas">
       {
         ORGANIZACIONES.map((o) => (
@@ -168,7 +297,7 @@ const PRODUCTOS_ESTUDIO = [
       }
     </ul>
     {/* Los productos del estudio, con la misma fila (Johnny, 05/11/2026). */}
-    <h3 class="organizaciones__subtitulo">Productos</h3>
+    <h3 class="organizaciones__subtitulo">{T.hProductos}</h3>
     <ul class="filas filas--cerradas">
       {
         PRODUCTOS_ESTUDIO.map((o) => (
@@ -181,7 +310,7 @@ const PRODUCTOS_ESTUDIO = [
     </ul>
   </Bloque>
 
-  <Bloque id="contacto-estudio" titulo="Contacto">
+  <Bloque id="contacto-estudio" titulo={T.hContacto}>
     <div class="pila pila--contacto">
       {/* El <wbr> deja partir el correo después de la arroba: sin espacios, a
           320 no cabe en una línea (1.4.10). */}

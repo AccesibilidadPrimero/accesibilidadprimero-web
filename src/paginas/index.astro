@@ -7,8 +7,8 @@ import Mesa from '../components/Mesa.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { REGISTRADA } from '../i18n/marca';
 import { path } from '../i18n/config';
-import { idiomaDe } from '../i18n/idioma';
-import { PRODUCTOS as productos } from '../data/productos';
+import { idiomaDe, localizar } from '../i18n/idioma';
+import { PRODUCTOS } from '../data/productos';
 /* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
    Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
    sirve con caché larga, y si el archivo desaparece el build se para. */
@@ -23,6 +23,41 @@ const medio = (nombre: string) =>
   Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
 
 const lang = idiomaDe(Astro.url);
+
+/* Los productos en el idioma de la página (las traducciones, enlaces
+   incluidos, viven en src/data/productos.ts). */
+const productos = PRODUCTOS.map((p) => localizar(p, lang));
+
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  es: {
+    title: 'Accesibilidad Primero · Diseñamos webs accesibles',
+    description: 'Estudio de diseño que crea webs y aplicaciones con la accesibilidad digital como punto de partida.',
+    titular: 'Diseñamos webs accesibles para organizaciones y proyectos con impacto social.',
+    destacados: 'Proyectos destacados',
+    productos: 'También creamos herramientas para resolver problemas que encontramos por el camino.',
+    estudio: 'Código, diseño y palabra. La accesibilidad como punto de partida.',
+    conoce: 'Conoce Accesibilidad Primero',
+  },
+  ca: {
+    title: 'Accesibilidad Primero · Dissenyem webs accessibles',
+    description: 'Estudi de disseny que crea webs i aplicacions amb l’accessibilitat digital com a punt de partida.',
+    titular: 'Dissenyem webs accessibles per a organitzacions i projectes amb impacte social.',
+    destacados: 'Projectes destacats',
+    productos: 'També creem eines per resoldre problemes que trobem pel camí.',
+    estudio: 'Codi, disseny i paraula. L’accessibilitat com a punt de partida.',
+    conoce: 'Coneix Accesibilidad Primero',
+  },
+  en: {
+    title: 'Accesibilidad Primero · We design accessible websites',
+    description: 'A design studio that creates websites and apps with digital accessibility as the starting point.',
+    titular: 'We design accessible websites for organisations and projects with social impact.',
+    destacados: 'Featured projects',
+    productos: 'We also build tools to solve the problems we come across along the way.',
+    estudio: 'Code, design and words. Accessibility as the starting point.',
+    conoce: 'Discover Accesibilidad Primero',
+  },
+}[lang];
 
 /* Tres destacados, siempre tres. El resto, en /proyectos/. */
 const todos = await getCollection('proyectos');
@@ -67,15 +102,15 @@ const conCuerpo = await Promise.all(
 <Base
   lang={lang}
   current="home"
-  title="Accesibilidad Primero · Diseñamos webs accesibles"
-  description="Estudio de diseño que crea webs y aplicaciones con la accesibilidad digital como punto de partida."
+  title={T.title}
+  description={T.description}
 >
   <HeroCarousel
     lang={lang}
-    titular="Diseñamos webs accesibles para organizaciones y proyectos con impacto social."
+    titular={T.titular}
   />
 
-  <h2 class="sr-only">Proyectos destacados</h2>
+  <h2 class="sr-only">{T.destacados}</h2>
   {conCuerpo.map(({ proyecto, Content }) => (
     <ProjectSection proyecto={proyecto} lang={lang}>
       <Content />
@@ -86,7 +121,7 @@ const conCuerpo = await Promise.all(
     <h2 id="productos-titulo" class="productos__intro">
       {/* Un solo texto en todos los anchos (Johnny, 03/11/2026): antes había
           uno de escritorio y otro de móvil, dos redacciones de la misma idea. */}
-      También creamos herramientas para resolver problemas que encontramos por el camino.
+      {T.productos}
     </h2>
 
     <ul class="productos__lista">
@@ -184,9 +219,9 @@ const conCuerpo = await Promise.all(
     </div>
     <h2 id="estudio-titulo" class="estudio__texto">
       {/* Un solo texto en todos los anchos (Johnny, 03/11/2026). */}
-      Código, diseño y palabra. La accesibilidad como punto de partida.
+      {T.estudio}
     </h2>
-    <CtaLink href={path('estudio', lang)}>Conoce Accesibilidad Primero<Fragment set:html={REGISTRADA} /></CtaLink>
+    <CtaLink href={path('estudio', lang)}>{T.conoce}<Fragment set:html={REGISTRADA} /></CtaLink>
   </section>
 
   {/* Al FINAL, justo antes del cierre de contacto (Johnny, 10/10, tarde). Hasta

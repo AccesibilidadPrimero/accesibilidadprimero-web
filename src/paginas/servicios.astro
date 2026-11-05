@@ -25,26 +25,72 @@ import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
 import { path } from '../i18n/config';
-import { idiomaDe } from '../i18n/idioma';
-import { DISENO, AUDITORIA, FORMACION } from '../data/servicios';
+import { idiomaDe, localizar } from '../i18n/idioma';
+import { DISENO as DISENO_ES, AUDITORIA as AUDITORIA_ES, FORMACION as FORMACION_ES } from '../data/servicios';
 import Plegable from '../components/Plegable.astro';
 import Microanimacion from '../components/Microanimacion.astro';
 import planeta from '../assets/servicios/planeta.svg';
 
 const lang = idiomaDe(Astro.url);
+const DISENO = localizar(DISENO_ES, lang);
+const AUDITORIA = localizar(AUDITORIA_ES, lang);
+const FORMACION = localizar(FORMACION_ES, lang);
+
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  es: {
+    title: 'Servicios · Accesibilidad Primero',
+    description: 'Diseño y desarrollo, auditoría de accesibilidad y formación. Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan.',
+    alt: 'Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde.',
+    titulo: 'Diseño, Auditoría y Formación.',
+    golpes: ['Diseño, Auditoría', 'y Formación.'],
+    texto: 'Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan.',
+    diseno: 'Diseño y desarrollo',
+    auditoria: 'Auditoría de accesibilidad',
+    formacion: 'Formación',
+    verCasos: 'Ver casos de estudio',
+    tarifas: 'Tarifas',
+  },
+  ca: {
+    title: 'Serveis · Accesibilidad Primero',
+    description: 'Disseny i desenvolupament, auditoria d’accessibilitat i formació. Dissenyem webs accessibles, auditem les que ja existeixen i formem qui les gestiona.',
+    alt: 'Dues persones diminutes sobre l’anell d’un planeta: una salta amb els braços enlaire, l’altra seu a la vora.',
+    titulo: 'Disseny, Auditoria i Formació.',
+    golpes: ['Disseny, Auditoria', 'i Formació.'],
+    texto: 'Dissenyem webs accessibles, auditem les que ja existeixen i formem qui les gestiona.',
+    diseno: 'Disseny i desenvolupament',
+    auditoria: 'Auditoria d’accessibilitat',
+    formacion: 'Formació',
+    verCasos: 'Veure casos d’estudi',
+    tarifas: 'Tarifes',
+  },
+  en: {
+    title: 'Services · Accesibilidad Primero',
+    description: 'Design and development, accessibility audits and training. We design accessible websites, audit existing ones and train the people who manage them.',
+    alt: 'Two tiny people on the ring of a planet: one jumps with their arms in the air, the other sits on the edge.',
+    titulo: 'Design, Audit and Training.',
+    golpes: ['Design, Audit', 'and Training.'],
+    texto: 'We design accessible websites, audit existing ones and train the people who manage them.',
+    diseno: 'Design and development',
+    auditoria: 'Accessibility audit',
+    formacion: 'Training',
+    verCasos: 'See case studies',
+    tarifas: 'Pricing',
+  },
+}[lang];
 ---
 <Base
   lang={lang}
   current="servicios"
-  title="Servicios · Accesibilidad Primero"
-  description="Diseño y desarrollo, auditoría de accesibilidad y formación. Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan."
+  title={T.title}
+  description={T.description}
 >
   <HeroPagina
     ilustracion={planeta}
-    alt="Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde."
-    titulo="Diseño, Auditoría y Formación."
-    golpes={['Diseño, Auditoría', 'y Formación.']}
-    texto={['Diseñamos webs accesibles, auditamos las que ya existen y formamos a quienes las gestionan.']}
+    alt={T.alt}
+    titulo={T.titulo}
+    golpes={T.golpes}
+    texto={[T.texto]}
     fondos={['var(--rose-ap)', 'var(--yellow-ap)', 'var(--mint)']}
     fondosUnaVez
     ilustracionComoHome
@@ -53,7 +99,7 @@ const lang = idiomaDe(Astro.url);
   <div class="servicios">
   {/* Los tres cerrados al cargar (Johnny, 04/11/2026), cada uno con su párrafo
       descriptivo a la vista y un + al final para el resto (05/11/2026). */}
-  <Bloque id="diseno" titulo="Diseño y desarrollo" desplegable resumen={DISENO.intro}>
+  <Bloque id="diseno" titulo={T.diseno} desplegable resumen={DISENO.intro}>
     <div class="pila">
       <ul class="puntos">
         {DISENO.puntos.map((p) => (
@@ -64,11 +110,11 @@ const lang = idiomaDe(Astro.url);
           </li>
         ))}
       </ul>
-      <CtaLink href={path('proyectos', lang)}>Ver casos de estudio</CtaLink>
+      <CtaLink href={path('proyectos', lang)}>{T.verCasos}</CtaLink>
     </div>
   </Bloque>
 
-  <Bloque id="auditoria" titulo="Auditoría de accesibilidad" desplegable resumen={AUDITORIA.intro}>
+  <Bloque id="auditoria" titulo={T.auditoria} desplegable resumen={AUDITORIA.intro}>
     <div class="pila">
       <ul class="puntos">
         {AUDITORIA.revisamos.map((p) => (
@@ -86,7 +132,7 @@ const lang = idiomaDe(Astro.url);
           con lo que se audita como título (<h4>). Dentro, el precio y lo que
           incluye; sin el nombre de la tarifa ni recuadro. */}
       <div class="tarifas">
-        <h3 class="punto__nombre">Tarifas</h3>
+        <h3 class="punto__nombre">{T.tarifas}</h3>
         <p>{AUDITORIA.comun}</p>
         <div class="tarifas__lista">
           {AUDITORIA.tarifas.map((t, i) => (
@@ -103,7 +149,7 @@ const lang = idiomaDe(Astro.url);
     </div>
   </Bloque>
 
-  <Bloque id="formacion" titulo="Formación" desplegable resumen={FORMACION.intro}>
+  <Bloque id="formacion" titulo={T.formacion} desplegable resumen={FORMACION.intro}>
     <div class="pila">
       <Microanimacion tipo="dia" color="verde" />
       <ul class="puntos">
