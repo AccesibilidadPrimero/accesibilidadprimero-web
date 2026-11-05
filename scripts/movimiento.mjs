@@ -396,9 +396,9 @@ for (const [modo, opciones] of [['con JS', {}], ['reducido', { reducedMotion: 'r
   await p.waitForTimeout(3000);
   const c3 = await color();
   const boton = await p.$('[data-fondos-control]');
-  // El primero de la lista, resuelto: la vuelta arranca al cargar, así que
+  // El primero de la lista (rosa desde el 05/11/2026), resuelto: la vuelta arranca al cargar, así que
   // en la primera lectura ya puede ir por el segundo.
-  const primero = await p.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--mint').trim());
+  const primero = await p.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--rose-ap').trim());
   if (modo === 'con JS') {
     anota(c1 !== primero, `con JS · el color cambia solo (${primero} → ${c1})`);
     anota(c2 === primero && c3 === primero, `con JS · en 6 s vuelve al primero y se queda (${c2}, ${c3})`);

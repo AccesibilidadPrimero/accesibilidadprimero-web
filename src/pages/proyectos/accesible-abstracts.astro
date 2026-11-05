@@ -31,13 +31,11 @@ import hero from '../../assets/proyectos/accesible-abstracts/hero.jpg';
 import envioMovil from '../../assets/proyectos/accesible-abstracts/envio-movil.jpg';
 import envio from '../../assets/proyectos/accesible-abstracts/envio.jpg';
 import evaluacion from '../../assets/proyectos/accesible-abstracts/evaluacion.jpg';
-import comite from '../../assets/proyectos/accesible-abstracts/comite.jpg';
 /* Las versiones para móvil (04/11/2026): la misma aplicación a 390. */
 import CapturaArte from '../../components/CapturaArte.astro';
 import heroM from '../../assets/proyectos/accesible-abstracts/hero-m.jpg';
 import envioM from '../../assets/proyectos/accesible-abstracts/envio-m.jpg';
 import evaluacionM from '../../assets/proyectos/accesible-abstracts/evaluacion-m.jpg';
-import comiteM from '../../assets/proyectos/accesible-abstracts/comite-m.jpg';
 
 const titulo = 'Accesible Abstracts';
 const datos = [
@@ -146,17 +144,8 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
       <figcaption>Evaluar, en doble ciego</figcaption>
     </figure>
 
-    <figure class="pieza pieza--centro">
-      <CapturaArte
-        src={comite}
-        movil={comiteM}
-        sizes={centro}
-        alt="El panel del comité: los abstracts con su referencia, título, tipo, línea temática, cuántas revisiones tienen de dos, la nota media y un selector para decidir, con pestañas para la asignación y las exportaciones."
-        class="captura"
-      />
-      <figcaption>Decidir, en el comité</figcaption>
-    </figure>
-
+    {/* Sin la captura del comité (05/11/2026): el caso era muy largo y la
+        evaluación ya enseña la revisión. */}
     <section class="bloque" aria-labelledby="aprendido">
       <p class="bloque__etiqueta">Lo aprendido</p>
       <div class="bloque__contenido">

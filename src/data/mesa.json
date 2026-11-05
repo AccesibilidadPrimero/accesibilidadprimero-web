@@ -1,8 +1,25 @@
 {
-  "generado": "2026-10-10T15:53:39.874Z",
+  "generado": "2026-11-05T10:47:36.995Z",
   "dias": 60,
   "visible": true,
   "notas": [
+    {
+      "id": "117519240246889877",
+      "url": "https://mastodon.social/@accesibilidadprimero/117519240246889877",
+      "fijado": false,
+      "fecha": "2026-10-28T15:28:17.715Z",
+      "idioma": "es",
+      "titular": "El contraste no es un color.",
+      "regla": "frase",
+      "largoOriginal": 393,
+      "imagen": {
+        "remota": "https://files.mastodon.social/media_attachments/files/117/519/236/881/377/033/original/49185a314b02105a.png",
+        "alt": "Sobre fondo azul noche, el titular “El contraste no es un color. Es una pareja de colores.” Debajo, ocho tarjetas de la guía de estilo de GUS con el texto “GUS ens guia” en distintas parejas de color: azul noche y crema, azul guía, verde parque, naranja y amarillo. Cada tarjeta indica su contraste, entre 5,86:1 y 13,50:1, todos por encima del mínimo AA.",
+        "ancho": 1600,
+        "alto": 900,
+        "archivo": "117519240246889877.png"
+      }
+    },
     {
       "id": "117417310266165993",
       "url": "https://mastodon.social/@accesibilidadprimero/117417310266165993",
