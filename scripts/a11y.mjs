@@ -16,6 +16,7 @@
 import { chromium } from 'playwright';
 import { createRequire } from 'node:module';
 import { servir } from './serve.mjs';
+import { tresIdiomas, paginasTresIdiomas } from './idiomas.mjs';
 
 const require = createRequire(import.meta.url);
 const axePath = require.resolve('axe-core/axe.min.js');
@@ -46,7 +47,8 @@ const navegador = await chromium.launch(
 );
 let fallos = 0;
 
-for (const ruta of RUTAS) {
+/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+for (const ruta of tresIdiomas(RUTAS)) {
   for (const [nombre, viewport] of [
     ['Móvil 390', { width: 390, height: 844 }],
     ['Tablet 768', { width: 768, height: 1024 }],

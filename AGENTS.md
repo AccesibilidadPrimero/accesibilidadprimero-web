@@ -301,7 +301,28 @@ disciplina personal a las once de la noche.
   castellana la pronuncia como un galimatías (3.1.2). `HeroCarousel.astro` ya
   pone el atributo solo cuando el idioma de la frase difiere del de la página,
   así que en la versión catalana el atributo desaparece él solo — y ahí la
-  licencia se pierde, lo que es una decisión de contenido pendiente, no un bug.
+  licencia se pierde. Decidido el 05/11/2026 (Johnny): en la versión catalana
+  se queda igual y se lee como una frase normal.
+
+- **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
+  inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.
+  Traducción nativa, no literal, con el glosario de `src/i18n/GLOSARIO.md`.
+  · Cada página vive en `src/paginas/` (misma profundidad que `src/pages/`,
+    así los imports relativos no cambian) y `src/pages/`, `src/pages/ca/` y
+    `src/pages/en/` solo tienen la ruta que la pinta. El idioma lo saca
+    `idiomaDe(Astro.url)`: ningún componente necesita que se lo pasen.
+  · Los textos de cada página, en un diccionario `{ es, ca, en }` en la
+    propia página. Los de `src/data/*` y los Markdown de proyectos llevan
+    `traducciones: { ca, en }` con la misma forma que el original, y se leen
+    con `localizar(dato, lang)`, que mezcla campo a campo y las listas por
+    posición. Una página nueva o un texto nuevo entra en los tres idiomas.
+  · El blog NO se traduce: solo existe en castellano y no enseña el selector
+    de idioma (`alternates()` devuelve lista vacía para `blog`).
+  · Las legales traducidas avisan de que prevalece la versión castellana; el
+    testimonio traducido dice que es una traducción.
+  · Las partículas a final de línea tienen lista por idioma
+    (`src/lib/particulas.ts`), y a11y, tipografía, contraste y renglones
+    miden también `/ca/` y `/en/` (`scripts/idiomas.mjs`).
 
 - **«Sobre la mesa» no pide nada en el build.** El contenido lo congela
   `npm run mesa` en `src/data/mesa.json` y las imágenes las baja a
@@ -320,8 +341,8 @@ disciplina personal a las once de la noche.
   alternativa sea buena sigue siendo trabajo humano, al publicar.
 
 - **Blog (11/10/2026).** Los artículos son Markdown en `src/content/blog/`,
-  migrados de WordPress con el mismo slug. Solo en castellano: la regla de los
-  tres idiomas del 30/09 entra cuando se activen catalán e inglés. Sin
+  migrados de WordPress con el mismo slug. Solo en castellano, también con
+  la web en tres idiomas (Johnny, 05/11/2026). Sin
   negritas (un peso). `urlAntigua` obliga a una 301 en `public/_redirects`, y
   `npm run redirecciones` comprueba que existe y que cada destino es una
   página de verdad. Los filtros del listado son páginas
@@ -557,12 +578,6 @@ transparente y muestrea el fondo real debajo de cada caja.
 
 No cerrarlo por iniciativa propia. Preguntar.
 
-- Qué pasa cuando alguien en la versión inglesa llega a un artículo que solo
-  existe en castellano. Deja de ser teórico el día que se publique el catalán.
-- Qué frase lleva `01-diferencies` en la versión catalana. En castellano y en
-  inglés la licencia funciona porque el catalán es otra lengua; en catalán no.
-  Opciones: dejarla igual y aceptar que ahí se lee como una frase normal, o
-  llevarla a otra lengua para ese idioma. No inventarlo sin preguntar.
 - Si la web enseña todos los casos o una selección.
 - Las fases de las landings de producto.
 - Si el menú de escritorio crece más allá de cinco destinos.

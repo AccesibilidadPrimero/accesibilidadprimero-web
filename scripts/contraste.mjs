@@ -15,6 +15,7 @@
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
+import { tresIdiomas, paginasTresIdiomas } from './idiomas.mjs';
 import { recorrer } from './recorrer.mjs';
 
 const PUERTO = 4397;
@@ -77,7 +78,8 @@ const RUTAS = [
 ];
 
 let fallos = 0, medidas = 0;
-for (const ruta of RUTAS) {
+/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+for (const ruta of paginasTresIdiomas(RUTAS)) {
   let medidasRuta = 0;
   const page = await navegador.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(`http://localhost:${PUERTO}${ruta.url}`, { waitUntil: 'load' });
