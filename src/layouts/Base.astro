@@ -10,6 +10,7 @@ import '../styles/home.css';
 import SkipLink from '../components/SkipLink.astro';
 import Header from '../components/Header.astro';
 import ContactCTA from '../components/ContactCTA.astro';
+import GuiaCierre from '../components/GuiaCierre.astro';
 import Footer from '../components/Footer.astro';
 import { type Lang, type RouteKey } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
@@ -104,6 +105,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
 
+    {/* La guía en vídeo antes del cierre, en todas menos en la suya (05/11/2026). */}
+    {current !== 'guia' && <GuiaCierre lang={lang} />}
     {conCta && <ContactCTA lang={lang} titulo={ctaTitulo} />}
     <Footer lang={lang} />
 

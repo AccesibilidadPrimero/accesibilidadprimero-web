@@ -3,8 +3,8 @@
    idiomas. Los segmentos son los de src/i18n/config.ts; el blog solo existe
    en castellano. */
 const SEG = {
-  ca: { proyectos: 'projectes', servicios: 'serveis', estudio: 'estudi', contacto: 'contacte', privacidad: 'privacitat', cookies: 'galetes', 'declaracion-de-accesibilidad': 'declaracio-accessibilitat' },
-  en: { proyectos: 'projects', servicios: 'services', estudio: 'studio', contacto: 'contact', privacidad: 'privacy', cookies: 'cookies', 'declaracion-de-accesibilidad': 'accessibility-statement' },
+  ca: { proyectos: 'projectes', servicios: 'serveis', estudio: 'estudi', contacto: 'contacte', privacidad: 'privacitat', cookies: 'galetes', 'declaracion-de-accesibilidad': 'declaracio-accessibilitat', 'que-hace-una-web-accesible': 'que-fa-un-web-accessible' },
+  en: { proyectos: 'projects', servicios: 'services', estudio: 'studio', contacto: 'contact', privacidad: 'privacy', cookies: 'cookies', 'declaracion-de-accesibilidad': 'accessibility-statement', 'que-hace-una-web-accesible': 'what-makes-a-website-accessible' },
 };
 
 export function enIdioma(url, lang) {

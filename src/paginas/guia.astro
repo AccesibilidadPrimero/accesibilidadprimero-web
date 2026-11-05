@@ -1,0 +1,250 @@
+---
+/* ---------------------------------------------------------------------------
+   ¿Qué hace que tu web sea accesible? (Johnny, 05/11/2026). La página del
+   vídeo esquemático: un plano fijo por punto, la carita que dice “No es
+   accesible” / “Es accesible” y la referencia WCAG de cada uno. Estilo en el
+   proyecto: claude/video-esquematico-estilo-2026-11-05.md.
+
+   · El vídeo NO tiene sonido y lo que enseña lo enseña con imagen (la carita,
+     el foco, el texto que cambia). Por eso cada punto está escrito debajo:
+     es su alternativa (1.2.1, solo vídeo). Si el montaje final lleva voz,
+     necesita subtítulos (1.2.2).
+   · Controles nativos y sin reproducción automática: es un vídeo largo y
+     explicativo, la persona tiene que poder pararlo, volver y saltar.
+   · Cada punto tiene un botón que lleva el vídeo a su momento. Sin JS no se
+     pinta, porque no haría nada. Los tiempos (`inicio`, en segundos) son los
+     del montaje: hoy solo existe el primer punto, en un vídeo propio.
+   · Los puntos van en `PUNTOS`: el que se añade aquí aparece en los tres
+     idiomas a la vez (la forma obliga a escribirlo en los tres).
+   --------------------------------------------------------------------------- */
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import CtaLink from '../components/CtaLink.astro';
+import { path, type Lang } from '../i18n/config';
+import { idiomaDe } from '../i18n/idioma';
+import ilustracion from '../assets/hero/04-diversidad.svg';
+import poster from '../assets/guia/01-enlaces.png';
+
+const lang = idiomaDe(Astro.url);
+
+const VIDEO = '/video/guia/01-enlaces.mp4';
+const posterWeb = await getImage({ src: poster, width: 1600, format: 'webp', quality: 'high' });
+
+interface Punto {
+  /** Segundo del vídeo en que empieza. */
+  inicio: number;
+  criterio: string;
+  nivel: 'A' | 'AA' | 'AAA';
+  texto: Record<Lang, { nombre: string; frase: string; referencia: string; falla: string; arreglo: string; nota?: string }>;
+}
+
+const PUNTOS: Punto[] = [
+  {
+    inicio: 0,
+    criterio: '2.4.9',
+    nivel: 'AAA',
+    texto: {
+      es: {
+        nombre: 'Enlaces',
+        frase: 'Los enlaces dicen adónde llevan.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
+        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
+        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
+        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
+      },
+      ca: {
+        nombre: 'Enllaços',
+        frase: 'Els enllaços diuen on porten.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
+        falla: 'Dos projectes, cadascun amb un enllaç que diu “Conoce más”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Conoce más, enllaç” dues vegades, sense saber on porta cadascun.',
+        arreglo: 'Que el mateix enllaç digui on porta: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. S’entén sol, també fora del context.',
+        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
+      },
+      en: {
+        nombre: 'Links',
+        frase: 'Links say where they go.',
+        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
+        falla: 'Two projects, each with a link that says “Conoce más” (Find out more). Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
+        arreglo: 'Make the link itself say where it goes: “Conocer Cultura en los barrios” (Discover Culture in the Neighbourhoods), “Conocer Laboratorio cultural” (Discover the Culture Lab). It makes sense on its own, even out of context.',
+        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
+      },
+    },
+  },
+];
+
+const T = {
+  es: {
+    title: 'Qué hace que tu web sea accesible · Accesibilidad Primero',
+    description: 'Un vídeo que recorre, punto por punto y con su referencia WCAG, qué hace que una web sea o no accesible. Y debajo, cada punto por escrito.',
+    alt: 'Una persona emite una maraña enredada de líneas que, al llegar a la otra, se ha ordenado en una espiral regular.',
+    titulo: '¿Qué hace que tu web sea accesible?',
+    golpes: ['¿Qué hace que tu web', 'sea accesible?'],
+    texto: 'Punto por punto, con la referencia WCAG de cada uno. Primero en vídeo y debajo, por escrito.',
+    hVideo: 'El vídeo',
+    videoNombre: 'Vídeo: ¿Qué hace que tu web sea o no accesible?',
+    videoPie: 'Sin sonido. Todo lo que enseña está escrito debajo, punto por punto.',
+    sinVideo: 'Tu navegador no puede reproducir el vídeo. Lo que enseña está escrito debajo.',
+    hPuntos: 'Punto por punto',
+    estado: 'De momento, el primer punto. Los demás se irán sumando aquí, hasta unos veinte, en cuatro bloques: que se pueda ver, que se pueda usar, que se entienda y que funcione con todo.',
+    falla: 'Qué falla',
+    arreglo: 'Cómo se arregla',
+    verEnVideo: 'Ver este punto en el vídeo',
+    hAuditoria: 'En una auditoría',
+    auditoria: 'Esto es lo que miramos cuando auditamos una web: cada punto, con teclado, con lector de pantalla y con el texto delante.',
+    verAuditoria: 'Ver la auditoría de accesibilidad',
+  },
+  ca: {
+    title: 'Què fa que el teu web sigui accessible · Accesibilidad Primero',
+    description: 'Un vídeo que recorre, punt per punt i amb la referència WCAG, què fa que un web sigui accessible o no. I a sota, cada punt per escrit.',
+    alt: 'Una persona emet un embolic de línies que, quan arriba a l’altra, s’ha ordenat en una espiral regular.',
+    titulo: 'Què fa que el teu web sigui accessible?',
+    golpes: ['Què fa que el teu web', 'sigui accessible?'],
+    texto: 'Punt per punt, amb la referència WCAG de cadascun. Primer en vídeo i a sota, per escrit.',
+    hVideo: 'El vídeo',
+    videoNombre: 'Vídeo: Què fa que el teu web sigui accessible o no?',
+    videoPie: 'Sense so i en castellà. Tot el que mostra està escrit a sota, punt per punt.',
+    sinVideo: 'El teu navegador no pot reproduir el vídeo. El que mostra està escrit a sota.',
+    hPuntos: 'Punt per punt',
+    estado: 'De moment, el primer punt. La resta s’hi aniran sumant, fins a una vintena, en quatre blocs: que es pugui veure, que es pugui fer servir, que s’entengui i que funcioni amb tot.',
+    falla: 'Què falla',
+    arreglo: 'Com s’arregla',
+    verEnVideo: 'Veure aquest punt al vídeo',
+    hAuditoria: 'En una auditoria',
+    auditoria: 'Això és el que mirem quan auditem un web: cada punt, amb teclat, amb lector de pantalla i amb el text al davant.',
+    verAuditoria: 'Veure l’auditoria d’accessibilitat',
+  },
+  en: {
+    title: 'What makes your website accessible · Accesibilidad Primero',
+    description: 'A video that goes through, point by point and with its WCAG reference, what makes a website accessible or not. And below it, every point in writing.',
+    alt: 'One person sends out a tangled mass of lines that, by the time it reaches the other, has settled into a regular spiral.',
+    titulo: 'What makes your website accessible?',
+    golpes: ['What makes your', 'website accessible?'],
+    texto: 'Point by point, with the WCAG reference for each one. First on video, and below it, in writing.',
+    hVideo: 'The video',
+    videoNombre: 'Video: What makes your website accessible or not?',
+    videoPie: 'No sound, and in Spanish. Everything it shows is written out below, point by point.',
+    sinVideo: 'Your browser can’t play this video. What it shows is written out below.',
+    hPuntos: 'Point by point',
+    estado: 'For now, the first point. The rest will be added here, around twenty in all, in four groups: that it can be seen, that it can be used, that it can be understood and that it works with everything.',
+    falla: 'What goes wrong',
+    arreglo: 'How to fix it',
+    verEnVideo: 'See this point in the video',
+    hAuditoria: 'In an audit',
+    auditoria: 'This is what we check when we audit a website: every point, with a keyboard, with a screen reader and with the text in front of us.',
+    verAuditoria: 'See the accessibility audit',
+  },
+}[lang];
+---
+<Base lang={lang} current="guia" title={T.title} description={T.description}>
+  <HeroPagina
+    ilustracion={ilustracion}
+    alt={T.alt}
+    titulo={T.titulo}
+    golpes={T.golpes}
+    texto={[T.texto]}
+    superficie={{ fondo: 'var(--green-ap)', foco: 'var(--blue-ap)' }}
+    ilustracionComoHome
+  />
+
+  <Bloque id="video" titulo={T.hVideo}>
+    <figure class="guia__video">
+      <video
+        controls
+        preload="none"
+        playsinline
+        width="1920"
+        height="1080"
+        poster={posterWeb.src}
+        aria-label={T.videoNombre}
+        data-guia-video
+      >
+        <source src={VIDEO} type="video/mp4" />
+        <p>{T.sinVideo}</p>
+      </video>
+      <figcaption>{T.videoPie}</figcaption>
+    </figure>
+  </Bloque>
+
+  <Bloque id="puntos" titulo={T.hPuntos}>
+    <div class="pila">
+      <p>{T.estado}</p>
+      <ol class="guia__puntos">
+        {PUNTOS.map((p) => {
+          const x = p.texto[lang];
+          return (
+            <li class="guia__punto" id={`punto-${p.criterio}`}>
+              <h3 class="guia__nombre">{p.criterio} {x.nombre}</h3>
+              <p>{x.frase}</p>
+              <p class="guia__referencia">{x.referencia}</p>
+              <h4 class="guia__sub">{T.falla}</h4>
+              <p>{x.falla}</p>
+              <h4 class="guia__sub">{T.arreglo}</h4>
+              <p>{x.arreglo}</p>
+              {x.nota && <p>{x.nota}</p>}
+              <button type="button" class="guia__ir" data-guia-ir={p.inicio} hidden>
+                {T.verEnVideo}<span class="sr-only">: {p.criterio} {x.nombre}</span><svg class="guia__flecha" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14"><path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </Bloque>
+
+  <Bloque id="auditoria" titulo={T.hAuditoria}>
+    <div class="pila">
+      <p>{T.auditoria}</p>
+      <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
+    </div>
+  </Bloque>
+</Base>
+
+<script>
+  /* El botón de cada punto lleva el vídeo a su momento y lo arranca. Solo
+     con JS: sin él, el botón no se pinta. */
+  const video = document.querySelector<HTMLVideoElement>('[data-guia-video]');
+  document.querySelectorAll<HTMLButtonElement>('[data-guia-ir]').forEach((b) => {
+    if (!video) return;
+    b.hidden = false;
+    b.addEventListener('click', () => {
+      video.currentTime = Number(b.dataset.guiaIr) || 0;
+      video.focus();
+      video.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      void video.play();
+    });
+  });
+</script>
+
+<style>
+  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; }
+  .guia__video { margin: 0; display: flex; flex-direction: column; gap: var(--space-24); }
+  .guia__video video {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radio);
+    background: var(--silk);
+  }
+  .guia__puntos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
+  .guia__punto { display: flex; flex-direction: column; gap: var(--space-12); }
+  .guia__punto p { margin: 0; }
+  .guia__nombre, .guia__sub { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .guia__sub { margin-block-start: var(--space-12); }
+  .guia__referencia { color: var(--ink); }
+  .guia__ir {
+    align-self: flex-start;
+    min-block-size: var(--touch-min);
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-align: start;
+  }
+  .guia__flecha { display: inline-block; vertical-align: -0.05em; margin-inline-start: var(--space-12); }
+  .guia__ir:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset, 4px); }
+</style>

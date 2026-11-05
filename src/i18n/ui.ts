@@ -100,6 +100,7 @@ export const UI: Record<Lang, Dict> = {
          estudio · Contacto». Las URL no cambian. */
       proyectos: 'Casos de estudio',
       servicios: 'Qué hacemos',
+      guia: 'Qué hace que una web sea accesible',
       estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contacto',
@@ -161,6 +162,7 @@ export const UI: Record<Lang, Dict> = {
       home: 'Inici',
       proyectos: 'Casos d’estudi',
       servicios: 'Què fem',
+      guia: 'Què fa que un web sigui accessible',
       estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contacte',
@@ -222,6 +224,7 @@ export const UI: Record<Lang, Dict> = {
       home: 'Home',
       proyectos: 'Case studies',
       servicios: 'What we do',
+      guia: 'What makes a website accessible',
       estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contact',

@@ -50,6 +50,7 @@ const T = {
     formacion: 'Formación',
     verCasos: 'Ver casos de estudio',
     tarifas: 'Tarifas',
+    verGuia: 'Qué hace que una web sea accesible',
   },
   ca: {
     title: 'Serveis · Accesibilidad Primero',
@@ -63,6 +64,7 @@ const T = {
     formacion: 'Formació',
     verCasos: 'Veure casos d’estudi',
     tarifas: 'Tarifes',
+    verGuia: 'Què fa que un web sigui accessible',
   },
   en: {
     title: 'Services · Accesibilidad Primero',
@@ -76,6 +78,7 @@ const T = {
     formacion: 'Training',
     verCasos: 'See case studies',
     tarifas: 'Pricing',
+    verGuia: 'What makes a website accessible',
   },
 }[lang];
 ---
@@ -126,6 +129,8 @@ const T = {
         ))}
       </ul>
       <p>{AUDITORIA.entregamos}</p>
+      {/* La guía en vídeo: lo que mira una auditoría, punto por punto (05/11/2026). */}
+      <CtaLink href={path('guia', lang)}>{T.verGuia}</CtaLink>
 
       {/* Las tarifas, DENTRO de la auditoría: son su precio (Johnny,
           03/11/2026). Un <h3> como los puntos y un desplegable por tarifa,

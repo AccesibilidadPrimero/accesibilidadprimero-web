@@ -304,6 +304,14 @@ disciplina personal a las once de la noche.
   licencia se pierde. Decidido el 05/11/2026 (Johnny): en la versión catalana
   se queda igual y se lee como una frase normal.
 
+- **La guía en vídeo (05/11/2026).** “¿Qué hace que tu web sea accesible?”
+  vive en `src/paginas/guia.astro` (ruta `guia`): el vídeo esquemático con
+  controles nativos y sin reproducción automática, y debajo cada punto por
+  escrito, que es su alternativa (el vídeo no tiene sonido). Un punto nuevo
+  se añade en `PUNTOS`, con su segundo de inicio y su texto en los tres
+  idiomas. `GuiaCierre.astro` la enlaza antes del cierre de contacto en todas
+  las páginas menos en la suya, con la carita feliz del vídeo.
+
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
   inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.
   Traducción nativa, no literal, con el glosario de `src/i18n/GLOSARIO.md`.
