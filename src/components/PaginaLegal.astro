@@ -21,14 +21,20 @@ import HeroPagina from './HeroPagina.astro';
 import Bloque from './Bloque.astro';
 import CtaLink from './CtaLink.astro';
 import { conMarca } from '../i18n/marca';
-import { DEFAULT_LANG, type RouteKey } from '../i18n/config';
-import type { PaginaLegal } from '../data/legal';
+import { path } from '../i18n/config';
+import { LEGALES, AVISO_IDIOMA, type ClaveLegal } from '../data/legal';
+import { idiomaDe } from '../i18n/idioma';
 
+/* El idioma sale de la URL (05/11/2026) y con él el texto de LEGALES. En
+   catalán e inglés va primero un aviso: si las versiones no coinciden, manda
+   la castellana, con su enlace en línea propia (44 px). */
 interface Props {
-  pagina: PaginaLegal;
-  ruta: RouteKey;
+  ruta: ClaveLegal;
 }
-const { pagina, ruta } = Astro.props;
+const { ruta } = Astro.props;
+const lang = idiomaDe(Astro.url);
+const pagina = LEGALES[ruta][lang];
+const aviso = lang === 'es' ? null : AVISO_IDIOMA[lang];
 
 const escapar = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 /* Una dirección de correo no tiene espacios y a 320 no cabe: se le deja
@@ -37,13 +43,24 @@ const textoEnlace = (s: string) => escapar(s).replace('@', '@<wbr>');
 ---
 
 <Base
-  lang={DEFAULT_LANG}
+  lang={lang}
   current={ruta}
   conCta={false}
   title={`${pagina.titulo} · Accesibilidad Primero`}
   description={pagina.descripcion}
 >
   <HeroPagina titulo={pagina.titulo} texto={pagina.entrada} nota={pagina.fecha} />
+
+  {
+    aviso && (
+      <Bloque id="version" titulo={aviso.titulo}>
+        <div class="pila">
+          <p>{aviso.texto}</p>
+          <CtaLink href={path(ruta, 'es')}>{aviso.enlace}</CtaLink>
+        </div>
+      </Bloque>
+    )
+  }
 
   {
     pagina.bloques.map((b) => (

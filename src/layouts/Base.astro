@@ -11,7 +11,8 @@ import SkipLink from '../components/SkipLink.astro';
 import Header from '../components/Header.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import Footer from '../components/Footer.astro';
-import { DEFAULT_LANG, type Lang, type RouteKey } from '../i18n/config';
+import { type Lang, type RouteKey } from '../i18n/config';
+import { idiomaDe } from '../i18n/idioma';
 import { CF_WEB_ANALYTICS_TOKEN } from '../data/analitica';
 import { INDEXABLE } from '../data/sitio';
 
@@ -29,7 +30,7 @@ interface Props {
 const {
   title,
   description,
-  lang = DEFAULT_LANG,
+  lang = idiomaDe(Astro.url),
   current,
   slug,
   conCta = true,

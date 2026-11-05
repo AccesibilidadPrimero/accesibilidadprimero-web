@@ -1,0 +1,549 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Itza · el segundo caso de un producto propio (04/11/2026)
+
+   La misma maqueta y el mismo tono que A11y Primero y los casos de clientes
+   (Johnny, 04/11/2026). El contenido sale de la landing de Itza
+   (ITZA/LAnding Itza/index.html y ITZA_PROYECTO.md), reescrito en la voz de
+   los casos: qué hicimos y por qué.
+
+   Las capturas son el widget de verdad (el de la landing, con su HTML, CSS
+   y JS) montado sobre esta misma web, como en A11y Primero: no se enseña la
+   web de un cliente. Las respuestas del asistente son de ejemplo, servidas
+   sin llamar al servicio real; las preguntas sugeridas son las que tendría
+   esta web. Lo dice el propio caso.
+
+   VÍDEOS (Johnny, 04/11/2026: «explicar bien la experiencia simulando
+   consultas»): el hero, las preguntas sugeridas y el contacto al cerrar son
+   grabaciones del widget con una persona ficticia (Marta) que escribe y
+   pulsa. El hero arranca solo, una vez, con botón de pausa (dura 13 s); los
+   otros dos, como en todos los casos, los arranca quien mira.
+
+   Off Escuela sale nombrada, sin captura: el widget se está instalando allí
+   y todavía no está activo (Johnny, 04/11/2026).
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { path } from '../../i18n/config';
+import { idiomaDe } from '../../i18n/idioma';
+const lang = idiomaDe(Astro.url);
+/* Los textos en los tres idiomas (05/11/2026). Glosario: src/i18n/GLOSARIO.md. */
+const T = {
+  es: {
+    seccion: "Casos de estudio",
+    descripcion: "Itza, el asistente accesible de Accesibilidad Primero: responde las preguntas de quienes visitan la web de una organización, con teclado, voz y lector de pantalla.",
+    heroTitulo: "Ninguna pregunta sin respuesta.",
+    heroGolpe1: "Ninguna pregunta",
+    heroGolpe2: "sin respuesta.",
+    heroTexto: "Itza · Caso de estudio",
+    altHero: "Una consulta en Itza: Marta pulsa la barra “Pregúntame lo que necesites”, se abre la ventana y el asistente le pregunta cómo llamarla. Escribe “Me llamo Marta”, elige la pregunta sugerida “¿Hacéis auditorías de accesibilidad?” y el asistente responde que auditamos la web con WCAG 2.2 y la normativa vigente, explicamos cada barrera, damos un plan para quitarlas y preparamos la declaración de accesibilidad.",
+    nombreHero: "la consulta de Marta",
+    datos: "Datos del proyecto",
+    producto: "Producto",
+    productoValor: "Asistente accesible",
+    anio: "Año",
+    rol: "Rol",
+    rolValor: "Desarrollo",
+    estandar: "Estándar",
+    web: "Web",
+    conocer: "Conocer Itza",
+    proyecto: "El proyecto",
+    proyecto1: "Itza es un asistente que responde las preguntas de quienes visitan la web de una organización: qué hace, cómo apuntarse, qué horarios tiene, si quedan plazas. Atiende las 24 horas, orienta a cada persona y recoge los datos de quien quiere que le contacten.",
+    proyecto2: "Lo pensamos para asociaciones, fundaciones, centros educativos y proyectos culturales, que suelen responder esas preguntas a mano, una a una. Ahora lo estamos instalando en Off Escuela, la escuela de artes escénicas de Off Valencia.",
+    proyecto3: "Las capturas de esta página son Itza instalado en esta misma web, con una conversación de ejemplo.",
+    altMovil: "La misma conversación en el móvil: la ventana de Itza ocupa casi toda la pantalla, con la respuesta sobre la auditoría, el campo para escribir y la barra con el botón de voz debajo.",
+    pieMovil: "En el móvil",
+    reto: "El reto",
+    retoTitulo: "Un asistente que también sea accesible.",
+    reto1: "Un chat es una ventana que se abre encima de la página. Si no se maneja con teclado, si el lector de pantalla no anuncia las respuestas o si atrapa el foco sin dejar salir, deja fuera justo a quien más ayuda necesita.",
+    reto2: "Por teclado, por voz y con lector de pantalla.",
+    reto3: "Se abre y se cierra con teclado, el foco se queda dentro mientras está abierto y vuelve a su sitio al cerrar. Cada respuesta se anuncia sola, y se puede preguntar hablando y escuchar la respuesta.",
+    altSugerencias: "Itza en esta web: Marta pulsa la barra del pie de la página, escribe su nombre y el asistente la saluda y le ofrece cuatro preguntas sugeridas, “¿Qué servicios ofrecéis?”, “¿Hacéis auditorías de accesibilidad?”, “¿Cómo es trabajar con vosotros?” y “Quiero contaros mi proyecto”, que el cursor recorre una a una.",
+    nombreSugerencias: "las preguntas sugeridas",
+    pieSugerencias: "Preguntas sugeridas",
+    estructura: "La estructura",
+    estructuraTitulo: "Una barra, una conversación y un contacto.",
+    estructura1: "Itza vive en una barra al pie de la página: “Pregúntame lo que necesites”. Al pulsarla se abre la conversación. Primero pregunta cómo llamar a quien escribe y después ofrece preguntas sugeridas, las de cada organización.",
+    estructura2: "Responde con la información de la propia organización y tiene la instrucción de no inventar datos. Al cerrar, propone dejar nombre y correo, y se puede cerrar sin dejarlos. Si la persona envía sus datos, la conversación se guarda con ellos, para que el equipo sepa qué preguntó y pueda seguir desde ahí.",
+    altContacto: "Al cerrar la conversación, Itza pregunta “¿Te ha sido útil? Déjanos tus datos”. Marta escribe su nombre y su correo, pulsa “Enviar y cerrar” y el asistente le da las gracias y le deja el correo del estudio. También se puede cerrar sin dejar datos.",
+    nombreContacto: "el contacto al cerrar",
+    pieContacto: "Al cerrar",
+    decisiones: "Decisiones de diseño",
+    decisionesIntro: "Un asistente útil no sustituye al equipo: responde lo de siempre para que el equipo tenga tiempo para lo demás.",
+    mComo: "¿Cómo te llamo?",
+    mHola: "Hola, Marta.",
+    nombreTitulo: "Primero, el nombre.",
+    nombre: "La conversación empieza preguntando cómo llamar a quien escribe. El tono es el de alguien de la organización, no el de un formulario.",
+    mBarra: "Pregúntame lo que necesites",
+    barraTitulo: "Una barra, no un botón flotante.",
+    barra: "“Pregúntame lo que necesites” dice qué es y para qué sirve antes de pulsarla. Un icono en una esquina obliga a adivinarlo.",
+    mAlba: "Hola, soy Alba.",
+    mNuri: "Hola, soy Nuri.",
+    mItza: "Hola, soy Itza.",
+    vozTitulo: "Con la voz de cada organización.",
+    voz: "El nombre del asistente, los colores y el mensaje de bienvenida se adaptan a cada web.",
+    mEnLinea: "En línea",
+    instalaTitulo: "Lo instalamos nosotros.",
+    instala: "Sin programadores ni contratos largos: lo dejamos funcionando en la web de la organización.",
+  },
+  ca: {
+    seccion: "Casos d’estudi",
+    descripcion: "Itza, l’assistent accessible d’Accesibilidad Primero: respon les preguntes de qui visita el web d’una organització, amb teclat, veu i lector de pantalla.",
+    heroTitulo: "Cap pregunta sense resposta.",
+    heroGolpe1: "Cap pregunta",
+    heroGolpe2: "sense resposta.",
+    heroTexto: "Itza · Cas d’estudi",
+    altHero: "Una consulta a Itza, en castellà: la Marta prem la barra “Pregúntame lo que necesites” (Pregunta’m el que necessitis), s’obre la finestra i l’assistent li pregunta com l’ha d’anomenar. Escriu “Me llamo Marta” (Em dic Marta), tria la pregunta suggerida “¿Hacéis auditorías de accesibilidad?” (Feu auditories d’accessibilitat?) i l’assistent respon que auditem el web amb WCAG 2.2 i la normativa vigent, expliquem cada barrera, donem un pla per eliminar-les i preparem la declaració d’accessibilitat.",
+    nombreHero: "la consulta de la Marta",
+    datos: "Dades del projecte",
+    producto: "Producte",
+    productoValor: "Assistent accessible",
+    anio: "Any",
+    rol: "Rol",
+    rolValor: "Desenvolupament",
+    estandar: "Estàndard",
+    web: "Web",
+    conocer: "Coneix Itza",
+    proyecto: "El projecte",
+    proyecto1: "Itza és un assistent que respon les preguntes de qui visita el web d’una organització: què fa, com s’hi pot apuntar, quins horaris té, si queden places. Atén les 24 hores, orienta cada persona i recull les dades de contacte de qui vol que li responguin.",
+    proyecto2: "El vam pensar per a associacions, fundacions, centres educatius i projectes culturals, que solen respondre aquestes preguntes a mà, una per una. Ara l’estem instal·lant a Off Escuela, l’escola d’arts escèniques d’Off Valencia.",
+    proyecto3: "Les captures d’aquesta pàgina són Itza instal·lat en aquest mateix web, en la versió en castellà, amb una conversa d’exemple.",
+    altMovil: "La mateixa conversa al mòbil: la finestra d’Itza ocupa gairebé tota la pantalla, amb la resposta sobre l’auditoria, el camp per escriure i la barra amb el botó de veu a sota.",
+    pieMovil: "Al mòbil",
+    reto: "El repte",
+    retoTitulo: "Un assistent que també sigui accessible.",
+    reto1: "Un xat és una finestra que s’obre damunt de la pàgina. Si no es pot fer servir amb el teclat, si el lector de pantalla no n’anuncia les respostes o si atrapa el focus sense deixar-lo sortir, deixa fora justament qui més ajuda necessita.",
+    reto2: "Amb teclat, amb veu i amb lector de pantalla.",
+    reto3: "S’obre i es tanca amb el teclat, el focus es queda a dins mentre està obert i torna al seu lloc en tancar-lo. Cada resposta s’anuncia sola, i es pot preguntar parlant i escoltar la resposta.",
+    altSugerencias: "Itza en aquest web, en castellà: la Marta prem la barra del peu de la pàgina, escriu el seu nom i l’assistent la saluda i li ofereix quatre preguntes suggerides, “¿Qué servicios ofrecéis?” (Quins serveis oferiu?), “¿Hacéis auditorías de accesibilidad?” (Feu auditories d’accessibilitat?), “¿Cómo es trabajar con vosotros?” (Com és treballar amb vosaltres?) i “Quiero contaros mi proyecto” (Us vull explicar el meu projecte), que el cursor recorre una per una.",
+    nombreSugerencias: "les preguntes suggerides",
+    pieSugerencias: "Preguntes suggerides",
+    estructura: "L’estructura",
+    estructuraTitulo: "Una barra, una conversa i un contacte.",
+    estructura1: "Itza viu en una barra al peu de la pàgina: “Pregunta’m el que necessitis”. En prémer-la s’obre la conversa. Primer pregunta com ha d’anomenar qui escriu i després ofereix preguntes suggerides, les de cada organització.",
+    estructura2: "Respon amb la informació de la mateixa organització i té la instrucció de no inventar-se dades. En tancar, proposa deixar el nom i el correu, i es pot tancar sense deixar-los. Si la persona envia les seves dades, la conversa es desa amb elles, perquè l’equip sàpiga què va preguntar i pugui continuar des d’aquí.",
+    altContacto: "En tancar la conversa, Itza pregunta, en castellà, “¿Te ha sido útil? Déjanos tus datos” (T’ha estat útil? Deixa’ns les teves dades). La Marta escriu el seu nom i el seu correu, prem “Enviar y cerrar” (Envia i tanca) i l’assistent li dona les gràcies i li deixa el correu de l’estudi. També es pot tancar sense deixar dades.",
+    nombreContacto: "el contacte en tancar",
+    pieContacto: "En tancar",
+    decisiones: "Decisions de disseny",
+    decisionesIntro: "Un assistent útil no substitueix l’equip: respon el de sempre perquè l’equip tingui temps per a la resta.",
+    mComo: "Com et dic?",
+    mHola: "Hola, Marta.",
+    nombreTitulo: "Primer, el nom.",
+    nombre: "La conversa comença preguntant com s’ha d’anomenar qui escriu. El to és el d’algú de l’organització, no el d’un formulari.",
+    mBarra: "Pregunta’m el que necessitis",
+    barraTitulo: "Una barra, no un botó flotant.",
+    barra: "“Pregunta’m el que necessitis” diu què és i per a què serveix abans de prémer-la. Una icona en un racó obliga a endevinar-ho.",
+    mAlba: "Hola, soc l’Alba.",
+    mNuri: "Hola, soc la Nuri.",
+    mItza: "Hola, soc l’Itza.",
+    vozTitulo: "Amb la veu de cada organització.",
+    voz: "El nom de l’assistent, els colors i el missatge de benvinguda s’adapten a cada web.",
+    mEnLinea: "En línia",
+    instalaTitulo: "L’instal·lem nosaltres.",
+    instala: "Sense equip tècnic ni contractes llargs: el deixem funcionant al web de l’organització.",
+  },
+  en: {
+    seccion: "Case studies",
+    descripcion: "Itza, the Accesibilidad Primero accessible assistant: it answers the questions of people visiting an organisation’s website, by keyboard, by voice and with a screen reader.",
+    heroTitulo: "No question left unanswered.",
+    heroGolpe1: "No question",
+    heroGolpe2: "left unanswered.",
+    heroTexto: "Itza · Case study",
+    altHero: "A conversation with Itza, in Spanish: Marta clicks the bar that reads “Pregúntame lo que necesites” (Ask me anything you need), the window opens and the assistant asks what to call her. She types “Me llamo Marta” (My name is Marta), picks the suggested question “¿Hacéis auditorías de accesibilidad?” (Do you do accessibility audits?) and the assistant replies that we audit the website against WCAG 2.2 and current regulations, explain each barrier, provide a plan to remove them and prepare the accessibility statement.",
+    nombreHero: "Marta’s conversation",
+    datos: "Project details",
+    producto: "Product",
+    productoValor: "Accessible assistant",
+    anio: "Year",
+    rol: "Role",
+    rolValor: "Development",
+    estandar: "Standard",
+    web: "Website",
+    conocer: "Discover Itza",
+    proyecto: "The project",
+    proyecto1: "Itza is an assistant that answers the questions of people visiting an organisation’s website: what it does, how to sign up, what its opening hours are, whether there are places left. It’s available 24 hours a day, points each person in the right direction and collects the details of anyone who wants to be contacted.",
+    proyecto2: "We designed it for associations, foundations, schools and cultural projects, which tend to answer those questions by hand, one by one. We’re now installing it at Off Escuela, the performing arts school of Off Valencia.",
+    proyecto3: "The screenshots on this page show Itza installed on this very website, in its Spanish version, with a sample conversation.",
+    altMovil: "The same conversation on a phone: the Itza window fills almost the whole screen, with the answer about the audit, the text field and the bar with the voice button below.",
+    pieMovil: "On a phone",
+    reto: "The challenge",
+    retoTitulo: "An assistant that is accessible too.",
+    reto1: "A chat is a window that opens on top of the page. If it can’t be used with a keyboard, if the screen reader doesn’t announce the answers or if it traps focus with no way out, it shuts out exactly the people who need help most.",
+    reto2: "By keyboard, by voice and with a screen reader.",
+    reto3: "It opens and closes with the keyboard, focus stays inside while it’s open and returns to where it was on closing. Every answer is announced automatically, and you can ask out loud and listen to the reply.",
+    altSugerencias: "Itza on this website, in Spanish: Marta clicks the bar at the foot of the page, types her name, and the assistant greets her and offers four suggested questions, “¿Qué servicios ofrecéis?” (What services do you offer?), “¿Hacéis auditorías de accesibilidad?” (Do you do accessibility audits?), “¿Cómo es trabajar con vosotros?” (What is it like to work with you?) and “Quiero contaros mi proyecto” (I’d like to tell you about my project), which the cursor moves over one by one.",
+    nombreSugerencias: "the suggested questions",
+    pieSugerencias: "Suggested questions",
+    estructura: "The structure",
+    estructuraTitulo: "A bar, a conversation and a contact.",
+    estructura1: "Itza lives in a bar at the foot of the page: “Ask me anything you need”. Clicking it opens the conversation. First it asks what to call the person writing, then it offers suggested questions, each organisation’s own.",
+    estructura2: "It answers with the organisation’s own information and is instructed not to make anything up. On closing, it suggests leaving a name and email address, and it can be closed without leaving them. If the person sends their details, the conversation is saved with them, so the team knows what was asked and can pick it up from there.",
+    altContacto: "On closing the conversation, Itza asks, in Spanish, “¿Te ha sido útil? Déjanos tus datos” (Was this helpful? Leave us your details). Marta types her name and email address, clicks “Enviar y cerrar” (Send and close) and the assistant thanks her and gives her the studio’s email address. It can also be closed without leaving any details.",
+    nombreContacto: "the contact on closing",
+    pieContacto: "On closing",
+    decisiones: "Design decisions",
+    decisionesIntro: "A useful assistant doesn’t replace the team: it answers the usual questions so the team has time for everything else.",
+    mComo: "What should I call you?",
+    mHola: "Hello, Marta.",
+    nombreTitulo: "First, the name.",
+    nombre: "The conversation starts by asking what to call the person writing. The tone is that of someone from the organisation, not a form.",
+    mBarra: "Ask me anything you need",
+    barraTitulo: "A bar, not a floating button.",
+    barra: "“Ask me anything you need” says what it is and what it’s for before you click it. An icon in a corner makes you guess.",
+    mAlba: "Hi, I’m Alba.",
+    mNuri: "Hi, I’m Nuri.",
+    mItza: "Hi, I’m Itza.",
+    vozTitulo: "In each organisation’s own voice.",
+    voz: "The assistant’s name, colours and welcome message adapt to each website.",
+    mEnLinea: "Online",
+    instalaTitulo: "We install it for you.",
+    instala: "No developers and no long contracts: we leave it up and running on the organisation’s website.",
+  },
+}[lang];
+import VideoPausable from '../../components/VideoPausable.astro';
+import movil from '../../assets/proyectos/itza/movil.jpg';
+import posterHero from '../../assets/proyectos/itza/itza-hero-fotograma.png';
+import posterSugerencias from '../../assets/proyectos/itza/itza-sugerencias-fotograma.png';
+import posterContacto from '../../assets/proyectos/itza/itza-contacto-fotograma.png';
+const video = (n: string, poster: ImageMetadata) => ({ escritorio: { archivo: `/video/itza-${n}.mp4`, poster } });
+
+const titulo = 'Itza';
+const datos = [
+  [T.producto, T.productoValor],
+  [T.anio, '2026'],
+  [T.rol, T.rolValor],
+  [T.estandar, 'WCAG 2.2 A/AA'],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+---
+
+<Base
+  lang={lang}
+  current="proyectos"
+  title={`${titulo} · ${T.seccion} · Accesibilidad Primero`}
+  description={T.descripcion}
+>
+  <div class="itza">
+    <HeroPagina
+      titulo={T.heroTitulo}
+      golpes={[T.heroGolpe1, T.heroGolpe2]}
+      texto={[T.heroTexto]}
+      superficie={{ fondo: 'var(--mint-video)', foco: 'var(--blue-ap)' }}
+    >
+      <VideoPausable
+        slot="ilustracion"
+        class="itza-hero"
+        auto
+        {...video('hero', posterHero)}
+        alt={T.altHero}
+        nombre={T.nombreHero}
+        lang={lang}
+        sizes={{ escritorio: '400px', tableta: '330px', movil: '286px' }}
+      />
+    </HeroPagina>
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        <div><dt>{T.web}</dt><dd><CtaLink href="https://itza.accesibilidadprimero.com/">{T.conocer}</CtaLink></dd></div>
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
+      <div class="bloque__contenido">
+        <p>{T.proyecto1}</p>
+        <p>{T.proyecto2}</p>
+        <p>{T.proyecto3}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={movil}
+        formats={['avif', 'webp']}
+        widths={[movil.width / 2, movil.width]}
+        sizes="(min-width: 768px) 360px, calc(100vw - 48px)"
+        alt={T.altMovil}
+        class="captura captura--movil"
+        loading="lazy"
+      />
+      <figcaption>{T.pieMovil}</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">{T.reto}</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">{T.retoTitulo}</h2>
+        <p>{T.reto1}</p>
+        <h3>{T.reto2}</h3>
+        <p>{T.reto3}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <VideoPausable
+        class="captura-video"
+        {...video('sugerencias', posterSugerencias)}
+        alt={T.altSugerencias}
+        nombre={T.nombreSugerencias}
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 1100px, 76vw', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' }}
+      />
+      <figcaption>{T.pieSugerencias}</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">{T.estructura}</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">{T.estructuraTitulo}</h2>
+        <p>{T.estructura1}</p>
+        <p>{T.estructura2}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <VideoPausable
+        class="captura-video captura-video--ventana"
+        {...video('contacto', posterContacto)}
+        alt={T.altContacto}
+        nombre={T.nombreContacto}
+        lang={lang}
+        sizes={{ escritorio: '420px', tableta: '420px', movil: 'calc(100vw - 48px)' }}
+      />
+      <figcaption>{T.pieContacto}</figcaption>
+    </figure>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">{T.decisiones}</h2>
+        <p>{T.decisionesIntro}</p>
+      </div>
+      <ul class="decisiones__lista">
+        {/* Microanimaciones (Johnny, 04/11/2026): una por decisión, que la
+            explica. Dibujadas en HTML y CSS, en tinta y con una sola línea.
+            Arrancan al entrar en pantalla, duran menos de 5 s y van UNA vez,
+            así que no necesitan botón (2.2.2). Sin JS o con «reducir
+            movimiento», el estado final, quieto. `aria-hidden`: lo que
+            enseñan ya lo dice el texto de al lado. */}
+        <li>
+          <div class="micro micro--nombre" aria-hidden="true">
+            <span class="m-burbuja m-bot m-1">{T.mComo}</span>
+            <span class="m-burbuja m-yo m-2"><span class="m-escribe">Marta</span></span>
+            <span class="m-burbuja m-bot m-3">{T.mHola}</span>
+          </div>
+          <h3>{T.nombreTitulo}</h3>
+          <p>{T.nombre}</p>
+        </li>
+        <li>
+          <div class="micro micro--barra" aria-hidden="true">
+            <span class="m-pagina"><i></i><i></i><i></i></span>
+            <span class="m-boton"><span class="m-boton__texto">{T.mBarra}</span><span class="m-boton__punto"></span></span>
+          </div>
+          <h3>{T.barraTitulo}</h3>
+          <p>{T.barra}</p>
+        </li>
+        <li>
+          <div class="micro micro--voz" aria-hidden="true">
+            <span class="m-capa m-capa--1"><span class="m-cabecera">Alba</span><span class="m-burbuja m-bot">{T.mAlba}</span></span>
+            <span class="m-capa m-capa--2"><span class="m-cabecera">Nuri</span><span class="m-burbuja m-bot">{T.mNuri}</span></span>
+            <span class="m-capa m-capa--3"><span class="m-cabecera">Itza</span><span class="m-burbuja m-bot">{T.mItza}</span></span>
+          </div>
+          <h3>{T.vozTitulo}</h3>
+          <p>{T.voz}</p>
+        </li>
+        <li>
+          <div class="micro micro--instala" aria-hidden="true">
+            <span class="m-pagina"><i></i><i></i><i></i></span>
+            <span class="m-linea">{T.mEnLinea}</span>
+            <span class="m-boton m-boton--barra"><span class="m-boton__texto">{T.mBarra}</span><span class="m-boton__punto"></span></span>
+          </div>
+          <h3>{T.instalaTitulo}</h3>
+          <p>{T.instala}</p>
+        </li>
+      </ul>
+    </section>
+  </div>
+  <CierreProyecto actual="itza" titulo={titulo} />
+</Base>
+
+<script>
+  /* Las microanimaciones arrancan al entrar en pantalla, una vez. */
+  const micros = document.querySelectorAll<HTMLElement>('.micro');
+  const ver = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    // Un respiro para que termine la aparición del bloque.
+    setTimeout(() => e.target.classList.add('is-vista'), 500);
+    ver.unobserve(e.target);
+  }), { threshold: 0.6 });
+  micros.forEach((m) => ver.observe(m));
+</script>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li > .micro + h3 { margin-block-start: calc(var(--space-24) - var(--space-48)); }
+
+  /* ---- Microanimaciones de las decisiones (04/11/2026) ----
+     El estado por defecto es el FINAL: es lo que se ve sin JS y con «reducir
+     movimiento». Con JS, la animación se monta en pausa (enseña su primer
+     fotograma) y arranca cuando el bloque entra en pantalla. */
+  .micro {
+    position: relative;
+    inline-size: min(100%, 400px);
+    block-size: 176px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radio);
+    overflow: hidden;
+    --t: 0s;            /* retraso común, para dejar terminar la aparición */
+  }
+  /* `!important` en los longhand: el `animation:` de cada pieza los
+     reiniciaría. */
+  .micro * { animation-fill-mode: both !important; animation-play-state: paused !important; }
+  :global(html:not(.js)) .micro * { animation: none !important; }
+  .micro.is-vista * { animation-play-state: running !important; }
+  @media (prefers-reduced-motion: reduce) { .micro * { animation: none !important; } }
+
+  .m-burbuja {
+    position: absolute;
+    padding: 6px 14px;
+    border-radius: 16px;
+    white-space: nowrap;
+  }
+  .m-bot { background: var(--surface-band); }
+  .m-yo { border: 1px solid var(--ink); }
+  @keyframes m-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* 1 · Primero, el nombre: pregunta, «Marta» se escribe, saludo. */
+  .micro--nombre .m-1 { inset-block-start: 16px; inset-inline-start: 16px; animation: m-entra 400ms var(--ease-out) 300ms; }
+  .micro--nombre .m-2 { inset-block-start: 66px; inset-inline-end: 16px; animation: m-entra 300ms var(--ease-out) 1100ms; }
+  .micro--nombre .m-escribe { display: inline-block; animation: m-teclea 900ms steps(5, end) 1300ms; }
+  .micro--nombre .m-3 { inset-block-start: 116px; inset-inline-start: 16px; animation: m-entra 400ms var(--ease-out) 2700ms; }
+  @keyframes m-teclea { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+  /* 2 · Una barra: el botón redondo de la esquina se estira y dice qué es. */
+  .m-pagina { position: absolute; inset: 20px 20px auto 20px; display: flex; flex-direction: column; gap: 10px; }
+  .m-pagina i { display: block; block-size: 8px; border-radius: 4px; background: var(--hairline); }
+  .m-pagina i:nth-child(2) { inline-size: 80%; }
+  .m-pagina i:nth-child(3) { inline-size: 55%; }
+  .m-boton {
+    position: absolute;
+    inset-block-end: 16px;
+    inset-inline-end: 16px;
+    block-size: 44px;
+    inline-size: calc(100% - 32px);
+    border: 1px solid var(--ink);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .m-boton__texto { position: absolute; inset-inline-start: 16px; white-space: nowrap; }
+  /* El punto, centrado en el círculo de 44 y a la derecha de la barra. */
+  .m-boton__punto { position: absolute; inset-inline-end: 15px; inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--ink); }
+  .micro--barra .m-boton { animation: m-estira 1100ms var(--ease-out) 1200ms; }
+  .micro--barra .m-boton__texto { animation: m-aparece 500ms var(--ease-out) 2100ms; }
+  @keyframes m-estira { from { inline-size: 44px; } to { inline-size: calc(100% - 32px); } }
+  @keyframes m-aparece { from { opacity: 0; } to { opacity: 1; } }
+
+  /* 3 · Con la voz de cada organización: tres asistentes, el mismo widget. */
+  .m-capa { position: absolute; inset: 0; display: block; }
+  .m-cabecera { position: absolute; inset: 0 0 auto 0; block-size: 64px; display: flex; align-items: center; padding-inline: 16px; }
+  .m-capa--1 .m-cabecera { background: var(--yellow-ap); }
+  .m-capa--2 .m-cabecera { background: var(--rose-ap); }
+  .m-capa--3 .m-cabecera { background: var(--mint); }
+  .m-capa .m-burbuja { inset-block-start: 84px; inset-inline-start: 16px; }
+  .m-capa--1, .m-capa--2 { opacity: 0; }
+  .micro--voz .m-capa--1 { animation: m-turno 1500ms linear 300ms; }
+  .micro--voz .m-capa--2 { animation: m-turno 1500ms linear 1700ms; }
+  .micro--voz .m-capa--3 { animation: m-ultimo 400ms var(--ease-out) 3100ms; }
+  @keyframes m-turno { 0% { opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes m-ultimo { from { opacity: 0; } to { opacity: 1; } }
+
+  /* 4 · Lo instalamos nosotros: la barra llega a la web y queda en línea. */
+  .micro--instala .m-boton { animation: m-sube 800ms var(--ease-out) 600ms; }
+  .m-linea { position: absolute; inset-block-end: 70px; inset-inline-end: 20px; display: flex; align-items: center; gap: 8px; }
+  .m-linea::before { content: ''; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--ink); }
+  .micro--instala .m-linea { animation: m-entra 400ms var(--ease-out) 1800ms; }
+  @keyframes m-sube { from { transform: translateY(80px); } to { transform: none; } }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La ventana del hero, más alta que una ilustración (400): a ese tamaño
+     la conversación no se leía. Cabe en lo que deja libre el titular. */
+  /* Desde el 04/11/2026 es un vídeo: el ancho sale del alto (1032 × 1444). */
+  .itza :global(.itza-hero) { --alto: 400px; inline-size: calc(var(--alto) * 1032 / 1444); max-inline-size: 100%; }
+  @media (min-width: 768px) { .itza :global(.itza-hero) { --alto: 460px; } }
+  @media (min-width: 1024px) { .itza :global(.itza-hero) { --alto: 560px; } }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .itza :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
+     separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
+  .pieza > :global(:not(.vp)) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
+  .pieza figcaption { align-self: stretch; }
+  /* El móvil, a su tamaño (390 de ancho, capturado a @2x). */
+  .itza :global(.captura--movil) { width: min(360px, 100%); }
+  .itza :global(.captura--ventana) { width: min(420px, 100%); box-shadow: none; }
+  /* Los vídeos, con la misma sombra que las capturas. */
+  .itza :global(.captura-video .vp__marco) { border-radius: var(--radio); box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08); }
+  .itza :global(.captura-video--ventana) { width: min(420px, 100%); }
+  .itza :global(.captura-video--ventana .vp__marco) { box-shadow: none; }
+  .pieza--derecha figcaption { width: min(420px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>

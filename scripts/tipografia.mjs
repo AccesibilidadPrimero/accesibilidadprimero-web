@@ -24,6 +24,7 @@
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
+import { tresIdiomas, paginasTresIdiomas } from './idiomas.mjs';
 
 /* Las DOS únicas frases que se salen del tamaño único. Si alguien añade una
    tercera, el barrido de más abajo la caza igual, pero esto nombra las que
@@ -279,7 +280,8 @@ const INTERIORES = [
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
   { nombre: 'Blog · artículo con tablas', url: '/blog/pero-que-es-la-wcag/', conErrores: false },
 ];
-for (const pagina of INTERIORES) {
+/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+for (const pagina of paginasTresIdiomas(INTERIORES)) {
 console.log(`\n── ${pagina.nombre} ──\n`);
 for (const ancho of [390, 768, 1440]) {
   for (const conErrores of pagina.conErrores ? [false, true] : [false]) {

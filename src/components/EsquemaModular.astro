@@ -28,10 +28,9 @@
      de ECI en el módulo del programa. Sin texto dentro (§1).
    --------------------------------------------------------------------------- */
 import { t } from '../i18n/ui';
-import { DEFAULT_LANG } from '../i18n/config';
 interface Props { class?: string }
 const { class: clase } = Astro.props;
-const ui = t(DEFAULT_LANG);
+const ui = t(idiomaDe(Astro.url));
 
 type Pieza = [string, Record<string, number>];
 const L = (x: number, y: number, w: number): Pieza => ['linea', { left: x, top: y, width: w }];
@@ -83,6 +82,7 @@ const plan = MODULOS.map((m) => ({
   }),
 }));
 const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
+import { idiomaDe } from '../i18n/idioma';
 ---
 
 <div class:list={['esquema', clase]} data-esquema-modular data-estado={ULTIMO} data-plan={JSON.stringify(plan)}>
@@ -110,7 +110,7 @@ const final = (m: (typeof plan)[number]) => m.t[ULTIMO - 1];
       <g class="esquema__pausa"><rect x="0" y="0" width="3" height="12" /><rect x="7" y="0" width="3" height="12" /></g>
       <path class="esquema__play" d="M1 0 10 6 1 12z" />
     </svg>
-    <span class="sr-only"><span data-esquema-label>{ui.carouselPause}</span> · esquema del sistema modular</span>
+    <span class="sr-only"><span data-esquema-label>{ui.carouselPause}</span> · {({ es: 'esquema del sistema modular', ca: 'esquema del sistema modular', en: 'modular system diagram' } as const)[idiomaDe(Astro.url)]}</span>
   </button>
 </div>
 

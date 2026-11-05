@@ -21,6 +21,9 @@ import { getCollection } from 'astro:content';
 import CtaLink from './CtaLink.astro';
 import { PRODUCTOS } from '../data/productos';
 import { CLAVES_TIPO } from '../data/proyectos';
+import { path } from '../i18n/config';
+import { idiomaDe, localizar, de } from '../i18n/idioma';
+import { t } from '../i18n/ui';
 
 interface Props {
   actual: string;
@@ -29,6 +32,8 @@ interface Props {
   titulo: string;
 }
 const { actual, declaracion, titulo } = Astro.props;
+const lang = idiomaDe(Astro.url);
+const ui = t(lang);
 
 /* El recorrido: los casos de clientes en el orden de Proyectos y, detrás,
    los productos que ya tienen caso, en el orden de la Home (04/11/2026). */
@@ -36,7 +41,7 @@ const casos = [
   ...(await getCollection('proyectos'))
     .filter((p) => p.data.casoPublicado)
     .sort((a, b) => a.data.orden - b.data.orden)
-    .map((p) => ({ id: p.id, nombre: p.data.nombreCorto ?? p.data.titulo })),
+    .map((p) => { const d = localizar(p.data, lang); return { id: p.id, nombre: d.nombreCorto ?? d.titulo }; }),
   /* Los productos en el mismo orden que el listado de Casos de estudio, por
      tipo (05/11/2026): Itza, Accesible Abstracts, A11y Primero. */
   ...PRODUCTOS.filter((p) => p.caso)
@@ -52,14 +57,14 @@ const siguiente = casos[i + 1];
 <div class="cierre">
   {declaracion && (
     <p class="cierre__declaracion">
-      <CtaLink href={declaracion}><span class="linea">Declaración de accesibilidad</span> <span class="linea">de {titulo}</span></CtaLink>
+      <CtaLink href={declaracion}><span class="linea">{ui.declaracion}</span> <span class="linea">{lang === 'en' ? `for ${titulo}` : de(lang, titulo)}</span></CtaLink>
     </p>
   )}
-  <nav class="siguiente" aria-label="Siguiente proyecto">
+  <nav class="siguiente" aria-label={ui.siguienteProyecto}>
     {siguiente ? (
-      <CtaLink href={`/proyectos/${siguiente.id}/`} size="large">Ver {siguiente.nombre}</CtaLink>
+      <CtaLink href={path('proyectos', lang, siguiente.id)} size="large">{`${ui.ver} ${siguiente.nombre}`}</CtaLink>
     ) : (
-      <CtaLink href="/proyectos/" size="large">Ver todos los casos de estudio</CtaLink>
+      <CtaLink href={path('proyectos', lang)} size="large">{ui.verTodosCasos}</CtaLink>
     )}
   </nav>
 </div>

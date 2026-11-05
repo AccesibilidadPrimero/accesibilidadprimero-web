@@ -1,0 +1,8 @@
+---
+/* Ruta ca (05/11/2026). La plantilla vive en src/paginas/proyectos/caso.astro. */
+import Pagina from '../../../paginas/proyectos/caso.astro';
+import { rutasCaso } from '../../../paginas/proyectos/rutas';
+export const getStaticPaths = rutasCaso;
+---
+
+<Pagina {...Astro.props} />

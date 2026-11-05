@@ -44,6 +44,64 @@ imagenes:
     alt: >-
       La página de comisariado: dos hombres miran de cerca unos libros
       antiguos expuestos en una vitrina iluminada.
+# Versiones en catalán e inglés (05/11/2026). Ver foc-i-cor.md.
+traducciones:
+  ca:
+    linea: El web d’una artista i comissària.
+    resumen: |-
+      Izaskun Etxebarria és artista i comissària.
+      La seva obra es mou entre la instal·lació,
+      el llibre d’artista i el dibuix.
+    aporte: |-
+      Hem dissenyat un web que s’aparta
+      perquè l’obra tingui el seu espai,
+      amb les sèries navegables com a conjunts.
+    imagenes:
+      - alt: >-
+          La portada d’izaskunetxebarria.com: una peça circular de metall
+          sobre l’herba d’un penya-segat vora el mar, amb el nom de l’artista
+          i el menú en una barra clara a dalt.
+      - alt: >-
+          La pàgina de la sèrie “Agujeros de Tiempo”, amb una banda vermella
+          de títol, el text de l’artista a tres columnes i una fotografia
+          panoràmica de cel a sota.
+      - alt: >-
+          La pàgina de comissariat: dos homes miren de prop uns llibres antics
+          exposats en una vitrina il·luminada.
+    cuerpo:
+      - Obra pròpia i comissariat, sense barrejar-se.
+      - >-
+        Treballs, exposicions i textos es recorren sense perdre la
+        personalitat del projecte. A “Agujeros de tiempo”, les panoràmiques
+        avancen d’un costat a l’altre amb el punter.
+  en:
+    linea: The website of an artist and curator.
+    resumen: |-
+      Izaskun Etxebarria is an artist and curator.
+      Her work moves between installation,
+      the artist’s book and drawing.
+    aporte: |-
+      We designed a website that steps aside
+      so the work has room to breathe,
+      with each series navigable as a whole.
+    imagenes:
+      - alt: >-
+          The izaskunetxebarria.com home page: a circular metal piece on the
+          grass of a clifftop by the sea, with the artist’s name and the menu
+          in a light bar at the top.
+      - alt: >-
+          The page for the series “Agujeros de Tiempo”, with a red title band,
+          the artist’s text in three columns and a panoramic photograph of
+          the sky below.
+      - alt: >-
+          The curating page: two men look closely at some old books displayed
+          in a lit glass case.
+    cuerpo:
+      - Her own work and her curating, each in its place.
+      - >-
+        Works, exhibitions and writing can be explored without losing the
+        character of the project. In “Agujeros de tiempo”, the panoramas move
+        from side to side with the pointer.
 ---
 
 Obra propia y comisariado, sin mezclarse.

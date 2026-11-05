@@ -1,0 +1,492 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso A11y Primero · el primer caso de un producto propio (04/11/2026)
+
+   Johnny: «los casos de estudio de los productos y las extensiones deben
+   tener el mismo estilo de tono y de diseño que en los casos de las webs».
+   Así que es la maqueta de Izaskun y ECI, pieza a pieza: hero, ficha,
+   bloques «etiqueta | texto», capturas, decisiones de diseño y el cierre
+   común (CierreProyecto). El contenido sale de la landing de la extensión
+   (a11y-i18n/_publicacion/a11y-primero-landing.html), reescrito en la voz
+   de los casos: qué hicimos y por qué, no un anuncio. Sin «Avísame cuando
+   esté disponible» (Johnny, 04/11/2026).
+
+   Lo que cambia frente a un caso de cliente, y por qué:
+   · Hero: no hay foto de ambiente, así que va la banda en el color del
+     producto (el amarillo de su tarjeta en Proyectos) con la extensión
+     abierta sobre esta misma web.
+   · Sin «Web» en la ficha ni declaración en el cierre: la extensión está en
+     revisión en la Chrome Web Store y no tiene página pública todavía.
+   · Las capturas son imágenes, no vídeos. Son de la extensión de verdad
+     (v2.0.0, cargada en Chromium) sobre esta misma web, a @2x, con el panel
+     montado encima como lo pinta Chrome. Una «metaweb» (Johnny, 04/11/2026):
+     enseñamos la extensión evaluando nuestra propia web, en lugar de señalar
+     los fallos de la web de un cliente. Si la web cambia, se vuelve a
+     capturar; lo que dice el panel es lo que midió ese día.
+   · Sin la banda amarilla de los límites del final (Johnny, 04/11/2026:
+     «queda muy pobre»).
+   --------------------------------------------------------------------------- */
+import { Picture } from 'astro:assets';
+import MicroDecision from '../../components/MicroDecision.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import { path } from '../../i18n/config';
+import { idiomaDe } from '../../i18n/idioma';
+const lang = idiomaDe(Astro.url);
+/* Los textos en los tres idiomas (05/11/2026). Glosario: src/i18n/GLOSARIO.md. */
+const T = {
+  es: {
+    seccion: "Casos de estudio",
+    descripcion: "A11y Primero, la extensión de Chrome de Accesibilidad Primero: una evaluación de accesibilidad contada para quien decide y para quien corrige.",
+    heroTitulo: "Entender qué falla y cómo mejorarlo.",
+    heroGolpe1: "Entender qué falla",
+    heroGolpe2: "y cómo mejorarlo.",
+    heroTexto: "A11y Primero · Caso de estudio",
+    altHero: "A11y Primero abierto sobre la portada de esta web: el panel da 100 de 100, “sin fallos automáticos”, con las cuatro categorías a 100, y avisa de que dos comprobaciones necesitan revisión manual.",
+    datos: "Datos del proyecto",
+    producto: "Producto",
+    productoValor: "Extensión de Chrome",
+    anio: "Año",
+    rol: "Rol",
+    rolValor: "Desarrollo",
+    estandar: "Estándar",
+    estado: "Estado",
+    estadoValor: "En revisión",
+    proyecto: "El proyecto",
+    proyecto1: "A11y Primero es una extensión de Chrome que analiza la accesibilidad de una página en un clic, con axe-core y los criterios de WCAG 2.2.",
+    proyecto2: "La hicimos para nuestro propio trabajo: es la herramienta con la que empezamos cada auditoría del estudio. Y la preparamos para que la use cualquiera que quiera saber por dónde empezar con su web.",
+    proyecto3: "Las capturas de esta página son la extensión evaluando esta misma web.",
+    proyecto4: "Todavía no se puede instalar: está en revisión en la Chrome Web Store. Si quieres probarla antes, escríbenos.",
+    probar: "Quiero probar A11y Primero",
+    altPanel: "La pestaña WCAG del panel sobre esta web: sin fallos WCAG automáticos y dos puntos para revisar a mano, el vídeo sin subtítulos (1.2.2) y, abierto, el contraste de dos textos que la animación de entrada tapa en parte (1.4.3), cada uno con su selector.",
+    reto: "El reto",
+    retoTitulo: "Una evaluación, dos maneras de entenderla.",
+    reto1: "Un resultado lleno de tecnicismos no explica qué ocurre, a quién afecta ni por qué conviene mejorarlo. Y a quien trabaja en el código no le basta con saber que hay un problema: necesita localizarlo, conocer el criterio afectado y saber cómo corregirlo.",
+    reto2: "Para quien decide y para quien corrige.",
+    reto3: "Cada hallazgo se cuenta de las dos maneras. “Las imágenes deben tener texto alternativo” es lo que lee quien decide; “1.1.1, image-alt, nivel A” y el selector de cada imagen, lo que necesita quien corrige.",
+    altWcag: "El bloque de productos de la portada de esta web, con la extensión abierta a la derecha: el vídeo de Itza, recuadrado en azul con un interrogante porque hay que revisar a mano si necesita subtítulos, y al lado la tarjeta de la propia A11y Primero.",
+    pieWcag: "Marcar fallos en la página",
+    estructura: "La estructura",
+    estructuraTitulo: "Cinco pestañas, del dato al informe.",
+    estructura1: "“Resumen” da una puntuación de 0 a 100 y los resultados por categorías. “WCAG”, el detalle técnico de cada fallo, con los elementos afectados marcados sobre la propia página.",
+    estructura2: "“Proyecto” evalúa varias páginas de un mismo sitio y exporta un informe conjunto, porque la portada puede salir limpia y la carta no. “Historial” compara las tres últimas evaluaciones de cada dominio. Y “Ver como…” simula baja visión, visión borrosa, daltonismo y alto contraste sobre la página.",
+    estructura3: "Todo acaba en un informe en PDF para compartir y en Markdown para pegar en un ticket o un repositorio.",
+    altVerComo: "La portada de esta web con la simulación de baja visión: la ilustración, el titular y el menú se ven borrosos y apagados, y el panel abierto en la pestaña “Ver como…” con sus cuatro simulaciones.",
+    pieVerComo: "Ver como…",
+    decisiones: "Decisiones de diseño",
+    decisionesIntro: "Una prueba automática detecta aproximadamente un tercio de las barreras. La herramienta no resuelve la accesibilidad: ayuda a saber por dónde empezar. Cada decisión sale de ahí.",
+    mPuntuacion: "Puntuación",
+    mMano: "Revisar a mano",
+    selloTitulo: "Un 100 no es un sello.",
+    sello: "La puntuación va siempre acompañada de lo que la prueba no ha podido comprobar. Lo que la herramienta no puede decidir, como un texto sobre una foto, se separa para revisarlo a mano en lugar de inventarse un número.",
+    mParte: "Se parte de",
+    mGrave: "Un fallo grave",
+    mModerado: "Uno moderado",
+    mResultado: "Resultado",
+    restaTitulo: "Una puntuación que se puede explicar.",
+    resta: "Se parte de 100 y cada regla que falla resta según su impacto: crítico 10, grave 7, moderado 3 y menor 1. Las buenas prácticas y lo que hay que revisar a mano no restan.",
+    mInforme: "El informe, en tu equipo",
+    equipoTitulo: "Los datos se quedan en el navegador.",
+    equipo: "Sin registro ni servidores externos. La extensión solo lee la pestaña en la que se abre y solo cuando se pulsa “Evaluar”, y el informe se genera en el propio equipo.",
+    idiomasTitulo: "En tres idiomas.",
+    idiomas: "La interfaz está en castellano, catalán e inglés, según el idioma de Chrome.",
+  },
+  ca: {
+    seccion: "Casos d’estudi",
+    descripcion: "A11y Primero, l’extensió de Chrome d’Accesibilidad Primero: una avaluació d’accessibilitat explicada per a qui decideix i per a qui corregeix.",
+    heroTitulo: "Entendre què falla i com millorar-ho.",
+    heroGolpe1: "Entendre què falla",
+    heroGolpe2: "i com millorar-ho.",
+    heroTexto: "A11y Primero · Cas d’estudi",
+    altHero: "A11y Primero obert sobre la portada d’aquest web, en castellà: el tauler dona 100 de 100, “sin fallos automáticos” (sense errors automàtics), amb les quatre categories a 100, i avisa que dues comprovacions necessiten revisió manual.",
+    datos: "Dades del projecte",
+    producto: "Producte",
+    productoValor: "Extensió de Chrome",
+    anio: "Any",
+    rol: "Rol",
+    rolValor: "Desenvolupament",
+    estandar: "Estàndard",
+    estado: "Estat",
+    estadoValor: "En revisió",
+    proyecto: "El projecte",
+    proyecto1: "A11y Primero és una extensió de Chrome que analitza l’accessibilitat d’una pàgina amb un clic, amb axe-core i els criteris de WCAG 2.2.",
+    proyecto2: "La vam fer per a la nostra pròpia feina: és l’eina amb què comencem cada auditoria de l’estudi. I l’hem preparada perquè la pugui fer servir qualsevol persona que vulgui saber per on començar amb el seu web.",
+    proyecto3: "Les captures d’aquesta pàgina són l’extensió avaluant aquest mateix web, en la versió en castellà.",
+    proyecto4: "Encara no es pot instal·lar: està en revisió a la Chrome Web Store. Si la vols provar abans, escriu-nos.",
+    probar: "Vull provar A11y Primero",
+    altPanel: "La pestanya WCAG del tauler sobre aquest web: sense errors WCAG automàtics i dos punts per revisar a mà, el vídeo sense subtítols (1.2.2) i, obert, el contrast de dos textos que l’animació d’entrada tapa en part (1.4.3), cadascun amb el seu selector.",
+    reto: "El repte",
+    retoTitulo: "Una avaluació, dues maneres d’entendre-la.",
+    reto1: "Un resultat ple de tecnicismes no explica què passa, a qui afecta ni per què convé millorar-ho. I a qui treballa en el codi no li n’hi ha prou de saber que hi ha un problema: necessita localitzar-lo, conèixer el criteri afectat i saber com corregir-lo.",
+    reto2: "Per a qui decideix i per a qui corregeix.",
+    reto3: "Cada troballa s’explica de les dues maneres. “Les imatges han de tenir text alternatiu” és el que llegeix qui decideix; “1.1.1, image-alt, nivell A” i el selector de cada imatge, el que necessita qui corregeix.",
+    altWcag: "El bloc de productes de la portada d’aquest web, amb l’extensió oberta a la dreta: el vídeo d’Itza, emmarcat en blau amb un interrogant perquè cal revisar a mà si necessita subtítols, i al costat la targeta de la mateixa A11y Primero.",
+    pieWcag: "Marcar errors a la pàgina",
+    estructura: "L’estructura",
+    estructuraTitulo: "Cinc pestanyes, de la dada a l’informe.",
+    estructura1: "“Resum” dona una puntuació de 0 a 100 i els resultats per categories. “WCAG”, el detall tècnic de cada error, amb els elements afectats marcats sobre la mateixa pàgina.",
+    estructura2: "“Projecte” avalua diverses pàgines d’un mateix lloc i n’exporta un informe conjunt, perquè la portada pot sortir neta i la carta no. “Historial” compara les tres últimes avaluacions de cada domini. I “Veure com…” simula baixa visió, visió borrosa, daltonisme i alt contrast sobre la pàgina.",
+    estructura3: "Tot acaba en un informe en PDF per compartir i en Markdown per enganxar en un tiquet o un repositori.",
+    altVerComo: "La portada d’aquest web amb la simulació de baixa visió: la il·lustració, el titular i el menú es veuen borrosos i apagats, i el tauler obert a la pestanya “Ver como…” (Veure com…) amb les quatre simulacions.",
+    pieVerComo: "Veure com…",
+    decisiones: "Decisions de disseny",
+    decisionesIntro: "Una prova automàtica detecta aproximadament un terç de les barreres. L’eina no resol l’accessibilitat: ajuda a saber per on començar. Cada decisió surt d’aquí.",
+    mPuntuacion: "Puntuació",
+    mMano: "Revisar a mà",
+    selloTitulo: "Un 100 no és un segell.",
+    sello: "La puntuació sempre va acompanyada del que la prova no ha pogut comprovar. El que l’eina no pot decidir, com un text sobre una foto, se separa per revisar-lo a mà en lloc d’inventar-se un número.",
+    mParte: "Es parteix de",
+    mGrave: "Un error greu",
+    mModerado: "Un de moderat",
+    mResultado: "Resultat",
+    restaTitulo: "Una puntuació que es pot explicar.",
+    resta: "Es parteix de 100 i cada regla que falla resta segons el seu impacte: crític 10, greu 7, moderat 3 i menor 1. Les bones pràctiques i el que cal revisar a mà no resten.",
+    mInforme: "L’informe, al teu ordinador",
+    equipoTitulo: "Les dades es queden al navegador.",
+    equipo: "Sense registre ni servidors externs. L’extensió només llegeix la pestanya on s’obre i només quan es prem “Avaluar”, i l’informe es genera al mateix ordinador.",
+    idiomasTitulo: "En tres idiomes.",
+    idiomas: "La interfície està en castellà, català i anglès, segons l’idioma de Chrome.",
+  },
+  en: {
+    seccion: "Case studies",
+    descripcion: "A11y Primero, the Accesibilidad Primero Chrome extension: an accessibility evaluation explained for those who decide and for those who fix.",
+    heroTitulo: "Understand what fails and how to improve it.",
+    heroGolpe1: "Understand what fails",
+    heroGolpe2: "and how to improve it.",
+    heroTexto: "A11y Primero · Case study",
+    altHero: "A11y Primero open over the home page of this website, in Spanish: the panel gives 100 out of 100, “sin fallos automáticos” (no automated failures), with all four categories at 100, and warns that two checks need manual review.",
+    datos: "Project details",
+    producto: "Product",
+    productoValor: "Chrome extension",
+    anio: "Year",
+    rol: "Role",
+    rolValor: "Development",
+    estandar: "Standard",
+    estado: "Status",
+    estadoValor: "Under review",
+    proyecto: "The project",
+    proyecto1: "A11y Primero is a Chrome extension that checks a page’s accessibility in one click, using axe-core and the WCAG 2.2 criteria.",
+    proyecto2: "We built it for our own work: it’s the tool we start every one of the studio’s audits with. And we’ve made it ready for anyone who wants to know where to begin with their website.",
+    proyecto3: "The screenshots on this page show the extension evaluating this very website, in its Spanish version.",
+    proyecto4: "It can’t be installed yet: it’s under review in the Chrome Web Store. If you’d like to try it sooner, get in touch.",
+    probar: "I’d like to try A11y Primero",
+    altPanel: "The panel’s WCAG tab over this website: no automated WCAG failures and two points to check by hand, the video without captions (1.2.2) and, expanded, the contrast of two pieces of text partly covered by the entrance animation (1.4.3), each with its selector.",
+    reto: "The challenge",
+    retoTitulo: "One evaluation, two ways to understand it.",
+    reto1: "A result full of jargon doesn’t explain what’s happening, who it affects or why it’s worth fixing. And for whoever works on the code, knowing there’s a problem isn’t enough: they need to find it, know which criterion it affects and how to fix it.",
+    reto2: "For those who decide and those who fix.",
+    reto3: "Every finding is told both ways. “Images must have alt text” is what the person deciding reads; “1.1.1, image-alt, level A” and the selector for each image are what the person fixing it needs.",
+    altWcag: "The products section of this website’s home page, with the extension open on the right: the Itza video, outlined in blue with a question mark because whether it needs captions has to be checked by hand, and beside it the card for A11y Primero itself.",
+    pieWcag: "Highlighting failures on the page",
+    estructura: "The structure",
+    estructuraTitulo: "Five tabs, from data to report.",
+    estructura1: "“Summary” gives a score from 0 to 100 and the results by category. “WCAG” gives the technical detail of each failure, with the affected elements highlighted on the page itself.",
+    estructura2: "“Project” evaluates several pages of the same site and exports a combined report, because the home page can come out clean and the menu page not. “History” compares the last three evaluations for each domain. And “View as…” simulates low vision, blurred vision, colour blindness and high contrast on the page.",
+    estructura3: "It all ends up in a report: PDF to share and Markdown to paste into a ticket or a repository.",
+    altVerComo: "This website’s home page with the low vision simulation: the illustration, the headline and the menu look blurred and faded, and the panel is open on the “Ver como…” (View as…) tab with its four simulations.",
+    pieVerComo: "View as…",
+    decisiones: "Design decisions",
+    decisionesIntro: "An automated test catches roughly a third of barriers. The tool doesn’t solve accessibility: it helps you know where to start. Every decision comes from that.",
+    mPuntuacion: "Score",
+    mMano: "Check by hand",
+    selloTitulo: "A 100 is not a seal of approval.",
+    sello: "The score always comes with what the test couldn’t check. Anything the tool can’t decide, such as text over a photo, is set aside to be checked by hand instead of making up a number.",
+    mParte: "Start at",
+    mGrave: "One serious failure",
+    mModerado: "One moderate",
+    mResultado: "Result",
+    restaTitulo: "A score you can explain.",
+    resta: "It starts at 100 and every failing rule subtracts according to its impact: critical 10, serious 7, moderate 3 and minor 1. Best practices and anything to check by hand don’t subtract.",
+    mInforme: "The report, on your computer",
+    equipoTitulo: "The data stays in the browser.",
+    equipo: "No sign-up and no external servers. The extension only reads the tab it’s opened in, and only when you press “Evaluate”, and the report is generated on your own computer.",
+    idiomasTitulo: "In three languages.",
+    idiomas: "The interface is in Spanish, Catalan and English, depending on Chrome’s language.",
+  },
+}[lang];
+import hero from '../../assets/proyectos/a11y-primero/hero.jpg';
+import panelWcag from '../../assets/proyectos/a11y-primero/panel-wcag.png';
+import wcag from '../../assets/proyectos/a11y-primero/wcag.jpg';
+import verComo from '../../assets/proyectos/a11y-primero/ver-como.jpg';
+
+const titulo = 'A11y Primero';
+const datos = [
+  [T.producto, T.productoValor],
+  [T.anio, '2026'],
+  [T.rol, T.rolValor],
+  [T.estandar, 'WCAG 2.2 A/AA'],
+  /* Su estado, a la vista (auditoría de usabilidad, 04/11/2026). */
+  [T.estado, T.estadoValor],
+];
+const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w];
+---
+
+<Base
+  lang={lang}
+  current="proyectos"
+  title={`${titulo} · ${T.seccion} · Accesibilidad Primero`}
+  description={T.descripcion}
+>
+  <div class="a11y" style="--acento: var(--yellow-ap); --texto-acento: var(--ink);">
+    <HeroPagina
+      titulo={T.heroTitulo}
+      golpes={[T.heroGolpe1, T.heroGolpe2]}
+      texto={[T.heroTexto]}
+      superficie={{ fondo: 'var(--yellow-ap)', foco: 'var(--blue-ap)' }}
+      ilustracion={hero}
+      alt={T.altHero}
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
+      <div class="bloque__contenido">
+        <p>{T.proyecto1}</p>
+        <p>{T.proyecto2}</p>
+        <p>{T.proyecto3}</p>
+        {/* El siguiente paso (auditoría de usabilidad, 04/11/2026): todavía
+            no se puede instalar, así que no se promete una descarga. */}
+        <p>{T.proyecto4}</p>
+        <CtaLink href={path('contacto', lang)}>{T.probar}</CtaLink>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <Picture
+        src={panelWcag}
+        formats={['avif', 'webp']}
+        widths={[panelWcag.width / 2, panelWcag.width]}
+        sizes="(min-width: 768px) 300px, calc(100vw - 48px)"
+        alt={T.altPanel}
+        class="captura captura--panel"
+        loading="lazy"
+      />
+      <figcaption>WCAG</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">{T.reto}</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">{T.retoTitulo}</h2>
+        <p>{T.reto1}</p>
+        <h3>{T.reto2}</h3>
+        <p>{T.reto3}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={wcag}
+        formats={['avif', 'webp']}
+        widths={anchos(wcag.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt={T.altWcag}
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>{T.pieWcag}</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">{T.estructura}</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">{T.estructuraTitulo}</h2>
+        <p>{T.estructura1}</p>
+        <p>{T.estructura2}</p>
+        <p>{T.estructura3}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <Picture
+        src={verComo}
+        formats={['avif', 'webp']}
+        widths={anchos(verComo.width, [640, 1100, 1600, 2200])}
+        sizes="(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw - 48px)"
+        alt={T.altVerComo}
+        class="captura"
+        loading="lazy"
+      />
+      <figcaption>{T.pieVerComo}</figcaption>
+    </figure>
+
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">{T.decisiones}</h2>
+        <p>{T.decisionesIntro}</p>
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <MicroDecision tipo="sello">
+            <span class="m-fila m-fila--nota"><span>{T.mPuntuacion}</span><span>100</span></span>
+            <span class="m-barra"><i></i></span>
+            <span class="m-fila m-mano"><span>{T.mMano}</span><span>2</span></span>
+          </MicroDecision>
+          <h3>{T.selloTitulo}</h3>
+          <p>{T.sello}</p>
+        </li>
+        <li>
+          <MicroDecision tipo="resta">
+            <span class="m-fila m-f1"><span>{T.mParte}</span><span>100</span></span>
+            <span class="m-fila m-f2"><span>{T.mGrave}</span><span>-7</span></span>
+            <span class="m-fila m-f3"><span>{T.mModerado}</span><span>-3</span></span>
+            <span class="m-linea"></span>
+            <span class="m-fila m-f4"><span>{T.mResultado}</span><span>90</span></span>
+          </MicroDecision>
+          <h3>{T.restaTitulo}</h3>
+          <p>{T.resta}</p>
+        </li>
+        <li>
+          <MicroDecision tipo="equipo">
+            <span class="m-ventana">
+              <span class="m-barra m-b1"><i></i></span>
+              <span class="m-barra m-b2"><i></i></span>
+              <span class="m-barra m-b3"><i></i></span>
+              <span class="m-fila"><span>{T.mInforme}</span></span>
+            </span>
+          </MicroDecision>
+          <h3>{T.equipoTitulo}</h3>
+          <p>{T.equipo}</p>
+        </li>
+        <li>
+          <MicroDecision tipo="idiomas">
+            <span class="m-capa m-capa--1"><span class="m-etiqueta">Castellano</span><span class="m-boton">Evaluar</span></span>
+            <span class="m-capa m-capa--2"><span class="m-etiqueta">Català</span><span class="m-boton">Avaluar</span></span>
+            <span class="m-capa m-capa--3"><span class="m-etiqueta">English</span><span class="m-boton">Evaluate</span></span>
+          </MicroDecision>
+          <h3>{T.idiomasTitulo}</h3>
+          <p>{T.idiomas}</p>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+  <CierreProyecto actual="a11y-primero" titulo={titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en los casos de clientes. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta en su columna de 280 desde 1024;
+     encima en tablet y móvil. Distancias del 04/11/2026: 48 entre titular y
+     texto, 24 entre párrafos, 72 antes de un titular dentro del texto. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); column-gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en Izaskun. */
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-48); }
+  /* La microanimación, a 24 de su titular (05/11/2026). */
+  .decisiones__lista li > :global(.micro) + h3 { margin-block-start: calc(var(--space-24) - var(--space-48)); }
+
+  /* ---- Microanimaciones de las decisiones (05/11/2026) ----
+     MicroDecision.astro pone el marco y las reglas (estado final por defecto,
+     arranque al entrar en pantalla, una vez). Aquí, las piezas. */
+  @keyframes m-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes m-aparece { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes m-sale { from { opacity: 1; } to { opacity: 0; } }
+  .m-fila { position: absolute; inset-inline: 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; white-space: nowrap; }
+  .m-barra { position: absolute; inset-inline: 16px; block-size: 8px; border-radius: 4px; background: var(--hairline); overflow: hidden; }
+  .m-barra i { display: block; block-size: 100%; inline-size: 100%; background: var(--ink); transform-origin: left center; }
+  .m-boton { position: absolute; display: inline-flex; align-items: center; justify-content: center; block-size: 44px; padding-inline: 16px; border: 1px solid var(--ink); border-radius: 22px; white-space: nowrap; background: var(--white); }
+  .m-capa { position: absolute; inset: 0; }
+
+  /* 1 · Un 100 no es un sello: la nota llega a 100 y, debajo, lo que queda por mirar a mano. */
+  :global(.micro--sello) .m-fila--nota { inset-block-start: 20px; }
+  :global(.micro--sello) .m-barra { inset-block-start: 60px; }
+  :global(.micro--sello) .m-barra i { animation: m-llena 1400ms var(--ease-out) 300ms; }
+  :global(.micro--sello) .m-mano { inset-block-start: 96px; animation: m-entra 400ms var(--ease-out) 2000ms; }
+  :global(.micro--sello) .m-mano--2 { inset-block-start: 128px; animation-delay: 2400ms; }
+  @keyframes m-llena { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* 2 · Una puntuación que se puede explicar: 100, lo que resta cada fallo y el resultado. */
+  :global(.micro--resta) .m-f1 { inset-block-start: 16px; }
+  :global(.micro--resta) .m-f2 { inset-block-start: 52px; animation: m-entra 400ms var(--ease-out) 700ms; }
+  :global(.micro--resta) .m-f3 { inset-block-start: 88px; animation: m-entra 400ms var(--ease-out) 1400ms; }
+  :global(.micro--resta) .m-linea { position: absolute; inset-inline: 16px; inset-block-start: 126px; border-block-start: 1px solid var(--ink); animation: m-aparece 300ms linear 2100ms; }
+  :global(.micro--resta) .m-f4 { inset-block-start: 132px; animation: m-entra 400ms var(--ease-out) 2300ms; }
+
+  /* 3 · Los datos se quedan en el navegador: el informe se hace dentro de la ventana. */
+  .m-ventana { position: absolute; inset: 16px 16px 16px 16px; border: 1px solid var(--ink); border-radius: 8px; }
+  .m-ventana::before { content: ''; position: absolute; inset-block-start: 10px; inset-inline-start: 12px; inline-size: 36px; block-size: 6px;
+    background: radial-gradient(circle, var(--ink) 2.5px, transparent 3px) 0 0 / 12px 6px repeat-x; }
+  .m-ventana .m-barra { inset-inline: 16px; }
+  .m-ventana .m-barra i { animation: m-llena 600ms var(--ease-out) both; }
+  .m-ventana .m-b1 { inset-block-start: 36px; } .m-ventana .m-b1 i { animation-delay: 400ms; }
+  .m-ventana .m-b2 { inset-block-start: 54px; inset-inline-end: 80px; } .m-ventana .m-b2 i { animation-delay: 800ms; }
+  .m-ventana .m-b3 { inset-block-start: 72px; inset-inline-end: 140px; } .m-ventana .m-b3 i { animation-delay: 1200ms; }
+  :global(.micro--equipo) .m-fila { inset-block-end: 14px; inset-inline: 16px; animation: m-entra 400ms var(--ease-out) 2000ms; }
+
+  /* 4 · En tres idiomas: el mismo botón en castellano, catalán e inglés. */
+  :global(.micro--idiomas) .m-capa--1, .micro--idiomas .m-capa--2 { opacity: 0; }
+  :global(.micro--idiomas) .m-capa--1 { animation: m-turno 1300ms linear 300ms; }
+  :global(.micro--idiomas) .m-capa--2 { animation: m-turno 1300ms linear 1600ms; }
+  :global(.micro--idiomas) .m-capa--3 { animation: m-aparece 400ms var(--ease-out) 2900ms; }
+  :global(.micro--idiomas) .m-boton { inset-block-start: 66px; inset-inline-start: 16px; }
+  :global(.micro--idiomas) .m-etiqueta { position: absolute; inset-block-start: 20px; inset-inline-start: 16px; }
+  @keyframes m-turno { 0% { opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; } }
+
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-64); }
+  }
+
+  /* La captura del hero, con el radio de las demás capturas. */
+  .a11y :global(.apertura__ilustracion) { border-radius: var(--radio); }
+
+  /* ---- Capturas ---- con la sombra leve de los vídeos sobre blanco. */
+  .a11y :global(.captura) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  /* El pie, a 60 de la imagen, como en Izaskun (Johnny, 05/11/2026): allí lo
+     separa el botón del vídeo; aquí, el aire. Los vídeos ya lo llevan. */
+  .pieza > :global(:not(.vp)) + figcaption { margin-block-start: calc(var(--space-48) + var(--space-4)); }
+  .pieza figcaption { align-self: stretch; }
+  /* El panel solo, a su tamaño de Chrome (300): la captura es @2x de eso. */
+  .a11y :global(.captura--panel) { width: min(300px, 100%); }
+  .pieza--derecha figcaption { width: min(300px, 100%); }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--centro { padding-inline: calc(12% + var(--gutter-page)); }
+  }
+
+</style>

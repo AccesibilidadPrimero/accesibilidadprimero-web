@@ -22,13 +22,23 @@
    Lista cerrada y corta a propósito: palabras de una a tres letras que no
    pueden cerrar una línea. Las cadenas («y a la casa») quedan unidas enteras;
    en castellano son cortas, y `npm run a11y` mide a 320 px que no desborden.
-   Solo castellano: el catalán y el inglés tendrán su propia lista cuando
-   entren.
+   Cada idioma con su lista (05/11/2026): el catalán y el inglés entran con
+   la web traducida. En inglés la tradición no es tan estricta, pero la regla
+   de Johnny es la misma: ninguna línea acaba en «and», «of» o «the».
    --------------------------------------------------------------------------- */
 export const PARTICULAS_ES = [
   'y', 'e', 'o', 'u', 'ni', 'a', 'al', 'de', 'del', 'en', 'el', 'la', 'lo', 'los', 'las',
   'un', 'una', 'con', 'por', 'sin', 'que', 'se', 'su', 'sus', 'mi', 'tu', 'si', 'no',
 ];
+export const PARTICULAS_CA = [
+  'i', 'o', 'u', 'ni', 'a', 'al', 'als', 'de', 'del', 'dels', 'en', 'el', 'la', 'els', 'les',
+  'un', 'una', 'amb', 'per', 'pel', 'que', 'es', 'seu', 'si', 'no', 'hi', 'ho', 'ens', 'és',
+];
+export const PARTICULAS_EN = [
+  'a', 'an', 'the', 'and', 'or', 'nor', 'of', 'to', 'in', 'on', 'at', 'by', 'for', 'as',
+  'if', 'no', 'our', 'its', 'we', 'is',
+];
+const LISTAS: Record<string, string[]> = { es: PARTICULAS_ES, ca: PARTICULAS_CA, en: PARTICULAS_EN };
 
 const NBSP = ' ';
 /* Las tablas tampoco: en una columna estrecha, cualquier palabra unida de
@@ -42,24 +52,28 @@ const LIBRE = /\bdata-renglones="libre"/;
    el espacio también se fija. Delante de un bloque no tiene sentido. */
 const EN_LINEA = new Set(['a', 'span', 'strong', 'em', 'b', 'i', 'abbr', 'sup', 'sub', 'mark', 'small', 'time', 'q', 'cite', 'dfn', 'bdi']);
 
-const lista = PARTICULAS_ES.join('|');
+function patrones(particulas: string[]) {
+  const lista = particulas.join('|');
 /* Partícula entera (precedida de inicio, espacio, nbsp o un signo de
    apertura) seguida de un espacio normal y de algo que no es espacio. */
-const DENTRO = new RegExp(`(^|[\\s\\u00A0(«“"¿¡—])(${lista})[ \\t\\r\\n]+(?=\\S)`, 'giu');
+  const DENTRO = new RegExp(`(^|[\\s\\u00A0(«“"¿¡—])(${lista})[ \\t\\r\\n]+(?=\\S)`, 'giu');
 /* En el <h1> (titulares en display, 34 px en móvil) la línea a 320 px mide
    272 px. Medido en el render: «a la accesibilidad» ocupa 247 y «de
    comunicación», 256. Ahí la cadena ENTERA de palabras unidas no pasa de 18
    caracteres; si no cabe, la partícula se queda al final de su línea: el
    reflow (1.4.10, AA) manda sobre la tipografía. */
+  const ES_PARTICULA = new RegExp(`^[(«“"¿¡—]*(${lista})$`, 'iu');
+  const AL_FINAL = new RegExp(`(^|[\\s\\u00A0(«“"¿¡—])(${lista})[ \\t\\r\\n]+$`, 'iu');
+  return { DENTRO, ES_PARTICULA, AL_FINAL };
+}
+const PATRONES = Object.fromEntries(Object.entries(LISTAS).map(([k, v]) => [k, patrones(v)]));
 const MAX_TITULAR = 18;
-const ES_PARTICULA = new RegExp(`^[(«“"¿¡—]*(${lista})$`, 'iu');
-const AL_FINAL = new RegExp(`(^|[\\s\\u00A0(«“"¿¡—])(${lista})[ \\t\\r\\n]+$`, 'iu');
 /* Las dos últimas palabras del texto, separadas por un espacio normal. */
 const VIUDA = /(\S+)[ \t\r\n]+(\S+\s*)$/u;
 const MAX_VIUDA = 28;
 const PARRAFO = new Set(['p', 'li', 'dd', 'figcaption', 'blockquote']);
 
-function fijarTitular(texto: string): string {
+function fijarTitular(texto: string, { ES_PARTICULA }: ReturnType<typeof patrones>): string {
   const t = texto.split(/([ \t\r\n]+)/);   // palabra, espacio, palabra…
   let cadena = (t[0] ?? '').length;
   for (let i = 1; i + 1 < t.length; i += 2) {
@@ -72,8 +86,9 @@ function fijarTitular(texto: string): string {
   return t.join('');
 }
 
-function fijar(texto: string, siguienteEnLinea: boolean, enTitular: boolean): string {
-  if (enTitular) return fijarTitular(texto);
+function fijar(texto: string, siguienteEnLinea: boolean, enTitular: boolean, pat: ReturnType<typeof patrones>): string {
+  const { DENTRO, AL_FINAL } = pat;
+  if (enTitular) return fijarTitular(texto, pat);
   /* Dos pasadas: con una sola, en «y a la casa» el espacio de la primera
      coincidencia se consume y «a» ya no encuentra su inicio. */
   let t = texto.replace(DENTRO, `$1$2${NBSP}`).replace(DENTRO, `$1$2${NBSP}`);
@@ -82,7 +97,8 @@ function fijar(texto: string, siguienteEnLinea: boolean, enTitular: boolean): st
 }
 
 /** HTML entero → mismo HTML con las partículas fijadas en el texto. */
-export function sinParticulasAlFinal(html: string): string {
+export function sinParticulasAlFinal(html: string, idioma = 'es'): string {
+  const pat = PATRONES[idioma] ?? PATRONES.es;
   const trozos = html.split(/(<[^>]*>)/);
   const pila: string[] = [];
   let ultimoTexto = -1;   // último trozo de texto dentro del bloque en curso
@@ -120,7 +136,7 @@ export function sinParticulasAlFinal(html: string): string {
     }
     if (pila.length || !t.trim()) continue;
     const sig = /^<\s*([a-zA-Z][\w-]*)/.exec(trozos[i + 1] ?? '');
-    trozos[i] = fijar(t, Boolean(sig && EN_LINEA.has(sig[1].toLowerCase())), enTitular);
+    trozos[i] = fijar(t, Boolean(sig && EN_LINEA.has(sig[1].toLowerCase())), enTitular, pat);
     ultimoTexto = i;
   }
   return trozos.join('');

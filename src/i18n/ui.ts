@@ -51,6 +51,30 @@ type Dict = {
   notFoundBody: string;
   notFoundAction: string;
   langMissingNotice: string;
+  /* Compartidas por los componentes (05/11/2026). */
+  /** El nombre accesible del logotipo. */
+  logoLabel: string;
+  /** Detrás de un enlace que sale a otra pestaña (con el espacio delante). */
+  nuevaVentana: string;
+  /** «Leer más» + « sobre …»: el contexto del botón para el lector de pantalla. */
+  sobre: string;
+  testimonio: string;
+  /** La nota bajo un testimonio traducido (vacía en castellano). */
+  testimonioTraducido: string;
+  siguienteProyecto: string;
+  /** «Ver Itza»: el siguiente caso del recorrido. */
+  ver: string;
+  verTodosCasos: string;
+  /** «Declaración de accesibilidad» (y «de {cliente}» con `de()`). */
+  declaracion: string;
+  mesaMas: string;
+  /** El título de la página de Casos de estudio y su prefijo en los filtros. */
+  casosTitulo: string;
+  filtrosLabel: string;
+  todos: string;
+  casosDescripcion: string;
+  /** El locale de Intl para las fechas. */
+  locale: string;
 };
 
 export const UI: Record<Lang, Dict> = {
@@ -101,6 +125,21 @@ export const UI: Record<Lang, Dict> = {
       'Puede que la hayamos movido o que el enlace esté mal escrito. Desde aquí se llega a todo lo demás.',
     notFoundAction: 'Ir a la portada',
     langMissingNotice: 'Este artículo solo está publicado en',
+    logoLabel: 'Accesibilidad Primero, ir a la portada',
+    nuevaVentana: ' (se abre en una ventana nueva)',
+    sobre: ' sobre ',
+    testimonio: 'Testimonio',
+    testimonioTraducido: '',
+    siguienteProyecto: 'Siguiente proyecto',
+    ver: 'Ver',
+    verTodosCasos: 'Ver todos los casos de estudio',
+    declaracion: 'Declaración de accesibilidad',
+    mesaMas: 'Ver más en Mastodon',
+    casosTitulo: 'Casos de estudio',
+    filtrosLabel: 'Tipos de proyecto',
+    todos: 'Todos',
+    casosDescripcion: 'Webs, aplicaciones y extensiones accesibles para organizaciones y proyectos con impacto social.',
+    locale: 'es-ES',
   },
 
   ca: {
@@ -112,28 +151,28 @@ export const UI: Record<Lang, Dict> = {
     langGroupLabel: 'Idioma',
     langSwitchLabel: 'Canvia d’idioma',
     currentPage: 'Pàgina actual',
-    footerTagline: 'Accessibilitat Primer. Sempre.',
+    footerTagline: 'Accesibilidad Primero. Sempre.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'El teu projecte treballa per la inclusió.\nEl teu web també.',
+    ctaHeading: 'Si el teu projecte és inclusiu,\nel teu web també.',
     ctaAction: 'Explica’ns el teu projecte',
     ctaCierre: 'Escriu-nos',
     nav: {
       home: 'Inici',
-      proyectos: 'Projectes',
-      servicios: 'Serveis',
-      estudio: 'Estudi',
+      proyectos: 'Casos d’estudi',
+      servicios: 'Què fem',
+      estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contacte',
       privacidad: 'Privacitat',
       cookies: 'Galetes',
       accesibilidad: 'Accessibilitat',
     },
-    navComplemento: {},
-    readMore: 'Llegeix-ne més',
-    readLess: 'Llegeix-ne menys',
-    carouselPause: 'Pausa',
-    carouselPlay: 'Reprodueix',
+    navComplemento: { estudio: ', l’estudi' },
+    readMore: 'Llegir-ne més',
+    readLess: 'Llegir-ne menys',
+    carouselPause: 'Pausar',
+    carouselPlay: 'Reproduir',
     carouselRegion: 'Il·lustracions de l’estudi',
     mesaTitulo: 'Sobre la taula',
     mesaCta: 'Anar a Mastodon',
@@ -141,12 +180,27 @@ export const UI: Record<Lang, Dict> = {
     publishedOn: 'Publicat el',
     updatedOn: 'Actualitzat el',
     backToBlog: 'Torna al blog',
-    backToProjects: 'Torna a projectes',
+    backToProjects: 'Torna als casos d’estudi',
     notFoundTitle: 'Aquesta pàgina no existeix',
     notFoundBody:
       'Potser l’hem moguda o l’enllaç està mal escrit. Des d’aquí s’arriba a tota la resta.',
     notFoundAction: 'Vés a la portada',
     langMissingNotice: 'Aquest article només està publicat en',
+    logoLabel: 'Accesibilidad Primero, vés a la portada',
+    nuevaVentana: ' (s’obre en una finestra nova)',
+    sobre: ' sobre ',
+    testimonio: 'Testimoni',
+    testimonioTraducido: 'Traducció del castellà.',
+    siguienteProyecto: 'Projecte següent',
+    ver: 'Veure',
+    verTodosCasos: 'Veure tots els casos d’estudi',
+    declaracion: 'Declaració d’accessibilitat',
+    mesaMas: 'Veure’n més a Mastodon',
+    casosTitulo: 'Casos d’estudi',
+    filtrosLabel: 'Tipus de projecte',
+    todos: 'Tots',
+    casosDescripcion: 'Webs, aplicacions i extensions accessibles per a organitzacions i projectes amb impacte social.',
+    locale: 'ca',
   },
 
   en: {
@@ -158,24 +212,24 @@ export const UI: Record<Lang, Dict> = {
     langGroupLabel: 'Language',
     langSwitchLabel: 'Change language',
     currentPage: 'Current page',
-    footerTagline: 'Accessibility First. Always.',
+    footerTagline: 'Accesibilidad Primero. Always.',
     footerCopyright: '© 2026 Accesibilidad Primero',
     footerNavLabel: 'Legal',
-    ctaHeading: 'Your project works for inclusion.\nYour website should too.',
+    ctaHeading: 'If your project is inclusive,\nyour website should be too.',
     ctaAction: 'Tell us about your project',
-    ctaCierre: 'Write to us',
+    ctaCierre: 'Get in touch',
     nav: {
       home: 'Home',
-      proyectos: 'Projects',
-      servicios: 'Services',
-      estudio: 'Studio',
+      proyectos: 'Case studies',
+      servicios: 'What we do',
+      estudio: 'AP',
       blog: 'Blog',
       contacto: 'Contact',
       privacidad: 'Privacy',
       cookies: 'Cookies',
       accesibilidad: 'Accessibility',
     },
-    navComplemento: {},
+    navComplemento: { estudio: ', the studio' },
     readMore: 'Read more',
     readLess: 'Read less',
     carouselPause: 'Pause',
@@ -183,16 +237,31 @@ export const UI: Record<Lang, Dict> = {
     carouselRegion: 'Studio illustrations',
     mesaTitulo: 'Work in progress',
     mesaCta: 'Go to Mastodon',
-    mesaRegion: 'Work in progress: what we are on right now',
+    mesaRegion: 'Work in progress: what we’re working on now',
     publishedOn: 'Published on',
     updatedOn: 'Updated on',
     backToBlog: 'Back to the blog',
-    backToProjects: 'Back to projects',
-    notFoundTitle: 'This page does not exist',
+    backToProjects: 'Back to case studies',
+    notFoundTitle: 'This page doesn’t exist',
     notFoundBody:
-      'We may have moved it, or the link may be misspelled. Everything else is reachable from here.',
+      'We may have moved it, or the link may be mistyped. You can reach everything else from here.',
     notFoundAction: 'Go to the home page',
     langMissingNotice: 'This article is only published in',
+    logoLabel: 'Accesibilidad Primero, go to the home page',
+    nuevaVentana: ' (opens in a new window)',
+    sobre: ' about ',
+    testimonio: 'Testimonial',
+    testimonioTraducido: 'Translated from Spanish.',
+    siguienteProyecto: 'Next project',
+    ver: 'See',
+    verTodosCasos: 'See all case studies',
+    declaracion: 'Accessibility statement',
+    mesaMas: 'More on Mastodon',
+    casosTitulo: 'Case studies',
+    filtrosLabel: 'Project types',
+    todos: 'All',
+    casosDescripcion: 'Accessible websites, apps and extensions for organisations and projects with social impact.',
+    locale: 'en-GB',
   },
 };
 

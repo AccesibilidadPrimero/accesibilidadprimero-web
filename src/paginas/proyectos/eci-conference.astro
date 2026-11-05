@@ -1,0 +1,465 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso ECI Conference Madrid 2027 · Figma `Producción · Caso ECI Conference
+   2027`: Desktop 2536:2 · Tablet 2620:276 · Móvil 2624:283. Montado el
+   29/10/2026.
+
+   Maqueta propia, no la plantilla de [slug].astro: «la maquetación de cada
+   caso sale de la lógica del propio proyecto» (casos-una-maqueta-por-
+   proyecto). ECI va de hacer navegable lo complejo, así que el caso se
+   ordena: etiqueta a la izquierda (280) y contenido a la derecha, y entre
+   secciones, la web funcionando en vídeo.
+
+   Lo que NO viene del Figma, por las reglas del sitio:
+   · Cabecera, CTA, pie y márgenes: los del sitio (24 al borde, 09/10).
+   · Hero: el común (HeroPagina) con la foto de Madrid (13/10 y 23/10).
+   · Tipografía: un solo titular grande, el h1 (08/10). Los h2, a tamaño de
+     texto. Dos colores: los pies de vídeo en gris del Figma van en negro;
+     sobre la banda azul, en el Silk que declara la ficha del proyecto.
+   · Accesibilidad: solo el enlace a la declaración del cliente (23/10). La
+     tabla WCAG del Figma no se monta.
+   · Los vídeos son grabaciones de eciconference2027.com hechas el
+     29/10/2026, una por tamaño. Cada uno lleva su control (VideoPausable).
+   · El primer vídeo del Figma tenía el rótulo «por confirmar»: es el
+     recorrido de la portada de la web, como en Foc i Cor (Johnny, 29/10).
+   --------------------------------------------------------------------------- */
+import { getEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import VideoPausable from '../../components/VideoPausable.astro';
+import EsquemaModular from '../../components/EsquemaModular.astro';
+import { path } from '../../i18n/config';
+import { idiomaDe, localizar } from '../../i18n/idioma';
+const lang = idiomaDe(Astro.url);
+/* Los textos en los tres idiomas (05/11/2026). Glosario: src/i18n/GLOSARIO.md. */
+const T = {
+  es: {
+    heroTitulo: "Una web que crece con el congreso.",
+    heroGolpe1: "Una web que crece",
+    heroGolpe2: "con el congreso.",
+    heroTexto: "ECI Conference Madrid 2027 · Caso de estudio",
+    datos: "Datos del proyecto",
+    cliente: "Cliente",
+    clienteValor: "AEIPI y Eurlyaid",
+    anio: "Año",
+    rol: "Rol",
+    rolValor: "Diseño y desarrollo",
+    estandar: "Estándar",
+    estandarValor: "WCAG 2.2 nivel AA",
+    web: "Web",
+    proyecto: "El proyecto",
+    proyecto1: "ECI Conference reúne a profesionales, investigadores y familias de Europa para compartir conocimiento y avanzar en torno a la intervención temprana en la infancia.",
+    proyecto2: "Detrás de esos días de encuentro hay una enorme cantidad de información, decisiones y recorridos digitales.",
+    proyecto3: "Nuestro trabajo fue ordenarla para que cada persona encuentre su perfil.",
+    altPortada: "Recorrido por la portada de eciconference2027.com de arriba abajo: la foto nocturna de Madrid con el lema “Growing together: innovation, equity and community”, la bienvenida al congreso, los seis motivos para asistir, las cinco líneas temáticas del programa, las ponencias principales, la trayectoria de las ediciones anteriores, las tarifas y la convocatoria de abstracts, la sede en el Colegio de Médicos de Madrid, las preguntas frecuentes y el formulario de contacto.",
+    nombrePortada: "portada de eciconference2027.com",
+    reto: "El reto",
+    retoTitulo: "Mucha información. Muchos perfiles. Un sistema claro.",
+    reto1: "Un congreso internacional empieza mucho antes de abrir sus puertas. Hay que reunir inscripciones, tarifas, abstracts, ponencias, horarios, espacios e información práctica. Y ofrecerla a personas con perfiles y necesidades diferentes, mientras los contenidos se actualizan a medida que se acerca la fecha.",
+    reto2: "El reto estaba en ayudar a cada persona a encontrar y comprender la información que necesita.",
+    reto3: "Por eso empezamos por ordenar los contenidos, definir jerarquías y crear recorridos claros.",
+    altPonentes: "La página de ponentes: el carrusel de las ponencias principales avanza y se abre la ficha de uno de los ponentes, con el título de su ponencia, su foto y su biografía, que se recorre antes de cerrarla.",
+    ordenar: "Ordenar",
+    ordenarTitulo: "De lo general a lo concreto.",
+    ordenar1: "Revisamos el contenido, agrupamos necesidades y construimos una arquitectura que permite avanzar de lo general a lo concreto. Cada página intenta responder primero a una necesidad y después navegar al siguiente paso.",
+    ordenar2: "La mayor parte del trabajo no estuvo en añadir. Estuvo en simplificar.",
+    altTracks: "Las cinco líneas temáticas del programa en tarjetas de color. Se abre la primera, “Families, participation and natural environments”, con su descripción; se cierra y se abre la tercera, “Quality, evidence and transdisciplinary practice”.",
+    tarifas: "Sistema de tarifas",
+    tarifasTitulo: "Antes del precio, una pregunta: ¿quién eres?",
+    tarifas1: "En ediciones anteriores, mucha gente no sabía qué entrada le correspondía entre tantas combinaciones de perfiles y condiciones.",
+    tarifas2: "En lugar de trasladar esa complejidad a las personas mediante una gran tabla de precios, cambiamos la lógica. A partir de una primera elección, el sistema acompaña a cada persona por las opciones que le corresponden, elimina las que no son relevantes y termina mostrando la tarifa adecuada.",
+    tarifas3: "Cuando la persona sabe qué inscripción necesita, el proceso continúa en Weeztix para formalizarla.",
+    altTarifas: "El selector de tarifas de la web: se elige el perfil profesional, después un país de renta alta, y aparecen solo las tarifas que corresponden, con la inscripción anticipada a 380 €, la general a 440 € y los talleres previos a 65 €.",
+    modular: "Un sistema modular",
+    modularTitulo: "Diseñamos para que la web pueda crecer con el congreso.",
+    modular1: "La web se publica antes de que esté disponible toda la información. Los perfiles de ponentes, los abstracts, los contenidos y el programa se incorporan a medida que se confirman.",
+    modular2: "Por eso creamos un sistema modular que permite añadir y organizar nuevos contenidos sin rediseñar la web cada vez.",
+    modular3: "La experiencia puede evolucionar con el congreso: acompañar a quienes empiezan a planificar su participación meses antes y adaptarse a las necesidades de quienes consultan la información durante el evento, siempre desde una misma base.",
+    modular4: "Los abstracts se envían y se revisan en Accesible Abstracts, la plataforma que hicimos para el congreso.",
+    verAA: "Ver el caso de Accesible Abstracts",
+    testimonio: "Desde el otro lado",
+    cita: "“Desde AEIPI, donde estamos comprometidos con la accesibilidad, la inclusión y los derechos de la infancia con desafíos en el desarrollo y sus familias, haber tenido la oportunidad de trabajar con Accesibilidad Primero, ha sido el mejor camino de asegurar la coherencia del código ético de la entidad, haciendo que la información de las conferencias ECI 2027 en Madrid, llegase a cualquier persona, independientemente de su condición, lugar de residencia o idioma, y ofreciendo oportunidades equitativas de participación, gracias a los recursos y prestaciones que desde Accesibilidad Primero nos han brindado.”",
+    cargo: "Directora de Atención Temprana en Avapace",
+    seccion: "Casos de estudio",
+    traducida: "",
+  },
+  ca: {
+    heroTitulo: "Un web que creix amb el congrés.",
+    heroGolpe1: "Un web que creix",
+    heroGolpe2: "amb el congrés.",
+    heroTexto: "ECI Conference Madrid 2027 · Cas d’estudi",
+    datos: "Dades del projecte",
+    cliente: "Client",
+    clienteValor: "AEIPI i Eurlyaid",
+    anio: "Any",
+    rol: "Rol",
+    rolValor: "Disseny i desenvolupament",
+    estandar: "Estàndard",
+    estandarValor: "WCAG 2.2 nivell AA",
+    web: "Web",
+    proyecto: "El projecte",
+    proyecto1: "ECI Conference reuneix professionals, persones investigadores i famílies de tot Europa per compartir coneixement i fer avançar l’atenció primerenca a la infància.",
+    proyecto2: "Darrere d’aquests dies de trobada hi ha una quantitat enorme d’informació, decisions i recorreguts digitals.",
+    proyecto3: "La nostra feina va ser ordenar-la perquè cada persona hi trobi el seu perfil.",
+    altPortada: "Recorregut per la portada d’eciconference2027.com de dalt a baix: la foto nocturna de Madrid amb el lema “Growing together: innovation, equity and community”, la benvinguda al congrés, els sis motius per assistir-hi, les cinc línies temàtiques del programa, les ponències principals, la trajectòria de les edicions anteriors, les tarifes i la convocatòria d’abstracts, la seu al Col·legi de Metges de Madrid, les preguntes freqüents i el formulari de contacte.",
+    nombrePortada: "portada d’eciconference2027.com",
+    reto: "El repte",
+    retoTitulo: "Molta informació. Molts perfils. Un sistema clar.",
+    reto1: "Un congrés internacional comença molt abans d’obrir les portes. Cal reunir inscripcions, tarifes, abstracts, ponències, horaris, espais i informació pràctica. I oferir-la a persones amb perfils i necessitats diferents, mentre els continguts s’actualitzen a mesura que s’acosta la data.",
+    reto2: "El repte era ajudar cada persona a trobar i entendre la informació que necessita.",
+    reto3: "Per això vam començar ordenant els continguts, definint jerarquies i creant recorreguts clars.",
+    altPonentes: "La pàgina de ponents: el carrusel de les ponències principals avança i s’obre la fitxa d’un dels ponents, amb el títol de la ponència, la foto i la biografia, que es recorre abans de tancar-la.",
+    ordenar: "Ordenar",
+    ordenarTitulo: "Del general al concret.",
+    ordenar1: "Vam revisar el contingut, vam agrupar necessitats i vam construir una arquitectura que permet avançar del general al concret. Cada pàgina intenta respondre primer a una necessitat i després portar al pas següent.",
+    ordenar2: "La major part de la feina no va ser afegir. Va ser simplificar.",
+    altTracks: "Les cinc línies temàtiques del programa en targetes de colors. S’obre la primera, “Families, participation and natural environments”, amb la seva descripció; es tanca i s’obre la tercera, “Quality, evidence and transdisciplinary practice”.",
+    tarifas: "Sistema de tarifes",
+    tarifasTitulo: "Abans del preu, una pregunta: qui ets?",
+    tarifas1: "En edicions anteriors, molta gent no sabia quina entrada li corresponia entre tantes combinacions de perfils i condicions.",
+    tarifas2: "En lloc de traslladar aquesta complexitat a les persones amb una gran taula de preus, vam canviar la lògica. A partir d’una primera tria, el sistema acompanya cada persona per les opcions que li corresponen, elimina les que no són rellevants i acaba mostrant la tarifa adequada.",
+    tarifas3: "Quan la persona sap quina inscripció necessita, el procés continua a Weeztix per formalitzar-la.",
+    altTarifas: "El selector de tarifes del web: es tria el perfil professional, després un país de renda alta, i apareixen només les tarifes que corresponen, amb la inscripció anticipada a 380 €, la general a 440 € i els tallers previs a 65 €.",
+    modular: "Un sistema modular",
+    modularTitulo: "Vam dissenyar el web perquè pogués créixer amb el congrés.",
+    modular1: "El web es publica abans que tota la informació estigui disponible. Els perfils dels ponents, els abstracts, els continguts i el programa s’hi incorporen a mesura que es confirmen.",
+    modular2: "Per això vam crear un sistema modular que permet afegir i organitzar continguts nous sense redissenyar el web cada vegada.",
+    modular3: "L’experiència pot evolucionar amb el congrés: acompanyar qui comença a planificar la seva participació mesos abans i adaptar-se a les necessitats de qui consulta la informació durant l’esdeveniment, sempre des d’una mateixa base.",
+    modular4: "Els abstracts s’envien i es revisen a Accesible Abstracts, la plataforma que vam fer per al congrés.",
+    verAA: "Veure el cas d’Accesible Abstracts",
+    testimonio: "Des de l’altra banda",
+    cita: "“Des d’AEIPI, on estem compromesos amb l’accessibilitat, la inclusió i els drets de la infància amb reptes en el desenvolupament i de les seves famílies, haver tingut l’oportunitat de treballar amb Accesibilidad Primero ha estat el millor camí per assegurar la coherència amb el codi ètic de l’entitat: ha fet que la informació de les conferències ECI 2027 a Madrid arribés a qualsevol persona, independentment de la seva condició, del lloc de residència o de l’idioma, i ha ofert oportunitats equitatives de participació, gràcies als recursos i les prestacions que ens ha brindat Accesibilidad Primero.”",
+    cargo: "Directora d’Atenció Primerenca a Avapace",
+    seccion: "Casos d’estudi",
+    traducida: "Traducció del castellà.",
+  },
+  en: {
+    heroTitulo: "A website that grows with the conference.",
+    heroGolpe1: "A website that grows",
+    heroGolpe2: "with the conference.",
+    heroTexto: "ECI Conference Madrid 2027 · Case study",
+    datos: "Project details",
+    cliente: "Client",
+    clienteValor: "AEIPI and Eurlyaid",
+    anio: "Year",
+    rol: "Role",
+    rolValor: "Design and development",
+    estandar: "Standard",
+    estandarValor: "WCAG 2.2 level AA",
+    web: "Website",
+    proyecto: "The project",
+    proyecto1: "ECI Conference brings together professionals, researchers and families from across Europe to share knowledge and move early childhood intervention forward.",
+    proyecto2: "Behind those few days together lies a huge amount of information, decisions and digital journeys.",
+    proyecto3: "Our job was to organise it so that everyone can find their own profile.",
+    altPortada: "A scroll through the eciconference2027.com home page from top to bottom: the night-time photo of Madrid with the slogan “Growing together: innovation, equity and community”, the welcome to the conference, six reasons to attend, the five themed tracks of the programme, the keynote talks, the history of previous editions, the fees and the call for abstracts, the venue at the Madrid College of Physicians, the FAQs and the contact form.",
+    nombrePortada: "eciconference2027.com home page",
+    reto: "The challenge",
+    retoTitulo: "Lots of information. Lots of profiles. One clear system.",
+    reto1: "An international conference starts long before its doors open. Registrations, fees, abstracts, talks, schedules, venues and practical information all have to come together. And they have to reach people with different profiles and needs, while the content keeps changing as the date gets closer.",
+    reto2: "The challenge was to help each person find and understand the information they need.",
+    reto3: "So we started by organising the content, setting hierarchies and creating clear paths.",
+    altPonentes: "The speakers page: the keynote carousel moves on and one speaker’s profile opens, with the title of their talk, their photo and their biography, which scrolls past before it closes.",
+    ordenar: "Organising",
+    ordenarTitulo: "From the general to the specific.",
+    ordenar1: "We reviewed the content, grouped needs together and built an architecture that moves from the general to the specific. Each page tries to meet one need first, then lead on to the next step.",
+    ordenar2: "Most of the work wasn’t adding. It was simplifying.",
+    altTracks: "The five themed tracks of the programme on coloured cards. The first, “Families, participation and natural environments”, opens with its description; it closes and the third, “Quality, evidence and transdisciplinary practice”, opens.",
+    tarifas: "Fee system",
+    tarifasTitulo: "Before the price, a question: who are you?",
+    tarifas1: "At previous editions, many people couldn’t tell which ticket was theirs among so many combinations of profiles and conditions.",
+    tarifas2: "Rather than handing that complexity to people as one huge price table, we changed the logic. Starting from a first choice, the system guides each person through the options that apply to them, removes the ones that don’t and ends by showing the right fee.",
+    tarifas3: "Once someone knows which registration they need, the process continues on Weeztix to complete it.",
+    altTarifas: "The website’s fee selector: the professional profile is chosen, then a high-income country, and only the matching fees appear, with early registration at €380, standard registration at €440 and pre-conference workshops at €65.",
+    modular: "A modular system",
+    modularTitulo: "We designed the website to grow with the conference.",
+    modular1: "The website goes live before all the information is available. Speaker profiles, abstracts, content and the programme are added as they are confirmed.",
+    modular2: "So we created a modular system for adding and organising new content without redesigning the website every time.",
+    modular3: "The experience can evolve with the conference: supporting those who start planning months ahead and adapting to the needs of those looking things up during the event, always from the same foundation.",
+    modular4: "Abstracts are submitted and reviewed in Accesible Abstracts, the platform we built for the conference.",
+    verAA: "See the Accesible Abstracts case study",
+    testimonio: "From the other side",
+    cita: "“At AEIPI we are committed to accessibility, inclusion and the rights of children with developmental challenges and their families. Having the chance to work with Accesibilidad Primero has been the best way to stay true to our organisation’s code of ethics: it meant the information about the ECI 2027 conference in Madrid could reach anyone, whatever their circumstances, wherever they live and whatever language they speak, and it offered fair opportunities to take part, thanks to the resources and features Accesibilidad Primero gave us.”",
+    cargo: "Head of Early Intervention at Avapace",
+    seccion: "Case studies",
+    traducida: "Translated from Spanish.",
+  },
+}[lang];
+import hero from '../../assets/proyectos/eci-conference/hero.jpg';
+
+const p = (await getEntry('proyectos', 'eci-conference'))!;
+const d = localizar(p.data, lang);
+
+/* Los primeros fotogramas de cada grabación, uno por tamaño. */
+const posters = import.meta.glob<{ default: ImageMetadata }>('../../assets/proyectos/eci-conference/video-*.png', { eager: true });
+const video = (escena: string) => {
+  const f = (formato: string) => {
+    const poster = posters[`../../assets/proyectos/eci-conference/video-${escena}-${formato}.png`]?.default;
+    if (!poster) throw new Error(`Caso ECI: falta el póster video-${escena}-${formato}.png`);
+    return { archivo: `/video/eci-conference/${escena}-${formato}.mp4`, poster };
+  };
+  return { escritorio: f('escritorio'), tableta: f('tableta'), movil: f('movil') };
+};
+/* En tablet y móvil las grabaciones son verticales: 360 y 280 de ancho,
+   centradas, como la portada de Foc i Cor. */
+const vertical = { tableta: '360px', movil: '280px' };
+
+/* La ficha de todos los casos (Johnny, 03/11/2026): cliente, año, rol,
+   estándar y web. Antes, los datos del congreso. */
+const datos = [
+  [T.cliente, T.clienteValor],
+  [T.anio, '2026'],
+  [T.rol, T.rolValor],
+  [T.estandar, T.estandarValor],
+];
+---
+
+<Base
+  lang={lang}
+  current="proyectos"
+  title={`${d.titulo} · ${T.seccion} · Accesibilidad Primero`}
+  description={d.resumen.replace(/\s+/g, ' ')}
+>
+  <div class="eci" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
+    <HeroPagina
+      titulo={T.heroTitulo}
+      golpes={[T.heroGolpe1, T.heroGolpe2]}
+      texto={[T.heroTexto]}
+      foto={hero}
+    />
+
+    {/* Los datos del congreso desde el primer scroll. El <h2> no está en el
+        Figma: es invisible y solo sirve para saltar a ellos por encabezados. */}
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        {/* La web del congreso (Johnny, 30/10/2026: «faltan la URL»). */}
+        {d.web && <div><dt>{T.web}</dt><dd><CtaLink href={d.web}>{new URL(d.web).hostname.replace(/^www\./, '')}</CtaLink></dd></div>}
+      </dl>
+    </section>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
+      <div class="bloque__contenido">
+        <p>{T.proyecto1}</p>
+        <p>{T.proyecto2}</p>
+        <p>{T.proyecto3}</p>
+      </div>
+    </section>
+
+    {/* La portada de la web, recorrida de arriba abajo, sobre el rojo del
+        Figma (#c0392b, 5,4:1 con el Silk del control). */}
+    <div class="banda banda--roja">
+      <VideoPausable
+        class="video video--portada"
+        {...video('portada')}
+        alt={T.altPortada}
+        nombre={T.nombrePortada}
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
+      />
+    </div>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">{T.reto}</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">{T.retoTitulo}</h2>
+        <p>{T.reto1}</p>
+        <p>{T.reto2}</p>
+        <p>{T.reto3}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <VideoPausable
+        class="video"
+        {...video('ponentes')}
+        alt={T.altPonentes}
+        nombre="Keynote speakers"
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
+      />
+      <figcaption>Keynote speakers</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="ordenar">
+      <p class="bloque__etiqueta">{T.ordenar}</p>
+      <div class="bloque__contenido">
+        <h2 id="ordenar">{T.ordenarTitulo}</h2>
+        <p>{T.ordenar1}</p>
+        <p>{T.ordenar2}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <VideoPausable
+        class="video"
+        {...video('tracks')}
+        alt={T.altTracks}
+        nombre="Programme tracks"
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 896px, 62vw', ...vertical }}
+      />
+      <figcaption>Programme tracks</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="tarifas">
+      <p class="bloque__etiqueta">{T.tarifas}</p>
+      <div class="bloque__contenido">
+        <h2 id="tarifas">{T.tarifasTitulo}</h2>
+        <p>{T.tarifas1}</p>
+        <p>{T.tarifas2}</p>
+        <p>{T.tarifas3}</p>
+      </div>
+    </section>
+
+
+    {/* El selector de tarifas, sobre el azul del congreso. El texto va en el
+        Silk que declara la ficha (paleta.textoSobreAcento, validado en build). */}
+    <div class="banda banda--acento" data-campo-color>
+      <figure class="pieza pieza--banda">
+        <VideoPausable
+          class="video"
+          {...video('tarifas')}
+          alt={T.altTarifas}
+          nombre="Conference fee"
+          lang={lang}
+          sizes={{ escritorio: '(min-width: 1440px) 851px, 60vw', ...vertical }}
+        />
+        <figcaption>Conference fee</figcaption>
+      </figure>
+    </div>
+
+    {/* Con la microanimación del sistema modular (Johnny, 30/10/2026): en
+        escritorio, tres columnas, con la animación en la central, fija
+        mientras se lee; en tablet y móvil, entre el titular y los párrafos. */}
+    <section class="bloque bloque--esquema" aria-labelledby="modular">
+      <p class="bloque__etiqueta">{T.modular}</p>
+      <div class="bloque__esquema">
+        <EsquemaModular class="esquema--columna" />
+      </div>
+      <div class="bloque__contenido">
+        <h2 id="modular">{T.modularTitulo}</h2>
+        <EsquemaModular class="esquema--linea" />
+        <p>{T.modular1}</p>
+        <p>{T.modular2}</p>
+        <p>{T.modular3}</p>
+        {/* La relación con la plataforma de abstracts (auditoría de usabilidad,
+            04/11/2026). Enlace suelto y no dentro de la frase: 44 de alto. */}
+        <p>{T.modular4}</p>
+        <CtaLink href={path('proyectos', lang, 'accesible-abstracts')}>{T.verAA}</CtaLink>
+      </div>
+    </section>
+
+    {/* Testimonio de AEIPI (03/11/2026). Sin formato especial (Johnny): un
+        bloque como los demás, título a la izquierda y texto a la derecha,
+        sobre gris claro. Dos correcciones de concordancia y puntuación con
+        permiso (Johnny, 03/11/2026): la coma tras «Desde AEIPI» y «llegase». */}
+    <section class="bloque bloque--testimonio" aria-labelledby="testimonio">
+      <h2 id="testimonio" class="bloque__etiqueta">{T.testimonio}</h2>
+      <figure class="bloque__contenido testimonio">
+        <blockquote><p>{T.cita}</p></blockquote>
+        <figcaption><span class="linea">Rosa Fernández Valero</span> <span class="linea">{T.cargo}</span>{T.traducida && <span class="linea">{T.traducida}</span>}</figcaption>
+      </figure>
+    </section>
+
+  </div>
+  <CierreProyecto actual="eci-conference" declaracion={d.nota?.declaracion} titulo={d.titulo} />
+</Base>
+
+<style>
+  p, h2, dl, dd, figure { margin: 0; }
+  h2 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como la ficha de Foc i Cor. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- la etiqueta encima en tablet y móvil; desde
+     1024, a la izquierda en su columna de 280 y el contenido a 96. En «El
+     proyecto» no hay título, así que la etiqueta ES el h2. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  /* El testimonio, como un bloque más sobre gris claro (03/11/2026). */
+  .bloque--testimonio { background: var(--surface-band); }
+  .testimonio blockquote { margin: 0; }
+  .testimonio figcaption { display: flex; flex-direction: column; margin-block-start: var(--space-8); }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
+
+  /* ---- El esquema del sistema modular ---- */
+  /* Tres columnas desde 1024 (Johnny, 30/10/2026): etiqueta, esquema y
+     texto, con 96 entre ellas, como el resto de bloques. */
+  .bloque__esquema { display: none; }
+  @media (min-width: 1024px) {
+    .bloque--esquema { grid-template-columns: 280px 280px minmax(0, 1fr); }
+    .bloque--esquema .bloque__esquema { display: block; }
+    .bloque--esquema :global(.esquema--columna) { position: sticky; top: var(--space-24); }
+    .bloque--esquema :global(.esquema--linea) { display: none; }
+    /* Con el esquema de línea oculto, los 48 del titular los lleva el párrafo. */
+    .bloque__contenido > h2 + :global(.esquema--linea) + p { margin-block-start: var(--space-24); }
+  }
+
+  /* ---- Vídeos ---- */
+  /* Sobre el blanco, una sombra leve los despega del papel (Johnny,
+     30/10/2026). Sobre las bandas de color no hace falta. */
+  .pieza:not(.pieza--banda) :global(.vp__marco) {
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .eci :global(.video) { width: min(280px, 100%); }
+  @media (min-width: 768px) { .eci :global(.video) { width: 360px; } }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { display: flex; flex-direction: column; width: min(280px, 100%); }
+  @media (min-width: 768px) { .pieza figcaption { width: 360px; } }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--derecha :global(.video), .pieza--derecha figcaption { width: 100%; }
+    .pieza--centro :global(.video), .pieza--centro figcaption { width: min(896px, 100%); }
+    .pieza--banda :global(.video), .pieza--banda figcaption { width: min(851px, 100%); }
+  }
+
+  /* Las bandas de color, de borde a borde. */
+  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); }
+  .banda--roja { background: #c0392b; color: var(--silk); --focus-ring: var(--silk); }
+  .banda--acento { background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
+  .banda .pieza { padding: 0; }
+  @media (min-width: 1024px) {
+    .banda { padding-block: var(--space-96); }
+    .banda--roja :global(.video--portada) { width: min(1148px, 85%); }
+  }
+
+  /* Centrada y en dos líneas (Johnny, 29/10/2026). */
+
+  /* El titular en dos líneas: «Una web que crece / con el congreso.»
+     (Johnny, 29/10/2026; texto del 03/11/2026). */
+  .eci :global(.apertura__titulo .golpe:first-child) { display: block; inline-size: fit-content; }
+
+
+  /* ---- Jerarquía por distancia (Johnny, 04/11/2026) --------------------
+     Con un solo tamaño y un solo peso, lo que dice «esto es un título» es el
+     espacio. El criterio es el de Foc i Cor: 48 entre un titular y su texto,
+     24 entre párrafos y 72 antes de un titular que corta el texto, para que
+     quede más cerca de lo que encabeza que de lo anterior. */
+  .bloque { row-gap: var(--space-48); }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+</style>

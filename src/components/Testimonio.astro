@@ -17,6 +17,8 @@
    `npm run dev`; en el build de producción no sale. Un testimonio inventado
    no se publica (decisión del 30/08), ni en el .eu con noindex.
    --------------------------------------------------------------------------- */
+import { idiomaDe } from '../i18n/idioma';
+import { t } from '../i18n/ui';
 interface Props {
   cita: string;
   nombre: string;
@@ -30,6 +32,7 @@ interface Props {
   borrador?: boolean;
 }
 const { cita, nombre, cargo, lang, fondo, texto, foco, borrador = false } = Astro.props;
+const ui = t(idiomaDe(Astro.url));
 const pintar = !borrador || import.meta.env.DEV;
 ---
 {
@@ -40,7 +43,7 @@ const pintar = !borrador || import.meta.env.DEV;
       style={`--t-fondo: ${fondo}; --t-texto: ${texto}; --t-foco: ${foco};`}
       data-borrador={borrador ? '' : undefined}
     >
-      <h2 id="testimonio-titulo" class="sr-only">Testimonio</h2>
+      <h2 id="testimonio-titulo" class="sr-only">{ui.testimonio}</h2>
       <figure class="testimonio__figura">
         <span class="testimonio__comillas" aria-hidden="true">“</span>
         <blockquote class="testimonio__cita" lang={lang}><p>{cita}</p></blockquote>
@@ -49,6 +52,7 @@ const pintar = !borrador || import.meta.env.DEV;
           <span>{cargo}</span>
         </figcaption>
       </figure>
+      {ui.testimonioTraducido && <p class="testimonio__nota">{ui.testimonioTraducido}</p>}
       {borrador && <p class="testimonio__aviso">Borrador: solo se ve en desarrollo.</p>}
     </section>
   )
@@ -98,5 +102,7 @@ const pintar = !borrador || import.meta.env.DEV;
     min-width: 96px;
   }
   .testimonio__aviso { margin: var(--space-32) 0 0; font-size: var(--meta-size); }
+  /* Catalán e inglés (05/11/2026): la cita es una traducción y se dice. */
+  .testimonio__nota { margin: var(--space-24) 0 0; }
   [data-borrador] { outline: 2px dashed currentColor; outline-offset: -12px; }
 </style>

@@ -18,6 +18,8 @@
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { idiomaDe } from '../i18n/idioma';
+import { t } from '../i18n/ui';
 
 interface Props {
   href: string;
@@ -29,6 +31,7 @@ interface Props {
   marca?: boolean;
 }
 const { href, nombre, linea, captura, color, marca = false } = Astro.props;
+const ui = t(idiomaDe(Astro.url));
 const externo = /^https?:\/\//.test(href);
 ---
 
@@ -49,7 +52,7 @@ const externo = /^https?:\/\//.test(href);
     )}
   </h2>
   {linea && <p class="tarjeta__linea">{linea}</p>}
-  {externo && <span class="sr-only"> (se abre en una ventana nueva)</span>}
+  {externo && <span class="sr-only">{ui.nuevaVentana}</span>}
 </a>
 
 <style>

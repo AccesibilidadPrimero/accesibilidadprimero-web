@@ -1,0 +1,425 @@
+---
+/* ---------------------------------------------------------------------------
+   Caso Izaskun Etxebarria · Figma `Producción · Caso Izaskun Etxebarria`:
+   Desktop 2539:2 · Tablet 2625:290 · Móvil 2625:443. Montado el 30/10/2026
+   con la estructura del caso ECI (maqueta propia).
+
+   El proyecto va de dejar espacio a la obra, así que el caso también: mucho
+   aire, la web en vídeo y una sola animación, la de la retícula editorial,
+   que es la idea de diseño del proyecto (Johnny, 30/10/2026).
+
+   Lo que NO viene del Figma, por las reglas del sitio:
+   · Cabecera, CTA, pie y márgenes: los del sitio (24 al borde, 09/10).
+   · Hero: el común (HeroPagina) con la foto de sala de la web de Izaskun.
+   · Tipografía: un solo titular grande, el h1 (08/10). Los h2, a tamaño de
+     texto.
+   · Accesibilidad: solo el enlace a la declaración del cliente (23/10). La
+     tabla WCAG del Figma no se monta.
+   · Los gifs del Figma son vídeos: grabaciones de izaskunetxebarria.com
+     hechas el 30/10/2026, una por tamaño, cada una con su control
+     (VideoPausable).
+   --------------------------------------------------------------------------- */
+import { getEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import CierreProyecto from '../../components/CierreProyecto.astro';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import VideoPausable from '../../components/VideoPausable.astro';
+import ReticulaEditorial from '../../components/ReticulaEditorial.astro';
+import { path } from '../../i18n/config';
+import { idiomaDe, localizar } from '../../i18n/idioma';
+const lang = idiomaDe(Astro.url);
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  "es": {
+    "notaTraduccion": "",
+    "cliente": "Cliente",
+    "anio": "Año",
+    "rol": "Rol",
+    "estandar": "Estándar",
+    "rolV": "Diseño y desarrollo",
+    "estandarV": "WCAG 2.2 nivel AA",
+    "seccion": "Casos de estudio",
+    "firma": "Izaskun Etxebarria, artista y comisaria",
+    "titulo": "Dejar espacio a la obra.",
+    "golpe1": "Dejar espacio",
+    "golpe2": "a la obra.",
+    "heroTexto": "Izaskun Etxebarria · Caso de estudio",
+    "datos": "Datos del proyecto",
+    "portadaAlt": "Recorrido por la portada de izaskunetxebarria.com: una pieza circular de metal sobre la hierba de un acantilado junto al mar, y debajo fotografías a todo el ancho de exposiciones y de obra, una detrás de otra, con el menú en una barra clara arriba.",
+    "portadaNombre": "portada de izaskunetxebarria.com",
+    "proyecto": "El proyecto",
+    "proyectoP": "Izaskun Etxebarria es artista y comisaria. Su trabajo se mueve entre la instalación y el dibujo, con una práctica donde materia, espacio y gesto tienen tanto peso como la propia imagen.",
+    "reto": "El reto",
+    "retoH": "Acompañar la obra.",
+    "retoP": "La web tenía que resolver dos cosas a la vez: acompañar una obra muy visual y ordenar sus proyectos, exposiciones y textos, respetando el carácter de cada pieza.",
+    "presenciaH": "La presencia.",
+    "presenciaP": "La obra necesitaba espacio, escala y silencio. La interfaz tenía que apartarse sin dejar de orientar.",
+    "bideAlt": "La página de la obra Bide-zabalak se recorre de arriba abajo: la serie enmarcada en la pared, las imágenes de calles y edificios a gran tamaño sobre fondo oscuro, la banda carmesí con el título y el texto a dos columnas.",
+    "estructura": "La estructura",
+    "estructuraH": "Una práctica compleja, sin simplificarla de más.",
+    "estructuraP1": "Trabajos, exposiciones y textos tenían que poder recorrerse sin perder la personalidad del proyecto.",
+    "estructuraP2": "Las series se navegan como lo que son: conjuntos, no imágenes sueltas. En “Agujeros de tiempo”, las panorámicas se recorren de lado a lado con el puntero.",
+    "panoAlt": "La serie “Agujeros de tiempo”: bajo la banda carmesí con el título, una panorámica de campos de cereal bajo un cielo de nubes se desplaza de lado a lado al mover el puntero; después, la siguiente.",
+    "decisiones": "Decisiones de diseño",
+    "decisionesP": "El proyecto se construyó desde una idea sencilla: reducir la interfaz para aumentar la presencia de la obra.",
+    "d1H": "Una estructura editorial contenida.",
+    "d1P": "Tipografía, márgenes y jerarquías se usan para ordenar, no para decorar. Todo se coloca sobre una retícula de doce columnas muy marcada.",
+    "d2H": "Las imágenes por delante.",
+    "d2P": "Algunas piezas ocupan toda la anchura y otras entran en diálogo con el texto, creando un ritmo más cercano a una publicación que a una web de portafolio convencional.",
+    "d3H": "Una navegación directa y previsible.",
+    "d3P": "Pocas opciones, recorridos claros y una arquitectura que permite moverse por el trabajo sin perder contexto.",
+    "retratoAlt": "Retrato en blanco y negro de Izaskun Etxebarria, con gafas y la mano apoyada en la mejilla, delante de unas baldas con cuadros y objetos de su estudio.",
+    "testimonio": "Desde el otro lado",
+    "cita1": "“Johnny Vigas y yo somos grandes amigos, y esa confianza fue la base de todo el proceso. Empezamos pensando en una web que reuniera todo lo que he hecho a lo largo de mi vida, pero nuestras conversaciones nos llevaron a algo mucho más esencial: reconocerme de nuevo como artista.",
+    "cita2": "Johnny tiene una enorme capacidad para escuchar, ver a la otra persona desde un lugar positivo y descubrir sus potencias, cuidando también los miedos que aparecen durante el proceso. Su sensibilidad y su conexión con el mundo del arte hicieron posible una web íntima, mínima, transparente y reflexiva. No es una recopilación de mi trayectoria, sino un espacio que permite conocerme primero como artista y, después, como todo lo demás.”"
+  },
+  "ca": {
+    "notaTraduccion": "Traduït del castellà.",
+    "cliente": "Client",
+    "anio": "Any",
+    "rol": "Rol",
+    "estandar": "Estàndard",
+    "rolV": "Disseny i desenvolupament",
+    "estandarV": "WCAG 2.2 nivell AA",
+    "seccion": "Casos d’estudi",
+    "firma": "Izaskun Etxebarria, artista i comissària",
+    "titulo": "Deixar espai a l’obra.",
+    "golpe1": "Deixar espai",
+    "golpe2": "a l’obra.",
+    "heroTexto": "Izaskun Etxebarria · Cas d’estudi",
+    "datos": "Dades del projecte",
+    "portadaAlt": "Recorregut per la portada d’izaskunetxebarria.com: una peça circular de metall sobre l’herba d’un penya-segat vora el mar i, a sota, fotografies a tota l’amplada d’exposicions i d’obra, l’una darrere l’altra, amb el menú en una barra clara a dalt.",
+    "portadaNombre": "portada d’izaskunetxebarria.com",
+    "proyecto": "El projecte",
+    "proyectoP": "Izaskun Etxebarria és artista i comissària. La seva obra es mou entre la instal·lació i el dibuix, amb una pràctica en què la matèria, l’espai i el gest pesen tant com la imatge mateixa.",
+    "reto": "El repte",
+    "retoH": "Acompanyar l’obra.",
+    "retoP": "El web havia de resoldre dues coses alhora: acompanyar una obra molt visual i ordenar-ne els projectes, les exposicions i els textos, respectant el caràcter de cada peça.",
+    "presenciaH": "La presència.",
+    "presenciaP": "L’obra necessitava espai, escala i silenci. La interfície s’havia d’apartar sense deixar d’orientar.",
+    "bideAlt": "Es recorre de dalt a baix la pàgina de l’obra Bide-zabalak: la sèrie emmarcada a la paret, les imatges de carrers i edificis a gran mida sobre fons fosc, la banda carmesí amb el títol i el text a dues columnes.",
+    "estructura": "L’estructura",
+    "estructuraH": "Una pràctica complexa, sense simplificar-la de més.",
+    "estructuraP1": "Treballs, exposicions i textos s’havien de poder recórrer sense perdre la personalitat del projecte.",
+    "estructuraP2": "Les sèries es naveguen com el que són: conjunts, no imatges soltes. A “Agujeros de tiempo”, les panoràmiques es recorren d’un costat a l’altre amb el punter.",
+    "panoAlt": "La sèrie “Agujeros de tiempo”: sota la banda carmesí amb el títol, una panoràmica de camps de cereals sota un cel de núvols es desplaça d’un costat a l’altre en moure el punter; després, la següent.",
+    "decisiones": "Decisions de disseny",
+    "decisionesP": "El projecte es va construir a partir d’una idea senzilla: reduir la interfície perquè l’obra hi guanyi presència.",
+    "d1H": "Una estructura editorial continguda.",
+    "d1P": "La tipografia, els marges i les jerarquies serveixen per ordenar, no per decorar. Tot se situa sobre una retícula de dotze columnes molt marcada.",
+    "d2H": "Les imatges, al davant.",
+    "d2P": "Algunes peces ocupen tota l’amplada i d’altres dialoguen amb el text, amb un ritme més proper al d’una publicació que al d’un web de portafoli convencional.",
+    "d3H": "Una navegació directa i previsible.",
+    "d3P": "Poques opcions, recorreguts clars i una arquitectura que permet moure’s per l’obra sense perdre el context.",
+    "retratoAlt": "Retrat en blanc i negre d’Izaskun Etxebarria, amb ulleres i la mà recolzada a la galta, davant d’uns prestatges amb quadres i objectes del seu estudi.",
+    "testimonio": "Des de l’altra banda",
+    "cita1": "“En Johnny Vigas i jo som molt amics, i aquesta confiança va ser la base de tot el procés. Vam començar pensant en un web que reunís tot el que he fet al llarg de la meva vida, però les nostres converses ens van portar a una cosa molt més essencial: tornar a reconèixer-me com a artista.",
+    "cita2": "En Johnny té una enorme capacitat per escoltar, per veure l’altra persona des d’un lloc positiu i descobrir-ne les potències, i també per acompanyar les pors que apareixen durant el procés. La seva sensibilitat i la seva connexió amb el món de l’art van fer possible un web íntim, mínim, transparent i reflexiu. No és un recull de la meva trajectòria, sinó un espai que permet conèixer-me primer com a artista i, després, com tota la resta.”"
+  },
+  "en": {
+    "notaTraduccion": "Translated from Spanish.",
+    "cliente": "Client",
+    "anio": "Year",
+    "rol": "Role",
+    "estandar": "Standard",
+    "rolV": "Design and development",
+    "estandarV": "WCAG 2.2 level AA",
+    "seccion": "Case studies",
+    "firma": "Izaskun Etxebarria, artist and curator",
+    "titulo": "Making room for the work.",
+    "golpe1": "Making room",
+    "golpe2": "for the work.",
+    "heroTexto": "Izaskun Etxebarria · Case study",
+    "datos": "Project details",
+    "portadaAlt": "A scroll through the izaskunetxebarria.com home page: a circular metal piece on the grass of a clifftop by the sea, followed by full-width photographs of exhibitions and artworks, one after another, with the menu in a light bar at the top.",
+    "portadaNombre": "izaskunetxebarria.com home page",
+    "proyecto": "The project",
+    "proyectoP": "Izaskun Etxebarria is an artist and curator. Her work moves between installation and drawing, in a practice where material, space and gesture carry as much weight as the image itself.",
+    "reto": "The challenge",
+    "retoH": "Supporting the work.",
+    "retoP": "The website had to do two things at once: support a highly visual body of work and bring order to her projects, exhibitions and writing, while respecting the character of each piece.",
+    "presenciaH": "Presence.",
+    "presenciaP": "The work needed space, scale and silence. The interface had to step back while still showing the way.",
+    "bideAlt": "The page for the artwork Bide-zabalak, scrolled from top to bottom: the series framed on the wall, large images of streets and buildings on a dark background, the crimson band with the title and the text in two columns.",
+    "estructura": "The structure",
+    "estructuraH": "A complex practice, without oversimplifying it.",
+    "estructuraP1": "Works, exhibitions and writing had to be explorable without losing the character of the project.",
+    "estructuraP2": "Each series is navigated as what it is: a whole, not a set of loose images. In “Agujeros de tiempo”, the panoramas move from side to side with the pointer.",
+    "panoAlt": "The series “Agujeros de tiempo”: below the crimson band with the title, a panorama of cereal fields under a cloudy sky moves from side to side as the pointer moves; then the next one.",
+    "decisiones": "Design decisions",
+    "decisionesP": "The project was built on a simple idea: less interface, so the work has more presence.",
+    "d1H": "A restrained editorial structure.",
+    "d1P": "Typography, margins and hierarchy are there to organise, not to decorate. Everything sits on a strongly defined twelve-column grid.",
+    "d2H": "Images first.",
+    "d2P": "Some pieces span the full width and others enter into dialogue with the text, creating a rhythm closer to a publication than to a conventional portfolio website.",
+    "d3H": "Direct, predictable navigation.",
+    "d3P": "Few options, clear paths and an architecture that lets you move through the work without losing your bearings.",
+    "retratoAlt": "Black and white portrait of Izaskun Etxebarria, wearing glasses, her hand resting on her cheek, in front of shelves holding paintings and objects from her studio.",
+    "testimonio": "From the other side",
+    "cita1": "“Johnny Vigas and I are close friends, and that trust was the foundation of the whole process. We started out thinking about a website that would bring together everything I have done over my life, but our conversations led us to something far more essential: recognising myself as an artist again.",
+    "cita2": "Johnny has a remarkable ability to listen, to see the other person in a positive light and to discover their strengths, while also attending to the fears that come up along the way. His sensitivity and his connection with the art world made possible a website that is intimate, minimal, transparent and reflective. It is not a record of my career, but a space where people can get to know me first as an artist and then as everything else.”"
+  }
+}[lang];
+import hero from '../../assets/proyectos/izaskun-etxebarria/hero.jpg';
+import retrato from '../../assets/proyectos/izaskun-etxebarria/retrato.jpg';
+
+const p = (await getEntry('proyectos', 'izaskun-etxebarria'))!;
+const d = localizar(p.data, lang);
+
+/* Los primeros fotogramas de cada grabación, uno por tamaño. */
+const posters = import.meta.glob<{ default: ImageMetadata }>('../../assets/proyectos/izaskun-etxebarria/video-*.png', { eager: true });
+const video = (escena: string) => {
+  const f = (formato: string) => {
+    const poster = posters[`../../assets/proyectos/izaskun-etxebarria/video-${escena}-${formato}.png`]?.default;
+    if (!poster) throw new Error(`Caso Izaskun: falta el póster video-${escena}-${formato}.png`);
+    return { archivo: `/video/izaskun-etxebarria/${escena}-${formato}.mp4`, poster };
+  };
+  /* Desde el 03/11/2026 el móvil usa la de tableta (VideoPausable): las
+     grabaciones nuevas ya no llevan versión de móvil. */
+  const conMovil = posters[`../../assets/proyectos/izaskun-etxebarria/video-${escena}-movil.png`];
+  return { escritorio: f('escritorio'), tableta: f('tableta'), ...(conMovil ? { movil: f('movil') } : {}) };
+};
+const vertical = { tableta: '360px', movil: '280px' };
+const dominio = d.web ? new URL(d.web).hostname.replace(/^www\./, '') : null;
+
+const datos = [
+  [T.cliente, 'Izaskun Etxebarria'],
+  [T.anio, '2026'],
+  [T.rol, T.rolV],
+  [T.estandar, T.estandarV],
+];
+---
+
+<Base
+  lang={lang}
+  current="proyectos"
+  title={`${d.titulo} · ${T.seccion} · Accesibilidad Primero`}
+  description={d.resumen.replace(/\s+/g, ' ')}
+>
+  <div class="izaskun" style={`--acento: ${d.paleta.acento}; --texto-acento: ${d.paleta.textoSobreAcento}; --anillo-acento: ${d.paleta.anilloFoco};`}>
+    <HeroPagina
+      titulo={T.titulo}
+      golpes={[T.golpe1, T.golpe2]}
+      texto={[T.heroTexto]}
+      foto={hero}
+    />
+
+    <section class="datos" aria-labelledby="datos">
+      <h2 id="datos" class="sr-only">{T.datos}</h2>
+      <dl class="datos__lista">
+        {datos.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        {d.web && dominio && <div><dt>Web</dt><dd><CtaLink href={d.web}>{dominio}</CtaLink></dd></div>}
+      </dl>
+    </section>
+
+    {/* La portada de la web, recorrida de arriba abajo, sobre el carmesí del
+        proyecto (Silk encima, validado en el build). */}
+    <div class="banda banda--acento">
+      <VideoPausable
+        class="video video--portada"
+        {...video('portada')}
+        alt={T.portadaAlt}
+        nombre={T.portadaNombre}
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 1148px, 80vw', ...vertical }}
+      />
+    </div>
+
+    <section class="bloque" aria-labelledby="proyecto">
+      <h2 id="proyecto" class="bloque__etiqueta">{T.proyecto}</h2>
+      <div class="bloque__contenido">
+        <p>{T.proyectoP}</p>
+      </div>
+    </section>
+
+    <section class="bloque" aria-labelledby="reto">
+      <p class="bloque__etiqueta">{T.reto}</p>
+      <div class="bloque__contenido">
+        <h2 id="reto">{T.retoH}</h2>
+        <p>{T.retoP}</p>
+        <h3>{T.presenciaH}</h3>
+        <p>{T.presenciaP}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--derecha">
+      <VideoPausable
+        class="video"
+        {...video('bide-zabalak')}
+        alt={T.bideAlt}
+        nombre="Bide-zabalak"
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 660px, 46vw', ...vertical }}
+      />
+      <figcaption>Bide-zabalak</figcaption>
+    </figure>
+
+    <section class="bloque" aria-labelledby="estructura">
+      <p class="bloque__etiqueta">{T.estructura}</p>
+      <div class="bloque__contenido">
+        <h2 id="estructura">{T.estructuraH}</h2>
+        <p>{T.estructuraP1}</p>
+        <p>{T.estructuraP2}</p>
+      </div>
+    </section>
+
+    <figure class="pieza pieza--centro">
+      <VideoPausable
+        class="video"
+        {...video('panoramicas')}
+        alt={T.panoAlt}
+        nombre="Agujeros de tiempo"
+        lang={lang}
+        sizes={{ escritorio: '(min-width: 1440px) 896px, 62vw', ...vertical }}
+      />
+      <figcaption>Agujeros de tiempo</figcaption>
+    </figure>
+
+    {/* Decisiones de diseño, con la microanimación de la retícula: en
+        escritorio, en la columna del enunciado; en tablet y móvil, entre el
+        enunciado y las decisiones. */}
+    <section class="bloque bloque--decisiones" aria-labelledby="decisiones">
+      <div class="decisiones__enunciado">
+        <h2 id="decisiones">{T.decisiones}</h2>
+        <p>{T.decisionesP}</p>
+        <ReticulaEditorial acento={d.paleta.acento} />
+      </div>
+      <ul class="decisiones__lista">
+        <li>
+          <h3>{T.d1H}</h3>
+          <p>{T.d1P}</p>
+        </li>
+        <li>
+          <h3>{T.d2H}</h3>
+          <p>{T.d2P}</p>
+        </li>
+        <li>
+          <h3>{T.d3H}</h3>
+          <p>{T.d3P}</p>
+        </li>
+      </ul>
+    </section>
+
+    {/* Testimonio de Izaskun (03/11/2026), sobre el carmesí: la foto a la
+        izquierda y el texto a la derecha (en tablet y móvil, uno encima de
+        otro). Sustituye a la foto de sala. La cita va literal. */}
+    <section class="banda banda--acento banda--testimonio" aria-labelledby="testimonio" data-campo-color>
+      <Picture
+        src={retrato}
+        formats={['avif', 'webp']}
+        widths={[300, retrato.width].filter((w, i, a) => w <= retrato.width && a.indexOf(w) === i)}
+        sizes="(min-width: 1024px) 420px, calc(100vw - 48px)"
+        alt={T.retratoAlt}
+        class="foto foto--retrato"
+        loading="lazy"
+      />
+      <figure class="testimonio">
+        <h2 id="testimonio">{T.testimonio}</h2>
+        <blockquote>
+          <p>{T.cita1}</p>
+          <p>{T.cita2}</p>
+        </blockquote>
+        <figcaption>{T.firma}{T.notaTraduccion && <> <span class="nota-traduccion">{T.notaTraduccion}</span></>}</figcaption>
+      </figure>
+    </section>
+
+  </div>
+  <CierreProyecto actual="izaskun-etxebarria" declaracion={d.nota?.declaracion} titulo={d.titulo} />
+</Base>
+
+<style>
+  p, h2, h3, dl, dd, figure, ul { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  h2, h3 { font-size: inherit; line-height: inherit; font-weight: 400; }
+
+  /* ---- Datos ---- en franja, como en ECI. */
+  .datos { padding: var(--space-48) var(--gutter-page); }
+  .datos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-24) var(--space-16); }
+  /* En móvil, dos columnas (auditoría de usabilidad, 04/11/2026: la ficha en
+     vertical retrasaba la historia). La web, que es un enlace largo, entera. */
+  @media (max-width: 767px) { .datos__lista > div:has(a) { grid-column: 1 / -1; } }
+  /* La web, en la misma línea base que el resto (Johnny, 05/11/2026), como en
+     Foc i Cor: el enlace mide 44 de alto y se come su aire. */
+  .datos__lista > div:has(a) dd { margin-block: calc(var(--aire-control) * -1); }
+  .datos__lista > div { display: flex; flex-direction: column; gap: var(--space-4); }
+  @media (min-width: 768px) { .datos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-32) var(--space-24); } }
+  @media (min-width: 1024px) { .datos__lista { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+  /* ---- Bloques de texto ---- como en ECI: la etiqueta en su columna de
+     280 desde 1024; encima en tablet y móvil. */
+  .bloque {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-24);
+    padding: var(--space-64) var(--gutter-page);
+  }
+  .bloque__contenido { display: flex; flex-direction: column; gap: var(--space-24); max-width: 968px; }
+  /* El h3 al cuerpo del texto: lo separa el aire de antes (AGENTS.md §4). */
+  .bloque__contenido h3 { margin-block-start: var(--space-24); }
+  @media (min-width: 768px) { .bloque { padding-block: var(--space-96); } }
+  @media (min-width: 1024px) { .bloque { grid-template-columns: 280px minmax(0, 1fr); gap: var(--space-96); } }
+
+  /* ---- Decisiones ---- dos columnas desde 1024, como en el Figma: el
+     enunciado y la retícula a la izquierda, las tres decisiones a la
+     derecha (16 entre nombre y texto, 48 entre decisiones). */
+  .bloque--decisiones { gap: var(--space-48); }
+  .decisiones__enunciado { display: flex; flex-direction: column; gap: var(--space-24); }
+  .decisiones__enunciado :global(.reticula) { margin-block-start: var(--space-24); }
+  .decisiones__lista { display: flex; flex-direction: column; gap: var(--space-48); }
+  .decisiones__lista li { display: flex; flex-direction: column; gap: var(--space-16); }
+  @media (min-width: 1024px) {
+    .bloque--decisiones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-64); }
+    .decisiones__enunciado :global(.reticula) { position: sticky; top: var(--space-24); }
+  }
+
+  /* ---- Vídeos ---- como en ECI. Sobre el blanco, una sombra leve. */
+  .pieza:not(.pieza--banda) :global(.vp__marco) {
+    border-radius: var(--radio);
+    box-shadow: 0 1px 3px rgb(23 23 23 / 0.08), 0 8px 24px rgb(23 23 23 / 0.08);
+  }
+  .izaskun :global(.video) { width: min(280px, 100%); }
+  @media (min-width: 768px) { .izaskun :global(.video) { width: 360px; } }
+  .pieza { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); padding: var(--space-48) var(--gutter-page); }
+  .pieza figcaption { display: flex; flex-direction: column; width: min(280px, 100%); }
+  @media (min-width: 768px) { .pieza figcaption { width: 360px; } }
+  @media (min-width: 1024px) {
+    .pieza--derecha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: start; }
+    .pieza--derecha > :global(*) { grid-column: 2; }
+    .pieza--derecha :global(.video), .pieza--derecha figcaption { width: 100%; }
+    .pieza--centro :global(.video), .pieza--centro figcaption { width: min(1100px, 100%); }
+  }
+
+  /* Las bandas carmesí, de borde a borde. */
+  .banda { display: grid; place-items: center; padding: var(--space-48) var(--gutter-page); background: var(--acento); color: var(--texto-acento); --focus-ring: var(--anillo-acento); }
+  @media (min-width: 1024px) {
+    .banda { padding-block: var(--space-96); }
+    .banda :global(.video--portada) { width: min(1148px, 85%); }
+  }
+  /* El testimonio sobre el carmesí: foto y texto en dos columnas desde 1024
+     (03/11/2026). El texto, en el Silk de la paleta (validado en build). */
+  .banda--testimonio { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48); place-items: start; }
+  .izaskun :global(.foto--retrato) { display: block; width: min(420px, 100%); height: auto; border-radius: var(--radio); }
+  .testimonio { display: flex; flex-direction: column; gap: var(--space-24); max-width: 720px; }
+  .testimonio h2 { color: inherit; }
+  .testimonio blockquote { margin: 0; display: flex; flex-direction: column; gap: var(--space-24); }
+  @media (min-width: 1024px) {
+    .banda--testimonio { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-24); align-items: center; }
+    .banda--testimonio :global(.foto--retrato) { justify-self: end; }
+  }
+
+
+  /* ---- Jerarquía por distancia (Johnny, 04/11/2026) --------------------
+     Con un solo tamaño y un solo peso, lo que dice «esto es un título» es el
+     espacio. El criterio es el de Foc i Cor: 48 entre un titular y su texto,
+     24 entre párrafos y 72 antes de un titular que corta el texto, para que
+     quede más cerca de lo que encabeza que de lo anterior. */
+  .bloque { row-gap: var(--space-48); }
+  .bloque__contenido > :is(h2, h3) + * { margin-block-start: var(--space-24); }
+  .bloque__contenido > h3 { margin-block-start: var(--space-48); }
+  .decisiones__enunciado > h2 + * { margin-block-start: var(--space-24); }
+  .decisiones__lista li { gap: var(--space-48); }
+  .testimonio > h2 + * { margin-block-start: var(--space-24); }
+</style>

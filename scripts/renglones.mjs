@@ -22,8 +22,10 @@ import { fileURLToPath } from 'node:url';
 import { servir } from './serve.mjs';
 
 const RAIZ = fileURLToPath(new URL('../dist/', import.meta.url));
-const lista = readFileSync(new URL('../src/lib/particulas.ts', import.meta.url), 'utf8')
-  .match(/PARTICULAS_ES = \[([\s\S]*?)\]/)[1].match(/'([^']+)'/g).map((s) => s.slice(1, -1));
+/* Una lista por idioma (05/11/2026): la de cada página según su <html lang>. */
+const fuente = readFileSync(new URL('../src/lib/particulas.ts', import.meta.url), 'utf8');
+const leer = (n) => fuente.match(new RegExp(`PARTICULAS_${n} = \\[([\\s\\S]*?)\\]`))[1].match(/'([^']+)'/g).map((s) => s.slice(1, -1));
+const LISTAS = { es: leer('ES'), ca: leer('CA'), en: leer('EN') };
 
 const rutas = [];
 (function andar(dir) {
@@ -102,7 +104,7 @@ for (const ancho of [390, 768, 1440]) {
         }
       }
       return { mal, nl, np };
-    }, lista);
+    }, LISTAS[ruta.startsWith('/ca/') ? 'ca' : ruta.startsWith('/en/') ? 'en' : 'es']);
     lineas += r.nl; parrafos += r.np;
     if (r.mal.length) {
       fallos += r.mal.length;

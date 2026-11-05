@@ -1,0 +1,392 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import HeroCarousel from '../components/HeroCarousel.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+import Mesa from '../components/Mesa.astro';
+import CtaLink from '../components/CtaLink.astro';
+import { REGISTRADA } from '../i18n/marca';
+import { path } from '../i18n/config';
+import { idiomaDe, localizar } from '../i18n/idioma';
+import { PRODUCTOS } from '../data/productos';
+/* El símbolo de la marca, compilado por `npm run arte` desde arte/estudio/.
+   Importado y no escrito a mano: así Astro le pone el hash al nombre y lo
+   sirve con caché larga, y si el archivo desaparece el build se para. */
+import iconoEstudio from '../assets/estudio/icono.svg';
+import type { ImageMetadata } from 'astro';
+/* Las compila `npm run arte`. El glob tiene que ser literal para Vite. */
+const mediosProducto = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/productos/*.{png,jpg,jpeg,webp,svg}',
+  { eager: true },
+);
+const medio = (nombre: string) =>
+  Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
+
+const lang = idiomaDe(Astro.url);
+
+/* Los productos en el idioma de la página (las traducciones, enlaces
+   incluidos, viven en src/data/productos.ts). */
+const productos = PRODUCTOS.map((p) => localizar(p, lang));
+
+/* Los textos de la página en los tres idiomas (05/11/2026). */
+const T = {
+  es: {
+    title: 'Accesibilidad Primero · Diseñamos webs accesibles',
+    description: 'Estudio de diseño que crea webs y aplicaciones con la accesibilidad digital como punto de partida.',
+    titular: 'Diseñamos webs accesibles para organizaciones y proyectos con impacto social.',
+    destacados: 'Proyectos destacados',
+    productos: 'También creamos herramientas para resolver problemas que encontramos por el camino.',
+    estudio: 'Código, diseño y palabra. La accesibilidad como punto de partida.',
+    conoce: 'Conoce Accesibilidad Primero',
+  },
+  ca: {
+    title: 'Accesibilidad Primero · Dissenyem webs accessibles',
+    description: 'Estudi de disseny que crea webs i aplicacions amb l’accessibilitat digital com a punt de partida.',
+    titular: 'Dissenyem webs accessibles per a organitzacions i projectes amb impacte social.',
+    destacados: 'Projectes destacats',
+    productos: 'També creem eines per resoldre problemes que trobem pel camí.',
+    estudio: 'Codi, disseny i paraula. L’accessibilitat com a punt de partida.',
+    conoce: 'Coneix Accesibilidad Primero',
+  },
+  en: {
+    title: 'Accesibilidad Primero · We design accessible websites',
+    description: 'A design studio that creates websites and apps with digital accessibility as the starting point.',
+    titular: 'We design accessible websites for organisations and projects with social impact.',
+    destacados: 'Featured projects',
+    productos: 'We also build tools to solve the problems we come across along the way.',
+    estudio: 'Code, design and words. Accessibility as the starting point.',
+    conoce: 'Discover Accesibilidad Primero',
+  },
+}[lang];
+
+/* Tres destacados, siempre tres. El resto, en /proyectos/. */
+const todos = await getCollection('proyectos');
+const destacados = todos.filter((p) => p.data.destacado).sort((a, b) => a.data.orden - b.data.orden);
+
+if (destacados.length !== 3) {
+  throw new Error(
+    `La Home enseña exactamente tres proyectos destacados y hay ${destacados.length}. ` +
+      'Marca o desmarca `destacado` en src/content/proyectos/.',
+  );
+}
+
+/* El cuerpo del markdown es la ampliación del «Leer más». */
+const conCuerpo = await Promise.all(
+  destacados.map(async (p) => {
+    const { Content } = await render(p);
+    /* En catalán e inglés, el mismo texto viene párrafo a párrafo en
+       `traducciones.<lang>.cuerpo` del propio Markdown (05/11/2026). */
+    const cuerpo = lang === 'es' ? null : ((localizar(p.data, lang) as { cuerpo?: string | string[] }).cuerpo ?? null);
+    if (lang !== 'es' && !cuerpo) throw new Error(`Falta traducciones.${lang}.cuerpo en ${p.id}.md: es el «Leer más» de la Home.`);
+    return { proyecto: p, Content, cuerpo: cuerpo && [cuerpo].flat() };
+  }),
+);
+
+/* Medidas leídas del Figma (`Productos`, 2181:331), revisión del 09/10:
+
+     tres columnas iguales de 432, separadas 24      432 × 3 + 24 × 2 = 1344
+     campo de color 432 × 443 en las tres
+     dentro, un hueco de 392 × 403 a 20 de cada borde
+
+   El móvil va ENTERO dentro del hueco, encajado por el alto y centrado: ya no
+   se sale del campo ni se recorta. Las tres maquetas tienen la misma
+   proporción (0,49), así que las tres salen al mismo tamaño.
+
+   El campo de Accesible Abstracts mide 439 en el Figma y no 443. Son cuatro
+   píxeles en una fila que el resto del documento trata como igual: se toma
+   como descuido y las tres van a 443. Pendiente de corregir en el Figma. */
+/* TEXTOS DE MÓVIL (Johnny, 09/10): en el Figma de Móvil 390 tres textos están
+   simplificados y mandan por debajo de 768; en escritorio se quedan los de
+   siempre. Van los dos en el HTML y se enseña uno según el ancho, con
+   `display: none` en el otro: así lo saca también del árbol de accesibilidad
+   y el lector oye solo el que se ve. Las clases están en base.css porque las
+   usa más de un bloque. */
+---
+
+<Base
+  lang={lang}
+  current="home"
+  title={T.title}
+  description={T.description}
+>
+  <HeroCarousel
+    lang={lang}
+    titular={T.titular}
+  />
+
+  <h2 class="sr-only">{T.destacados}</h2>
+  {conCuerpo.map(({ proyecto, Content, cuerpo }) => (
+    <ProjectSection proyecto={proyecto} lang={lang}>
+      {cuerpo ? cuerpo.map((parrafo) => <p>{parrafo}</p>) : <Content />}
+    </ProjectSection>
+  ))}
+
+  <section class="productos" aria-labelledby="productos-titulo">
+    <h2 id="productos-titulo" class="productos__intro">
+      {/* Un solo texto en todos los anchos (Johnny, 03/11/2026): antes había
+          uno de escritorio y otro de móvil, dos redacciones de la misma idea. */}
+      {T.productos}
+    </h2>
+
+    <ul class="productos__lista">
+      {
+        productos.map((p) => (
+          <li class:list={['producto', p.clase]}>
+            <div class="producto__campo">
+              {p.imagen && medio(p.imagen) && (
+                <img
+                  src={medio(p.imagen)!.src}
+                  alt={p.alt}
+                  width={medio(p.imagen)!.width}
+                  height={medio(p.imagen)!.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {p.video && (
+                /* Un <video> no admite `alt`, así que el nombre accesible va
+                   en `aria-label`: la animación enseña el producto, no es
+                   decoración, y sin alternativa no se entendería qué es
+                   (AGENTS.md §1 — ARIA justificada). Describe el final de la
+                   conversación, que es lo que queda en pantalla.
+
+                   SIN `loop` y SIN botón de pausa. El clip dura 4,93 s y se
+                   reproduce UNA vez: 2.2.2 solo pide un mecanismo para lo que
+                   se mueve solo más de cinco segundos.
+
+                   Esto NO se sostiene en este comentario, que ya mintió una
+                   vez: el 09/10 decía 4,94 s mientras el archivo duraba 9,28
+                   y la web incumplía 2.2.2 sin que nadie lo viera. Quien lo
+                   sostiene es `npm run teclado`, que mide la duración del
+                   ARCHIVO servido y exige el botón en cuanto pase de 5 s.
+
+                   `muted` no es cosmético: es la condición para que el
+                   navegador deje reproducir solo. El archivo, además, no
+                   tiene pista de audio. `playsinline` evita que iOS lo abra a
+                   pantalla completa.
+
+                   Dos fotogramas fijos. El `poster` es el ÚLTIMO: la
+                   conversación completa, que es lo que ve quien no tiene JS o
+                   tiene activado reducir movimiento. Si el vídeo va a
+                   moverse, el script cambia el póster por el PRIMERO para
+                   que al arrancar no salte de la conversación entera a la
+                   pantalla vacía. */
+                <video
+                  class="producto__video"
+                  data-video-producto
+                  data-poster-inicio={medio('itza-inicio')?.src}
+                  aria-label={p.video.descripcion}
+                  poster={medio('itza-fotograma')?.src}
+                  muted
+                  playsinline
+                  preload="metadata"
+                >
+                  <source src={p.video.webm} type="video/webm" />
+                  <source src={p.video.mp4} type="video/mp4" />
+                </video>
+              )}
+            </div>
+            <h3 class="producto__nombre">
+              {p.nombre}
+              {p.marca && <sup aria-hidden="true">®</sup>}
+            </h3>
+            {p.descripcionMovil ? (
+              <p class="producto__desc">
+                <span class="solo-amplio">{p.descripcion}</span>
+                <span class="solo-movil">{p.descripcionMovil}</span>
+              </p>
+            ) : (
+              <p class="producto__desc">{p.descripcion}</p>
+            )}
+            {/* La flecha la decide el destino (04/11/2026): A11y Primero ya lleva a
+                su caso, dentro de la web, y con `external` fijo salía con ↗. */}
+            <CtaLink href={p.href}>{p.cta}</CtaLink>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="estudio" aria-labelledby="estudio-titulo">
+    {/* El símbolo de AP, en el hueco de 60 × 60 del Figma (`2080:531`).
+        Medido en el documento: dentro de ese marco el dibujo ocupa
+        50,25 × 44,5 y está centrado —4,75 de aire a la izquierda, 5 a la
+        derecha, 7,75 arriba y abajo—, así que el marco es caja y el símbolo
+        va a 50 de ancho dentro de ella.
+
+        `alt=""` y nada más. Es decorativo de verdad: lo que dice la sección
+        está escrito justo debajo, y un `alt` que lo repitiera se lo haría oír
+        dos veces a quien usa lector de pantalla. Un `alt` vacío ya lo saca del
+        árbol de accesibilidad; `aria-hidden` encima sobraba (AGENTS.md §1). */}
+    <div class="estudio__icono">
+      <img src={iconoEstudio.src} alt="" width={iconoEstudio.width} height={iconoEstudio.height} />
+    </div>
+    <h2 id="estudio-titulo" class="estudio__texto">
+      {/* Un solo texto en todos los anchos (Johnny, 03/11/2026). */}
+      {T.estudio}
+    </h2>
+    <CtaLink href={path('estudio', lang)}>{T.conoce}<Fragment set:html={REGISTRADA} /></CtaLink>
+  </section>
+
+  {/* Al FINAL, justo antes del cierre de contacto (Johnny, 10/10, tarde). Hasta
+      esa tarde iba entre los proyectos y Productos, pero sus tarjetas llevan a
+      Mastodon: a mitad de página eran una salida antes de haber visto
+      Productos y Estudio. Aquí, lo último que se ve después es «Cuéntanos tu
+      proyecto». Si no hay nada reciente no devuelve nada y la Home queda como
+      estaba. */}
+  <Mesa lang={lang} />
+</Base>
+
+<style>
+  .productos {
+    padding-block: var(--space-96) var(--space-128);
+    padding-inline: var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-64);
+  }
+  .productos__intro {
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
+    font-weight: 400;
+    max-width: 1002px;   /* medida del Figma */
+  }
+
+  /* El reparto de columnas vive en home.css. */
+  .producto { display: flex; flex-direction: column; gap: var(--space-24); align-items: flex-start; }
+  /* El campo de color: 432 × 443 en el Figma. */
+  .producto__campo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 432 / 443;
+    background: var(--campo);
+  }
+  /* El hueco de 392 × 403, a 20 de cada borde. En porcentaje y no en píxeles,
+     para que escale con la columna. Ojo: en `inset`, arriba y abajo se miden
+     contra el ALTO del campo y los lados contra el ANCHO, así que no es el
+     mismo número: 20 / 443 = 4,51 % y 20 / 432 = 4,63 %.
+
+     `object-fit: contain` encaja el móvil entero por el alto y lo centra.
+     Vale igual para la imagen, para el vídeo y para su póster. */
+  .producto__campo img,
+  .producto__campo video {
+    position: absolute;
+    inset: 4.51% 4.63%;
+    width: 90.74%;      /* 392 / 432 */
+    height: 90.97%;     /* 403 / 443 */
+    object-fit: contain;
+    display: block;
+  }
+  /* El menta TAL COMO lo decodifica el vídeo (h264 y VP9, medido en Chrome el
+     04/11/2026): con el token de la paleta se intuía el rectángulo del vídeo
+     sobre el campo. */
+  .producto--itza { --campo: var(--mint-video); }
+  .producto--a11y { --campo: var(--yellow-ap); }
+  .producto--aa   { --campo: var(--rose-ap); }
+  .producto__nombre { font-size: var(--texto-size); line-height: var(--texto-leading); }
+  .producto__nombre sup { font-size: 0.4em; vertical-align: super; }
+  /* En negro, como el nombre (Johnny, 09/10). Lo que los separa es el hueco
+     de 24 entre los dos, no el color. */
+  .producto__desc { font-size: var(--texto-size); line-height: var(--texto-leading); }
+  /* 32 entre nombre y descripción, no 24 (Johnny, 09/10): sin el gris, a 24
+     los dos se leían como un solo párrafo. El resto de huecos de la columna
+     siguen en 24; lo que se suma aquí es la diferencia. */
+  .producto__nombre + .producto__desc { margin-block-start: calc(var(--space-32) - var(--space-24)); }
+
+  .estudio {
+    background: var(--surface-band);
+    padding-inline: var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+  }
+  .estudio__texto {
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
+    font-weight: 400;
+  }
+  /* El marco de 60 × 60 del Figma, con el símbolo centrado dentro a 50 de
+     ancho. La geometría vive aquí y no en home.css: Astro da scope a los
+     estilos de componente y eso gana por especificidad, así que una regla
+     suelta para esta misma clase en una hoja aparte no se aplicaría nunca
+     (AGENTS.md §6). */
+  .estudio__icono {
+    width: 60px;
+    height: 60px;
+    flex: none;
+    display: grid;
+    place-items: center;
+  }
+  /* El alto sale de la proporción del dibujo —338,4 × 299,43—, no de un
+     número escrito a mano: 50 de ancho dan 44,24 de alto. */
+  .estudio__icono img { display: block; width: 50px; height: auto; }
+
+  /* ---- Móvil 390 · medido en el Figma (2203:563, 2203:590) ----------------
+     Productos: 64 arriba y 96 abajo. Las columnas ya se apilan en home.css
+     con 48 entre ellas, que es lo del documento.
+     Estudio: la frase en una caja de 274.
+     Desde el 30/10/2026 los H2 y los párrafos de la Home van a la izquierda
+     en todos los anchos (Johnny); antes, la frase de Productos en móvil y la
+     de Estudio iban centradas. El enlace «Conoce
+     Accesibilidad Primero» está oculto en el frame de Móvil y aquí se queda
+     a propósito (Johnny, 09/10): es el camino a Estudio desde la Home. */
+  /* ---- El ritmo vertical, de 1024 para arriba ---------------------------
+     Productos no lleva fondo: se ciñe a su tinta y la separación la pone el
+     128. Estudio SÍ lleva fondo (Silk), así que conserva su relleno de 96: en
+     una banda, el borde que ve el ojo es la banda, no el texto. */
+  /* En todos los anchos desde el 10/10. */
+  .productos { padding-block: 0; margin-block-start: var(--ritmo-seccion); }
+  .estudio { margin-block-start: var(--ritmo-seccion); }
+
+  /* Tableta: la frase de Estudio en la caja de 572 del Figma de Tablet
+     (2201:558). */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .estudio__texto { max-width: 572px; }
+  }
+
+  @media (max-width: 767px) {
+    .estudio__texto { width: 274px; max-width: 100%; }
+  }
+</style>
+
+<script>
+  /* El vídeo de Itza: se reproduce UNA vez, cuando se ve, y se queda en el
+     último fotograma. Si sale de pantalla a medias se pausa y sigue al volver,
+     así que en total nunca se mueve más de 4,93 s y no necesita control
+     (2.2.2). Quien sostiene ese «4,93» no es esta frase, es `npm run teclado`:
+     mide el archivo servido y exige el botón en cuanto pase de 5 s.
+
+     Con `prefers-reduced-motion` no arranca: se queda el póster, que es el
+     último fotograma. Reducir no es quitar: quien lo tiene activado ve el
+     mismo final que los demás, solo que sin el camino (AGENTS.md §2.3). */
+  document.documentElement.classList.add('js');
+  document.querySelectorAll<HTMLVideoElement>('[data-video-producto]').forEach((video) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const posterFinal = video.poster;
+    let visible = false;
+
+    const sincronizar = () => {
+      if (reduce.matches) {
+        video.pause();
+        /* Si alguien activa reducir movimiento con el vídeo ya empezado,
+           salta al final en vez de quedarse a medias. */
+        if (video.currentTime > 0 && video.duration) video.currentTime = video.duration;
+        else video.poster = posterFinal;
+        return;
+      }
+      if (video.currentTime === 0 && video.dataset.posterInicio) {
+        video.poster = video.dataset.posterInicio;
+      }
+      if (visible && !video.ended) video.play().catch(() => {});   // el navegador puede negarse; no pasa nada
+      else video.pause();
+    };
+
+    new IntersectionObserver(
+      (es) => es.forEach((e) => { visible = e.isIntersecting; sincronizar(); }),
+      { threshold: 0.3 },
+    ).observe(video);
+    reduce.addEventListener('change', sincronizar);
+    sincronizar();
+  });
+</script>
