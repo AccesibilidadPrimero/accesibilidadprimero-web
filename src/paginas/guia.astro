@@ -45,7 +45,6 @@
 import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
 import Disclosure from '../components/Disclosure.astro';
 import VideoPausable from '../components/VideoPausable.astro';
@@ -65,11 +64,17 @@ const poster = (formato: 'web' | 'movil', archivo: string) => {
   if (!img) throw new Error(`Falta el póster ${formato}/${lang}/${archivo}.jpg en arte/guia/ (npm run arte)`);
   return img.default;
 };
+/* Los vídeos van en public/ con URL fija: al cambiar los archivos, se sube la
+   versión para que ningún navegador ni caché sirva los antiguos (los pósters
+   no lo necesitan, Astro les pone huella). 2: web en gris, cara triste a
+   feliz sin neutra y pesos nuevos (Johnny, 06/11/2026). */
+const VERSION_VIDEOS = 2;
+const video = (formato: 'web' | 'movil', archivo: string) => `/video/guia/${formato}/${lang}/${archivo}.mp4?v=${VERSION_VIDEOS}`;
 const PUNTOS = PUNTOS_GUIA.map((p) => ({
   id: p.id,
   ...p.texto[lang],
-  web: { archivo: `/video/guia/web/${lang}/${p.archivo}.mp4`, poster: poster('web', p.archivo) },
-  movil: { archivo: `/video/guia/movil/${lang}/${p.archivo}.mp4`, poster: poster('movil', p.archivo) },
+  web: { archivo: video('web', p.archivo), poster: poster('web', p.archivo) },
+  movil: { archivo: video('movil', p.archivo), poster: poster('movil', p.archivo) },
 }));
 
 const T = {
@@ -278,8 +283,8 @@ const datosPreguntas = JSON.stringify({
   })),
 });
 const imagenSocial = (await getImage({ src: PUNTOS[0].web.poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
-/* Desde 1024, el vídeo va en la segunda columna (la de las fichas). */
-const anchoVideo = { escritorio: 'calc((min(100vw, 1440px) - 48px) * 0.6724)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
+/* Desde 1024, el vídeo va a diez de las doce columnas. */
+const anchoVideo = { escritorio: 'calc((min(100vw, 1440px) - 48px) * 0.8305)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
 /* El `alt` de la imagen fija: qué es el vídeo. Lo que enseña, paso a paso,
    ya lo cuenta la pauta de debajo, y no se repite. */
 const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
@@ -323,7 +328,8 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 
   {/* La pauta como ficha (Johnny, 06/11/2026): su título, que es el del
       vídeo, en la columna de los bloques, a la altura de la frase; el resto
-      en la segunda columna, con un filete entre bloque y bloque. */}
+      en la segunda columna. A la vista, la frase y la referencia; lo demás
+      en «Leer más», con un filete entre bloque y bloque. */}
   <section class="pautas" aria-label={T.hPauta}>
     {PUNTOS.map((p, i) => (
       <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${p.id}-titulo`}>
@@ -333,23 +339,27 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
             <p>{p.frase}</p>
             <p>{p.referencia}</p>
           </div>
-          <div class="pauta__grupo pauta__grupo--filete">
-            <h3 class="pauta__sub">{T.falla}</h3>
-            <p>{p.falla}</p>
-          </div>
-          <div class="pauta__grupo pauta__grupo--filete">
-            <h3 class="pauta__sub">{T.arreglo}</h3>
-            <p>{p.arreglo}</p>
-            {p.nota && <p>{p.nota}</p>}
-          </div>
-          <div class="pauta__grupo pauta__grupo--filete">
-            <h3 class="pauta__sub">{T.comprobar}</h3>
-            <p>{p.comprobar}</p>
-          </div>
-          <div class="pauta__grupo pauta__grupo--filete">
-            <p>{T.conversion}</p>
-            <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
-          </div>
+          {/* Lo demás, plegado (Johnny, 06/11/2026): la ficha enseña la frase y
+              la referencia, como el final del vídeo, y «Leer más». */}
+          <Disclosure id={`${p.id}-ficha`} contexto={p.titulo} lang={lang}>
+            <div class="pauta__grupo pauta__grupo--filete">
+              <h3 class="pauta__sub">{T.falla}</h3>
+              <p>{p.falla}</p>
+            </div>
+            <div class="pauta__grupo pauta__grupo--filete">
+              <h3 class="pauta__sub">{T.arreglo}</h3>
+              <p>{p.arreglo}</p>
+              {p.nota && <p>{p.nota}</p>}
+            </div>
+            <div class="pauta__grupo pauta__grupo--filete">
+              <h3 class="pauta__sub">{T.comprobar}</h3>
+              <p>{p.comprobar}</p>
+            </div>
+            <div class="pauta__grupo pauta__grupo--filete">
+              <p>{T.conversion}</p>
+              <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
+            </div>
+          </Disclosure>
         </div>
       </article>
     ))}
@@ -377,7 +387,10 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
     </ul>
   </section>
 
-  <Bloque id="preguntas" titulo={T.hPreguntas}>
+  {/* El título arriba y las preguntas debajo, a tres columnas desde el
+      margen (Johnny, 06/11/2026): no es la fila de Bloque. */}
+  <section class="faq" aria-labelledby="preguntas">
+    <h2 id="preguntas" class="faq__titulo">{T.hPreguntas}</h2>
     <div class="preguntas">
       <ul class="preguntas__lista">
         {/* Solo las preguntas a la vista, a tres columnas (Johnny,
@@ -405,7 +418,7 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
       </ul>
       <p>{ACTUALIZADO[lang]}</p>
     </div>
-  </Bloque>
+  </section>
 
   <script type="application/ld+json" set:html={datosPreguntas} />
 </Base>
@@ -453,18 +466,23 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 </script>
 
 <style>
-  /* El hero: titular arriba y el vídeo a las tres columnas, en verde AP como
-     la banda de la guía. No es la apertura a pantalla entera de HeroPagina:
+  /* El hero: el vídeo centrado sobre el amarillo de la carita. No es la apertura a pantalla entera de HeroPagina:
      aquí lo que abre la página es el vídeo, no una ilustración (06/11/2026). */
+  /* La mancha en el amarillo de la carita del vídeo (#E6E680, Johnny,
+     06/11/2026), y de arriba abajo: el hero se sube por debajo de la
+     cabecera, que no tiene fondo, como en la Home. Tinta sobre él: 15,6:1. */
   .guia-hero {
+    margin-block-start: calc(var(--header-height) * -1);
     padding: calc(var(--header-height) + var(--space-48)) var(--gutter-page) var(--space-48);
-    background: var(--green-ap);
+    background: #E6E680;
   }
-  /* Más pequeño (Johnny, 06/11/2026): desde 1024, en la segunda columna,
-     la misma de las fichas de abajo (456 / 1392, como Bloque.astro). */
+  /* Centrado y a diez de las doce columnas desde 1024 (Johnny, 06/11/2026:
+     ni a pantalla entera ni en la segunda columna). Columna de 94 y huecos
+     de 24 en 1392: diez columnas, 1156. */
   @media (min-width: 1024px) {
-    .carrusel { margin-inline-start: calc(456 / 1392 * 100%); }
+    .carrusel { max-inline-size: calc(1156 / 1392 * 100%); margin-inline: auto; }
   }
+  @media (forced-colors: active) { .guia-hero { background: Canvas; } }
 
   .carrusel { position: relative; }
   .carrusel__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-48); }
@@ -504,6 +522,9 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   /* Los filetes de la ficha: la línea gris de las filas de la web (--rule).
      El Silk (#f7f7f4) no se ve sobre el blanco. */
   .pauta__grupo--filete { margin-block-start: var(--space-24); padding-block-start: var(--space-24); border-block-start: 1px solid var(--rule); max-width: none; }
+  /* El primer filete, ya dentro de lo desplegado, no necesita aire encima. */
+  .pauta__ficha :global(.disclosure__panel) > .pauta__grupo--filete:first-child { margin-block-start: 0; }
+  .pauta__ficha > :global(.disclosure) { margin-block-start: var(--space-8); }
   .pauta__grupo--filete > * { max-width: var(--measure); }
   .pauta__grupo p { margin: 0; }
   .pauta__titulo, .pauta__sub, .info__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
@@ -522,6 +543,8 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   .info__glosario { margin: 0; display: flex; flex-direction: column; gap: var(--space-16); }
   .info__glosario dd { margin: 0; }
 
+  .faq { display: flex; flex-direction: column; gap: var(--ritmo-intro); padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
+  .faq__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
   .preguntas { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
   .preguntas > p { margin: 0; max-width: var(--measure); }
   /* Los botones salen 12 por arriba y por abajo, así que con 24 entre

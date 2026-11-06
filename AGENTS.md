@@ -307,10 +307,17 @@ disciplina personal a las once de la noche.
 - **La guía en vídeo (05/11/2026; landing propia desde el 06/11/2026).**
   “¿Qué hace que tu web sea o no accesible?” vive en `src/paginas/guia.astro`
   (ruta `guia`). Es la página de referencia del lanzamiento: información de
-  valor, no una pieza de venta. Hero en verde AP con el titular y el
-  carrusel de vídeos a las tres columnas, con contador (1 / 23); cada vídeo
-  es un `VideoPausable` (empieza en pausa). Debajo, la pauta del vídeo que
-  se ve (qué falla, cómo se arregla, cómo comprobarlo), que cambia con él, y
+  valor, no una pieza de venta. Hero en #E6E680 (el amarillo de la carita
+  del vídeo) de arriba abajo, por debajo de la cabecera sin fondo; el titular
+  solo para el lector de pantalla (el vídeo ya lo dice) y el carrusel
+  centrado a diez de doce columnas, con contador (1 / 23); cada vídeo es un
+  `VideoPausable`. El primero espera en pausa y, al pasar, el siguiente
+  arranca solo (con «reducir movimiento», no). Los vídeos llevan `?v=` con
+  `VERSION_VIDEOS`: se sube al sustituir los archivos. Debajo, la pauta del
+  vídeo que se ve, en ficha: título a la izquierda, frase y referencia a la
+  vista y qué falla, cómo se arregla y cómo comprobarlo en «Leer más», con
+  filetes. Cambia con el vídeo. Preguntas frecuentes con el título encima y
+  tres columnas debajo, solo la pregunta a la vista. Y
   tres columnas fijas con «Leer más»: qué es la WCAG, políticas europeas y
   glosario. Excepción declarada a los heros de pantalla entera: aquí abre el
   vídeo. El carrusel no avanza solo; cada punto tiene su dirección
