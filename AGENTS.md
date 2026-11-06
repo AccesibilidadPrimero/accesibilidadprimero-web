@@ -318,10 +318,16 @@ disciplina personal a las once de la noche.
   entra. Sin JS, todos los vídeos y pautas a la vista. Un punto nuevo es una
   entrada en `PUNTOS` con su texto en los tres idiomas; probar con uno, con
   tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
-  europeas» se revisan cuando el Diario Oficial la cite. `GuiaCierre.astro`
-  enlaza la guía antes del cierre de contacto en todas las páginas menos en
-  la suya, con la carita feliz del vídeo. Es la única página con imagen
-  para compartir (`imagen` de `Base`).
+  europeas» se revisan cuando el Diario Oficial la cite. Preguntas frecuentes
+  (14, sobre la ley, pensadas para buscadores) en `src/data/preguntas.ts`:
+  la primera frase contesta sí, no o depende y el detalle va en «Leer más»;
+  fechadas y con aviso de que no son asesoramiento jurídico. Si cambia una
+  norma, se cambia ahí. `GuiaCierre.astro` enlaza la guía antes del cierre
+  de contacto en todas las páginas menos en la suya, sin fondo, con la
+  carita del vídeo: hace el gesto de “Es accesible” dos veces, una cada
+  2,5 s (5 s en total, sin botón: 2.2.2), al entrar en pantalla y una sola
+  vez; sin JS y con «reducir movimiento», feliz y quieta. Es la única página
+  con imagen para compartir (`imagen` de `Base`).
 
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
   inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.

@@ -47,6 +47,7 @@ import VideoPausable from '../components/VideoPausable.astro';
 import { path, type Lang } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
 import poster01 from '../assets/guia/01-enlaces.png';
+import { PREGUNTAS, ACTUALIZADO, type Pregunta } from '../data/preguntas';
 
 const lang = idiomaDe(Astro.url);
 
@@ -129,6 +130,7 @@ const T = {
     conversion: '¿Tu web cumple este punto? Lo revisamos, con este y con todos los demás, en una auditoría.',
     verAuditoria: 'Ver la auditoría de accesibilidad',
     hInfo: 'Para saber más',
+    hPreguntas: 'Preguntas frecuentes',
   },
   ca: {
     title: 'Què fa que el teu web sigui accessible o no · Accesibilidad Primero',
@@ -147,6 +149,7 @@ const T = {
     conversion: 'El teu web compleix aquest punt? El revisem, amb aquest i amb tots els altres, en una auditoria.',
     verAuditoria: 'Veure l’auditoria d’accessibilitat',
     hInfo: 'Per saber-ne més',
+    hPreguntas: 'Preguntes freqüents',
   },
   en: {
     title: 'What makes your website accessible, or not · Accesibilidad Primero',
@@ -165,6 +168,7 @@ const T = {
     conversion: 'Does your website meet this point? We check it, along with all the others, in an audit.',
     verAuditoria: 'See the accessibility audit',
     hInfo: 'Find out more',
+    hPreguntas: 'Frequently asked questions',
   },
 }[lang];
 
@@ -294,6 +298,25 @@ const COLUMNAS: Record<Lang, Columna[]> = {
 };
 
 const total = PUNTOS.length;
+
+/* Preguntas frecuentes (06/11/2026): datos en src/data/preguntas.ts. El blog
+   solo existe en castellano, así que su enlace va siempre a /blog/. */
+const preguntas = PREGUNTAS[lang];
+const hrefDe = (e: NonNullable<Pregunta['enlace']>) => e.url
+  ?? `${path(e.ruta!, e.ruta === 'blog' ? 'es' : lang, e.slug)}${e.ancla ? `#${e.ancla}` : ''}`;
+/* Para los buscadores: las mismas preguntas en datos estructurados. Google ya
+   no las enseña como resultado enriquecido salvo en webs oficiales y de
+   salud, pero los buscadores con IA sí las leen. */
+const datosPreguntas = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: lang,
+  mainEntity: preguntas.map((q) => ({
+    '@type': 'Question',
+    name: q.pregunta,
+    acceptedAnswer: { '@type': 'Answer', text: [q.corta, ...q.detalle].join(' ') },
+  })),
+});
 const idPunto = (p: Punto) => `punto-${p.criterio.replaceAll('.', '-')}`;
 const imagenSocial = (await getImage({ src: PUNTOS[0].poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
 const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
@@ -387,6 +410,27 @@ const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'ca
       ))}
     </ul>
   </section>
+
+  <Bloque id="preguntas" titulo={T.hPreguntas}>
+    <div class="preguntas">
+      <ul class="preguntas__lista">
+        {preguntas.map((q) => (
+          <li class="pregunta" id={`pregunta-${q.id}`}>
+            <h3 class="pregunta__titulo">{q.pregunta}</h3>
+            {/* El correo no cabe a 320 sin cortarse: <wbr> detrás de la arroba (§4). */}
+            <p>{q.corta.split('@').map((t, i) => <>{i > 0 && <>@<wbr /></>}{t}</>)}</p>
+            <Disclosure id={`pregunta-${q.id}-detalle`} contexto={q.pregunta} lang={lang}>
+              {q.detalle.map((t) => <p>{t}</p>)}
+              {q.enlace && <CtaLink href={hrefDe(q.enlace)}>{q.enlace.texto}</CtaLink>}
+            </Disclosure>
+          </li>
+        ))}
+      </ul>
+      <p>{ACTUALIZADO[lang]}</p>
+    </div>
+  </Bloque>
+
+  <script type="application/ld+json" set:html={datosPreguntas} />
 </Base>
 
 <script>
@@ -489,4 +533,13 @@ const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'ca
   .info__columna :global(.disclosure__panel[hidden]) { display: none; }
   .info__glosario { margin: 0; display: flex; flex-direction: column; gap: var(--space-16); }
   .info__glosario dd { margin: 0; }
+
+  .preguntas { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
+  .preguntas > p { margin: 0; max-width: var(--measure); }
+  .preguntas__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
+  .pregunta { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; max-width: var(--measure); }
+  .pregunta p { margin: 0; }
+  .pregunta__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .pregunta :global(.disclosure__panel) { display: flex; flex-direction: column; gap: var(--space-16); }
+  .pregunta :global(.disclosure__panel[hidden]) { display: none; }
 </style>
