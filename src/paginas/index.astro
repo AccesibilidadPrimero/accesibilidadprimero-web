@@ -233,8 +233,11 @@ const conCuerpo = await Promise.all(
       Mastodon: a mitad de página eran una salida antes de haber visto
       Productos y Estudio. Aquí, lo último que se ve después es «Cuéntanos tu
       proyecto». Si no hay nada reciente no devuelve nada y la Home queda como
-      estaba. */}
-  <Mesa lang={lang} />
+      estaba.
+      Solo en castellano (Johnny, 06/11/2026): las notas de Mastodon están
+      escritas en castellano y no se traducen, así que en /ca/ y /en/ serían
+      un bloque en otro idioma en mitad de la página. */}
+  {lang === 'es' && <Mesa lang={lang} />}
 </Base>
 
 <style>

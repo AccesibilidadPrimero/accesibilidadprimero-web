@@ -362,6 +362,9 @@ disciplina personal a las once de la noche.
     (`src/lib/particulas.ts`), y a11y, tipografía, contraste y renglones
     miden también `/ca/` y `/en/` (`scripts/idiomas.mjs`).
 
+- **«Sobre la mesa» solo sale en la Home en castellano** (Johnny,
+  06/11/2026): las notas de Mastodon no se traducen. En `/ca/` y `/en/` no
+  se pinta.
 - **«Sobre la mesa» no pide nada en el build.** El contenido lo congela
   `npm run mesa` en `src/data/mesa.json` y las imágenes las baja a
   `src/assets/mesa/`. Excepción consciente a la regla de que `src/assets/`
