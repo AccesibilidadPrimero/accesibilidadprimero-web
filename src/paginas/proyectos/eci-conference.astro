@@ -408,6 +408,9 @@ const datos = [
   /* Tres columnas desde 1024 (Johnny, 30/10/2026): etiqueta, esquema y
      texto, con 96 entre ellas, como el resto de bloques. */
   .bloque__esquema { display: none; }
+  /* Por debajo de 1024, entre el titular y los párrafos: centrado en el
+     ancho (Johnny, 06/11/2026), no pegado a la izquierda. */
+  .bloque--esquema :global(.esquema--linea) { margin-inline: auto; }
   @media (min-width: 1024px) {
     .bloque--esquema { grid-template-columns: 280px 280px minmax(0, 1fr); }
     .bloque--esquema .bloque__esquema { display: block; }
