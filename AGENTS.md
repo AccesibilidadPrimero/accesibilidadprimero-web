@@ -316,8 +316,10 @@ disciplina personal a las once de la noche.
   `VERSION_VIDEOS`: se sube al sustituir los archivos. Debajo, la pauta del
   vídeo que se ve, en ficha: título a la izquierda, frase y referencia a la
   vista y qué falla, cómo se arregla y cómo comprobarlo en «Leer más», con
-  filetes. Cambia con el vídeo. Preguntas frecuentes con el título encima y
-  tres columnas debajo, solo la pregunta a la vista. Y
+  filetes en Silk, sobre el mismo amarillo que el hero, pegada a él. Cambia
+  con el vídeo. Preguntas frecuentes sobre gris claro, con el título encima
+  y dos columnas debajo: solo la pregunta a la vista, sin «+» y sin signos
+  de interrogación (titulares con las palabras que se buscan). Y
   tres columnas fijas con «Leer más»: qué es la WCAG, políticas europeas y
   glosario. Excepción declarada a los heros de pantalla entera: aquí abre el
   vídeo. El carrusel no avanza solo; cada punto tiene su dirección
@@ -331,7 +333,7 @@ disciplina personal a las once de la noche.
   con tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
   europeas» se revisan cuando el Diario Oficial la cite. Preguntas frecuentes
   (14, sobre la ley, pensadas para buscadores) en `src/data/preguntas.ts`:
-  la primera frase contesta sí, no o depende y el detalle va en «Leer más»;
+  la primera frase contesta de entrada y el resto va al desplegar;
   fechadas y con aviso de que no son asesoramiento jurídico. Si cambia una
   norma, se cambia ahí. `GuiaCierre.astro` enlaza la guía antes del cierre
   de contacto en todas las páginas menos en la suya, sin fondo, con la

@@ -145,10 +145,10 @@ interface Columna { id: string; titulo: string; resumen: string; parrafos?: stri
 const COLUMNAS: Record<Lang, Columna[]> = {
   es: [
     {
-      id: 'wcag', titulo: '¿Qué es la WCAG?',
-      resumen: 'Las Pautas de Accesibilidad para el Contenido Web: el estándar internacional que dice qué necesita una web para que la pueda usar cualquier persona.',
+      id: 'wcag', titulo: 'Sobre la WCAG',
+      resumen: 'El estándar internacional que dice qué necesita una web para que la pueda usar cualquier persona.',
       parrafos: [
-        'Las publica el W3C, el consorcio que define cómo funciona la web. Se ordenan en cuatro principios: que el contenido se pueda percibir, que se pueda manejar, que se entienda y que sea robusto, es decir, que funcione con cualquier navegador y con las tecnologías de apoyo.',
+        'WCAG son las Pautas de Accesibilidad para el Contenido Web. Las publica el W3C, el consorcio que define cómo funciona la web. Se ordenan en cuatro principios: que el contenido se pueda percibir, que se pueda manejar, que se entienda y que sea robusto, es decir, que funcione con cualquier navegador y con las tecnologías de apoyo.',
         'Cada principio baja a criterios concretos que se pueden comprobar, y cada criterio tiene un nivel. A es el mínimo, AA es el que piden las leyes y AAA es el más exigente.',
         'La 2.2 es la versión vigente desde octubre de 2023. Incluye todo lo de la 2.1 y suma nueve criterios, casi todos para quien navega con teclado, usa una pantalla táctil o tiene dificultades cognitivas: que el foco no quede tapado, que los botones tengan un tamaño mínimo, que arrastrar no sea la única forma de hacer algo o que entrar en una cuenta no obligue a memorizar.',
         'Es la versión con la que trabajamos y la que adopta la nueva norma europea. Cumplirla es cumplir también las anteriores.',
@@ -156,7 +156,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
     },
     {
       id: 'europa', titulo: 'Políticas europeas sobre accesibilidad',
-      resumen: 'Dos directivas obligan a que las webs sean accesibles en Europa: una para el sector público y otra para las empresas que venden productos y servicios.',
+      resumen: 'Dos directivas obligan a que las webs sean accesibles en Europa.',
       parrafos: [
         'La Directiva (UE) 2016/2102, de accesibilidad de los sitios web y aplicaciones del sector público. En España la traspone el Real Decreto 1112/2018: las administraciones tienen que cumplirla y publicar su declaración de accesibilidad.',
         'El Acta Europea de Accesibilidad, la Directiva (UE) 2019/882. Se aplica desde el 28 de junio de 2025 a productos y servicios como el comercio electrónico, la banca, el transporte o los libros electrónicos. En España la traspone la Ley 11/2023. Las microempresas que prestan servicios quedan fuera.',
@@ -184,10 +184,10 @@ const COLUMNAS: Record<Lang, Columna[]> = {
   ],
   ca: [
     {
-      id: 'wcag', titulo: 'Què és la WCAG?',
-      resumen: 'Les Pautes d’Accessibilitat per al Contingut Web: l’estàndard internacional que diu què necessita una web perquè la pugui fer servir qualsevol persona.',
+      id: 'wcag', titulo: 'Sobre la WCAG',
+      resumen: 'L’estàndard internacional que diu què necessita una web perquè la pugui fer servir qualsevol persona.',
       parrafos: [
-        'Les publica el W3C, el consorci que defineix com funciona el web. S’ordenen en quatre principis: que el contingut es pugui percebre, que es pugui fer servir, que s’entengui i que sigui robust, és a dir, que funcioni amb qualsevol navegador i amb les tecnologies de suport.',
+        'WCAG són les Pautes d’Accessibilitat per al Contingut Web. Les publica el W3C, el consorci que defineix com funciona el web. S’ordenen en quatre principis: que el contingut es pugui percebre, que es pugui fer servir, que s’entengui i que sigui robust, és a dir, que funcioni amb qualsevol navegador i amb les tecnologies de suport.',
         'Cada principi baixa a criteris concrets que es poden comprovar, i cada criteri té un nivell. A és el mínim, AA és el que demanen les lleis i AAA és el més exigent.',
         'La 2.2 és la versió vigent des d’octubre de 2023. Inclou tot el de la 2.1 i hi suma nou criteris, gairebé tots per a qui navega amb teclat, fa servir una pantalla tàctil o té dificultats cognitives: que el focus no quedi tapat, que els botons tinguin una mida mínima, que arrossegar no sigui l’única manera de fer una cosa o que entrar en un compte no obligui a memoritzar.',
         'És la versió amb què treballem i la que adopta la nova norma europea. Complir-la és complir també les anteriors.',
@@ -195,7 +195,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
     },
     {
       id: 'europa', titulo: 'Polítiques europees d’accessibilitat',
-      resumen: 'Dues directives obliguen que les webs siguin accessibles a Europa: una per al sector públic i una altra per a les empreses que venen productes i serveis.',
+      resumen: 'Dues directives obliguen que les webs siguin accessibles a Europa.',
       parrafos: [
         'La Directiva (UE) 2016/2102, d’accessibilitat dels llocs web i aplicacions del sector públic. A Espanya la transposa el Reial decret 1112/2018: les administracions l’han de complir i publicar la seva declaració d’accessibilitat.',
         'L’Acta Europea d’Accessibilitat, la Directiva (UE) 2019/882. S’aplica des del 28 de juny de 2025 a productes i serveis com el comerç electrònic, la banca, el transport o els llibres electrònics. A Espanya la transposa la Llei 11/2023. Les microempreses que presten serveis en queden fora.',
@@ -223,10 +223,10 @@ const COLUMNAS: Record<Lang, Columna[]> = {
   ],
   en: [
     {
-      id: 'wcag', titulo: 'What is WCAG?',
-      resumen: 'The Web Content Accessibility Guidelines: the international standard that sets out what a website needs so that anyone can use it.',
+      id: 'wcag', titulo: 'About WCAG',
+      resumen: 'The international standard that sets out what a website needs so that anyone can use it.',
       parrafos: [
-        'They are published by the W3C, the consortium that defines how the web works. They are organised around four principles: content must be perceivable, operable, understandable and robust, which means it works with any browser and with assistive technologies.',
+        'WCAG stands for the Web Content Accessibility Guidelines. They are published by the W3C, the consortium that defines how the web works. They are organised around four principles: content must be perceivable, operable, understandable and robust, which means it works with any browser and with assistive technologies.',
         'Each principle breaks down into specific criteria that can be checked, and each criterion has a level. A is the minimum, AA is what the law requires and AAA is the most demanding.',
         'WCAG 2.2 has been the current version since October 2023. It includes everything in 2.1 and adds nine criteria, most of them for people who use a keyboard, a touchscreen or who have cognitive difficulties: focus must not be hidden, buttons need a minimum size, dragging cannot be the only way to do something and signing in cannot depend on memorising.',
         'It is the version we work with and the one the new European standard adopts. Meeting it means meeting the earlier versions too.',
@@ -234,7 +234,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
     },
     {
       id: 'europa', titulo: 'European accessibility policy',
-      resumen: 'Two directives require websites to be accessible in Europe: one for the public sector and another for businesses that sell products and services.',
+      resumen: 'Two directives require websites to be accessible in Europe.',
       parrafos: [
         'Directive (EU) 2016/2102, on the accessibility of public sector websites and apps. In Spain it is transposed by Royal Decree 1112/2018: public bodies must comply and publish an accessibility statement.',
         'The European Accessibility Act, Directive (EU) 2019/882. It has applied since 28 June 2025 to products and services such as e-commerce, banking, transport and e-books. In Spain it is transposed by Act 11/2023. Microenterprises that provide services are exempt.',
@@ -401,10 +401,9 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
           <li class="pregunta" id={`pregunta-${q.id}`}>
             <h3 class="pregunta__titulo">
               <button type="button" class="pregunta__boton" aria-expanded="false" aria-controls={`pregunta-${q.id}-respuesta`} data-plegable-boton data-ancla={`pregunta-${q.id}`}>
-                <span>{q.pregunta}</span>
-                <svg class="pregunta__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
-                  <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
-                </svg>
+                {/* Sin «+» (Johnny, 06/11/2026): la pregunta ya dice que se abre. El
+                    estado lo lleva `aria-expanded` y, a la vista, el subrayado. */}
+                {q.pregunta}
               </button>
             </h3>
             <div class="pregunta__respuesta" id={`pregunta-${q.id}-respuesta`} hidden data-mov-propio>
@@ -472,10 +471,12 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   /* La mancha en el amarillo de la carita del vídeo (#E6E680, Johnny,
      06/11/2026), y de arriba abajo: el hero se sube por debajo de la
      cabecera, que no tiene fondo, como en la Home. Tinta sobre él: 15,6:1. */
+  /* Una sola definición del amarillo, para el hero y la ficha. */
+  .guia-hero, .pautas { --amarillo-cara: #E6E680; }
   .guia-hero {
     margin-block-start: calc(var(--header-height) * -1);
     padding: calc(var(--header-height) + var(--space-48)) var(--gutter-page) var(--space-48);
-    background: #E6E680;
+    background: var(--amarillo-cara);
     /* El alto de la pantalla y el vídeo centrado en lo que deja el menú. Sin
        JS se ven todos los vídeos seguidos: es un mínimo, no un alto fijo. */
     box-sizing: border-box;
@@ -535,15 +536,21 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   .carrusel__boton:first-child { margin-inline-start: -18px; }
   .carrusel__boton:disabled { opacity: 0.35; cursor: default; }
 
-  .pautas { padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
+  /* La ficha, en el mismo amarillo que el hero y pegada a él (Johnny,
+     06/11/2026): se lee como una sola pieza con el vídeo. */
+  .pautas {
+    padding: var(--space-48) var(--gutter-page) var(--space-96);
+    background: var(--amarillo-cara);
+  }
+  @media (forced-colors: active) { .pautas { background: Canvas; } }
   .pauta { display: flex; flex-direction: column; gap: var(--ritmo-intro); }
   .pauta[hidden] { display: none; }
   .pauta + .pauta { margin-block-start: var(--ritmo-seccion); }
   .pauta__ficha { display: flex; flex-direction: column; min-width: 0; }
   .pauta__grupo { display: flex; flex-direction: column; gap: var(--space-16); max-width: var(--measure); }
-  /* Los filetes de la ficha: la línea gris de las filas de la web (--rule).
-     El Silk (#f7f7f4) no se ve sobre el blanco. */
-  .pauta__grupo--filete { margin-block-start: var(--space-24); padding-block-start: var(--space-24); border-block-start: 1px solid var(--rule); max-width: none; }
+  /* Los filetes de la ficha, en Silk: sobre el amarillo sí se ven (sobre el
+     blanco, no). Son decoración: el orden lo dan los encabezados. */
+  .pauta__grupo--filete { margin-block-start: var(--space-24); padding-block-start: var(--space-24); border-block-start: 1px solid var(--silk); max-width: none; }
   /* El primer filete, ya dentro de lo desplegado, no necesita aire encima. */
   .pauta__ficha :global(.disclosure__panel) > .pauta__grupo--filete:first-child { margin-block-start: 0; }
   .pauta__ficha > :global(.disclosure) { margin-block-start: var(--space-8); }
@@ -565,18 +572,27 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   .info__glosario { margin: 0; display: flex; flex-direction: column; gap: var(--space-16); }
   .info__glosario dd { margin: 0; }
 
-  .faq { display: flex; flex-direction: column; gap: var(--ritmo-intro); padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
+  /* Sobre gris claro, como los bloques en banda (Bloque `fondo="gris"`), y a
+     dos columnas (Johnny, 06/11/2026). */
+  .faq {
+    display: flex; flex-direction: column; gap: var(--ritmo-intro);
+    padding: var(--space-64) var(--gutter-page);
+    margin-block-start: var(--ritmo-seccion);
+    background: var(--surface-band);
+  }
+  @media (min-width: 768px) { .faq { padding-block: var(--space-96); } }
   .faq__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
   .preguntas { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
   .preguntas > p { margin: 0; max-width: var(--measure); }
   /* Los botones salen 12 por arriba y por abajo, así que con 24 entre
      preguntas sus zonas de 44 se tocan sin montarse. */
   .preguntas__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-24); align-items: start; }
-  @media (min-width: 1024px) { .preguntas__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-48) var(--space-24); } }
+  @media (min-width: 1024px) { .preguntas__lista { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-48) var(--space-24); } }
   .pregunta { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; min-width: 0; }
   .pregunta__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  /* La pregunta entera es el botón; el + al final del texto, como en «Leer
-     más». 44 de alto como mínimo. */
+  /* La pregunta entera es el botón, de 44 de alto como mínimo. Sin «+»: al
+     pasar por encima se subraya, y abierta se queda subrayada, así el
+     estado no va solo en un cambio de forma. */
   .pregunta__boton {
     display: block;
     inline-size: 100%;
@@ -590,20 +606,15 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
     color: var(--text); text-align: start;
     font: inherit;
   }
-  .pregunta__signo { display: inline-block; margin-inline-start: var(--space-8); vertical-align: 0.05em; transition: transform var(--dur-base) var(--ease-out); }
-  .pregunta__boton:is(:hover, :focus-visible) .pregunta__signo { transform: scale(1.2); }
-  .pregunta__boton[aria-expanded='true'] .pregunta__signo { transform: rotate(45deg); }
-  .pregunta__boton[aria-expanded='true']:is(:hover, :focus-visible) .pregunta__signo { transform: rotate(45deg) scale(1.2); }
+  .pregunta__boton:hover, .pregunta__boton[aria-expanded='true'] { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
   .pregunta__respuesta { display: flex; flex-direction: column; gap: var(--space-16); }
   .pregunta__respuesta[hidden] { display: none; }
   .pregunta__respuesta p { margin: 0; }
   :global(html:not(.js)) .pregunta__respuesta[hidden] { display: flex; }
-  :global(html:not(.js)) .pregunta__signo { display: none; }
   @media (prefers-reduced-motion: no-preference) {
     :global(html.js) .pregunta__respuesta:not([hidden]) { animation: pregunta-despliega var(--dur-despliegue) var(--ease-asentar); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .pregunta__signo { transition: none; }
     :global(html.js) .pregunta__respuesta:not([hidden]) { animation: pregunta-funde var(--dur-fundido-reducido) linear; }
   }
   @keyframes pregunta-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
