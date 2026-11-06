@@ -165,7 +165,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
     {
       id: 'contacto',
       pregunta: '¿Cómo puedo contactar con Accesibilidad Primero para encargar un proyecto o para colaborar?',
-      corta: 'Escríbenos desde el formulario de contacto o a proyectos@accesibilidadprimero.com.',
+      corta: 'Escríbenos a proyectos@accesibilidadprimero.com o desde el formulario de contacto.',
       detalle: [
         'Para un proyecto, cuéntanos qué tienes y adónde quieres llegar: una web nueva, una auditoría de la que ya tienes o formación para tu equipo. Con eso preparamos una propuesta.',
         'Para colaborar, si eres un estudio, una agencia, una entidad o una persona que trabaja en accesibilidad, también nos interesa. Cuéntanos qué te gustaría hacer.',
@@ -307,7 +307,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
     {
       id: 'contacto',
       pregunta: 'Com puc contactar amb Accesibilidad Primero per encarregar un projecte o per col·laborar?',
-      corta: 'Escriu-nos des del formulari de contacte o a proyectos@accesibilidadprimero.com.',
+      corta: 'Escriu-nos a proyectos@accesibilidadprimero.com o des del formulari de contacte.',
       detalle: [
         'Per a un projecte, explica’ns què tens i on vols arribar: un web nou, una auditoria del que ja tens o formació per al teu equip. Amb això preparem una proposta.',
         'Per col·laborar, si ets un estudi, una agència, una entitat o una persona que treballa en accessibilitat, també ens interessa. Explica’ns què t’agradaria fer.',
@@ -449,7 +449,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
     {
       id: 'contacto',
       pregunta: 'How can I contact Accesibilidad Primero to commission a project or to collaborate?',
-      corta: 'Write to us through the contact form or at proyectos@accesibilidadprimero.com.',
+      corta: 'Write to us at proyectos@accesibilidadprimero.com or through the contact form.',
       detalle: [
         'For a project, tell us what you have and where you want to get to: a new website, an audit of the one you already have or training for your team. With that, we put together a proposal.',
         'To collaborate, if you are a studio, an agency, an organisation or someone working in accessibility, we would like to hear from you too. Tell us what you have in mind.',
