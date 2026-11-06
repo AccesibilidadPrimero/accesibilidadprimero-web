@@ -97,11 +97,12 @@ export const UI: Record<Lang, Dict> = {
     nav: {
       home: 'Inicio',
       /* Nombres del menú (Johnny, 04/11/2026): «AP · Qué hacemos · Casos de
-         estudio · Contacto». Las URL no cambian. */
+         estudio · Contacto». Las URL no cambian. «Sobre AP» en vez de «AP»
+         desde el 06/11/2026 (Johnny). */
       proyectos: 'Casos de estudio',
       servicios: 'Qué hacemos',
       guia: 'Qué hace que una web sea accesible',
-      estudio: 'AP',
+      estudio: 'Sobre AP',
       blog: 'Blog',
       contacto: 'Contacto',
       privacidad: 'Privacidad',
@@ -163,7 +164,7 @@ export const UI: Record<Lang, Dict> = {
       proyectos: 'Casos d’estudi',
       servicios: 'Què fem',
       guia: 'Què fa que un web sigui accessible',
-      estudio: 'AP',
+      estudio: 'Sobre AP',
       blog: 'Blog',
       contacto: 'Contacte',
       privacidad: 'Privacitat',
@@ -225,7 +226,7 @@ export const UI: Record<Lang, Dict> = {
       proyectos: 'Case studies',
       servicios: 'What we do',
       guia: 'What makes a website accessible',
-      estudio: 'AP',
+      estudio: 'About AP',
       blog: 'Blog',
       contacto: 'Contact',
       privacidad: 'Privacy',
