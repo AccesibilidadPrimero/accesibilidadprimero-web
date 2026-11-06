@@ -308,16 +308,20 @@ disciplina personal a las once de la noche.
   “¿Qué hace que tu web sea o no accesible?” vive en `src/paginas/guia.astro`
   (ruta `guia`). Es la página de referencia del lanzamiento: información de
   valor, no una pieza de venta. Hero en verde AP con el titular y el
-  carrusel de vídeos a las tres columnas, con contador (1 / 18); cada vídeo
+  carrusel de vídeos a las tres columnas, con contador (1 / 23); cada vídeo
   es un `VideoPausable` (empieza en pausa). Debajo, la pauta del vídeo que
   se ve (qué falla, cómo se arregla, cómo comprobarlo), que cambia con él, y
   tres columnas fijas con «Leer más»: qué es la WCAG, políticas europeas y
   glosario. Excepción declarada a los heros de pantalla entera: aquí abre el
   vídeo. El carrusel no avanza solo; cada punto tiene su dirección
   (`#punto-2-4-9`) para los Reels, y un aviso `aria-live` dice qué vídeo
-  entra. Sin JS, todos los vídeos y pautas a la vista. Un punto nuevo es una
-  entrada en `PUNTOS` con su texto en los tres idiomas; probar con uno, con
-  tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
+  entra. Sin JS, todos los vídeos y pautas a la vista. Los 23 puntos están en
+  `src/data/guia-puntos.ts` (título, frase y referencia literales del vídeo
+  de cada idioma). Vídeos en `public/video/guia/{web,movil}/{es,ca,en}/` y
+  pósters en `arte/guia/…`: 16:9 desde 768 y 4:5 por debajo
+  (`VideoPausable movilPropio`), cada idioma con su vídeo. Un punto nuevo es
+  una entrada con `id` fijo y su texto en los tres idiomas; probar con uno,
+  con tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
   europeas» se revisan cuando el Diario Oficial la cite. Preguntas frecuentes
   (14, sobre la ley, pensadas para buscadores) en `src/data/preguntas.ts`:
   la primera frase contesta sí, no o depende y el detalle va en «Leer más»;

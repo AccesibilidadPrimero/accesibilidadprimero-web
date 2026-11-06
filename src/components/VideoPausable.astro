@@ -55,11 +55,14 @@ interface Props {
   class?: string;
   /** Arranca solo, una vez (ver arriba). */
   auto?: boolean;
+  /** Usa de verdad la versión `movil` por debajo de 768 (la guía: 4:5). */
+  movilPropio?: boolean;
 }
-const { escritorio, tableta = escritorio, alt, nombre, lang, sizes, class: clase, auto = false } = Astro.props;
+const { escritorio, tableta = escritorio, alt, nombre, lang, sizes, class: clase, auto = false, movilPropio = false } = Astro.props;
 /* En móvil, la versión de tableta (Johnny, 03/11/2026): se acepta `movil`
-   para no tocar los casos, pero no se usa. */
-const movil = tableta;
+   para no tocar los casos, pero no se usa. Salvo con `movilPropio` (la guía,
+   06/11/2026), que tiene sus vídeos verticales 4:5 hechos para el móvil. */
+const movil = movilPropio && Astro.props.movil ? Astro.props.movil : tableta;
 const ui = t(lang);
 
 /* Los anchos que se generan, sin pasar del original. */

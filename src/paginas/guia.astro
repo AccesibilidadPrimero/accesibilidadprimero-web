@@ -9,7 +9,7 @@
 
    ESTRUCTURA
    · Hero: el titular y el carrusel de vídeos a las tres columnas, con su
-     contador (1 / 18). Un vídeo por punto; cada uno con su botón de
+     contador (1 / 23). Un vídeo por punto; cada uno con su botón de
      reproducir y pausar (VideoPausable: empieza en pausa, nada se descarga
      hasta que se pulsa, y se para solo al salir de la vista o del carrusel).
    · Debajo, la pauta del vídeo que se está viendo: qué falla, cómo se
@@ -33,9 +33,10 @@
      ARIA justificada (AGENTS.md §1): es la única forma de anunciar un
      cambio que no mueve el foco.
 
-   AÑADIR UN PUNTO: una entrada en `PUNTOS`, con su vídeo en
-   public/video/guia/ y su imagen fija en arte/guia/ (npm run arte). La
-   forma obliga a escribirlo en los tres idiomas.
+   AÑADIR UN PUNTO: una entrada en src/data/guia-puntos.ts, con sus vídeos en
+   public/video/guia/{web,movil}/{es,ca,en}/ y sus imágenes fijas en
+   arte/guia/{web,movil}/{es,ca,en}/ (npm run arte). La forma obliga a
+   escribirlo en los tres idiomas, y el build se para si falta un póster.
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
@@ -46,71 +47,26 @@ import Disclosure from '../components/Disclosure.astro';
 import VideoPausable from '../components/VideoPausable.astro';
 import { path, type Lang } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
-import poster01 from '../assets/guia/01-enlaces.png';
+import { PUNTOS_GUIA } from '../data/guia-puntos';
 import { PREGUNTAS, ACTUALIZADO, type Pregunta } from '../data/preguntas';
 
 const lang = idiomaDe(Astro.url);
 
-interface TextoPunto {
-  nombre: string;
-  /** La frase del final del vídeo. */
-  frase: string;
-  referencia: string;
-  /** El vídeo entero, contado: lo que lee quien no lo ve. */
-  alt: string;
-  falla: string;
-  arreglo: string;
-  comprobar: string;
-  nota?: string;
-}
-interface Punto {
-  criterio: string;
-  nivel: 'A' | 'AA' | 'AAA';
-  video: string;
-  poster: ImageMetadata;
-  texto: Record<Lang, TextoPunto>;
-}
-
-const PUNTOS: Punto[] = [
-  {
-    criterio: '2.4.9',
-    nivel: 'AAA',
-    video: '/video/guia/01-enlaces.mp4',
-    poster: poster01,
-    texto: {
-      es: {
-        nombre: 'Enlaces',
-        frase: 'Los enlaces dicen adónde llevan.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
-        alt: 'Vídeo del punto 2.4.9, Enlaces. En una web dibujada, dos proyectos tienen un enlace que dice “Conoce más”. El lector de pantalla anuncia “Conoce más, enlace” dos veces y la carita niega con la cabeza: no es accesible. Los enlaces cambian a “Conocer Cultura en los barrios” y “Conocer Laboratorio cultural”, el lector anuncia cada destino y la carita sonríe: es accesible.',
-        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
-        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
-        comprobar: 'Abre la lista de enlaces del lector de pantalla (en VoiceOver, el rotor; en NVDA, Insert + F7) y lee solo los textos. Cada uno tiene que decir adónde lleva sin mirar lo que tiene alrededor.',
-        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
-      },
-      ca: {
-        nombre: 'Enllaços',
-        frase: 'Els enllaços diuen on porten.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
-        alt: 'Vídeo del punt 2.4.9, Enllaços, en castellà. En un web dibuixat, dos projectes tenen un enllaç que diu “Conoce más” (Coneix-ne més). El lector de pantalla anuncia “Conoce más, enllaç” dues vegades i la careta nega amb el cap: no és accessible. Els enllaços canvien a “Conocer Cultura en los barrios” i “Conocer Laboratorio cultural”, el lector anuncia cada destinació i la careta somriu: és accessible.',
-        falla: 'Dos projectes, cadascun amb un enllaç que diu “Conoce más”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Conoce más, enllaç” dues vegades, sense saber on porta cadascun.',
-        arreglo: 'Que el mateix enllaç digui on porta: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. S’entén sol, també fora del context.',
-        comprobar: 'Obre la llista d’enllaços del lector de pantalla (a VoiceOver, el rotor; a NVDA, Insert + F7) i llegeix només els textos. Cadascun ha de dir on porta sense mirar el que té al voltant.',
-        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
-      },
-      en: {
-        nombre: 'Links',
-        frase: 'Links say where they go.',
-        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
-        alt: 'Video for point 2.4.9, Links, in Spanish. On a drawn website, two projects each have a link that says “Conoce más” (Find out more). The screen reader announces “Find out more, link” twice and the little face shakes its head: not accessible. The links change to “Conocer Cultura en los barrios” (Discover Culture in the Neighbourhoods) and “Conocer Laboratorio cultural” (Discover the Culture Lab), the screen reader announces each destination and the face smiles: accessible.',
-        falla: 'Two projects, each with a link that says “Conoce más” (Find out more). Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
-        arreglo: 'Make the link itself say where it goes: “Discover Culture in the Neighbourhoods”, “Discover the Culture Lab”. It makes sense on its own, even out of context.',
-        comprobar: 'Open the screen reader’s list of links (the rotor in VoiceOver, Insert + F7 in NVDA) and read only the link text. Each one has to say where it goes without looking at what surrounds it.',
-        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
-      },
-    },
-  },
-];
+/* Los 23 puntos, sus textos en los tres idiomas, en src/data/guia-puntos.ts.
+   Vídeo y póster, en el idioma de la página y en dos formatos: 16:9 desde
+   768 y 4:5 por debajo (los vídeos se hicieron así, 06/11/2026). */
+const posters = import.meta.glob<{ default: ImageMetadata }>('../assets/guia/*/*/*.jpg', { eager: true });
+const poster = (formato: 'web' | 'movil', archivo: string) => {
+  const img = posters[`../assets/guia/${formato}/${lang}/${archivo}.jpg`];
+  if (!img) throw new Error(`Falta el póster ${formato}/${lang}/${archivo}.jpg en arte/guia/ (npm run arte)`);
+  return img.default;
+};
+const PUNTOS = PUNTOS_GUIA.map((p) => ({
+  id: p.id,
+  ...p.texto[lang],
+  web: { archivo: `/video/guia/web/${lang}/${p.archivo}.mp4`, poster: poster('web', p.archivo) },
+  movil: { archivo: `/video/guia/movil/${lang}/${p.archivo}.mp4`, poster: poster('movil', p.archivo) },
+}));
 
 const T = {
   es: {
@@ -127,6 +83,7 @@ const T = {
     falla: 'Qué falla',
     arreglo: 'Cómo se arregla',
     comprobar: 'Cómo comprobarlo',
+    alt: (t: string, f: string) => `Vídeo sin sonido sobre ${t}: primero, un ejemplo que no es accesible; después, cómo queda arreglado. Termina con la frase “${f}” Debajo se cuenta por escrito.`,
     conversion: '¿Tu web cumple este punto? Lo revisamos, con este y con todos los demás, en una auditoría.',
     verAuditoria: 'Ver la auditoría de accesibilidad',
     hInfo: 'Para saber más',
@@ -146,6 +103,7 @@ const T = {
     falla: 'Què falla',
     arreglo: 'Com s’arregla',
     comprobar: 'Com comprovar-ho',
+    alt: (t: string, f: string) => `Vídeo sense so sobre ${t}: primer, un exemple que no és accessible; després, com queda arreglat. Acaba amb la frase “${f}” A sota s’explica per escrit.`,
     conversion: 'El teu web compleix aquest punt? El revisem, amb aquest i amb tots els altres, en una auditoria.',
     verAuditoria: 'Veure l’auditoria d’accessibilitat',
     hInfo: 'Per saber-ne més',
@@ -165,6 +123,7 @@ const T = {
     falla: 'What goes wrong',
     arreglo: 'How to fix it',
     comprobar: 'How to check it',
+    alt: (t: string, f: string) => `Silent video about ${t}: first, an example that is not accessible; then, how it looks once fixed. It ends with the sentence “${f}” It is described in writing below.`,
     conversion: 'Does your website meet this point? We check it, along with all the others, in an audit.',
     verAuditoria: 'See the accessibility audit',
     hInfo: 'Find out more',
@@ -317,9 +276,11 @@ const datosPreguntas = JSON.stringify({
     acceptedAnswer: { '@type': 'Answer', text: [q.corta, ...q.detalle].join(' ') },
   })),
 });
-const idPunto = (p: Punto) => `punto-${p.criterio.replaceAll('.', '-')}`;
-const imagenSocial = (await getImage({ src: PUNTOS[0].poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
+const imagenSocial = (await getImage({ src: PUNTOS[0].web.poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
 const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
+/* El `alt` de la imagen fija: qué es el vídeo. Lo que enseña, paso a paso,
+   ya lo cuenta la pauta de debajo, y no se repite. */
+const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 ---
 <Base lang={lang} current="guia" title={T.title} description={T.description} imagen={imagenSocial}>
   <section class="guia-hero" aria-labelledby="guia-titulo">
@@ -331,11 +292,13 @@ const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'ca
     <section class="carrusel" aria-label={T.carrusel} data-carrusel>
       <ol class="carrusel__lista">
         {PUNTOS.map((p, i) => (
-          <li class="carrusel__video" id={idPunto(p)} data-carrusel-video={i}>
+          <li class="carrusel__video" id={p.id} data-carrusel-video={i}>
             <VideoPausable
-              escritorio={{ archivo: p.video, poster: p.poster }}
-              alt={p.texto[lang].alt}
-              nombre={`${p.criterio} ${p.texto[lang].nombre}`}
+              escritorio={p.web}
+              movil={p.movil}
+              movilPropio
+              alt={altDe(p)}
+              nombre={p.titulo}
               lang={lang}
               sizes={anchoVideo}
             />
@@ -359,10 +322,10 @@ const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'ca
 
   <Bloque id="pauta" titulo={T.hPauta}>
     {PUNTOS.map((p, i) => {
-      const x = p.texto[lang];
+      const x = p;
       return (
-        <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${idPunto(p)}-titulo`}>
-          <h2 class="pauta__titulo" id={`${idPunto(p)}-titulo`}>{p.criterio} {x.nombre}</h2>
+        <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${p.id}-titulo`}>
+          <h2 class="pauta__titulo" id={`${p.id}-titulo`}>{x.titulo}</h2>
           <div class="pauta__grupo">
             <p>{x.frase}</p>
             <p>{x.referencia}</p>
