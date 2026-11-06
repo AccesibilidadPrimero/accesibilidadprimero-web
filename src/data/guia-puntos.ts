@@ -1,0 +1,728 @@
+/* ---------------------------------------------------------------------------
+   Los 23 puntos de la guía “¿Qué hace que tu web sea o no accesible?”
+   (06/11/2026). Uno por vídeo, en el orden del montaje. Abre un criterio AA
+   (1.4.3); Enlaces, que es AAA, va el quinto (Johnny, 06/11/2026).
+
+   · `archivo`: el nombre del vídeo y de su póster, igual en los tres idiomas:
+     public/video/guia/{web,movil}/{es,ca,en}/<archivo>.mp4 y
+     arte/guia/{web,movil}/{es,ca,en}/<archivo>.jpg (npm run arte).
+   · `titulo`, `frase` y `referencia` son LITERALES del vídeo de cada idioma:
+     si cambian en el vídeo, cambian aquí.
+   · `falla`, `arreglo` y `comprobar` amplían lo que el vídeo enseña: son la
+     alternativa escrita de un vídeo sin sonido (1.2.1).
+   --------------------------------------------------------------------------- */
+import type { Lang } from '../i18n/config';
+
+export interface TextoPunto {
+  titulo: string;
+  frase: string;
+  referencia: string;
+  falla: string;
+  arreglo: string;
+  comprobar: string;
+  nota?: string;
+}
+/** `id`: la dirección del punto (#punto-2-4-9), la que enlazan los Reels. No cambia aunque cambie el orden. */
+export interface PuntoGuia { id: string; archivo: string; texto: Record<Lang, TextoPunto> }
+
+export const PUNTOS_GUIA: PuntoGuia[] = [
+  {
+    id: 'punto-1-4-3',
+    archivo: '01-1-4-3-contraste-texto',
+    texto: {
+      es: {
+        titulo: '1.4.3 Contraste del texto',
+        frase: 'El texto se lee sobre su fondo.',
+        referencia: 'WCAG 2.2 · 1.4.3 Contraste (mínimo) · Nivel AA',
+        falla: 'La fecha y el nombre de cada actividad van en blanco sobre rosa y sobre verde claro: un contraste de 1,4 a 1. Con poca vista, con el sol en la pantalla o con un móvil viejo, el texto desaparece.',
+        arreglo: 'El texto va sobre una pastilla en tinta y se lee en blanco sobre negro. La WCAG pide al menos 4,5 a 1 para el texto normal y 3 a 1 para el grande.',
+        comprobar: 'Mide cada pareja de texto y fondo con un comprobador de contraste, como el Colour Contrast Analyser o el de las herramientas del navegador. Ojo con el texto sobre fotos o degradados: se mide en el punto más claro.',
+      },
+      ca: {
+        titulo: '1.4.3 Contrast del text',
+        frase: 'El text es llegeix sobre el fons.',
+        referencia: 'WCAG 2.2 · 1.4.3 Contrast (mínim) · Nivell AA',
+        falla: 'La data i el nom de cada activitat van en blanc sobre rosa i sobre verd clar: un contrast d’1,4 a 1. Amb poca vista, amb el sol a la pantalla o amb un mòbil vell, el text desapareix.',
+        arreglo: 'El text va sobre una pastilla en tinta i es llegeix en blanc sobre negre. La WCAG demana com a mínim 4,5 a 1 per al text normal i 3 a 1 per al gran.',
+        comprobar: 'Mesura cada parella de text i fons amb un comprovador de contrast, com el Colour Contrast Analyser o el de les eines del navegador. Compte amb el text sobre fotos o degradats: es mesura al punt més clar.',
+      },
+      en: {
+        titulo: '1.4.3 Text contrast',
+        frase: 'Text can be read on its background.',
+        referencia: 'WCAG 2.2 · 1.4.3 Contrast (Minimum) · Level AA',
+        falla: 'The date and name of each event are in white on pink and on light green: a contrast of 1.4 to 1. With low vision, sunlight on the screen or an old phone, the text disappears.',
+        arreglo: 'The text sits on a dark label and reads as white on black. WCAG asks for at least 4.5 to 1 for normal text and 3 to 1 for large text.',
+        comprobar: 'Measure every text and background pair with a contrast checker, such as the Colour Contrast Analyser or the one in your browser’s developer tools. Watch out for text on photos or gradients: measure at the lightest point.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-4-11',
+    archivo: '02-1-4-11-contraste-controles',
+    texto: {
+      es: {
+        titulo: '1.4.11 Contraste de los controles',
+        frase: 'Los campos y las casillas se distinguen.',
+        referencia: 'WCAG 2.2 · 1.4.11 Contraste no textual · Nivel AA',
+        falla: 'El campo del correo y la casilla de la política de privacidad tienen un borde gris muy claro sobre blanco: 1,3 a 1. No se sabe dónde se escribe ni dónde se marca.',
+        arreglo: 'Los bordes van en tinta. Los controles, los iconos que informan y el anillo de foco necesitan al menos 3 a 1 contra lo que tienen al lado.',
+        comprobar: 'Mide el borde de cada campo, casilla y botón contra su fondo, también en sus estados: con el foco, marcado y desactivado. Si un campo solo se distingue por su sombra, mide la sombra.',
+      },
+      ca: {
+        titulo: '1.4.11 Contrast dels controls',
+        frase: 'Els camps i les caselles es distingeixen.',
+        referencia: 'WCAG 2.2 · 1.4.11 Contrast no textual · Nivell AA',
+        falla: 'El camp del correu i la casella de la política de privacitat tenen una vora gris molt clara sobre blanc: 1,3 a 1. No se sap on s’escriu ni on es marca.',
+        arreglo: 'Les vores van en tinta. Els controls, les icones que informen i l’anell de focus necessiten com a mínim 3 a 1 contra el que tenen al costat.',
+        comprobar: 'Mesura la vora de cada camp, casella i botó contra el fons, també en els seus estats: amb el focus, marcat i desactivat. Si un camp només es distingeix per l’ombra, mesura l’ombra.',
+      },
+      en: {
+        titulo: '1.4.11 Control contrast',
+        frase: 'Fields and checkboxes stand out.',
+        referencia: 'WCAG 2.2 · 1.4.11 Non-text Contrast · Level AA',
+        falla: 'The email field and the privacy policy checkbox have a very light grey border on white: 1.3 to 1. You cannot tell where to type or where to tick.',
+        arreglo: 'The borders are dark. Controls, icons that carry information and the focus ring need at least 3 to 1 against what is next to them.',
+        comprobar: 'Measure the border of every field, checkbox and button against its background, in every state too: focused, checked and disabled. If a field only stands out by its shadow, measure the shadow.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-4-1',
+    archivo: '03-1-4-1-color',
+    texto: {
+      es: {
+        titulo: '1.4.1 Uso del color',
+        frase: 'El color no es la única señal.',
+        referencia: 'WCAG 2.2 · 1.4.1 Uso del color · Nivel A',
+        falla: 'En el párrafo, los enlaces “memoria anual” y “escribirnos” solo se distinguen por su color, con un contraste de 1,7 a 1 con el texto. Quien no distingue bien los colores no los encuentra.',
+        arreglo: 'Los enlaces llevan subrayado. El color puede acompañar, pero el significado tiene que llegar también por otra vía: una forma, un subrayado, un icono o una palabra.',
+        comprobar: 'Mira la página en escala de grises (el modo de visión del navegador o un filtro del sistema). Todo lo que informaba con color tiene que seguir entendiéndose: enlaces, errores, estados y gráficos.',
+      },
+      ca: {
+        titulo: '1.4.1 Ús del color',
+        frase: 'El color no és l’únic senyal.',
+        referencia: 'WCAG 2.2 · 1.4.1 Ús del color · Nivell A',
+        falla: 'Al paràgraf, els enllaços “memòria anual” i “escriure’ns” només es distingeixen pel color, amb un contrast d’1,7 a 1 amb el text. Qui no distingeix bé els colors no els troba.',
+        arreglo: 'Els enllaços porten subratllat. El color pot acompanyar, però el significat també ha d’arribar per una altra via: una forma, un subratllat, una icona o una paraula.',
+        comprobar: 'Mira la pàgina en escala de grisos (el mode de visió del navegador o un filtre del sistema). Tot el que informava amb color s’ha de continuar entenent: enllaços, errors, estats i gràfics.',
+      },
+      en: {
+        titulo: '1.4.1 Use of colour',
+        frase: 'Colour is not the only signal.',
+        referencia: 'WCAG 2.2 · 1.4.1 Use of Color · Level A',
+        falla: 'In the paragraph, the “annual report” and “write to us” links stand out only by their colour, at 1.7 to 1 against the text. People who do not see colours well cannot find them.',
+        arreglo: 'The links are underlined. Colour can come along, but the meaning has to arrive another way too: a shape, an underline, an icon or a word.',
+        comprobar: 'View the page in greyscale (your browser’s vision emulation or a system filter). Everything that carried meaning through colour must still make sense: links, errors, states and charts.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-1-1',
+    archivo: '04-1-1-1-imagenes',
+    texto: {
+      es: {
+        titulo: '1.1.1 Imágenes',
+        frase: 'Las imágenes que informan se describen.',
+        referencia: 'WCAG 2.2 · 1.1.1 Contenido no textual · Nivel A',
+        falla: 'Los logos de las entidades aliadas no tienen texto alternativo, o tienen el nombre del archivo. El lector de pantalla dice “banner, imagen”: no se sabe quién colabora.',
+        arreglo: 'Cada logo dice el nombre de su entidad en el texto alternativo. Las imágenes que solo decoran llevan el alternativo vacío, para que el lector las salte.',
+        comprobar: 'Recorre las imágenes con el lector de pantalla o con una extensión que enseñe los textos alternativos. Pregúntate si el alternativo dice lo mismo que la imagen, y si una imagen decorativa está callada.',
+      },
+      ca: {
+        titulo: '1.1.1 Imatges',
+        frase: 'Les imatges que informen es descriuen.',
+        referencia: 'WCAG 2.2 · 1.1.1 Contingut no textual · Nivell A',
+        falla: 'Els logos de les entitats aliades no tenen text alternatiu, o tenen el nom de l’arxiu. El lector de pantalla diu “banner, imatge”: no se sap qui hi col·labora.',
+        arreglo: 'Cada logo diu el nom de la seva entitat al text alternatiu. Les imatges que només decoren porten l’alternatiu buit, perquè el lector se les salti.',
+        comprobar: 'Recorre les imatges amb el lector de pantalla o amb una extensió que mostri els textos alternatius. Pregunta’t si l’alternatiu diu el mateix que la imatge, i si una imatge decorativa està callada.',
+      },
+      en: {
+        titulo: '1.1.1 Images',
+        frase: 'Images that inform are described.',
+        referencia: 'WCAG 2.2 · 1.1.1 Non-text Content · Level A',
+        falla: 'The partner logos have no alt text, or just the file name. The screen reader says “banner, image”: nobody can tell who the partners are.',
+        arreglo: 'Each logo gives the organisation’s name in its alt text. Images that are only decorative have empty alt text, so the screen reader skips them.',
+        comprobar: 'Go through the images with a screen reader or with an extension that shows alt text. Ask whether the alt text says the same as the image, and whether decorative images stay silent.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-4-9',
+    archivo: '05-2-4-9-enlaces',
+    texto: {
+      es: {
+        titulo: '2.4.9 Enlaces',
+        frase: 'Los enlaces dicen adónde llevan.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
+        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
+        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
+        comprobar: 'Abre la lista de enlaces del lector de pantalla (en VoiceOver, el rotor; en NVDA, Insert + F7) y lee solo los textos. Cada uno tiene que decir adónde lleva sin mirar lo que tiene alrededor.',
+        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
+      },
+      ca: {
+        titulo: '2.4.9 Enllaços',
+        frase: 'Els enllaços diuen on porten.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
+        falla: 'Dos projectes, cadascun amb un enllaç que diu “Coneix-ne més”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Coneix-ne més, enllaç” dues vegades, sense saber on porta cadascun.',
+        arreglo: 'Que el mateix enllaç digui on porta: “Coneix Cultura als barris”, “Coneix Laboratori cultural”. S’entén sol, també fora del context.',
+        comprobar: 'Obre la llista d’enllaços del lector de pantalla (a VoiceOver, el rotor; a NVDA, Insert + F7) i llegeix només els textos. Cadascun ha de dir on porta sense mirar el que té al voltant.',
+        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
+      },
+      en: {
+        titulo: '2.4.9 Links',
+        frase: 'Links say where they go.',
+        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
+        falla: 'Two projects, each with a link that says “Find out more”. Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
+        arreglo: 'Make the link itself say where it goes: “Find out about Local culture”, “Find out about Culture lab”. It makes sense on its own, even out of context.',
+        comprobar: 'Open the screen reader’s list of links (the rotor in VoiceOver, Insert + F7 in NVDA) and read only the link text. Each one has to say where it goes without looking at what surrounds it.',
+        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-4-4',
+    archivo: '06-1-4-4-tamano-texto',
+    texto: {
+      es: {
+        titulo: '1.4.4 Tamaño del texto',
+        frase: 'El texto se amplía sin cortarse.',
+        referencia: 'WCAG 2.2 · 1.4.4 Cambio de tamaño del texto · Nivel AA',
+        falla: 'Al ampliar el texto al 200 %, la tarjeta tiene un alto fijo y lo corta: “Mentoría” se lee, la explicación desaparece debajo.',
+        arreglo: 'La tarjeta crece con su texto. Se evitan las alturas fijas en lo que lleva texto y se usan unidades que respetan el tamaño que elige la persona.',
+        comprobar: 'Amplía al 200 % con el zoom del navegador y, aparte, sube solo el tamaño de letra en sus ajustes. No puede cortarse, montarse ni desaparecer nada.',
+      },
+      ca: {
+        titulo: '1.4.4 Mida del text',
+        frase: 'El text s’amplia sense tallar-se.',
+        referencia: 'WCAG 2.2 · 1.4.4 Canvi de mida del text · Nivell AA',
+        falla: 'En ampliar el text al 200 %, la targeta té una alçada fixa i el talla: “Mentoria” es llegeix, l’explicació desapareix a sota.',
+        arreglo: 'La targeta creix amb el text. S’eviten les alçades fixes en el que porta text i es fan servir unitats que respecten la mida que tria la persona.',
+        comprobar: 'Amplia al 200 % amb el zoom del navegador i, a part, puja només la mida de la lletra als ajustos. No s’ha de tallar, muntar ni desaparèixer res.',
+      },
+      en: {
+        titulo: '1.4.4 Text size',
+        frase: 'Text gets bigger without being cut off.',
+        referencia: 'WCAG 2.2 · 1.4.4 Resize Text · Level AA',
+        falla: 'With text enlarged to 200%, the card has a fixed height and cuts it off: you can read “Mentoring”, but the description disappears below.',
+        arreglo: 'The card grows with its text. Avoid fixed heights on anything that holds text, and use units that respect the size the person chooses.',
+        comprobar: 'Zoom to 200% in the browser and, separately, increase only the font size in its settings. Nothing should be cut off, overlap or disappear.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-4-10',
+    archivo: '07-1-4-10-adaptacion',
+    texto: {
+      es: {
+        titulo: '1.4.10 Adaptación al zoom y al móvil',
+        frase: 'El contenido se adapta al zoom y al móvil.',
+        referencia: 'WCAG 2.2 · 1.4.10 Reajuste del contenido · Nivel AA',
+        falla: 'En una pantalla de 320 px de ancho, que es lo que ve quien amplía al 400 %, el contenido no cabe y se sale por la derecha: hay que desplazarse a los lados para leer cada línea.',
+        arreglo: 'El contenido se reorganiza en una columna y el menú se recoge en un botón. Solo pueden necesitar dos direcciones de desplazamiento cosas como mapas, tablas de datos o editores.',
+        comprobar: 'Pon la ventana del navegador a 1280 px y amplía al 400 %, o mira la web a 320 px de ancho. No puede aparecer barra de desplazamiento horizontal ni perderse nada.',
+      },
+      ca: {
+        titulo: '1.4.10 Adaptació al zoom i al mòbil',
+        frase: 'El contingut s’adapta al zoom i al mòbil.',
+        referencia: 'WCAG 2.2 · 1.4.10 Reajustament del contingut · Nivell AA',
+        falla: 'En una pantalla de 320 px d’amplada, que és el que veu qui amplia al 400 %, el contingut no hi cap i surt per la dreta: cal desplaçar-se als costats per llegir cada línia.',
+        arreglo: 'El contingut es reorganitza en una columna i el menú es recull en un botó. Només poden necessitar dues direccions de desplaçament coses com mapes, taules de dades o editors.',
+        comprobar: 'Posa la finestra del navegador a 1280 px i amplia al 400 %, o mira la web a 320 px d’amplada. No hi pot aparèixer barra de desplaçament horitzontal ni perdre’s res.',
+      },
+      en: {
+        titulo: '1.4.10 Zoom and mobile',
+        frase: 'Content adapts to zoom and mobile.',
+        referencia: 'WCAG 2.2 · 1.4.10 Reflow · Level AA',
+        falla: 'On a screen 320 px wide, which is what someone zoomed to 400% sees, the content does not fit and runs off to the right: you have to scroll sideways to read each line.',
+        arreglo: 'The content reflows into a single column and the menu folds into a button. Only things like maps, data tables or editors may need scrolling in two directions.',
+        comprobar: 'Set the browser window to 1280 px and zoom to 400%, or view the site at 320 px wide. No horizontal scroll bar should appear and nothing should be lost.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-2-2',
+    archivo: '08-1-2-2-subtitulos',
+    texto: {
+      es: {
+        titulo: '1.2.2 Subtítulos',
+        frase: 'Los vídeos se entienden sin sonido.',
+        referencia: 'WCAG 2.2 · 1.2.2 Subtítulos (grabados) · Nivel A',
+        falla: 'El vídeo del taller de radio tiene voz, pero no tiene subtítulos. Quien no oye, o lo ve en el autobús sin cascos, no se entera de nada.',
+        arreglo: 'El vídeo trae subtítulos, con un botón para activarlos. Recogen lo que se dice y quién lo dice, y también los sonidos que importan.',
+        comprobar: 'Mira el vídeo sin sonido de principio a fin. Revisa que los subtítulos estén sincronizados, completos y bien escritos: los automáticos sin revisar no bastan.',
+      },
+      ca: {
+        titulo: '1.2.2 Subtítols',
+        frase: 'Els vídeos s’entenen sense so.',
+        referencia: 'WCAG 2.2 · 1.2.2 Subtítols (enregistrats) · Nivell A',
+        falla: 'El vídeo del taller de ràdio té veu, però no té subtítols. Qui no hi sent, o el mira a l’autobús sense auriculars, no s’assabenta de res.',
+        arreglo: 'El vídeo porta subtítols, amb un botó per activar-los. Recullen el que es diu i qui ho diu, i també els sons que importen.',
+        comprobar: 'Mira el vídeo sense so de principi a fi. Revisa que els subtítols estiguin sincronitzats, complets i ben escrits: els automàtics sense revisar no n’hi ha prou.',
+      },
+      en: {
+        titulo: '1.2.2 Captions',
+        frase: 'Videos make sense without sound.',
+        referencia: 'WCAG 2.2 · 1.2.2 Captions (Prerecorded) · Level A',
+        falla: 'The radio workshop video has speech but no captions. Anyone who cannot hear, or who watches it on the bus without headphones, misses everything.',
+        arreglo: 'The video comes with captions and a button to turn them on. They include what is said and who says it, and the sounds that matter too.',
+        comprobar: 'Watch the video with the sound off from start to finish. Check that the captions are in sync, complete and correctly written: unchecked automatic captions are not enough.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-2-5',
+    archivo: '09-1-2-5-audiodescripcion',
+    texto: {
+      es: {
+        titulo: '1.2.5 Audiodescripción',
+        frase: 'Lo que el vídeo solo enseña, también se cuenta.',
+        referencia: 'WCAG 2.2 · 1.2.5 Audiodescripción (grabada) · Nivel AA',
+        falla: 'El vídeo enseña en pantalla “18 asociaciones”, pero solo suena música. Quien escucha sin ver se pierde el dato más importante.',
+        arreglo: 'Una voz cuenta lo que solo se ve: “Participaron 18 asociaciones”. Si el vídeo no tiene voz, como los nuestros, un texto al lado que lo cuente entero cumple el nivel A.',
+        comprobar: 'Escucha el vídeo sin mirar la pantalla. Si te pierdes algo que la imagen cuenta (un dato, un nombre, un cambio), hace falta audiodescripción o un texto equivalente.',
+      },
+      ca: {
+        titulo: '1.2.5 Audiodescripció',
+        frase: 'El que el vídeo només ensenya, també s’explica.',
+        referencia: 'WCAG 2.2 · 1.2.5 Audiodescripció (enregistrada) · Nivell AA',
+        falla: 'El vídeo mostra a la pantalla “18 associacions”, però només sona música. Qui escolta sense veure es perd la dada més important.',
+        arreglo: 'Una veu explica el que només es veu: “Hi van participar 18 associacions”. Si el vídeo no té veu, com els nostres, un text al costat que ho expliqui tot compleix el nivell A.',
+        comprobar: 'Escolta el vídeo sense mirar la pantalla. Si et perds alguna cosa que explica la imatge (una dada, un nom, un canvi), cal audiodescripció o un text equivalent.',
+      },
+      en: {
+        titulo: '1.2.5 Audio description',
+        frase: 'What the video only shows is also told.',
+        referencia: 'WCAG 2.2 · 1.2.5 Audio Description (Prerecorded) · Level AA',
+        falla: 'The video shows “18 associations” on screen, but all you hear is music. Anyone listening without watching misses the most important fact.',
+        arreglo: 'A voice describes what is only shown: “18 associations took part”. If the video has no speech, like ours, a text alongside that tells it all meets level A.',
+        comprobar: 'Listen to the video without looking at the screen. If you miss anything the picture tells you (a figure, a name, a change), it needs audio description or an equivalent text.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-1-1',
+    archivo: '10-2-1-1-teclado',
+    texto: {
+      es: {
+        titulo: '2.1.1 Teclado',
+        frase: 'Todo se puede usar con el teclado.',
+        referencia: 'WCAG 2.2 · 2.1.1 Teclado · Nivel A',
+        falla: 'El submenú de “Hacemos” solo se abre al pasar el ratón. Con el tabulador se salta de “Hacemos” a “Experiencias” y “Formación” no aparece nunca.',
+        arreglo: '“Hacemos” es un botón que abre el submenú con Intro o con la barra espaciadora, y se cierra con Escape. Todo lo que se hace con el ratón se puede hacer con el teclado.',
+        comprobar: 'Deja el ratón y recorre la página con el tabulador, Mayúsculas + tabulador, Intro, la barra espaciadora, las flechas y Escape. Tienes que llegar a todo y poder salir de todo.',
+      },
+      ca: {
+        titulo: '2.1.1 Teclat',
+        frase: 'Tot es pot fer servir amb el teclat.',
+        referencia: 'WCAG 2.2 · 2.1.1 Teclat · Nivell A',
+        falla: 'El submenú de “Fem” només s’obre en passar-hi el ratolí. Amb el tabulador se salta de “Fem” a “Experiències” i “Formació” no apareix mai.',
+        arreglo: '“Fem” és un botó que obre el submenú amb Retorn o amb la barra espaiadora, i es tanca amb Escapada. Tot el que es fa amb el ratolí es pot fer amb el teclat.',
+        comprobar: 'Deixa el ratolí i recorre la pàgina amb el tabulador, Majúscules + tabulador, Retorn, la barra espaiadora, les fletxes i Escapada. Has d’arribar a tot i poder sortir de tot.',
+      },
+      en: {
+        titulo: '2.1.1 Keyboard',
+        frase: 'Everything works with the keyboard.',
+        referencia: 'WCAG 2.2 · 2.1.1 Keyboard · Level A',
+        falla: 'The “What we do” submenu only opens on mouse hover. With the Tab key you jump from “What we do” to “Experiences”, and “Training” never appears.',
+        arreglo: '“What we do” is a button that opens the submenu with Enter or the space bar and closes with Escape. Everything you can do with a mouse, you can do with a keyboard.',
+        comprobar: 'Put the mouse aside and go through the page with Tab, Shift + Tab, Enter, the space bar, the arrow keys and Escape. You must be able to reach everything and get out of everything.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-4-7',
+    archivo: '11-2-4-7-foco',
+    texto: {
+      es: {
+        titulo: '2.4.7 Foco visible',
+        frase: 'Siempre se ve dónde estás.',
+        referencia: 'WCAG 2.2 · 2.4.7 Foco visible · Nivel AA',
+        falla: 'Al tabular por “Escribir un correo”, “Pedir una cita” y “Ver la dirección” no se ve nada: alguien quitó el anillo de foco porque “quedaba feo”. Quien usa el teclado no sabe dónde está.',
+        arreglo: 'Cada botón enseña un anillo de foco claro cuando llega el teclado. Se puede diseñar a juego con la marca, pero nunca se quita.',
+        comprobar: 'Recorre la página con el tabulador y sigue el foco con la vista. En cada paso tienes que ver dónde estás sin buscarlo, también sobre fondos de color y sobre imágenes.',
+      },
+      ca: {
+        titulo: '2.4.7 Focus visible',
+        frase: 'Sempre es veu on ets.',
+        referencia: 'WCAG 2.2 · 2.4.7 Focus visible · Nivell AA',
+        falla: 'En tabular per “Escriure un correu”, “Demanar cita” i “Veure l’adreça” no es veu res: algú va treure l’anell de focus perquè “quedava lleig”. Qui fa servir el teclat no sap on és.',
+        arreglo: 'Cada botó mostra un anell de focus clar quan hi arriba el teclat. Es pot dissenyar d’acord amb la marca, però no es treu mai.',
+        comprobar: 'Recorre la pàgina amb el tabulador i segueix el focus amb la vista. A cada pas has de veure on ets sense buscar-ho, també sobre fons de color i sobre imatges.',
+      },
+      en: {
+        titulo: '2.4.7 Visible focus',
+        frase: 'You can always see where you are.',
+        referencia: 'WCAG 2.2 · 2.4.7 Focus Visible · Level AA',
+        falla: 'Tabbing through “Send an email”, “Book a meeting” and “See the address” shows nothing: someone removed the focus ring because it “looked ugly”. Keyboard users cannot tell where they are.',
+        arreglo: 'Each button shows a clear focus ring when the keyboard reaches it. It can be designed to match the brand, but it is never removed.',
+        comprobar: 'Tab through the page and follow the focus with your eyes. At every step you should see where you are without searching, on coloured backgrounds and images too.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-4-1',
+    archivo: '12-2-4-1-saltar',
+    texto: {
+      es: {
+        titulo: '2.4.1 Saltar al contenido',
+        frase: 'Se puede saltar directo al contenido.',
+        referencia: 'WCAG 2.2 · 2.4.1 Evitar bloques · Nivel A',
+        falla: 'Con ocho enlaces en el menú, hay que pulsar el tabulador ocho veces en cada página antes de llegar a “Nuestras actividades”.',
+        arreglo: 'El primer elemento de la página es un enlace “Saltar al contenido” que aparece al tabular y lleva directo a lo importante. Los encabezados y las regiones bien marcadas también ayudan al lector de pantalla.',
+        comprobar: 'Carga la página y pulsa el tabulador una vez: tiene que aparecer el enlace para saltar. Púlsalo y comprueba que el foco llega de verdad al contenido, no solo la vista.',
+      },
+      ca: {
+        titulo: '2.4.1 Saltar al contingut',
+        frase: 'Es pot saltar directament al contingut.',
+        referencia: 'WCAG 2.2 · 2.4.1 Evitar blocs · Nivell A',
+        falla: 'Amb vuit enllaços al menú, cal prémer el tabulador vuit vegades a cada pàgina abans d’arribar a “Les nostres activitats”.',
+        arreglo: 'El primer element de la pàgina és un enllaç “Saltar al contingut” que apareix en tabular i porta directament al que importa. Els encapçalaments i les regions ben marcades també ajuden el lector de pantalla.',
+        comprobar: 'Carrega la pàgina i prem el tabulador una vegada: ha d’aparèixer l’enllaç per saltar. Prem-lo i comprova que el focus arriba de debò al contingut, no només la vista.',
+      },
+      en: {
+        titulo: '2.4.1 Skip to content',
+        frase: 'You can skip straight to the content.',
+        referencia: 'WCAG 2.2 · 2.4.1 Bypass Blocks · Level A',
+        falla: 'With eight links in the menu, you have to press Tab eight times on every page before you reach “Our activities”.',
+        arreglo: 'The first thing on the page is a “Skip to content” link that appears when you tab and goes straight to what matters. Well-marked headings and regions also help screen readers.',
+        comprobar: 'Load the page and press Tab once: the skip link should appear. Activate it and check that the focus really moves to the content, not just the view.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-2-2',
+    archivo: '13-2-2-2-movimiento',
+    texto: {
+      es: {
+        titulo: '2.2.2 Movimiento',
+        frase: 'Lo que se mueve se puede parar.',
+        referencia: 'WCAG 2.2 · 2.2.2 Pausar, detener, ocultar · Nivel A',
+        falla: 'Junto al texto de “Mentoría”, una tira de formas se mueve sin parar y no hay forma de detenerla. Distrae a quien necesita concentrarse para leer.',
+        arreglo: 'La animación tiene un botón para pausarla y reanudarla. Si algo se mueve solo más de 5 segundos, necesita ese control; con “reducir movimiento” activado, ni siquiera arranca.',
+        comprobar: 'Busca todo lo que se mueve, parpadea o cambia solo: carruseles, vídeos de fondo, tickers. Mide cuánto dura y comprueba que tiene pausa. Activa “reducir movimiento” en el sistema y vuelve a mirar.',
+      },
+      ca: {
+        titulo: '2.2.2 Moviment',
+        frase: 'El que es mou es pot aturar.',
+        referencia: 'WCAG 2.2 · 2.2.2 Posar en pausa, aturar, amagar · Nivell A',
+        falla: 'Al costat del text de “Mentoria”, una tira de formes es mou sense parar i no hi ha manera d’aturar-la. Distreu qui necessita concentrar-se per llegir.',
+        arreglo: 'L’animació té un botó per posar-la en pausa i reprendre-la. Si alguna cosa es mou sola més de 5 segons, necessita aquest control; amb “reduir el moviment” activat, ni tan sols arrenca.',
+        comprobar: 'Busca tot el que es mou, parpelleja o canvia sol: carrusels, vídeos de fons, tires de notícies. Mesura quant dura i comprova que té pausa. Activa “reduir el moviment” al sistema i torna a mirar.',
+      },
+      en: {
+        titulo: '2.2.2 Movement',
+        frase: 'Anything that moves can be stopped.',
+        referencia: 'WCAG 2.2 · 2.2.2 Pause, Stop, Hide · Level A',
+        falla: 'Next to the “Mentoring” text, a strip of shapes moves non-stop and there is no way to stop it. It distracts anyone who needs to concentrate to read.',
+        arreglo: 'The animation has a button to pause and resume it. Anything that moves on its own for more than 5 seconds needs that control; with “reduce motion” on, it does not even start.',
+        comprobar: 'Look for everything that moves, blinks or changes by itself: carousels, background videos, tickers. Time it and check it can be paused. Turn on “reduce motion” in your system settings and look again.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-2-1',
+    archivo: '14-2-2-1-tiempo',
+    texto: {
+      es: {
+        titulo: '2.2.1 Tiempo suficiente',
+        frase: 'Hay tiempo suficiente, y se puede pedir más.',
+        referencia: 'WCAG 2.2 · 2.2.1 Tiempo ajustable · Nivel A',
+        falla: 'El formulario de inscripción tiene un tiempo límite que no se ve. Lucía tarda en escribir, la sesión caduca y se borra todo: hay que volver a empezar.',
+        arreglo: 'El tiempo se ve y es generoso, y antes de que se acabe un aviso permite pedir más con una sola acción. Lo escrito no se pierde.',
+        comprobar: 'Rellena despacio cualquier formulario o proceso con sesión. Si hay un límite, tiene que avisarte con al menos 20 segundos para ampliarlo, o poder quitarse o ajustarse.',
+      },
+      ca: {
+        titulo: '2.2.1 Temps suficient',
+        frase: 'Hi ha temps suficient, i se’n pot demanar més.',
+        referencia: 'WCAG 2.2 · 2.2.1 Temps ajustable · Nivell A',
+        falla: 'El formulari d’inscripció té un temps límit que no es veu. La Lucía triga a escriure, la sessió caduca i s’esborra tot: cal tornar a començar.',
+        arreglo: 'El temps es veu i és generós, i abans que s’acabi un avís permet demanar-ne més amb una sola acció. El que s’ha escrit no es perd.',
+        comprobar: 'Omple a poc a poc qualsevol formulari o procés amb sessió. Si hi ha un límit, t’ha d’avisar amb almenys 20 segons per ampliar-lo, o s’ha de poder treure o ajustar.',
+      },
+      en: {
+        titulo: '2.2.1 Enough time',
+        frase: 'There is enough time, and you can ask for more.',
+        referencia: 'WCAG 2.2 · 2.2.1 Timing Adjustable · Level A',
+        falla: 'The sign-up form has a hidden time limit. Lucía types slowly, the session expires and everything is wiped: she has to start again.',
+        arreglo: 'The time is visible and generous, and before it runs out a warning lets you ask for more with a single action. What you have typed is not lost.',
+        comprobar: 'Fill in any form or session-based process slowly. If there is a limit, it must warn you with at least 20 seconds to extend it, or let you turn it off or adjust it.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-5-8',
+    archivo: '15-2-5-8-botones',
+    texto: {
+      es: {
+        titulo: '2.5.8 Tamaño de los botones',
+        frase: 'Los botones tienen tamaño suficiente.',
+        referencia: 'WCAG 2.2 · 2.5.8 Tamaño del objetivo (mínimo) · Nivel AA',
+        falla: 'Los iconos de redes sociales son diminutos y están pegados. En una pantalla táctil, el dedo toca dos a la vez.',
+        arreglo: 'Cada icono tiene una zona táctil de al menos 24 por 24 píxeles, con espacio entre uno y otro. Nosotros usamos 44: es lo cómodo para un dedo.',
+        comprobar: 'Mide la zona que responde de cada botón, enlace e icono con las herramientas del navegador. Pruébalo en un móvil con el pulgar, y con la otra mano ocupada.',
+      },
+      ca: {
+        titulo: '2.5.8 Mida dels botons',
+        frase: 'Els botons tenen prou mida.',
+        referencia: 'WCAG 2.2 · 2.5.8 Mida de l’objectiu (mínim) · Nivell AA',
+        falla: 'Les icones de xarxes socials són diminutes i estan enganxades. En una pantalla tàctil, el dit en toca dues alhora.',
+        arreglo: 'Cada icona té una zona tàctil d’almenys 24 per 24 píxels, amb espai entre l’una i l’altra. Nosaltres en fem servir 44: és el que resulta còmode per a un dit.',
+        comprobar: 'Mesura la zona que respon de cada botó, enllaç i icona amb les eines del navegador. Prova-ho en un mòbil amb el polze, i amb l’altra mà ocupada.',
+      },
+      en: {
+        titulo: '2.5.8 Button size',
+        frase: 'Buttons are big enough.',
+        referencia: 'WCAG 2.2 · 2.5.8 Target Size (Minimum) · Level AA',
+        falla: 'The social media icons are tiny and packed together. On a touchscreen, a finger hits two at once.',
+        arreglo: 'Each icon has a touch area of at least 24 by 24 pixels, with space between them. We use 44: it is what feels comfortable for a finger.',
+        comprobar: 'Measure the clickable area of every button, link and icon with the browser’s developer tools. Try it on a phone with your thumb, with your other hand busy.',
+      },
+    },
+  },
+  {
+    id: 'punto-1-3-1',
+    archivo: '16-1-3-1-titulos',
+    texto: {
+      es: {
+        titulo: '1.3.1 Títulos',
+        frase: 'Los títulos ordenan la página.',
+        referencia: 'WCAG 2.2 · 1.3.1 Información y relaciones · Nivel A',
+        falla: '“Proyectos propios”, “Cultura en los barrios” y “Laboratorio cultural” parecen títulos, pero en el código son párrafos. Quien usa un lector de pantalla salta de título en título y no encuentra ninguno.',
+        arreglo: 'Cada título es un encabezado de verdad, con su nivel: “Proyectos propios” es un título 2 y cada proyecto, un título 3. La estructura que se ve es la misma que está en el código.',
+        comprobar: 'Abre la lista de encabezados del lector de pantalla, o una extensión que la enseñe. Tiene que leerse como un índice de la página, con un solo título 1 y sin saltos de nivel.',
+      },
+      ca: {
+        titulo: '1.3.1 Títols',
+        frase: 'Els títols ordenen la pàgina.',
+        referencia: 'WCAG 2.2 · 1.3.1 Informació i relacions · Nivell A',
+        falla: '“Projectes propis”, “Cultura als barris” i “Laboratori cultural” semblen títols, però al codi són paràgrafs. Qui fa servir un lector de pantalla salta de títol en títol i no en troba cap.',
+        arreglo: 'Cada títol és un encapçalament de debò, amb el seu nivell: “Projectes propis” és un títol 2 i cada projecte, un títol 3. L’estructura que es veu és la mateixa que hi ha al codi.',
+        comprobar: 'Obre la llista d’encapçalaments del lector de pantalla, o una extensió que la mostri. S’ha de llegir com un índex de la pàgina, amb un sol títol 1 i sense salts de nivell.',
+      },
+      en: {
+        titulo: '1.3.1 Headings',
+        frase: 'Headings give the page its order.',
+        referencia: 'WCAG 2.2 · 1.3.1 Info and Relationships · Level A',
+        falla: '“Our projects”, “Local culture” and “Culture lab” look like headings, but in the code they are paragraphs. A screen reader user jumping from heading to heading finds none.',
+        arreglo: 'Each heading is a real heading with its level: “Our projects” is a heading 2 and each project a heading 3. The structure you see is the same structure in the code.',
+        comprobar: 'Open the screen reader’s list of headings, or an extension that shows it. It should read like a table of contents for the page, with a single heading 1 and no skipped levels.',
+      },
+    },
+  },
+  {
+    id: 'punto-3-3-2',
+    archivo: '17-3-3-2-etiquetas',
+    texto: {
+      es: {
+        titulo: '3.3.2 Campos con etiqueta',
+        frase: 'Cada campo dice qué hay que escribir.',
+        referencia: 'WCAG 2.2 · 3.3.2 Etiquetas o instrucciones · Nivel A',
+        falla: 'Los campos solo tienen un texto de ejemplo dentro, que desaparece al empezar a escribir. A mitad del formulario, ya no se sabe qué era cada campo; el lector de pantalla tampoco lo dice.',
+        arreglo: 'Cada campo tiene su etiqueta visible encima, “Nombre” y “Correo”, unida al campo en el código. Si hace falta un formato, se explica antes de escribir.',
+        comprobar: 'Rellena el formulario a medias y para: ¿sabes qué es cada campo sin borrar nada? Recórrelo con el lector de pantalla y comprueba que cada campo dice su nombre al llegar.',
+      },
+      ca: {
+        titulo: '3.3.2 Camps amb etiqueta',
+        frase: 'Cada camp diu què cal escriure.',
+        referencia: 'WCAG 2.2 · 3.3.2 Etiquetes o instruccions · Nivell A',
+        falla: 'Els camps només tenen un text d’exemple a dins, que desapareix quan comences a escriure. A mig formulari, ja no se sap què era cada camp; el lector de pantalla tampoc ho diu.',
+        arreglo: 'Cada camp té la seva etiqueta visible a sobre, “Nom” i “Correu”, unida al camp al codi. Si cal un format, s’explica abans d’escriure.',
+        comprobar: 'Omple el formulari a mitges i para: saps què és cada camp sense esborrar res? Recorre’l amb el lector de pantalla i comprova que cada camp diu el seu nom quan hi arribes.',
+      },
+      en: {
+        titulo: '3.3.2 Labelled fields',
+        frase: 'Every field says what to type.',
+        referencia: 'WCAG 2.2 · 3.3.2 Labels or Instructions · Level A',
+        falla: 'The fields only have placeholder text inside, which disappears as soon as you start typing. Halfway through the form, you no longer know what each field was for, and the screen reader does not say either.',
+        arreglo: 'Each field has a visible label above it, “Name” and “Email”, linked to the field in the code. If a format is needed, it is explained before you type.',
+        comprobar: 'Fill in half the form and stop: do you know what each field is without deleting anything? Go through it with a screen reader and check that each field announces its name.',
+      },
+    },
+  },
+  {
+    id: 'punto-3-3-1',
+    archivo: '18-3-3-1-errores',
+    texto: {
+      es: {
+        titulo: '3.3.1 Errores que se explican',
+        frase: 'Los errores se explican.',
+        referencia: 'WCAG 2.2 · 3.3.1 Identificación de errores · A · 3.3.3 Sugerencias ante errores · AA',
+        falla: 'Al enviar “lucia.asociacion.org” como correo, solo se pone rojo el borde del campo. El lector de pantalla no dice nada y quien no distingue el rojo no ve el error.',
+        arreglo: 'Un mensaje junto al campo dice qué falla y cómo arreglarlo, por ejemplo “Falta la arroba: nombre@dominio.org”, y el lector lo anuncia. Al corregirlo, “Consulta enviada”.',
+        comprobar: 'Envía el formulario vacío y con datos mal escritos, con el teclado y con el lector de pantalla. Cada error tiene que decirse con palabras, junto a su campo, y explicar cómo se corrige.',
+      },
+      ca: {
+        titulo: '3.3.1 Errors que s’expliquen',
+        frase: 'Els errors s’expliquen.',
+        referencia: 'WCAG 2.2 · 3.3.1 Identificació d’errors · A · 3.3.3 Suggeriments davant d’errors · AA',
+        falla: 'En enviar “lucia.asociacion.org” com a correu, només es posa vermella la vora del camp. El lector de pantalla no diu res i qui no distingeix el vermell no veu l’error.',
+        arreglo: 'Un missatge al costat del camp diu què falla i com arreglar-ho, per exemple “Falta l’arrova: nom@domini.org”, i el lector l’anuncia. En corregir-ho, “Consulta enviada”.',
+        comprobar: 'Envia el formulari buit i amb dades mal escrites, amb el teclat i amb el lector de pantalla. Cada error s’ha de dir amb paraules, al costat del seu camp, i explicar com es corregeix.',
+      },
+      en: {
+        titulo: '3.3.1 Errors that explain themselves',
+        frase: 'Errors are explained.',
+        referencia: 'WCAG 2.2 · 3.3.1 Error Identification · A · 3.3.3 Error Suggestion · AA',
+        falla: 'When “lucia.asociacion.org” is sent as an email address, only the field’s border turns red. The screen reader says nothing, and anyone who cannot tell red apart does not see the error.',
+        arreglo: 'A message next to the field says what is wrong and how to fix it, for example “The @ is missing: name@domain.org”, and the screen reader announces it. Once corrected, “Message sent”.',
+        comprobar: 'Submit the form empty and with mistyped data, using a keyboard and a screen reader. Every error must be stated in words, next to its field, with how to fix it.',
+      },
+    },
+  },
+  {
+    id: 'punto-3-1-1',
+    archivo: '19-3-1-1-idioma',
+    texto: {
+      es: {
+        titulo: '3.1.1 Idioma de la página',
+        frase: 'La página dice en qué idioma está.',
+        referencia: 'WCAG 2.2 · 3.1.1 Idioma de la página · Nivel A',
+        falla: 'La página está en castellano, pero el código dice que está en inglés (lang="en"). El lector de pantalla la lee con voz inglesa: “asoshiéishon cúltural del bárrio”.',
+        arreglo: 'El código dice el idioma de verdad (lang="es") y el lector usa la voz correcta. Si un trozo va en otro idioma, como una cita, se marca también.',
+        comprobar: 'Mira el atributo lang de la etiqueta html en el código de la página. Escucha un párrafo con el lector de pantalla, y otro en otro idioma si lo hay: la pronunciación te lo dirá.',
+      },
+      ca: {
+        titulo: '3.1.1 Idioma de la pàgina',
+        frase: 'La pàgina diu en quin idioma està.',
+        referencia: 'WCAG 2.2 · 3.1.1 Idioma de la pàgina · Nivell A',
+        falla: 'La pàgina està en català, però el codi diu que està en castellà (lang="es"). El lector de pantalla la llegeix amb veu castellana: “una asosiasió cultural del bari”.',
+        arreglo: 'El codi diu l’idioma de debò (lang="ca") i el lector fa servir la veu correcta. Si un tros va en un altre idioma, com una cita, també es marca.',
+        comprobar: 'Mira l’atribut lang de l’etiqueta html al codi de la pàgina. Escolta un paràgraf amb el lector de pantalla, i un altre en un altre idioma si n’hi ha: la pronúncia t’ho dirà.',
+      },
+      en: {
+        titulo: '3.1.1 Page language',
+        frase: 'The page says what language it is in.',
+        referencia: 'WCAG 2.2 · 3.1.1 Language of Page · Level A',
+        falla: 'The page is in English, but the code says it is in Spanish (lang="es"). The screen reader reads it with a Spanish voice: “a cooltooral asoseeathion in de nayborjood”.',
+        arreglo: 'The code states the real language (lang="en") and the screen reader uses the right voice. If a passage is in another language, such as a quotation, it is marked too.',
+        comprobar: 'Check the lang attribute on the page’s html element in the source. Listen to a paragraph with a screen reader, and to one in another language if there is any: the pronunciation will tell you.',
+      },
+    },
+  },
+  {
+    id: 'punto-lenguaje-claro',
+    archivo: '20-lenguaje-claro-lenguaje',
+    texto: {
+      es: {
+        titulo: 'Lenguaje claro',
+        frase: 'Se entiende a la primera.',
+        referencia: 'Criterio editorial de AP · relacionado con WCAG 2.2 · 3.1.5 Nivel de lectura · Nivel AAA',
+        falla: '“La actividad se dirige a entidades de ámbito local previa formalización de la inscripción.” Está todo, pero no queda claro lo que importa: ¿puede apuntarse mi asociación?',
+        arreglo: '“Si tu asociación trabaja en el barrio, puede participar. Inscríbela antes del taller.” Frases cortas, palabras de todos los días y lo importante primero.',
+        comprobar: 'Lee el texto en voz alta a alguien que no conozca el tema y pregúntale qué ha entendido. Busca frases de más de 25 palabras, palabras técnicas sin explicar y verbos convertidos en sustantivos.',
+        nota: 'No es un criterio de nivel A ni AA: es una regla que nos ponemos en todos los proyectos. La ISO 24495-1 recoge cómo escribir en lenguaje claro.',
+      },
+      ca: {
+        titulo: 'Llenguatge planer',
+        frase: 'S’entén a la primera.',
+        referencia: 'Criteri editorial d’AP · relacionat amb WCAG 2.2 · 3.1.5 Nivell de lectura · Nivell AAA',
+        falla: '“L’activitat s’adreça a entitats d’àmbit local amb la formalització prèvia de la inscripció.” Hi és tot, però no queda clar el que importa: s’hi pot apuntar la meva associació?',
+        arreglo: '“Si la teva associació treballa al barri, hi pot participar. Inscriu-la abans del taller.” Frases curtes, paraules de cada dia i el més important al principi.',
+        comprobar: 'Llegeix el text en veu alta a algú que no conegui el tema i pregunta-li què ha entès. Busca frases de més de 25 paraules, paraules tècniques sense explicar i verbs convertits en substantius.',
+        nota: 'No és un criteri de nivell A ni AA: és una regla que ens posem en tots els projectes. La ISO 24495-1 recull com escriure en llenguatge planer.',
+      },
+      en: {
+        titulo: 'Plain language',
+        frase: 'It makes sense first time.',
+        referencia: 'AP editorial criterion · related to WCAG 2.2 · 3.1.5 Reading Level · Level AAA',
+        falla: '“The activity is directed at locally based entities subject to prior formalisation of registration.” It is all there, but what matters is unclear: can my association take part?',
+        arreglo: '“If your association works in the neighbourhood, it can take part. Sign it up before the workshop.” Short sentences, everyday words and the important part first.',
+        comprobar: 'Read the text aloud to someone who does not know the subject and ask what they understood. Look for sentences over 25 words, unexplained technical terms and verbs turned into nouns.',
+        nota: 'It is not a level A or AA criterion: it is a rule we set ourselves on every project. ISO 24495-1 sets out how to write in plain language.',
+      },
+    },
+  },
+  {
+    id: 'punto-3-2-3',
+    archivo: '21-3-2-3-navegacion',
+    texto: {
+      es: {
+        titulo: '3.2.3 Menús que no cambian',
+        frase: 'Los menús no cambian de sitio.',
+        referencia: 'WCAG 2.2 · 3.2.3 Navegación coherente · Nivel AA',
+        falla: 'En la página Inicio el menú dice “Somos, Hacemos, Experiencias, Hablemos”; en la página Hacemos, el mismo menú cambia de orden. Quien se orienta por la posición, o con el lector de pantalla, se pierde.',
+        arreglo: 'El menú va en el mismo orden y en el mismo sitio en todas las páginas. Lo que se repite en varias páginas se repite igual.',
+        comprobar: 'Recorre varias páginas y compara el menú, el buscador y el pie: mismo orden y mismo sitio. Con el lector de pantalla, cuenta en qué posición está cada enlace del menú en cada página.',
+      },
+      ca: {
+        titulo: '3.2.3 Menús que no canvien',
+        frase: 'Els menús no canvien de lloc.',
+        referencia: 'WCAG 2.2 · 3.2.3 Navegació coherent · Nivell AA',
+        falla: 'A la pàgina Inici el menú diu “Som, Fem, Experiències, Parlem”; a la pàgina Fem, el mateix menú canvia d’ordre. Qui s’orienta per la posició, o amb el lector de pantalla, es perd.',
+        arreglo: 'El menú va en el mateix ordre i al mateix lloc a totes les pàgines. El que es repeteix en diverses pàgines es repeteix igual.',
+        comprobar: 'Recorre diverses pàgines i compara el menú, el cercador i el peu: mateix ordre i mateix lloc. Amb el lector de pantalla, compta en quina posició és cada enllaç del menú a cada pàgina.',
+      },
+      en: {
+        titulo: '3.2.3 Menus that stay put',
+        frase: 'Menus don’t move around.',
+        referencia: 'WCAG 2.2 · 3.2.3 Consistent Navigation · Level AA',
+        falla: 'On the Home page the menu reads “About, What we do, Experiences, Contact”; on the What we do page, the same menu changes order. Anyone who finds their way by position, or with a screen reader, gets lost.',
+        arreglo: 'The menu stays in the same order and the same place on every page. Anything repeated across pages is repeated the same way.',
+        comprobar: 'Go through several pages and compare the menu, the search box and the footer: same order, same place. With a screen reader, count where each menu link sits on each page.',
+      },
+    },
+  },
+  {
+    id: 'punto-4-1-2',
+    archivo: '22-4-1-2-nombre-funcion',
+    texto: {
+      es: {
+        titulo: '4.1.2 Botones que son botones',
+        frase: 'Cada control dice qué es y cómo está.',
+        referencia: 'WCAG 2.2 · 4.1.2 Nombre, función, valor · Nivel A',
+        falla: 'El “+ Leer más” de la tarjeta de Mentoría está hecho con un elemento que no es un botón. Con el teclado no se llega a él y el lector de pantalla no sabe que se puede pulsar.',
+        arreglo: 'Es un botón de verdad: se llega con el tabulador, se abre con Intro o la barra espaciadora, y el lector dice “Leer más, botón, contraído” y, al abrirlo, “expandido”.',
+        comprobar: 'Recorre cada control con el teclado y el lector de pantalla: tiene que decir su nombre, qué es (botón, enlace, casilla) y su estado (marcado, expandido). Desconfía de los div con clics.',
+      },
+      ca: {
+        titulo: '4.1.2 Botons que són botons',
+        frase: 'Cada control diu què és i com està.',
+        referencia: 'WCAG 2.2 · 4.1.2 Nom, funció, valor · Nivell A',
+        falla: 'El “+ Llegir-ne més” de la targeta de Mentoria està fet amb un element que no és un botó. Amb el teclat no s’hi arriba i el lector de pantalla no sap que es pot prémer.',
+        arreglo: 'És un botó de debò: s’hi arriba amb el tabulador, s’obre amb Retorn o la barra espaiadora, i el lector diu “Llegir-ne més, botó, contret” i, en obrir-lo, “desplegat”.',
+        comprobar: 'Recorre cada control amb el teclat i el lector de pantalla: ha de dir el seu nom, què és (botó, enllaç, casella) i el seu estat (marcat, desplegat). Desconfia dels div amb clics.',
+      },
+      en: {
+        titulo: '4.1.2 Buttons that are buttons',
+        frase: 'Every control says what it is and how it is set.',
+        referencia: 'WCAG 2.2 · 4.1.2 Name, Role, Value · Level A',
+        falla: 'The “+ Read more” on the Mentoring card is built with an element that is not a button. You cannot reach it with the keyboard, and the screen reader does not know it can be pressed.',
+        arreglo: 'It is a real button: you reach it with Tab, open it with Enter or the space bar, and the screen reader says “Read more, button, collapsed” and, once open, “expanded”.',
+        comprobar: 'Go through every control with a keyboard and a screen reader: it must say its name, what it is (button, link, checkbox) and its state (checked, expanded). Be wary of clickable divs.',
+      },
+    },
+  },
+  {
+    id: 'punto-documentos',
+    archivo: '23-1-3-1-pdf-documentos',
+    texto: {
+      es: {
+        titulo: 'Documentos accesibles',
+        frase: 'Los documentos también se pueden leer.',
+        referencia: 'WCAG 2.2 · 1.3.1 Información y relaciones, aplicado a PDF · Nivel A',
+        falla: 'La “Memoria anual 2025” en PDF es una imagen escaneada. El lector de pantalla no encuentra texto: para quien no ve, el documento está vacío.',
+        arreglo: 'El PDF sale del documento original con su texto, sus títulos marcados, el orden de lectura, el idioma y las imágenes descritas. Si no puede ser, se ofrece la misma información en una página web.',
+        comprobar: 'Intenta seleccionar el texto del PDF: si no puedes, es una imagen. Ábrelo con un lector de pantalla y comprueba los títulos con la herramienta de accesibilidad de tu editor de PDF.',
+        nota: 'La WCAG está pensada para la web, pero la norma europea EN 301 549 aplica casi los mismos criterios a los documentos que se descargan.',
+      },
+      ca: {
+        titulo: 'Documents accessibles',
+        frase: 'Els documents també es poden llegir.',
+        referencia: 'WCAG 2.2 · 1.3.1 Informació i relacions, aplicat a PDF · Nivell A',
+        falla: 'La “Memòria anual 2025” en PDF és una imatge escanejada. El lector de pantalla no hi troba text: per a qui no hi veu, el document està buit.',
+        arreglo: 'El PDF surt del document original amb el seu text, els títols marcats, l’ordre de lectura, l’idioma i les imatges descrites. Si no pot ser, s’ofereix la mateixa informació en una pàgina web.',
+        comprobar: 'Intenta seleccionar el text del PDF: si no pots, és una imatge. Obre’l amb un lector de pantalla i comprova els títols amb l’eina d’accessibilitat del teu editor de PDF.',
+        nota: 'La WCAG està pensada per al web, però la norma europea EN 301 549 aplica gairebé els mateixos criteris als documents que es descarreguen.',
+      },
+      en: {
+        titulo: 'Accessible documents',
+        frase: 'Documents can be read too.',
+        referencia: 'WCAG 2.2 · 1.3.1 Info and Relationships, applied to PDF · Level A',
+        falla: 'The “Annual report 2025” PDF is a scanned image. The screen reader finds no text: for anyone who cannot see it, the document is empty.',
+        arreglo: 'The PDF is exported from the original document with its text, tagged headings, reading order, language and described images. If that is not possible, the same information is offered as a web page.',
+        comprobar: 'Try to select the text in the PDF: if you cannot, it is an image. Open it with a screen reader and check the headings with your PDF editor’s accessibility checker.',
+        nota: 'WCAG is designed for the web, but the European standard EN 301 549 applies almost the same criteria to downloadable documents.',
+      },
+    },
+  },
+];

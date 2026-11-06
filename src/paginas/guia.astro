@@ -1,250 +1,508 @@
 ---
 /* ---------------------------------------------------------------------------
-   ¿Qué hace que tu web sea accesible? (Johnny, 05/11/2026). La página del
-   vídeo esquemático: un plano fijo por punto, la carita que dice “No es
-   accesible” / “Es accesible” y la referencia WCAG de cada uno. Estilo en el
-   proyecto: claude/video-esquematico-estilo-2026-11-05.md.
+   ¿Qué hace que tu web sea o no accesible? Landing propia dentro de la web
+   (Johnny, 06/11/2026): la página de referencia que acompaña el lanzamiento.
+   Información de valor, no una pieza de venta: el vídeo, la pauta explicada,
+   y qué son la WCAG, las leyes europeas y las palabras que salen. La
+   conversión llega sola, al final de cada pauta y en el cierre de contacto.
+   Estilo del vídeo: claude/video-esquematico-estilo-2026-11-05.md.
 
-   · El vídeo NO tiene sonido y lo que enseña lo enseña con imagen (la carita,
-     el foco, el texto que cambia). Por eso cada punto está escrito debajo:
-     es su alternativa (1.2.1, solo vídeo). Si el montaje final lleva voz,
-     necesita subtítulos (1.2.2).
-   · Controles nativos y sin reproducción automática: es un vídeo largo y
-     explicativo, la persona tiene que poder pararlo, volver y saltar.
-   · Cada punto tiene un botón que lleva el vídeo a su momento. Sin JS no se
-     pinta, porque no haría nada. Los tiempos (`inicio`, en segundos) son los
-     del montaje: hoy solo existe el primer punto, en un vídeo propio.
-   · Los puntos van en `PUNTOS`: el que se añade aquí aparece en los tres
-     idiomas a la vez (la forma obliga a escribirlo en los tres).
+   ESTRUCTURA
+   · Hero: el titular y el carrusel de vídeos a las tres columnas, con su
+     contador (1 / 23). Un vídeo por punto; cada uno con su botón de
+     reproducir y pausar (VideoPausable: empieza en pausa, nada se descarga
+     hasta que se pulsa, y se para solo al salir de la vista o del carrusel).
+   · Debajo, la pauta del vídeo que se está viendo: qué falla, cómo se
+     arregla y cómo comprobarlo. Cambia con el vídeo.
+   · Tres columnas fijas con «Leer más»: qué es la WCAG, las políticas
+     europeas y el glosario.
+
+   ACCESIBILIDAD
+   · Los vídeos no tienen sonido y lo que enseñan lo enseñan con imagen. Su
+     alternativa (1.2.1, solo vídeo) es doble: el `alt` de la imagen fija
+     cuenta el vídeo entero y la pauta lo explica por escrito.
+   · Sin JS no hay carrusel: se ven todos los vídeos y todas las pautas,
+     uno debajo de otro, y los botones de navegación no se pintan (§5).
+   · Con JS, los vídeos que no se ven y sus pautas llevan `hidden`, así que
+     no se leen ni se tabulan. El carrusel NO avanza solo: lo mueve la
+     persona, así que no hay nada que pausar (2.2.2).
+   · Cada punto tiene su dirección (#punto-2-4-9): se puede compartir y
+     abrir directamente en él. Es lo que enlazarán los Reels.
+   · Al cambiar de vídeo, un aviso `aria-live="polite"` dice cuál es: el foco
+     se queda en el botón y quien no ve tiene que saber que algo cambió.
+     ARIA justificada (AGENTS.md §1): es la única forma de anunciar un
+     cambio que no mueve el foco.
+
+   AÑADIR UN PUNTO: una entrada en src/data/guia-puntos.ts, con sus vídeos en
+   public/video/guia/{web,movil}/{es,ca,en}/ y sus imágenes fijas en
+   arte/guia/{web,movil}/{es,ca,en}/ (npm run arte). La forma obliga a
+   escribirlo en los tres idiomas, y el build se para si falta un póster.
    --------------------------------------------------------------------------- */
+import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
+import Disclosure from '../components/Disclosure.astro';
+import VideoPausable from '../components/VideoPausable.astro';
 import { path, type Lang } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
-import ilustracion from '../assets/hero/04-diversidad.svg';
-import poster from '../assets/guia/01-enlaces.png';
+import { PUNTOS_GUIA } from '../data/guia-puntos';
+import { PREGUNTAS, ACTUALIZADO, type Pregunta } from '../data/preguntas';
 
 const lang = idiomaDe(Astro.url);
 
-const VIDEO = '/video/guia/01-enlaces.mp4';
-const posterWeb = await getImage({ src: poster, width: 1600, format: 'webp', quality: 'high' });
-
-interface Punto {
-  /** Segundo del vídeo en que empieza. */
-  inicio: number;
-  criterio: string;
-  nivel: 'A' | 'AA' | 'AAA';
-  texto: Record<Lang, { nombre: string; frase: string; referencia: string; falla: string; arreglo: string; nota?: string }>;
-}
-
-const PUNTOS: Punto[] = [
-  {
-    inicio: 0,
-    criterio: '2.4.9',
-    nivel: 'AAA',
-    texto: {
-      es: {
-        nombre: 'Enlaces',
-        frase: 'Los enlaces dicen adónde llevan.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
-        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
-        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
-        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
-      },
-      ca: {
-        nombre: 'Enllaços',
-        frase: 'Els enllaços diuen on porten.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
-        falla: 'Dos projectes, cadascun amb un enllaç que diu “Conoce más”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Conoce más, enllaç” dues vegades, sense saber on porta cadascun.',
-        arreglo: 'Que el mateix enllaç digui on porta: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. S’entén sol, també fora del context.',
-        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
-      },
-      en: {
-        nombre: 'Links',
-        frase: 'Links say where they go.',
-        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
-        falla: 'Two projects, each with a link that says “Conoce más” (Find out more). Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
-        arreglo: 'Make the link itself say where it goes: “Conocer Cultura en los barrios” (Discover Culture in the Neighbourhoods), “Conocer Laboratorio cultural” (Discover the Culture Lab). It makes sense on its own, even out of context.',
-        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
-      },
-    },
-  },
-];
+/* Los 23 puntos, sus textos en los tres idiomas, en src/data/guia-puntos.ts.
+   Vídeo y póster, en el idioma de la página y en dos formatos: 16:9 desde
+   768 y 4:5 por debajo (los vídeos se hicieron así, 06/11/2026). */
+const posters = import.meta.glob<{ default: ImageMetadata }>('../assets/guia/*/*/*.jpg', { eager: true });
+const poster = (formato: 'web' | 'movil', archivo: string) => {
+  const img = posters[`../assets/guia/${formato}/${lang}/${archivo}.jpg`];
+  if (!img) throw new Error(`Falta el póster ${formato}/${lang}/${archivo}.jpg en arte/guia/ (npm run arte)`);
+  return img.default;
+};
+const PUNTOS = PUNTOS_GUIA.map((p) => ({
+  id: p.id,
+  ...p.texto[lang],
+  web: { archivo: `/video/guia/web/${lang}/${p.archivo}.mp4`, poster: poster('web', p.archivo) },
+  movil: { archivo: `/video/guia/movil/${lang}/${p.archivo}.mp4`, poster: poster('movil', p.archivo) },
+}));
 
 const T = {
   es: {
-    title: 'Qué hace que tu web sea accesible · Accesibilidad Primero',
-    description: 'Un vídeo que recorre, punto por punto y con su referencia WCAG, qué hace que una web sea o no accesible. Y debajo, cada punto por escrito.',
-    alt: 'Una persona emite una maraña enredada de líneas que, al llegar a la otra, se ha ordenado en una espiral regular.',
-    titulo: '¿Qué hace que tu web sea accesible?',
-    golpes: ['¿Qué hace que tu web', 'sea accesible?'],
-    texto: 'Punto por punto, con la referencia WCAG de cada uno. Primero en vídeo y debajo, por escrito.',
-    hVideo: 'El vídeo',
-    videoNombre: 'Vídeo: ¿Qué hace que tu web sea o no accesible?',
-    videoPie: 'Sin sonido. Todo lo que enseña está escrito debajo, punto por punto.',
-    sinVideo: 'Tu navegador no puede reproducir el vídeo. Lo que enseña está escrito debajo.',
-    hPuntos: 'Punto por punto',
-    estado: 'De momento, el primer punto. Los demás se irán sumando aquí, hasta unos veinte, en cuatro bloques: que se pueda ver, que se pueda usar, que se entienda y que funcione con todo.',
+    title: 'Qué hace que tu web sea o no accesible · Accesibilidad Primero',
+    description: 'Punto por punto y en vídeo, qué hace que una web sea o no accesible, con su criterio WCAG 2.2, cómo se arregla y cómo comprobarlo. Y qué piden las leyes europeas.',
+    titulo: '¿Qué hace que tu web sea o no accesible?',
+    texto: 'Punto por punto, con su criterio WCAG. Mira el vídeo y, debajo, lee qué falla, cómo se arregla y cómo comprobarlo en tu propia web.',
+    carrusel: 'Vídeos, uno por punto',
+    anterior: 'Vídeo anterior',
+    siguiente: 'Vídeo siguiente',
+    video: 'Vídeo',
+    de: 'de',
+    hPauta: 'La pauta',
     falla: 'Qué falla',
     arreglo: 'Cómo se arregla',
-    verEnVideo: 'Ver este punto en el vídeo',
-    hAuditoria: 'En una auditoría',
-    auditoria: 'Esto es lo que miramos cuando auditamos una web: cada punto, con teclado, con lector de pantalla y con el texto delante.',
+    comprobar: 'Cómo comprobarlo',
+    alt: (t: string, f: string) => `Vídeo sin sonido sobre ${t}: primero, un ejemplo que no es accesible; después, cómo queda arreglado. Termina con la frase “${f}” Debajo se cuenta por escrito.`,
+    conversion: '¿Tu web cumple este punto? Lo revisamos, con este y con todos los demás, en una auditoría.',
     verAuditoria: 'Ver la auditoría de accesibilidad',
+    hInfo: 'Para saber más',
+    hPreguntas: 'Preguntas frecuentes',
   },
   ca: {
-    title: 'Què fa que el teu web sigui accessible · Accesibilidad Primero',
-    description: 'Un vídeo que recorre, punt per punt i amb la referència WCAG, què fa que un web sigui accessible o no. I a sota, cada punt per escrit.',
-    alt: 'Una persona emet un embolic de línies que, quan arriba a l’altra, s’ha ordenat en una espiral regular.',
-    titulo: 'Què fa que el teu web sigui accessible?',
-    golpes: ['Què fa que el teu web', 'sigui accessible?'],
-    texto: 'Punt per punt, amb la referència WCAG de cadascun. Primer en vídeo i a sota, per escrit.',
-    hVideo: 'El vídeo',
-    videoNombre: 'Vídeo: Què fa que el teu web sigui accessible o no?',
-    videoPie: 'Sense so i en castellà. Tot el que mostra està escrit a sota, punt per punt.',
-    sinVideo: 'El teu navegador no pot reproduir el vídeo. El que mostra està escrit a sota.',
-    hPuntos: 'Punt per punt',
-    estado: 'De moment, el primer punt. La resta s’hi aniran sumant, fins a una vintena, en quatre blocs: que es pugui veure, que es pugui fer servir, que s’entengui i que funcioni amb tot.',
+    title: 'Què fa que la teva web sigui accessible o no · Accesibilidad Primero',
+    description: 'Punt per punt i en vídeo, què fa que una web sigui accessible o no, amb el criteri WCAG 2.2, com s’arregla i com comprovar-ho. I què demanen les lleis europees.',
+    titulo: 'Què fa que la teva web sigui accessible o no?',
+    texto: 'Punt per punt, amb el criteri WCAG. Mira el vídeo i, a sota, llegeix què falla, com s’arregla i com comprovar-ho a la teva web.',
+    carrusel: 'Vídeos, un per punt',
+    anterior: 'Vídeo anterior',
+    siguiente: 'Vídeo següent',
+    video: 'Vídeo',
+    de: 'de',
+    hPauta: 'La pauta',
     falla: 'Què falla',
     arreglo: 'Com s’arregla',
-    verEnVideo: 'Veure aquest punt al vídeo',
-    hAuditoria: 'En una auditoria',
-    auditoria: 'Això és el que mirem quan auditem un web: cada punt, amb teclat, amb lector de pantalla i amb el text al davant.',
+    comprobar: 'Com comprovar-ho',
+    alt: (t: string, f: string) => `Vídeo sense so sobre ${t}: primer, un exemple que no és accessible; després, com queda arreglat. Acaba amb la frase “${f}” A sota s’explica per escrit.`,
+    conversion: 'La teva web compleix aquest punt? El revisem, amb aquest i amb tots els altres, en una auditoria.',
     verAuditoria: 'Veure l’auditoria d’accessibilitat',
+    hInfo: 'Per saber-ne més',
+    hPreguntas: 'Preguntes freqüents',
   },
   en: {
-    title: 'What makes your website accessible · Accesibilidad Primero',
-    description: 'A video that goes through, point by point and with its WCAG reference, what makes a website accessible or not. And below it, every point in writing.',
-    alt: 'One person sends out a tangled mass of lines that, by the time it reaches the other, has settled into a regular spiral.',
-    titulo: 'What makes your website accessible?',
-    golpes: ['What makes your', 'website accessible?'],
-    texto: 'Point by point, with the WCAG reference for each one. First on video, and below it, in writing.',
-    hVideo: 'The video',
-    videoNombre: 'Video: What makes your website accessible or not?',
-    videoPie: 'No sound, and in Spanish. Everything it shows is written out below, point by point.',
-    sinVideo: 'Your browser can’t play this video. What it shows is written out below.',
-    hPuntos: 'Point by point',
-    estado: 'For now, the first point. The rest will be added here, around twenty in all, in four groups: that it can be seen, that it can be used, that it can be understood and that it works with everything.',
+    title: 'What makes your website accessible, or not · Accesibilidad Primero',
+    description: 'Point by point and on video, what makes a website accessible or not, with its WCAG 2.2 criterion, how to fix it and how to check it. And what European law requires.',
+    titulo: 'What makes your website accessible, or not?',
+    texto: 'Point by point, with its WCAG criterion. Watch the video, then read below what goes wrong, how to fix it and how to check it on your own website.',
+    carrusel: 'Videos, one per point',
+    anterior: 'Previous video',
+    siguiente: 'Next video',
+    video: 'Video',
+    de: 'of',
+    hPauta: 'The guideline',
     falla: 'What goes wrong',
     arreglo: 'How to fix it',
-    verEnVideo: 'See this point in the video',
-    hAuditoria: 'In an audit',
-    auditoria: 'This is what we check when we audit a website: every point, with a keyboard, with a screen reader and with the text in front of us.',
+    comprobar: 'How to check it',
+    alt: (t: string, f: string) => `Silent video about ${t}: first, an example that is not accessible; then, how it looks once fixed. It ends with the sentence “${f}” It is described in writing below.`,
+    conversion: 'Does your website meet this point? We check it, along with all the others, in an audit.',
     verAuditoria: 'See the accessibility audit',
+    hInfo: 'Find out more',
+    hPreguntas: 'Frequently asked questions',
   },
 }[lang];
+
+/* Las tres columnas fijas. Fechas y normas comprobadas el 06/11/2026: la
+   EN 301 549 v4.1.1 se publicó el 2 de septiembre de 2026 y la Comisión la
+   citará en el Diario Oficial a finales de 2026 (ETSI, NDA de Irlanda).
+   Cuando se cite, cambia el último párrafo de «Políticas europeas». */
+interface Columna { id: string; titulo: string; resumen: string; parrafos?: string[]; glosario?: [string, string][] }
+const COLUMNAS: Record<Lang, Columna[]> = {
+  es: [
+    {
+      id: 'wcag', titulo: '¿Qué es la WCAG?',
+      resumen: 'Las Pautas de Accesibilidad para el Contenido Web: el estándar internacional que dice qué necesita una web para que la pueda usar cualquier persona.',
+      parrafos: [
+        'Las publica el W3C, el consorcio que define cómo funciona la web. Se ordenan en cuatro principios: que el contenido se pueda percibir, que se pueda manejar, que se entienda y que sea robusto, es decir, que funcione con cualquier navegador y con las tecnologías de apoyo.',
+        'Cada principio baja a criterios concretos que se pueden comprobar, y cada criterio tiene un nivel. A es el mínimo, AA es el que piden las leyes y AAA es el más exigente.',
+        'La 2.2 es la versión vigente desde octubre de 2023. Incluye todo lo de la 2.1 y suma nueve criterios, casi todos para quien navega con teclado, usa una pantalla táctil o tiene dificultades cognitivas: que el foco no quede tapado, que los botones tengan un tamaño mínimo, que arrastrar no sea la única forma de hacer algo o que entrar en una cuenta no obligue a memorizar.',
+        'Es la versión con la que trabajamos y la que adopta la nueva norma europea. Cumplirla es cumplir también las anteriores.',
+      ],
+    },
+    {
+      id: 'europa', titulo: 'Políticas europeas sobre accesibilidad',
+      resumen: 'Dos directivas obligan a que las webs sean accesibles en Europa: una para el sector público y otra para las empresas que venden productos y servicios.',
+      parrafos: [
+        'La Directiva (UE) 2016/2102, de accesibilidad de los sitios web y aplicaciones del sector público. En España la traspone el Real Decreto 1112/2018: las administraciones tienen que cumplirla y publicar su declaración de accesibilidad.',
+        'El Acta Europea de Accesibilidad, la Directiva (UE) 2019/882. Se aplica desde el 28 de junio de 2025 a productos y servicios como el comercio electrónico, la banca, el transporte o los libros electrónicos. En España la traspone la Ley 11/2023. Las microempresas que prestan servicios quedan fuera.',
+        'Las dos remiten a la misma norma técnica, la EN 301 549, y esta remite a la WCAG en nivel AA. La versión que hoy da presunción de conformidad es la 3.2.1, basada en la WCAG 2.1. La 4.1.1, basada en la WCAG 2.2, se publicó en septiembre de 2026 y pasará a ser la referencia cuando la cite el Diario Oficial de la UE, previsto para finales de 2026.',
+        'No somos un despacho de abogados. Si tu organización necesita saber exactamente qué le obliga, conviene confirmarlo con asesoría jurídica.',
+      ],
+    },
+    {
+      id: 'glosario', titulo: 'Glosario',
+      resumen: 'Las palabras que salen en los vídeos, explicadas sin tecnicismos.',
+      glosario: [
+        ['Accesibilidad digital', 'Que cualquier persona pueda usar una web, con o sin discapacidad y con el dispositivo que use.'],
+        ['Tecnologías de apoyo', 'Lo que algunas personas usan para manejar el ordenador o el móvil: lectores de pantalla, ampliadores, teclados adaptados o control por voz.'],
+        ['Lector de pantalla', 'Programa que lee en voz alta, o en braille, lo que hay en la pantalla y permite navegar sin verla.'],
+        ['Foco', 'La marca que señala en qué elemento estás cuando navegas con el teclado.'],
+        ['Texto alternativo', 'La descripción de una imagen que lee el lector de pantalla y que aparece si la imagen no carga.'],
+        ['Contraste', 'La diferencia de luz entre el texto y su fondo. La WCAG pide al menos 4,5 a 1 para el texto normal.'],
+        ['Criterio de conformidad', 'Cada requisito de la WCAG que se puede comprobar, con su número, como el 2.4.9, y su nivel.'],
+        ['Niveles A, AA y AAA', 'Lo exigente que es un criterio. Las leyes europeas piden el AA, que incluye el A.'],
+        ['Declaración de accesibilidad', 'La página que explica qué cumple una web, qué no y cómo avisar de una barrera.'],
+        ['Auditoría de accesibilidad', 'La revisión de una web contra la WCAG, con herramientas automáticas y a mano, con teclado y con lector de pantalla.'],
+        ['EN 301 549', 'La norma técnica europea de accesibilidad de productos y servicios digitales. Para la web, remite a la WCAG.'],
+      ],
+    },
+  ],
+  ca: [
+    {
+      id: 'wcag', titulo: 'Què és la WCAG?',
+      resumen: 'Les Pautes d’Accessibilitat per al Contingut Web: l’estàndard internacional que diu què necessita una web perquè la pugui fer servir qualsevol persona.',
+      parrafos: [
+        'Les publica el W3C, el consorci que defineix com funciona el web. S’ordenen en quatre principis: que el contingut es pugui percebre, que es pugui fer servir, que s’entengui i que sigui robust, és a dir, que funcioni amb qualsevol navegador i amb les tecnologies de suport.',
+        'Cada principi baixa a criteris concrets que es poden comprovar, i cada criteri té un nivell. A és el mínim, AA és el que demanen les lleis i AAA és el més exigent.',
+        'La 2.2 és la versió vigent des d’octubre de 2023. Inclou tot el de la 2.1 i hi suma nou criteris, gairebé tots per a qui navega amb teclat, fa servir una pantalla tàctil o té dificultats cognitives: que el focus no quedi tapat, que els botons tinguin una mida mínima, que arrossegar no sigui l’única manera de fer una cosa o que entrar en un compte no obligui a memoritzar.',
+        'És la versió amb què treballem i la que adopta la nova norma europea. Complir-la és complir també les anteriors.',
+      ],
+    },
+    {
+      id: 'europa', titulo: 'Polítiques europees d’accessibilitat',
+      resumen: 'Dues directives obliguen que les webs siguin accessibles a Europa: una per al sector públic i una altra per a les empreses que venen productes i serveis.',
+      parrafos: [
+        'La Directiva (UE) 2016/2102, d’accessibilitat dels llocs web i aplicacions del sector públic. A Espanya la transposa el Reial decret 1112/2018: les administracions l’han de complir i publicar la seva declaració d’accessibilitat.',
+        'L’Acta Europea d’Accessibilitat, la Directiva (UE) 2019/882. S’aplica des del 28 de juny de 2025 a productes i serveis com el comerç electrònic, la banca, el transport o els llibres electrònics. A Espanya la transposa la Llei 11/2023. Les microempreses que presten serveis en queden fora.',
+        'Totes dues remeten a la mateixa norma tècnica, l’EN 301 549, i aquesta remet a la WCAG en nivell AA. La versió que avui dona presumpció de conformitat és la 3.2.1, basada en la WCAG 2.1. La 4.1.1, basada en la WCAG 2.2, es va publicar el setembre de 2026 i passarà a ser la referència quan la citi el Diari Oficial de la UE, previst per a finals de 2026.',
+        'No som un despatx d’advocats. Si la teva organització necessita saber exactament què l’obliga, convé confirmar-ho amb assessoria jurídica.',
+      ],
+    },
+    {
+      id: 'glosario', titulo: 'Glossari',
+      resumen: 'Les paraules que surten als vídeos, explicades sense tecnicismes.',
+      glosario: [
+        ['Accessibilitat digital', 'Que qualsevol persona pugui fer servir una web, amb discapacitat o sense i amb el dispositiu que faci servir.'],
+        ['Tecnologies de suport', 'El que algunes persones fan servir per manejar l’ordinador o el mòbil: lectors de pantalla, ampliadors, teclats adaptats o control per veu.'],
+        ['Lector de pantalla', 'Programa que llegeix en veu alta, o en braille, el que hi ha a la pantalla i permet navegar sense veure-la.'],
+        ['Focus', 'La marca que assenyala en quin element ets quan navegues amb el teclat.'],
+        ['Text alternatiu', 'La descripció d’una imatge que llegeix el lector de pantalla i que apareix si la imatge no carrega.'],
+        ['Contrast', 'La diferència de llum entre el text i el fons. La WCAG demana com a mínim 4,5 a 1 per al text normal.'],
+        ['Criteri de conformitat', 'Cada requisit de la WCAG que es pot comprovar, amb el seu número, com el 2.4.9, i el seu nivell.'],
+        ['Nivells A, AA i AAA', 'Com d’exigent és un criteri. Les lleis europees demanen l’AA, que inclou l’A.'],
+        ['Declaració d’accessibilitat', 'La pàgina que explica què compleix una web, què no i com avisar d’una barrera.'],
+        ['Auditoria d’accessibilitat', 'La revisió d’una web contra la WCAG, amb eines automàtiques i a mà, amb teclat i amb lector de pantalla.'],
+        ['EN 301 549', 'La norma tècnica europea d’accessibilitat de productes i serveis digitals. Per al web, remet a la WCAG.'],
+      ],
+    },
+  ],
+  en: [
+    {
+      id: 'wcag', titulo: 'What is WCAG?',
+      resumen: 'The Web Content Accessibility Guidelines: the international standard that sets out what a website needs so that anyone can use it.',
+      parrafos: [
+        'They are published by the W3C, the consortium that defines how the web works. They are organised around four principles: content must be perceivable, operable, understandable and robust, which means it works with any browser and with assistive technologies.',
+        'Each principle breaks down into specific criteria that can be checked, and each criterion has a level. A is the minimum, AA is what the law requires and AAA is the most demanding.',
+        'WCAG 2.2 has been the current version since October 2023. It includes everything in 2.1 and adds nine criteria, most of them for people who use a keyboard, a touchscreen or who have cognitive difficulties: focus must not be hidden, buttons need a minimum size, dragging cannot be the only way to do something and signing in cannot depend on memorising.',
+        'It is the version we work with and the one the new European standard adopts. Meeting it means meeting the earlier versions too.',
+      ],
+    },
+    {
+      id: 'europa', titulo: 'European accessibility policy',
+      resumen: 'Two directives require websites to be accessible in Europe: one for the public sector and another for businesses that sell products and services.',
+      parrafos: [
+        'Directive (EU) 2016/2102, on the accessibility of public sector websites and apps. In Spain it is transposed by Royal Decree 1112/2018: public bodies must comply and publish an accessibility statement.',
+        'The European Accessibility Act, Directive (EU) 2019/882. It has applied since 28 June 2025 to products and services such as e-commerce, banking, transport and e-books. In Spain it is transposed by Act 11/2023. Microenterprises that provide services are exempt.',
+        'Both refer to the same technical standard, EN 301 549, which in turn refers to WCAG at level AA. The version that currently gives a presumption of conformity is 3.2.1, based on WCAG 2.1. Version 4.1.1, based on WCAG 2.2, was published in September 2026 and will become the reference once it is cited in the Official Journal of the EU, expected by the end of 2026.',
+        'We are not a law firm. If your organisation needs to know exactly what applies to it, check with a legal adviser.',
+      ],
+    },
+    {
+      id: 'glosario', titulo: 'Glossary',
+      resumen: 'The words that come up in the videos, explained without jargon.',
+      glosario: [
+        ['Digital accessibility', 'Anyone being able to use a website, whether or not they are disabled and whatever device they use.'],
+        ['Assistive technologies', 'What some people use to operate a computer or phone: screen readers, magnifiers, adapted keyboards or voice control.'],
+        ['Screen reader', 'Software that reads out, or shows in braille, what is on the screen, so you can navigate without seeing it.'],
+        ['Focus', 'The mark that shows which element you are on when you navigate with a keyboard.'],
+        ['Alt text', 'The description of an image that the screen reader reads out, and that appears if the image does not load.'],
+        ['Contrast', 'The difference in brightness between text and its background. WCAG asks for at least 4.5 to 1 for normal text.'],
+        ['Success criterion', 'Each checkable requirement in WCAG, with its number, such as 2.4.9, and its level.'],
+        ['Levels A, AA and AAA', 'How demanding a criterion is. European law requires AA, which includes A.'],
+        ['Accessibility statement', 'The page that explains what a website meets, what it does not and how to report a barrier.'],
+        ['Accessibility audit', 'Reviewing a website against WCAG, with automated tools and by hand, with a keyboard and a screen reader.'],
+        ['EN 301 549', 'The European technical standard for the accessibility of digital products and services. For the web, it refers to WCAG.'],
+      ],
+    },
+  ],
+};
+
+const total = PUNTOS.length;
+
+/* Preguntas frecuentes (06/11/2026): datos en src/data/preguntas.ts. El blog
+   solo existe en castellano, así que su enlace va siempre a /blog/. */
+const preguntas = PREGUNTAS[lang];
+const hrefDe = (e: NonNullable<Pregunta['enlace']>) => e.url
+  ?? `${path(e.ruta!, e.ruta === 'blog' ? 'es' : lang, e.slug)}${e.ancla ? `#${e.ancla}` : ''}`;
+/* Para los buscadores: las mismas preguntas en datos estructurados. Google ya
+   no las enseña como resultado enriquecido salvo en webs oficiales y de
+   salud, pero los buscadores con IA sí las leen. */
+const datosPreguntas = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: lang,
+  mainEntity: preguntas.map((q) => ({
+    '@type': 'Question',
+    name: q.pregunta,
+    acceptedAnswer: { '@type': 'Answer', text: [q.corta, ...q.detalle].join(' ') },
+  })),
+});
+const imagenSocial = (await getImage({ src: PUNTOS[0].web.poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
+const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
+/* El `alt` de la imagen fija: qué es el vídeo. Lo que enseña, paso a paso,
+   ya lo cuenta la pauta de debajo, y no se repite. */
+const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 ---
-<Base lang={lang} current="guia" title={T.title} description={T.description}>
-  <HeroPagina
-    ilustracion={ilustracion}
-    alt={T.alt}
-    titulo={T.titulo}
-    golpes={T.golpes}
-    texto={[T.texto]}
-    superficie={{ fondo: 'var(--green-ap)', foco: 'var(--blue-ap)' }}
-    ilustracionComoHome
-  />
+<Base lang={lang} current="guia" title={T.title} description={T.description} imagen={imagenSocial}>
+  <section class="guia-hero" aria-labelledby="guia-titulo">
+    <div class="guia-hero__texto">
+      <h1 id="guia-titulo" class="guia-hero__titulo">{T.titulo}</h1>
+      <p>{T.texto}</p>
+    </div>
 
-  <Bloque id="video" titulo={T.hVideo}>
-    <figure class="guia__video">
-      <video
-        controls
-        preload="none"
-        playsinline
-        width="1920"
-        height="1080"
-        poster={posterWeb.src}
-        aria-label={T.videoNombre}
-        data-guia-video
-      >
-        <source src={VIDEO} type="video/mp4" />
-        <p>{T.sinVideo}</p>
-      </video>
-      <figcaption>{T.videoPie}</figcaption>
-    </figure>
-  </Bloque>
-
-  <Bloque id="puntos" titulo={T.hPuntos}>
-    <div class="pila">
-      <p>{T.estado}</p>
-      <ol class="guia__puntos">
-        {PUNTOS.map((p) => {
-          const x = p.texto[lang];
-          return (
-            <li class="guia__punto" id={`punto-${p.criterio}`}>
-              <h3 class="guia__nombre">{p.criterio} {x.nombre}</h3>
-              <p>{x.frase}</p>
-              <p class="guia__referencia">{x.referencia}</p>
-              <h4 class="guia__sub">{T.falla}</h4>
-              <p>{x.falla}</p>
-              <h4 class="guia__sub">{T.arreglo}</h4>
-              <p>{x.arreglo}</p>
-              {x.nota && <p>{x.nota}</p>}
-              <button type="button" class="guia__ir" data-guia-ir={p.inicio} hidden>
-                {T.verEnVideo}<span class="sr-only">: {p.criterio} {x.nombre}</span><svg class="guia__flecha" aria-hidden="true" focusable="false" viewBox="0 0 24 14" width="24" height="14"><path d="M0 7h21M15 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
-              </button>
-            </li>
-          );
-        })}
+    <section class="carrusel" aria-label={T.carrusel} data-carrusel>
+      <ol class="carrusel__lista">
+        {PUNTOS.map((p, i) => (
+          <li class="carrusel__video" id={p.id} data-carrusel-video={i}>
+            <VideoPausable
+              escritorio={p.web}
+              movil={p.movil}
+              movilPropio
+              alt={altDe(p)}
+              nombre={p.titulo}
+              lang={lang}
+              sizes={anchoVideo}
+            />
+          </li>
+        ))}
       </ol>
+      <div class="carrusel__nav" data-carrusel-nav hidden>
+        <button type="button" class="carrusel__boton" data-carrusel-anterior>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 8 14" width="8" height="14"><path d="M7 1 1 7l6 6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+          <span class="sr-only">{T.anterior}</span>
+        </button>
+        <p class="carrusel__contador"><span class="sr-only">{T.video} </span><span data-carrusel-actual>1</span><span aria-hidden="true"> / </span><span class="sr-only"> {T.de} </span>{total}</p>
+        <button type="button" class="carrusel__boton" data-carrusel-siguiente>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 8 14" width="8" height="14"><path d="M1 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+          <span class="sr-only">{T.siguiente}</span>
+        </button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-carrusel-aviso></p>
+    </section>
+  </section>
+
+  <Bloque id="pauta" titulo={T.hPauta}>
+    {PUNTOS.map((p, i) => {
+      const x = p;
+      return (
+        <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${p.id}-titulo`}>
+          <h2 class="pauta__titulo" id={`${p.id}-titulo`}>{x.titulo}</h2>
+          <div class="pauta__grupo">
+            <p>{x.frase}</p>
+            <p>{x.referencia}</p>
+          </div>
+          <div class="pauta__grupo">
+            <h3 class="pauta__sub">{T.falla}</h3>
+            <p>{x.falla}</p>
+          </div>
+          <div class="pauta__grupo">
+            <h3 class="pauta__sub">{T.arreglo}</h3>
+            <p>{x.arreglo}</p>
+            {x.nota && <p>{x.nota}</p>}
+          </div>
+          <div class="pauta__grupo">
+            <h3 class="pauta__sub">{T.comprobar}</h3>
+            <p>{x.comprobar}</p>
+          </div>
+          <div class="pauta__grupo">
+            <p>{T.conversion}</p>
+            <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
+          </div>
+        </article>
+      );
+    })}
+  </Bloque>
+
+  <section class="info" aria-labelledby="info-titulo">
+    <h2 id="info-titulo" class="sr-only">{T.hInfo}</h2>
+    <ul class="info__columnas">
+      {COLUMNAS[lang].map((c) => (
+        <li class="info__columna">
+          <h3 class="info__titulo">{c.titulo}</h3>
+          <p>{c.resumen}</p>
+          <Disclosure id={`info-${c.id}`} contexto={c.titulo} lang={lang}>
+            {c.parrafos?.map((t) => <p>{t}</p>)}
+            {c.glosario && (
+              <dl class="info__glosario">
+                {c.glosario.map(([termino, definicion]) => (
+                  <div><dt>{termino}</dt><dd>{definicion}</dd></div>
+                ))}
+              </dl>
+            )}
+          </Disclosure>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <Bloque id="preguntas" titulo={T.hPreguntas}>
+    <div class="preguntas">
+      <ul class="preguntas__lista">
+        {preguntas.map((q) => (
+          <li class="pregunta" id={`pregunta-${q.id}`}>
+            <h3 class="pregunta__titulo">{q.pregunta}</h3>
+            {/* El correo no cabe a 320 sin cortarse: <wbr> detrás de la arroba (§4). */}
+            <p>{q.corta.split('@').map((t, i) => <>{i > 0 && <>@<wbr /></>}{t}</>)}</p>
+            <Disclosure id={`pregunta-${q.id}-detalle`} contexto={q.pregunta} lang={lang}>
+              {q.detalle.map((t) => <p>{t}</p>)}
+              {q.enlace && <CtaLink href={hrefDe(q.enlace)}>{q.enlace.texto}</CtaLink>}
+            </Disclosure>
+          </li>
+        ))}
+      </ul>
+      <p>{ACTUALIZADO[lang]}</p>
     </div>
   </Bloque>
 
-  <Bloque id="auditoria" titulo={T.hAuditoria}>
-    <div class="pila">
-      <p>{T.auditoria}</p>
-      <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
-    </div>
-  </Bloque>
+  <script type="application/ld+json" set:html={datosPreguntas} />
 </Base>
 
 <script>
-  /* El botón de cada punto lleva el vídeo a su momento y lo arranca. Solo
-     con JS: sin él, el botón no se pinta. */
-  const video = document.querySelector<HTMLVideoElement>('[data-guia-video]');
-  document.querySelectorAll<HTMLButtonElement>('[data-guia-ir]').forEach((b) => {
-    if (!video) return;
-    b.hidden = false;
-    b.addEventListener('click', () => {
-      video.currentTime = Number(b.dataset.guiaIr) || 0;
-      video.focus();
-      video.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-      void video.play();
-    });
-  });
+  /* El carrusel: un vídeo y su pauta a la vista, los demás con `hidden`.
+     Sin JS no se ejecuta y se ve todo, uno debajo de otro. */
+  const raiz = document.querySelector<HTMLElement>('[data-carrusel]');
+  if (raiz) {
+    const videos = [...raiz.querySelectorAll<HTMLElement>('[data-carrusel-video]')];
+    const pautas = [...document.querySelectorAll<HTMLElement>('[data-carrusel-pauta]')];
+    const nav = raiz.querySelector<HTMLElement>('[data-carrusel-nav]')!;
+    const anterior = raiz.querySelector<HTMLButtonElement>('[data-carrusel-anterior]')!;
+    const siguiente = raiz.querySelector<HTMLButtonElement>('[data-carrusel-siguiente]')!;
+    const actual = raiz.querySelector<HTMLElement>('[data-carrusel-actual]')!;
+    const aviso = raiz.querySelector<HTMLElement>('[data-carrusel-aviso]')!;
+    let i = Math.max(0, videos.findIndex((v) => `#${v.id}` === location.hash));
+
+    const mostrar = (n: number, anunciar: boolean) => {
+      i = n;
+      videos.forEach((v, k) => { v.hidden = k !== i; });
+      pautas.forEach((p, k) => { p.hidden = k !== i; });
+      actual.textContent = String(i + 1);
+      anterior.disabled = i === 0;
+      siguiente.disabled = i === videos.length - 1;
+      if (anunciar) {
+        const titulo = pautas[i]?.querySelector('h2')?.textContent ?? '';
+        aviso.textContent = `${i + 1} / ${videos.length}: ${titulo}`;
+        history.replaceState(null, '', `#${videos[i].id}`);
+      }
+    };
+    anterior.addEventListener('click', () => mostrar(Math.max(0, i - 1), true));
+    siguiente.addEventListener('click', () => mostrar(Math.min(videos.length - 1, i + 1), true));
+    nav.hidden = false;
+    mostrar(i, false);
+  }
 </script>
 
 <style>
-  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; }
-  .guia__video { margin: 0; display: flex; flex-direction: column; gap: var(--space-24); }
-  .guia__video video {
-    display: block;
-    inline-size: 100%;
-    block-size: auto;
-    aspect-ratio: 16 / 9;
-    border-radius: var(--radio);
-    background: var(--silk);
+  /* El hero: titular arriba y el vídeo a las tres columnas, en verde AP como
+     la banda de la guía. No es la apertura a pantalla entera de HeroPagina:
+     aquí lo que abre la página es el vídeo, no una ilustración (06/11/2026). */
+  .guia-hero {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-48);
+    padding: calc(var(--header-height) + var(--space-48)) var(--gutter-page) var(--space-48);
+    background: var(--green-ap);
   }
-  .guia__puntos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
-  .guia__punto { display: flex; flex-direction: column; gap: var(--space-12); }
-  .guia__punto p { margin: 0; }
-  .guia__nombre, .guia__sub { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  .guia__sub { margin-block-start: var(--space-12); }
-  .guia__referencia { color: var(--ink); }
-  .guia__ir {
-    align-self: flex-start;
-    min-block-size: var(--touch-min);
+  .guia-hero__texto { display: flex; flex-direction: column; gap: var(--space-24); }
+  .guia-hero__texto p { margin: 0; max-width: 930px; }
+  .guia-hero__titulo {
+    margin: 0;
+    font-size: var(--display-size);
+    line-height: var(--display-leading);
+    letter-spacing: var(--display-track);
+    font-weight: 400;
+  }
+
+  .carrusel { position: relative; }
+  .carrusel__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-48); }
+  /* La navegación, en la misma fila que el botón de reproducir de
+     VideoPausable (44 de alto, a la derecha): sube su alto y se queda a la
+     izquierda. */
+  .carrusel__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-block-start: calc(-1 * var(--touch-min));
+    inline-size: fit-content;
+    position: relative;
+  }
+  .carrusel__nav[hidden] { display: none; }
+  .carrusel__contador { margin: 0; min-inline-size: 4ch; text-align: center; font-variant-numeric: tabular-nums; }
+  .carrusel__boton {
+    display: grid;
+    place-items: center;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
     padding: 0;
     border: 0;
     background: none;
-    font: inherit;
     color: inherit;
     cursor: pointer;
-    text-align: start;
   }
-  .guia__flecha { display: inline-block; vertical-align: -0.05em; margin-inline-start: var(--space-12); }
-  .guia__ir:focus-visible { outline: var(--focus-width) solid var(--focus-ring); outline-offset: var(--focus-offset, 4px); }
+  .carrusel__boton:first-child { margin-inline-start: -18px; }
+  .carrusel__boton:disabled { opacity: 0.35; cursor: default; }
+
+  .pauta { display: flex; flex-direction: column; gap: var(--space-48); }
+  .pauta[hidden] { display: none; }
+  .pauta + .pauta { margin-block-start: calc(var(--space-24) * 3); }
+  .pauta__grupo { display: flex; flex-direction: column; gap: var(--space-16); max-width: var(--measure); }
+  .pauta__grupo p { margin: 0; }
+  .pauta__titulo, .pauta__sub, .info__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+
+  .info { padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
+  .info__columnas { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(var(--space-24) * 3) var(--space-24); }
+  @media (min-width: 1024px) { .info__columnas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .info__columna { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; }
+  .info__columna p { margin: 0; }
+  .info__columna :global(.disclosure__panel) { display: flex; flex-direction: column; gap: var(--space-16); }
+  .info__columna :global(.disclosure__panel[hidden]) { display: none; }
+  .info__glosario { margin: 0; display: flex; flex-direction: column; gap: var(--space-16); }
+  .info__glosario dd { margin: 0; }
+
+  .preguntas { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
+  .preguntas > p { margin: 0; max-width: var(--measure); }
+  .preguntas__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
+  .pregunta { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; max-width: var(--measure); }
+  .pregunta p { margin: 0; }
+  .pregunta__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .pregunta :global(.disclosure__panel) { display: flex; flex-direction: column; gap: var(--space-16); }
+  .pregunta :global(.disclosure__panel[hidden]) { display: none; }
 </style>

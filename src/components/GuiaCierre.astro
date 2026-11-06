@@ -1,12 +1,20 @@
 ---
 /* ---------------------------------------------------------------------------
    La guía en vídeo, antes del cierre de contacto de todas las páginas
-   (Johnny, 05/11/2026), con la carita feliz del vídeo: la que sale cuando
-   algo “Es accesible”.
+   (Johnny, 05/11/2026), con la carita del vídeo.
 
    El enlace ES la pregunta, así dice adónde lleva por sí solo: es lo que
    enseña el propio vídeo (2.4.9). La carita es decoración (`aria-hidden`):
    repite lo que dice el texto. No se pinta en la página de la guía.
+
+   LA CARITA (Johnny, 06/11/2026): el gesto del vídeo cuando algo “Es
+   accesible”. Parte seria (blanca y con la boca recta), da un salto, se
+   rellena de amarillo y sonríe. Lo hace DOS veces, una cada 2,5 s: 5 s en
+   total, así que no necesita botón de pausa (2.2.2 pide control para lo que
+   se mueve MÁS de 5 s). Arranca una sola vez, al entrar en pantalla, y se
+   queda feliz. Sin JS y con «reducir movimiento», feliz y quieta desde el
+   principio: es el estado final, el que cuenta el mensaje.
+   Sin fondo Silk desde el 06/11/2026.
    --------------------------------------------------------------------------- */
 import { path, type Lang } from '../i18n/config';
 import CtaLink from './CtaLink.astro';
@@ -14,20 +22,32 @@ import CtaLink from './CtaLink.astro';
 const { lang } = Astro.props as { lang: Lang };
 const TEXTO: Record<Lang, string> = {
   es: '¿Qué hace que tu web sea o no accesible?',
-  ca: 'Què fa que el teu web sigui accessible o no?',
+  ca: 'Què fa que la teva web sigui accessible o no?',
   en: 'What makes your website accessible, or not?',
 };
 ---
 
 <section class="guia-cierre" aria-label={TEXTO[lang]}>
-  <svg class="guia-cierre__cara" aria-hidden="true" focusable="false" viewBox="0 0 48 48" width="48" height="48">
-    <circle cx="24" cy="24" r="22" fill="#E6E680" stroke="currentColor" stroke-width="2" />
-    <circle cx="17" cy="20" r="2.2" fill="currentColor" />
-    <circle cx="31" cy="20" r="2.2" fill="currentColor" />
-    <path d="M15 28.5c2.2 3.6 5.3 5.5 9 5.5s6.8-1.9 9-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  <svg class="cara" aria-hidden="true" focusable="false" viewBox="0 -8 48 56" width="48" height="56" data-cara>
+    <g class="cara__cuerpo">
+      <circle class="cara__fondo" cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2" />
+      <circle cx="17" cy="20" r="2.2" fill="currentColor" />
+      <circle cx="31" cy="20" r="2.2" fill="currentColor" />
+      <path class="cara__seria" d="M16 31h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      <path class="cara__sonrisa" d="M15 28.5c2.2 3.6 5.3 5.5 9 5.5s6.8-1.9 9-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </g>
   </svg>
   <CtaLink href={path('guia', lang)}>{TEXTO[lang]}</CtaLink>
 </section>
+
+<script>
+  const ver = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('is-vista');
+    ver.unobserve(e.target);
+  }), { threshold: 1 });
+  document.querySelectorAll('[data-cara]').forEach((c) => ver.observe(c));
+</script>
 
 <style>
   .guia-cierre {
@@ -37,10 +57,49 @@ const TEXTO: Record<Lang, string> = {
     justify-content: center;
     gap: var(--space-24);
     margin: var(--ritmo-seccion) var(--gutter-page) 0;
-    padding: var(--space-24);
-    background: var(--silk);
-    border-radius: var(--radio);
     color: var(--ink);
   }
-  .guia-cierre__cara { flex: 0 0 auto; display: block; }
+  .cara { flex: 0 0 auto; display: block; overflow: visible; }
+
+  /* El estado de partida es el FINAL: feliz y amarilla. Lo que se ve sin JS
+     y con «reducir movimiento». */
+  .cara__fondo { fill: #E6E680; }
+  .cara__seria { opacity: 0; }
+  .cara__cuerpo { transform-box: fill-box; transform-origin: 50% 100%; }
+
+  /* Con JS y movimiento, la animación se monta en su primer fotograma (seria)
+     y espera a verse. Dos vueltas de 2,5 s y se queda en el último. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .cara__fondo { animation: cara-fondo 2.5s var(--ease-out) 2 both paused; }
+    :global(html.js) .cara__seria { animation: cara-seria 2.5s var(--ease-out) 2 both paused; }
+    :global(html.js) .cara__sonrisa { animation: cara-sonrisa 2.5s var(--ease-out) 2 both paused; }
+    :global(html.js) .cara__cuerpo { animation: cara-salto 2.5s var(--ease-out) 2 both paused; }
+    .cara:global(.is-vista) * { animation-play-state: running; }
+  }
+
+  @keyframes cara-fondo {
+    0%, 30% { fill: #fff; }
+    42%, 100% { fill: #E6E680; }
+  }
+  @keyframes cara-seria {
+    0%, 30% { opacity: 1; }
+    38%, 100% { opacity: 0; }
+  }
+  @keyframes cara-sonrisa {
+    0%, 30% { opacity: 0; }
+    38%, 100% { opacity: 1; }
+  }
+  /* Salta al ponerse contenta, cae y da un rebote pequeño. */
+  @keyframes cara-salto {
+    0%, 28% { transform: translateY(0) scale(1, 1); }
+    32% { transform: translateY(0) scale(1.06, 0.92); }
+    42% { transform: translateY(-8px) scale(0.97, 1.04); }
+    52% { transform: translateY(0) scale(1.04, 0.95); }
+    58% { transform: translateY(-2px) scale(1, 1); }
+    64%, 100% { transform: translateY(0) scale(1, 1); }
+  }
+
+  @media (forced-colors: active) {
+    .cara__fondo { fill: Canvas; }
+  }
 </style>

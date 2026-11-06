@@ -304,13 +304,34 @@ disciplina personal a las once de la noche.
   licencia se pierde. Decidido el 05/11/2026 (Johnny): en la versión catalana
   se queda igual y se lee como una frase normal.
 
-- **La guía en vídeo (05/11/2026).** “¿Qué hace que tu web sea accesible?”
-  vive en `src/paginas/guia.astro` (ruta `guia`): el vídeo esquemático con
-  controles nativos y sin reproducción automática, y debajo cada punto por
-  escrito, que es su alternativa (el vídeo no tiene sonido). Un punto nuevo
-  se añade en `PUNTOS`, con su segundo de inicio y su texto en los tres
-  idiomas. `GuiaCierre.astro` la enlaza antes del cierre de contacto en todas
-  las páginas menos en la suya, con la carita feliz del vídeo.
+- **La guía en vídeo (05/11/2026; landing propia desde el 06/11/2026).**
+  “¿Qué hace que tu web sea o no accesible?” vive en `src/paginas/guia.astro`
+  (ruta `guia`). Es la página de referencia del lanzamiento: información de
+  valor, no una pieza de venta. Hero en verde AP con el titular y el
+  carrusel de vídeos a las tres columnas, con contador (1 / 23); cada vídeo
+  es un `VideoPausable` (empieza en pausa). Debajo, la pauta del vídeo que
+  se ve (qué falla, cómo se arregla, cómo comprobarlo), que cambia con él, y
+  tres columnas fijas con «Leer más»: qué es la WCAG, políticas europeas y
+  glosario. Excepción declarada a los heros de pantalla entera: aquí abre el
+  vídeo. El carrusel no avanza solo; cada punto tiene su dirección
+  (`#punto-2-4-9`) para los Reels, y un aviso `aria-live` dice qué vídeo
+  entra. Sin JS, todos los vídeos y pautas a la vista. Los 23 puntos están en
+  `src/data/guia-puntos.ts` (título, frase y referencia literales del vídeo
+  de cada idioma). Vídeos en `public/video/guia/{web,movil}/{es,ca,en}/` y
+  pósters en `arte/guia/…`: 16:9 desde 768 y 4:5 por debajo
+  (`VideoPausable movilPropio`), cada idioma con su vídeo. Un punto nuevo es
+  una entrada con `id` fijo y su texto en los tres idiomas; probar con uno,
+  con tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
+  europeas» se revisan cuando el Diario Oficial la cite. Preguntas frecuentes
+  (14, sobre la ley, pensadas para buscadores) en `src/data/preguntas.ts`:
+  la primera frase contesta sí, no o depende y el detalle va en «Leer más»;
+  fechadas y con aviso de que no son asesoramiento jurídico. Si cambia una
+  norma, se cambia ahí. `GuiaCierre.astro` enlaza la guía antes del cierre
+  de contacto en todas las páginas menos en la suya, sin fondo, con la
+  carita del vídeo: hace el gesto de “Es accesible” dos veces, una cada
+  2,5 s (5 s en total, sin botón: 2.2.2), al entrar en pantalla y una sola
+  vez; sin JS y con «reducir movimiento», feliz y quieta. Es la única página
+  con imagen para compartir (`imagen` de `Base`).
 
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
   inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.
