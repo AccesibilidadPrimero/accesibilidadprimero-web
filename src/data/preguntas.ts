@@ -182,7 +182,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
         'Sector públic: el Reial decret 1112/2018 obliga administracions, universitats públiques i entitats públiques que els seus webs i aplicacions siguin accessibles i publiquin la seva declaració d’accessibilitat.',
         'Empreses: la Llei 11/2023, que transposa l’Acta Europea d’Accessibilitat, obliga des del 28 de juny de 2025 els serveis de comerç electrònic, banca per a persones consumidores, transport de viatgers, comunicacions electròniques, llibres electrònics i accés a serveis audiovisuals, entre d’altres.',
         'Grans empreses: la LSSI ja obligava les de més de cent treballadors en sectors com la banca, les assegurances, els subministraments, les telecomunicacions, el transport, les agències de viatges o el comerç al detall.',
-        'Encara que no t’hi obligui, un web accessible el pot fer servir més gent. I si treballes amb el sector públic o reps ajudes, t’ho poden exigir igualment.',
+        'Encara que no t’hi obligui, una web accessible la pot fer servir més gent. I si treballes amb el sector públic o reps ajudes, t’ho poden exigir igualment.',
       ],
     },
     {
@@ -192,7 +192,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       detalle: [
         'La Llei 11/2023 remet a la sanció de cada sector i, si no n’hi ha, a la Llei general de drets de les persones amb discapacitat. Segons aquesta llei, les infraccions lleus arriben fins a 30.000 euros, les greus fins a 90.000 i les molt greus fins a 1.000.000.',
         'Vigilen i sancionen les comunitats autònomes. A més de la multa, hi pot haver sancions accessòries, com no poder demanar ajudes públiques durant un temps.',
-        'El més habitual abans d’una sanció és una queixa: qualsevol persona que trobi una barrera pot reclamar. Tenir el web auditat i una declaració d’accessibilitat al dia és la millor resposta.',
+        'El més habitual abans d’una sanció és una queixa: qualsevol persona que trobi una barrera pot reclamar. Tenir la web auditada i una declaració d’accessibilitat al dia és la millor resposta.',
       ],
     },
     {
@@ -200,7 +200,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       pregunta: 'Puc perdre una subvenció si el meu web no és accessible?',
       corta: 'Sí, per dos camins: perquè la convocatòria ho exigeixi com a condició o com a sanció per incomplir la llei d’accessibilitat.',
       detalle: [
-        'Per la convocatòria: algunes ajudes exigeixen que el web compleixi l’accessibilitat, com passava amb els webs finançats pel Kit Digital. Si una condició de l’ajuda no es compleix, la Llei general de subvencions permet reclamar-ne el retorn.',
+        'Per la convocatòria: algunes ajudes exigeixen que la web compleixi l’accessibilitat, com passava amb les webs finançades pel Kit Digital. Si una condició de l’ajuda no es compleix, la Llei general de subvencions permet reclamar-ne el retorn.',
         'Per sanció: la Llei general de drets de les persones amb discapacitat preveu, juntament amb la multa, prohibir que demanis ajudes públiques en el teu sector fins a un any si la infracció és greu i fins a dos si és molt greu. En les molt greus, també es poden retirar les ajudes que ja tinguis.',
         'Abans de justificar una ajuda, revisa a les bases quin nivell d’accessibilitat demanen i guarda’n la prova: una auditoria amb data.',
       ],
@@ -211,7 +211,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       corta: 'En una subvenció depèn de les bases; en un contracte públic, l’accessibilitat és obligatòria en els requisits tècnics i pot sumar punts.',
       detalle: [
         'No hi ha una regla general per a les subvencions: cada convocatòria fixa els seus criteris. Busca a les bases paraules com “accessibilitat”, “disseny universal” o “inclusió”.',
-        'En els contractes públics, la Llei 9/2017 obliga a tenir en compte l’accessibilitat universal en definir el que es contracta, i permet valorar-la com a criteri de qualitat en adjudicar. Si la teva proposta inclou un web o un servei digital, demostrar que és accessible és un argument de pes.',
+        'En els contractes públics, la Llei 9/2017 obliga a tenir en compte l’accessibilitat universal en definir el que es contracta, i permet valorar-la com a criteri de qualitat en adjudicar. Si la teva proposta inclou una web o un servei digital, demostrar que és accessible és un argument de pes.',
       ],
     },
     {
@@ -219,8 +219,8 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       pregunta: 'El meu web pot aconseguir una certificació d’accessibilitat?',
       corta: 'En pot aconseguir una de voluntària, però no hi ha cap certificació oficial ni obligatòria.',
       detalle: [
-        'AENOR ofereix una certificació voluntària, “Accesibilidad Web Verificada”, basada en la norma UNE-EN 301 549. Acredita el nivell d’un web en una data concreta, sense seguiment després.',
-        'Un web canvia cada setmana: un certificat diu com estava el dia que es va revisar. El que demana la llei és complir, dir com es compleix i, en el sector públic, publicar la declaració d’accessibilitat.',
+        'AENOR ofereix una certificació voluntària, “Accesibilidad Web Verificada”, basada en la norma UNE-EN 301 549. Acredita el nivell d’una web en una data concreta, sense seguiment després.',
+        'Una web canvia cada setmana: un certificat diu com estava el dia que es va revisar. El que demana la llei és complir, dir com es compleix i, en el sector públic, publicar la declaració d’accessibilitat.',
         'Per això preferim una auditoria amb el seu informe i una declaració que es manté al dia, i formar qui publica perquè no es perdi el que s’ha aconseguit.',
       ],
       enlace: { ruta: 'servicios', ancla: 'auditoria', texto: 'Veure l’auditoria d’accessibilitat' },
@@ -232,7 +232,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       detalle: [
         'L’EN 301 549 l’elaboren els organismes europeus de normalització i UNE la publica a Espanya com a UNE-EN 301 549. És la referència tècnica de les dues directives europees: complir-la dona presumpció que es compleix la llei.',
         'Va més enllà del web: cobreix documents, aplicacions, programari, equips i comunicacions en temps real, com el xat o la videotrucada.',
-        'La versió que avui dona presumpció de conformitat és la 3.2.1, basada en la WCAG 2.1. La 4.1.1, basada en la WCAG 2.2, es va publicar el setembre de 2026 i passarà a ser la referència quan la citi el Diari Oficial de la UE, previst per a finals de 2026. Si el teu web compleix la WCAG 2.2 AA, ja estàs preparat.',
+        'La versió que avui dona presumpció de conformitat és la 3.2.1, basada en la WCAG 2.1. La 4.1.1, basada en la WCAG 2.2, es va publicar el setembre de 2026 i passarà a ser la referència quan la citi el Diari Oficial de la UE, previst per a finals de 2026. Si la teva web compleix la WCAG 2.2 AA, ja estàs preparat.',
       ],
     },
     {
@@ -247,7 +247,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
     {
       id: 'declaracion',
       pregunta: 'Què és la declaració d’accessibilitat i l’he de publicar?',
-      corta: 'És la pàgina que explica què compleix el teu web, què no i com avisar d’una barrera; el sector públic està obligat a publicar-la.',
+      corta: 'És la pàgina que explica què compleix la teva web, què no i com avisar d’una barrera; el sector públic està obligat a publicar-la.',
       detalle: [
         'Segueix un model europeu: el nivell de compliment, el contingut que no és accessible i per què, com es va preparar la declaració, un contacte per avisar de barreres i el procediment si no es respon.',
         'Per a una empresa no és obligatòria amb aquest format, però la Llei 11/2023 sí que li demana informar de com compleixen els seus serveis. Publicar-la és la manera més clara de fer-ho i demostra que l’accessibilitat es pren seriosament.',
@@ -258,28 +258,28 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
     {
       id: 'plugin',
       pregunta: 'Un connector o un giny d’accessibilitat fa el meu web accessible?',
-      corta: 'No: un botó que afegeix opcions per sobre del web no arregla el codi que hi ha a sota.',
+      corta: 'No: un botó que afegeix opcions per sobre de la web no arregla el codi que hi ha a sota.',
       detalle: [
         'Aquests connectors asseguren que es compleix la llei amb una línia de codi. No poden arreglar un formulari sense etiquetes, un menú que no funciona amb teclat o una imatge sense descripció, i de vegades destorben els lectors de pantalla, que ja fan la seva feina.',
-        'Les persones que fan servir tecnologies de suport ja tenen els seus ajustos al navegador i al sistema. El que necessiten és que el web estigui ben fet.',
+        'Les persones que fan servir tecnologies de suport ja tenen els seus ajustos al navegador i al sistema. El que necessiten és que la web estigui ben feta.',
       ],
       enlace: { ruta: 'blog', slug: 'no-un-plugin-de-accesibilidad', texto: 'Llegir per què no és un connector (en castellà)' },
     },
     {
       id: 'google',
       pregunta: 'L’accessibilitat millora el meu posicionament a Google?',
-      corta: 'No de manera directa: Google no la fa servir com a factor, però molt del que fa accessible un web també ajuda que Google l’entengui.',
+      corta: 'No de manera directa: Google no la fa servir com a factor, però molt del que fa accessible una web també ajuda que Google l’entengui.',
       detalle: [
         'Encapçalaments ordenats, imatges amb text alternatiu, enllaços que diuen on porten, títols de pàgina clars, una bona versió per a mòbil i pàgines que carreguen ràpid: tot això és accessibilitat i també ho valora un cercador.',
-        'I el que més pesa: si més persones poden fer servir el teu web, s’hi queden més temps, troben el que busquen i tornen. Desconfia de qui t’asseguri que pujaràs posicions només per instal·lar alguna cosa.',
+        'I el que més pesa: si més persones poden fer servir la teva web, s’hi queden més temps, troben el que busquen i tornen. Desconfia de qui t’asseguri que pujaràs posicions només per instal·lar alguna cosa.',
       ],
     },
     {
       id: 'coste',
       pregunta: 'Quant costa fer accessible el meu web?',
-      corta: 'Depèn de la mida i de l’estat del web: el primer és una auditoria, que per a un web de fins a deu pàgines costa de 590 a 790 euros més IVA.',
+      corta: 'Depèn de la mida i de l’estat de la web: el primer és una auditoria, que per a una web de fins a deu pàgines costa de 590 a 790 euros més IVA.',
       detalle: [
-        'L’auditoria diu què falla, per què importa i com s’arregla, ordenat per prioritat. Amb ella es pot calcular el que costa corregir-ho, que de vegades ho fa el mateix equip del web.',
+        'L’auditoria diu què falla, per què importa i com s’arregla, ordenat per prioritat. Amb ella es pot calcular el que costa corregir-ho, que de vegades ho fa el mateix equip de la web.',
         'Fer-lo accessible des del principi costa molt menys que arreglar-lo després: per això en els nostres projectes de disseny i desenvolupament l’accessibilitat és el punt de partida.',
       ],
       enlace: { ruta: 'servicios', ancla: 'auditoria', texto: 'Veure les tarifes d’auditoria' },
@@ -309,7 +309,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       pregunta: 'Com puc contactar amb Accesibilidad Primero per encarregar un projecte o per col·laborar?',
       corta: 'Escriu-nos a proyectos@accesibilidadprimero.com o des del formulari de contacte.',
       detalle: [
-        'Per a un projecte, explica’ns què tens i on vols arribar: un web nou, una auditoria del que ja tens o formació per al teu equip. Amb això preparem una proposta.',
+        'Per a un projecte, explica’ns què tens i on vols arribar: una web nova, una auditoria del que ja tens o formació per al teu equip. Amb això preparem una proposta.',
         'Per col·laborar, si ets un estudi, una agència, una entitat o una persona que treballa en accessibilitat, també ens interessa. Explica’ns què t’agradaria fer.',
       ],
       enlace: { ruta: 'contacto', texto: 'Anar al formulari de contacte' },

@@ -90,10 +90,10 @@ const T = {
     hPreguntas: 'Preguntas frecuentes',
   },
   ca: {
-    title: 'Què fa que el teu web sigui accessible o no · Accesibilidad Primero',
-    description: 'Punt per punt i en vídeo, què fa que un web sigui accessible o no, amb el criteri WCAG 2.2, com s’arregla i com comprovar-ho. I què demanen les lleis europees.',
-    titulo: 'Què fa que el teu web sigui accessible o no?',
-    texto: 'Punt per punt, amb el criteri WCAG. Mira el vídeo i, a sota, llegeix què falla, com s’arregla i com comprovar-ho al teu web.',
+    title: 'Què fa que la teva web sigui accessible o no · Accesibilidad Primero',
+    description: 'Punt per punt i en vídeo, què fa que una web sigui accessible o no, amb el criteri WCAG 2.2, com s’arregla i com comprovar-ho. I què demanen les lleis europees.',
+    titulo: 'Què fa que la teva web sigui accessible o no?',
+    texto: 'Punt per punt, amb el criteri WCAG. Mira el vídeo i, a sota, llegeix què falla, com s’arregla i com comprovar-ho a la teva web.',
     carrusel: 'Vídeos, un per punt',
     anterior: 'Vídeo anterior',
     siguiente: 'Vídeo següent',
@@ -104,7 +104,7 @@ const T = {
     arreglo: 'Com s’arregla',
     comprobar: 'Com comprovar-ho',
     alt: (t: string, f: string) => `Vídeo sense so sobre ${t}: primer, un exemple que no és accessible; després, com queda arreglat. Acaba amb la frase “${f}” A sota s’explica per escrit.`,
-    conversion: 'El teu web compleix aquest punt? El revisem, amb aquest i amb tots els altres, en una auditoria.',
+    conversion: 'La teva web compleix aquest punt? El revisem, amb aquest i amb tots els altres, en una auditoria.',
     verAuditoria: 'Veure l’auditoria d’accessibilitat',
     hInfo: 'Per saber-ne més',
     hPreguntas: 'Preguntes freqüents',
@@ -179,7 +179,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
   ca: [
     {
       id: 'wcag', titulo: 'Què és la WCAG?',
-      resumen: 'Les Pautes d’Accessibilitat per al Contingut Web: l’estàndard internacional que diu què necessita un web perquè el pugui fer servir qualsevol persona.',
+      resumen: 'Les Pautes d’Accessibilitat per al Contingut Web: l’estàndard internacional que diu què necessita una web perquè la pugui fer servir qualsevol persona.',
       parrafos: [
         'Les publica el W3C, el consorci que defineix com funciona el web. S’ordenen en quatre principis: que el contingut es pugui percebre, que es pugui fer servir, que s’entengui i que sigui robust, és a dir, que funcioni amb qualsevol navegador i amb les tecnologies de suport.',
         'Cada principi baixa a criteris concrets que es poden comprovar, i cada criteri té un nivell. A és el mínim, AA és el que demanen les lleis i AAA és el més exigent.',
@@ -189,7 +189,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
     },
     {
       id: 'europa', titulo: 'Polítiques europees d’accessibilitat',
-      resumen: 'Dues directives obliguen que els webs siguin accessibles a Europa: una per al sector públic i una altra per a les empreses que venen productes i serveis.',
+      resumen: 'Dues directives obliguen que les webs siguin accessibles a Europa: una per al sector públic i una altra per a les empreses que venen productes i serveis.',
       parrafos: [
         'La Directiva (UE) 2016/2102, d’accessibilitat dels llocs web i aplicacions del sector públic. A Espanya la transposa el Reial decret 1112/2018: les administracions l’han de complir i publicar la seva declaració d’accessibilitat.',
         'L’Acta Europea d’Accessibilitat, la Directiva (UE) 2019/882. S’aplica des del 28 de juny de 2025 a productes i serveis com el comerç electrònic, la banca, el transport o els llibres electrònics. A Espanya la transposa la Llei 11/2023. Les microempreses que presten serveis en queden fora.',
@@ -201,7 +201,7 @@ const COLUMNAS: Record<Lang, Columna[]> = {
       id: 'glosario', titulo: 'Glossari',
       resumen: 'Les paraules que surten als vídeos, explicades sense tecnicismes.',
       glosario: [
-        ['Accessibilitat digital', 'Que qualsevol persona pugui fer servir un web, amb discapacitat o sense i amb el dispositiu que faci servir.'],
+        ['Accessibilitat digital', 'Que qualsevol persona pugui fer servir una web, amb discapacitat o sense i amb el dispositiu que faci servir.'],
         ['Tecnologies de suport', 'El que algunes persones fan servir per manejar l’ordinador o el mòbil: lectors de pantalla, ampliadors, teclats adaptats o control per veu.'],
         ['Lector de pantalla', 'Programa que llegeix en veu alta, o en braille, el que hi ha a la pantalla i permet navegar sense veure-la.'],
         ['Focus', 'La marca que assenyala en quin element ets quan navegues amb el teclat.'],
@@ -209,8 +209,8 @@ const COLUMNAS: Record<Lang, Columna[]> = {
         ['Contrast', 'La diferència de llum entre el text i el fons. La WCAG demana com a mínim 4,5 a 1 per al text normal.'],
         ['Criteri de conformitat', 'Cada requisit de la WCAG que es pot comprovar, amb el seu número, com el 2.4.9, i el seu nivell.'],
         ['Nivells A, AA i AAA', 'Com d’exigent és un criteri. Les lleis europees demanen l’AA, que inclou l’A.'],
-        ['Declaració d’accessibilitat', 'La pàgina que explica què compleix un web, què no i com avisar d’una barrera.'],
-        ['Auditoria d’accessibilitat', 'La revisió d’un web contra la WCAG, amb eines automàtiques i a mà, amb teclat i amb lector de pantalla.'],
+        ['Declaració d’accessibilitat', 'La pàgina que explica què compleix una web, què no i com avisar d’una barrera.'],
+        ['Auditoria d’accessibilitat', 'La revisió d’una web contra la WCAG, amb eines automàtiques i a mà, amb teclat i amb lector de pantalla.'],
         ['EN 301 549', 'La norma tècnica europea d’accessibilitat de productes i serveis digitals. Per al web, remet a la WCAG.'],
       ],
     },

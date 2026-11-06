@@ -1,6 +1,7 @@
 /* ---------------------------------------------------------------------------
    Los 23 puntos de la guía “¿Qué hace que tu web sea o no accesible?”
-   (06/11/2026). Uno por vídeo, en el orden del montaje.
+   (06/11/2026). Uno por vídeo, en el orden del montaje. Abre un criterio AA
+   (1.4.3); Enlaces, que es AAA, va el quinto (Johnny, 06/11/2026).
 
    · `archivo`: el nombre del vídeo y de su póster, igual en los tres idiomas:
      public/video/guia/{web,movil}/{es,ca,en}/<archivo>.mp4 y
@@ -26,41 +27,8 @@ export interface PuntoGuia { id: string; archivo: string; texto: Record<Lang, Te
 
 export const PUNTOS_GUIA: PuntoGuia[] = [
   {
-    id: 'punto-2-4-9',
-    archivo: '01-2-4-9-enlaces',
-    texto: {
-      es: {
-        titulo: '2.4.9 Enlaces',
-        frase: 'Los enlaces dicen adónde llevan.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
-        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
-        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
-        comprobar: 'Abre la lista de enlaces del lector de pantalla (en VoiceOver, el rotor; en NVDA, Insert + F7) y lee solo los textos. Cada uno tiene que decir adónde lleva sin mirar lo que tiene alrededor.',
-        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
-      },
-      ca: {
-        titulo: '2.4.9 Enllaços',
-        frase: 'Els enllaços diuen on porten.',
-        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
-        falla: 'Dos projectes, cadascun amb un enllaç que diu “Coneix-ne més”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Coneix-ne més, enllaç” dues vegades, sense saber on porta cadascun.',
-        arreglo: 'Que el mateix enllaç digui on porta: “Coneix Cultura als barris”, “Coneix Laboratori cultural”. S’entén sol, també fora del context.',
-        comprobar: 'Obre la llista d’enllaços del lector de pantalla (a VoiceOver, el rotor; a NVDA, Insert + F7) i llegeix només els textos. Cadascun ha de dir on porta sense mirar el que té al voltant.',
-        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
-      },
-      en: {
-        titulo: '2.4.9 Links',
-        frase: 'Links say where they go.',
-        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
-        falla: 'Two projects, each with a link that says “Find out more”. Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
-        arreglo: 'Make the link itself say where it goes: “Find out about Local culture”, “Find out about Culture lab”. It makes sense on its own, even out of context.',
-        comprobar: 'Open the screen reader’s list of links (the rotor in VoiceOver, Insert + F7 in NVDA) and read only the link text. Each one has to say where it goes without looking at what surrounds it.',
-        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
-      },
-    },
-  },
-  {
     id: 'punto-1-4-3',
-    archivo: '02-1-4-3-contraste-texto',
+    archivo: '01-1-4-3-contraste-texto',
     texto: {
       es: {
         titulo: '1.4.3 Contraste del texto',
@@ -90,7 +58,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
   },
   {
     id: 'punto-1-4-11',
-    archivo: '03-1-4-11-contraste-controles',
+    archivo: '02-1-4-11-contraste-controles',
     texto: {
       es: {
         titulo: '1.4.11 Contraste de los controles',
@@ -120,7 +88,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
   },
   {
     id: 'punto-1-4-1',
-    archivo: '04-1-4-1-color',
+    archivo: '03-1-4-1-color',
     texto: {
       es: {
         titulo: '1.4.1 Uso del color',
@@ -150,7 +118,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
   },
   {
     id: 'punto-1-1-1',
-    archivo: '05-1-1-1-imagenes',
+    archivo: '04-1-1-1-imagenes',
     texto: {
       es: {
         titulo: '1.1.1 Imágenes',
@@ -175,6 +143,39 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
         falla: 'The partner logos have no alt text, or just the file name. The screen reader says “banner, image”: nobody can tell who the partners are.',
         arreglo: 'Each logo gives the organisation’s name in its alt text. Images that are only decorative have empty alt text, so the screen reader skips them.',
         comprobar: 'Go through the images with a screen reader or with an extension that shows alt text. Ask whether the alt text says the same as the image, and whether decorative images stay silent.',
+      },
+    },
+  },
+  {
+    id: 'punto-2-4-9',
+    archivo: '05-2-4-9-enlaces',
+    texto: {
+      es: {
+        titulo: '2.4.9 Enlaces',
+        frase: 'Los enlaces dicen adónde llevan.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propósito del enlace (solo enlaces) · Nivel AAA',
+        falla: 'Dos proyectos, cada uno con un enlace que dice “Conoce más”. Quien usa un lector de pantalla puede pedir la lista de enlaces de la página, y ahí oye “Conoce más, enlace” dos veces, sin saber adónde lleva cada uno.',
+        arreglo: 'Que el propio enlace diga su destino: “Conocer Cultura en los barrios”, “Conocer Laboratorio cultural”. Se entiende solo, también fuera de su contexto.',
+        comprobar: 'Abre la lista de enlaces del lector de pantalla (en VoiceOver, el rotor; en NVDA, Insert + F7) y lee solo los textos. Cada uno tiene que decir adónde lleva sin mirar lo que tiene alrededor.',
+        nota: 'En el nivel AA (2.4.4) basta con que el contexto lo aclare, por ejemplo con un texto que solo oye el lector de pantalla. En el AAA, el texto del enlace tiene que decirlo por sí mismo.',
+      },
+      ca: {
+        titulo: '2.4.9 Enllaços',
+        frase: 'Els enllaços diuen on porten.',
+        referencia: 'WCAG 2.2 · 2.4.9 Propòsit de l’enllaç (només l’enllaç) · Nivell AAA',
+        falla: 'Dos projectes, cadascun amb un enllaç que diu “Coneix-ne més”. Qui fa servir un lector de pantalla pot demanar la llista d’enllaços de la pàgina, i hi sent “Coneix-ne més, enllaç” dues vegades, sense saber on porta cadascun.',
+        arreglo: 'Que el mateix enllaç digui on porta: “Coneix Cultura als barris”, “Coneix Laboratori cultural”. S’entén sol, també fora del context.',
+        comprobar: 'Obre la llista d’enllaços del lector de pantalla (a VoiceOver, el rotor; a NVDA, Insert + F7) i llegeix només els textos. Cadascun ha de dir on porta sense mirar el que té al voltant.',
+        nota: 'En el nivell AA (2.4.4) n’hi ha prou que el context ho aclareixi, per exemple amb un text que només sent el lector de pantalla. En l’AAA, el text de l’enllaç ho ha de dir per si mateix.',
+      },
+      en: {
+        titulo: '2.4.9 Links',
+        frase: 'Links say where they go.',
+        referencia: 'WCAG 2.2 · 2.4.9 Link Purpose (Link Only) · Level AAA',
+        falla: 'Two projects, each with a link that says “Find out more”. Someone using a screen reader can ask for the list of links on the page, and there they hear “Find out more, link” twice, with no way of knowing where each one goes.',
+        arreglo: 'Make the link itself say where it goes: “Find out about Local culture”, “Find out about Culture lab”. It makes sense on its own, even out of context.',
+        comprobar: 'Open the screen reader’s list of links (the rotor in VoiceOver, Insert + F7 in NVDA) and read only the link text. Each one has to say where it goes without looking at what surrounds it.',
+        nota: 'At level AA (2.4.4) it is enough for the context to make it clear, for example with text that only the screen reader announces. At AAA, the link text has to say it by itself.',
       },
     },
   },
@@ -226,7 +227,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
         referencia: 'WCAG 2.2 · 1.4.10 Reajustament del contingut · Nivell AA',
         falla: 'En una pantalla de 320 px d’amplada, que és el que veu qui amplia al 400 %, el contingut no hi cap i surt per la dreta: cal desplaçar-se als costats per llegir cada línia.',
         arreglo: 'El contingut es reorganitza en una columna i el menú es recull en un botó. Només poden necessitar dues direccions de desplaçament coses com mapes, taules de dades o editors.',
-        comprobar: 'Posa la finestra del navegador a 1280 px i amplia al 400 %, o mira el web a 320 px d’amplada. No hi pot aparèixer barra de desplaçament horitzontal ni perdre’s res.',
+        comprobar: 'Posa la finestra del navegador a 1280 px i amplia al 400 %, o mira la web a 320 px d’amplada. No hi pot aparèixer barra de desplaçament horitzontal ni perdre’s res.',
       },
       en: {
         titulo: '1.4.10 Zoom and mobile',
@@ -639,7 +640,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
         titulo: '3.2.3 Menús que no cambian',
         frase: 'Los menús no cambian de sitio.',
         referencia: 'WCAG 2.2 · 3.2.3 Navegación coherente · Nivel AA',
-        falla: 'En la página Inicio el menú dice “Somos, Hacemos, Experiencias, Aliados, Hablemos”; en la página Hacemos, el mismo menú cambia de orden. Quien se orienta por la posición, o con el lector de pantalla, se pierde.',
+        falla: 'En la página Inicio el menú dice “Somos, Hacemos, Experiencias, Hablemos”; en la página Hacemos, el mismo menú cambia de orden. Quien se orienta por la posición, o con el lector de pantalla, se pierde.',
         arreglo: 'El menú va en el mismo orden y en el mismo sitio en todas las páginas. Lo que se repite en varias páginas se repite igual.',
         comprobar: 'Recorre varias páginas y compara el menú, el buscador y el pie: mismo orden y mismo sitio. Con el lector de pantalla, cuenta en qué posición está cada enlace del menú en cada página.',
       },
@@ -647,7 +648,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
         titulo: '3.2.3 Menús que no canvien',
         frase: 'Els menús no canvien de lloc.',
         referencia: 'WCAG 2.2 · 3.2.3 Navegació coherent · Nivell AA',
-        falla: 'A la pàgina Inici el menú diu “Som, Fem, Experiències, Aliats, Parlem”; a la pàgina Fem, el mateix menú canvia d’ordre. Qui s’orienta per la posició, o amb el lector de pantalla, es perd.',
+        falla: 'A la pàgina Inici el menú diu “Som, Fem, Experiències, Parlem”; a la pàgina Fem, el mateix menú canvia d’ordre. Qui s’orienta per la posició, o amb el lector de pantalla, es perd.',
         arreglo: 'El menú va en el mateix ordre i al mateix lloc a totes les pàgines. El que es repeteix en diverses pàgines es repeteix igual.',
         comprobar: 'Recorre diverses pàgines i compara el menú, el cercador i el peu: mateix ordre i mateix lloc. Amb el lector de pantalla, compta en quina posició és cada enllaç del menú a cada pàgina.',
       },
@@ -655,7 +656,7 @@ export const PUNTOS_GUIA: PuntoGuia[] = [
         titulo: '3.2.3 Menus that stay put',
         frase: 'Menus don’t move around.',
         referencia: 'WCAG 2.2 · 3.2.3 Consistent Navigation · Level AA',
-        falla: 'On the Home page the menu reads “About, What we do, Experiences, Partners, Contact”; on the What we do page, the same menu changes order. Anyone who finds their way by position, or with a screen reader, gets lost.',
+        falla: 'On the Home page the menu reads “About, What we do, Experiences, Contact”; on the What we do page, the same menu changes order. Anyone who finds their way by position, or with a screen reader, gets lost.',
         arreglo: 'The menu stays in the same order and the same place on every page. Anything repeated across pages is repeated the same way.',
         comprobar: 'Go through several pages and compare the menu, the search box and the footer: same order, same place. With a screen reader, count where each menu link sits on each page.',
       },
