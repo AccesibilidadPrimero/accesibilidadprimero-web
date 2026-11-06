@@ -466,8 +466,9 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 </script>
 
 <style>
-  /* El hero: el vídeo centrado sobre el amarillo de la carita. No es la apertura a pantalla entera de HeroPagina:
-     aquí lo que abre la página es el vídeo, no una ilustración (06/11/2026). */
+  /* El hero: el vídeo centrado sobre el amarillo de la carita, a pantalla
+     entera en cualquier dispositivo (Johnny, 06/11/2026), como los demás
+     heros. Lo que abre la página es el vídeo, no una ilustración. */
   /* La mancha en el amarillo de la carita del vídeo (#E6E680, Johnny,
      06/11/2026), y de arriba abajo: el hero se sube por debajo de la
      cabecera, que no tiene fondo, como en la Home. Tinta sobre él: 15,6:1. */
@@ -475,12 +476,33 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
     margin-block-start: calc(var(--header-height) * -1);
     padding: calc(var(--header-height) + var(--space-48)) var(--gutter-page) var(--space-48);
     background: #E6E680;
+    /* El alto de la pantalla y el vídeo centrado en lo que deja el menú. Sin
+       JS se ven todos los vídeos seguidos: es un mínimo, no un alto fijo. */
+    box-sizing: border-box;
+    min-block-size: 100vh;
+    min-block-size: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* El vídeo cabe entero en la pantalla, con su fila de controles (44 y 16
+     de aire, más el margen de abajo): el ancho sale del alto que queda y de
+     la proporción del vídeo. Con un tope por abajo de 360, para que en un
+     móvil tumbado no se quede en un sello: ahí el hero crece. */
+  .carrusel {
+    --alto-libre: calc(100svh - var(--header-height) - var(--space-48) * 2 - var(--touch-min) - var(--space-16));
+    inline-size: 100%;
+    max-inline-size: max(360px, calc(var(--alto-libre) * 4 / 5));
+    margin-inline: auto;
+  }
+  @media (min-width: 768px) {
+    .carrusel { max-inline-size: max(360px, calc(var(--alto-libre) * 16 / 9)); }
   }
   /* Centrado y a diez de las doce columnas desde 1024 (Johnny, 06/11/2026:
      ni a pantalla entera ni en la segunda columna). Columna de 94 y huecos
      de 24 en 1392: diez columnas, 1156. */
   @media (min-width: 1024px) {
-    .carrusel { max-inline-size: calc(1156 / 1392 * 100%); margin-inline: auto; }
+    .carrusel { max-inline-size: min(calc(1156 / 1392 * 100%), max(360px, calc(var(--alto-libre) * 16 / 9))); }
   }
   @media (forced-colors: active) { .guia-hero { background: Canvas; } }
 

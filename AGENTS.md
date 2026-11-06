@@ -307,7 +307,7 @@ disciplina personal a las once de la noche.
 - **La guía en vídeo (05/11/2026; landing propia desde el 06/11/2026).**
   “¿Qué hace que tu web sea o no accesible?” vive en `src/paginas/guia.astro`
   (ruta `guia`). Es la página de referencia del lanzamiento: información de
-  valor, no una pieza de venta. Hero en #E6E680 (el amarillo de la carita
+  valor, no una pieza de venta. Hero a pantalla entera en #E6E680 (el amarillo de la carita
   del vídeo) de arriba abajo, por debajo de la cabecera sin fondo; el titular
   solo para el lector de pantalla (el vídeo ya lo dice) y el carrusel
   centrado a diez de doce columnas, con contador (1 / 23); cada vídeo es un
