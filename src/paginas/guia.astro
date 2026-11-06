@@ -8,12 +8,16 @@
    Estilo del vídeo: claude/video-esquematico-estilo-2026-11-05.md.
 
    ESTRUCTURA
-   · Hero: el titular y el carrusel de vídeos a las tres columnas, con su
-     contador (1 / 23). Un vídeo por punto; cada uno con su botón de
+   · Hero: el carrusel de vídeos, con su contador (1 / 23). El titular lo
+     lleva el vídeo y el <h1> queda para el lector de pantalla. Desde 1024
+     el vídeo va en la segunda columna. Al pasar de vídeo, el nuevo arranca
+     solo; el primero espera en pausa (06/11/2026). Un vídeo por punto; cada uno con su botón de
      reproducir y pausar (VideoPausable: empieza en pausa, nada se descarga
      hasta que se pulsa, y se para solo al salir de la vista o del carrusel).
-   · Debajo, la pauta del vídeo que se está viendo: qué falla, cómo se
-     arregla y cómo comprobarlo. Cambia con el vídeo.
+   · Debajo, la pauta del vídeo que se está viendo, como ficha: el título en
+     la primera columna y qué falla, cómo se arregla y cómo comprobarlo en la
+     segunda, con filetes. Cambia con el vídeo.
+   · Preguntas frecuentes a tres columnas, solo la pregunta a la vista.
    · Tres columnas fijas con «Leer más»: qué es la WCAG, las políticas
      europeas y el glosario.
 
@@ -73,7 +77,6 @@ const T = {
     title: 'Qué hace que tu web sea o no accesible · Accesibilidad Primero',
     description: 'Punto por punto y en vídeo, qué hace que una web sea o no accesible, con su criterio WCAG 2.2, cómo se arregla y cómo comprobarlo. Y qué piden las leyes europeas.',
     titulo: '¿Qué hace que tu web sea o no accesible?',
-    texto: 'Punto por punto, con su criterio WCAG. Mira el vídeo y, debajo, lee qué falla, cómo se arregla y cómo comprobarlo en tu propia web.',
     carrusel: 'Vídeos, uno por punto',
     anterior: 'Vídeo anterior',
     siguiente: 'Vídeo siguiente',
@@ -93,7 +96,6 @@ const T = {
     title: 'Què fa que la teva web sigui accessible o no · Accesibilidad Primero',
     description: 'Punt per punt i en vídeo, què fa que una web sigui accessible o no, amb el criteri WCAG 2.2, com s’arregla i com comprovar-ho. I què demanen les lleis europees.',
     titulo: 'Què fa que la teva web sigui accessible o no?',
-    texto: 'Punt per punt, amb el criteri WCAG. Mira el vídeo i, a sota, llegeix què falla, com s’arregla i com comprovar-ho a la teva web.',
     carrusel: 'Vídeos, un per punt',
     anterior: 'Vídeo anterior',
     siguiente: 'Vídeo següent',
@@ -113,7 +115,6 @@ const T = {
     title: 'What makes your website accessible, or not · Accesibilidad Primero',
     description: 'Point by point and on video, what makes a website accessible or not, with its WCAG 2.2 criterion, how to fix it and how to check it. And what European law requires.',
     titulo: 'What makes your website accessible, or not?',
-    texto: 'Point by point, with its WCAG criterion. Watch the video, then read below what goes wrong, how to fix it and how to check it on your own website.',
     carrusel: 'Videos, one per point',
     anterior: 'Previous video',
     siguiente: 'Next video',
@@ -277,17 +278,17 @@ const datosPreguntas = JSON.stringify({
   })),
 });
 const imagenSocial = (await getImage({ src: PUNTOS[0].web.poster, width: 1200, height: 675, fit: 'cover', format: 'jpg', quality: 'high' })).src;
-const anchoVideo = { escritorio: 'calc(min(100vw, 1440px) - 48px)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
+/* Desde 1024, el vídeo va en la segunda columna (la de las fichas). */
+const anchoVideo = { escritorio: 'calc((min(100vw, 1440px) - 48px) * 0.6724)', tableta: 'calc(100vw - 48px)', movil: 'calc(100vw - 48px)' };
 /* El `alt` de la imagen fija: qué es el vídeo. Lo que enseña, paso a paso,
    ya lo cuenta la pauta de debajo, y no se repite. */
 const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 ---
 <Base lang={lang} current="guia" title={T.title} description={T.description} imagen={imagenSocial}>
   <section class="guia-hero" aria-labelledby="guia-titulo">
-    <div class="guia-hero__texto">
-      <h1 id="guia-titulo" class="guia-hero__titulo">{T.titulo}</h1>
-      <p>{T.texto}</p>
-    </div>
+    {/* El titular lo lleva el propio vídeo, arriba a la izquierda (Johnny,
+        06/11/2026): aquí solo para el lector de pantalla y los buscadores. */}
+    <h1 id="guia-titulo" class="sr-only">{T.titulo}</h1>
 
     <section class="carrusel" aria-label={T.carrusel} data-carrusel>
       <ol class="carrusel__lista">
@@ -320,37 +321,39 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
     </section>
   </section>
 
-  <Bloque id="pauta" titulo={T.hPauta}>
-    {PUNTOS.map((p, i) => {
-      const x = p;
-      return (
-        <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${p.id}-titulo`}>
-          <h2 class="pauta__titulo" id={`${p.id}-titulo`}>{x.titulo}</h2>
+  {/* La pauta como ficha (Johnny, 06/11/2026): su título, que es el del
+      vídeo, en la columna de los bloques, a la altura de la frase; el resto
+      en la segunda columna, con un filete entre bloque y bloque. */}
+  <section class="pautas" aria-label={T.hPauta}>
+    {PUNTOS.map((p, i) => (
+      <article class="pauta" data-carrusel-pauta={i} aria-labelledby={`${p.id}-titulo`}>
+        <h2 class="pauta__titulo" id={`${p.id}-titulo`}>{p.titulo}</h2>
+        <div class="pauta__ficha">
           <div class="pauta__grupo">
-            <p>{x.frase}</p>
-            <p>{x.referencia}</p>
+            <p>{p.frase}</p>
+            <p>{p.referencia}</p>
           </div>
-          <div class="pauta__grupo">
+          <div class="pauta__grupo pauta__grupo--filete">
             <h3 class="pauta__sub">{T.falla}</h3>
-            <p>{x.falla}</p>
+            <p>{p.falla}</p>
           </div>
-          <div class="pauta__grupo">
+          <div class="pauta__grupo pauta__grupo--filete">
             <h3 class="pauta__sub">{T.arreglo}</h3>
-            <p>{x.arreglo}</p>
-            {x.nota && <p>{x.nota}</p>}
+            <p>{p.arreglo}</p>
+            {p.nota && <p>{p.nota}</p>}
           </div>
-          <div class="pauta__grupo">
+          <div class="pauta__grupo pauta__grupo--filete">
             <h3 class="pauta__sub">{T.comprobar}</h3>
-            <p>{x.comprobar}</p>
+            <p>{p.comprobar}</p>
           </div>
-          <div class="pauta__grupo">
+          <div class="pauta__grupo pauta__grupo--filete">
             <p>{T.conversion}</p>
             <CtaLink href={`${path('servicios', lang)}#auditoria`}>{T.verAuditoria}</CtaLink>
           </div>
-        </article>
-      );
-    })}
-  </Bloque>
+        </div>
+      </article>
+    ))}
+  </section>
 
   <section class="info" aria-labelledby="info-titulo">
     <h2 id="info-titulo" class="sr-only">{T.hInfo}</h2>
@@ -377,15 +380,26 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   <Bloque id="preguntas" titulo={T.hPreguntas}>
     <div class="preguntas">
       <ul class="preguntas__lista">
+        {/* Solo las preguntas a la vista, a tres columnas (Johnny,
+            06/11/2026). Cada una es el acordeón de la WAI (plegable.ts): el
+            encabezado lleva el botón y la respuesta entera va en su panel.
+            Sin JS, todo abierto. */}
         {preguntas.map((q) => (
           <li class="pregunta" id={`pregunta-${q.id}`}>
-            <h3 class="pregunta__titulo">{q.pregunta}</h3>
-            {/* El correo no cabe a 320 sin cortarse: <wbr> detrás de la arroba (§4). */}
-            <p>{q.corta.split('@').map((t, i) => <>{i > 0 && <>@<wbr /></>}{t}</>)}</p>
-            <Disclosure id={`pregunta-${q.id}-detalle`} contexto={q.pregunta} lang={lang}>
+            <h3 class="pregunta__titulo">
+              <button type="button" class="pregunta__boton" aria-expanded="false" aria-controls={`pregunta-${q.id}-respuesta`} data-plegable-boton data-ancla={`pregunta-${q.id}`}>
+                <span>{q.pregunta}</span>
+                <svg class="pregunta__signo" aria-hidden="true" focusable="false" viewBox="0 0 12 12" width="12" height="12">
+                  <path d="M6 0v12M0 6h12" fill="none" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </button>
+            </h3>
+            <div class="pregunta__respuesta" id={`pregunta-${q.id}-respuesta`} hidden data-mov-propio>
+              {/* El correo no cabe a 320 sin cortarse: <wbr> detrás de la arroba (§4). */}
+              <p>{q.corta.split('@').map((t, i) => <>{i > 0 && <>@<wbr /></>}{t}</>)}</p>
               {q.detalle.map((t) => <p>{t}</p>)}
               {q.enlace && <CtaLink href={hrefDe(q.enlace)}>{q.enlace.texto}</CtaLink>}
-            </Disclosure>
+            </div>
           </li>
         ))}
       </ul>
@@ -397,6 +411,7 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 </Base>
 
 <script>
+  import '../scripts/plegable';
   /* El carrusel: un vídeo y su pauta a la vista, los demás con `hidden`.
      Sin JS no se ejecuta y se ve todo, uno debajo de otro. */
   const raiz = document.querySelector<HTMLElement>('[data-carrusel]');
@@ -421,6 +436,13 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
         const titulo = pautas[i]?.querySelector('h2')?.textContent ?? '';
         aviso.textContent = `${i + 1} / ${videos.length}: ${titulo}`;
         history.replaceState(null, '', `#${videos[i].id}`);
+        /* Al pasar de vídeo, el nuevo arranca solo (Johnny, 06/11/2026): solo
+           el primero espera en pausa. Lo pide la persona con el botón, y
+           cada vídeo tiene su pausa (2.2.2). Con «reducir movimiento», no. */
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const control = videos[i].querySelector<HTMLButtonElement>('[data-vp-control]');
+          if (control && videos[i].querySelector('[data-parado]')) control.click();
+        }
       }
     };
     anterior.addEventListener('click', () => mostrar(Math.max(0, i - 1), true));
@@ -435,20 +457,13 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
      la banda de la guía. No es la apertura a pantalla entera de HeroPagina:
      aquí lo que abre la página es el vídeo, no una ilustración (06/11/2026). */
   .guia-hero {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-48);
     padding: calc(var(--header-height) + var(--space-48)) var(--gutter-page) var(--space-48);
     background: var(--green-ap);
   }
-  .guia-hero__texto { display: flex; flex-direction: column; gap: var(--space-24); }
-  .guia-hero__texto p { margin: 0; max-width: 930px; }
-  .guia-hero__titulo {
-    margin: 0;
-    font-size: var(--display-size);
-    line-height: var(--display-leading);
-    letter-spacing: var(--display-track);
-    font-weight: 400;
+  /* Más pequeño (Johnny, 06/11/2026): desde 1024, en la segunda columna,
+     la misma de las fichas de abajo (456 / 1392, como Bloque.astro). */
+  @media (min-width: 1024px) {
+    .carrusel { margin-inline-start: calc(456 / 1392 * 100%); }
   }
 
   .carrusel { position: relative; }
@@ -480,12 +495,22 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   .carrusel__boton:first-child { margin-inline-start: -18px; }
   .carrusel__boton:disabled { opacity: 0.35; cursor: default; }
 
-  .pauta { display: flex; flex-direction: column; gap: var(--space-48); }
+  .pautas { padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
+  .pauta { display: flex; flex-direction: column; gap: var(--ritmo-intro); }
   .pauta[hidden] { display: none; }
-  .pauta + .pauta { margin-block-start: calc(var(--space-24) * 3); }
+  .pauta + .pauta { margin-block-start: var(--ritmo-seccion); }
+  .pauta__ficha { display: flex; flex-direction: column; min-width: 0; }
   .pauta__grupo { display: flex; flex-direction: column; gap: var(--space-16); max-width: var(--measure); }
+  /* Los filetes de la ficha: la línea gris de las filas de la web (--rule).
+     El Silk (#f7f7f4) no se ve sobre el blanco. */
+  .pauta__grupo--filete { margin-block-start: var(--space-24); padding-block-start: var(--space-24); border-block-start: 1px solid var(--rule); max-width: none; }
+  .pauta__grupo--filete > * { max-width: var(--measure); }
   .pauta__grupo p { margin: 0; }
   .pauta__titulo, .pauta__sub, .info__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  @media (min-width: 1024px) {
+    .pauta { display: grid; grid-template-columns: calc(456 / 1392 * 100%) minmax(0, 1fr); gap: 0; }
+    .pauta__titulo { max-width: 204px; }
+  }
 
   .info { padding: 0 var(--gutter-page); margin-block-start: var(--ritmo-seccion); }
   .info__columnas { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(var(--space-24) * 3) var(--space-24); }
@@ -499,10 +524,43 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
 
   .preguntas { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
   .preguntas > p { margin: 0; max-width: var(--measure); }
-  .preguntas__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); }
-  .pregunta { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; max-width: var(--measure); }
-  .pregunta p { margin: 0; }
+  /* Los botones salen 12 por arriba y por abajo, así que con 24 entre
+     preguntas sus zonas de 44 se tocan sin montarse. */
+  .preguntas__lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-24); align-items: start; }
+  @media (min-width: 1024px) { .preguntas__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-48) var(--space-24); } }
+  .pregunta { display: flex; flex-direction: column; gap: var(--space-16); align-items: flex-start; min-width: 0; }
   .pregunta__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  .pregunta :global(.disclosure__panel) { display: flex; flex-direction: column; gap: var(--space-16); }
-  .pregunta :global(.disclosure__panel[hidden]) { display: none; }
+  /* La pregunta entera es el botón; el + al final del texto, como en «Leer
+     más». 44 de alto como mínimo. */
+  .pregunta__boton {
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--touch-min);
+    padding: var(--space-12) var(--space-8);
+    margin-inline-start: calc(var(--space-8) * -1);
+    /* El relleno sale por arriba: el texto queda a plomo con «Preguntas
+       frecuentes», en la otra columna. */
+    margin-block: calc(var(--space-12) * -1);
+    background: none; border: 0; cursor: pointer;
+    color: var(--text); text-align: start;
+    font: inherit;
+  }
+  .pregunta__signo { display: inline-block; margin-inline-start: var(--space-8); vertical-align: 0.05em; transition: transform var(--dur-base) var(--ease-out); }
+  .pregunta__boton:is(:hover, :focus-visible) .pregunta__signo { transform: scale(1.2); }
+  .pregunta__boton[aria-expanded='true'] .pregunta__signo { transform: rotate(45deg); }
+  .pregunta__boton[aria-expanded='true']:is(:hover, :focus-visible) .pregunta__signo { transform: rotate(45deg) scale(1.2); }
+  .pregunta__respuesta { display: flex; flex-direction: column; gap: var(--space-16); }
+  .pregunta__respuesta[hidden] { display: none; }
+  .pregunta__respuesta p { margin: 0; }
+  :global(html:not(.js)) .pregunta__respuesta[hidden] { display: flex; }
+  :global(html:not(.js)) .pregunta__signo { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .pregunta__respuesta:not([hidden]) { animation: pregunta-despliega var(--dur-despliegue) var(--ease-asentar); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pregunta__signo { transition: none; }
+    :global(html.js) .pregunta__respuesta:not([hidden]) { animation: pregunta-funde var(--dur-fundido-reducido) linear; }
+  }
+  @keyframes pregunta-despliega { from { opacity: 0; transform: translateY(var(--recorrido-despliegue)); } }
+  @keyframes pregunta-funde { from { opacity: 0; } }
 </style>
