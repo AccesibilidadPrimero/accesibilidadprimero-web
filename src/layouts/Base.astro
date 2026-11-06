@@ -27,6 +27,9 @@ interface Props {
   conCta?: boolean;
   /** Titular propio del cierre de Contacto (los casos). */
   ctaTitulo?: string;
+  /** Imagen para compartir (Open Graph), ruta servida. Hoy solo la guía
+      (06/11/2026): es la página pensada para circular en redes. */
+  imagen?: string;
 }
 const {
   title,
@@ -36,6 +39,7 @@ const {
   slug,
   conCta = true,
   ctaTitulo,
+  imagen,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -54,6 +58,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         canonical apuntaría a páginas del .com que hoy son el WordPress. */}
     {INDEXABLE ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="light" />
+    {imagen && (
+      <>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:image" content={new URL(imagen, Astro.site)} />
+        <meta property="og:locale" content={{ es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[lang]} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </>
+    )}
     <!-- Favicon: el símbolo de AP SIN la marca CC del corazón, que a 16 px
          sería un punto (Johnny, 10/10). Sale de arte/estudio/icono.svg con el
          lienzo cuadrado. Tres archivos en public/ porque necesitan URL fija:

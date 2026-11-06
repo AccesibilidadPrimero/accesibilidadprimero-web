@@ -304,13 +304,24 @@ disciplina personal a las once de la noche.
   licencia se pierde. Decidido el 05/11/2026 (Johnny): en la versión catalana
   se queda igual y se lee como una frase normal.
 
-- **La guía en vídeo (05/11/2026).** “¿Qué hace que tu web sea accesible?”
-  vive en `src/paginas/guia.astro` (ruta `guia`): el vídeo esquemático con
-  controles nativos y sin reproducción automática, y debajo cada punto por
-  escrito, que es su alternativa (el vídeo no tiene sonido). Un punto nuevo
-  se añade en `PUNTOS`, con su segundo de inicio y su texto en los tres
-  idiomas. `GuiaCierre.astro` la enlaza antes del cierre de contacto en todas
-  las páginas menos en la suya, con la carita feliz del vídeo.
+- **La guía en vídeo (05/11/2026; landing propia desde el 06/11/2026).**
+  “¿Qué hace que tu web sea o no accesible?” vive en `src/paginas/guia.astro`
+  (ruta `guia`). Es la página de referencia del lanzamiento: información de
+  valor, no una pieza de venta. Hero en verde AP con el titular y el
+  carrusel de vídeos a las tres columnas, con contador (1 / 18); cada vídeo
+  es un `VideoPausable` (empieza en pausa). Debajo, la pauta del vídeo que
+  se ve (qué falla, cómo se arregla, cómo comprobarlo), que cambia con él, y
+  tres columnas fijas con «Leer más»: qué es la WCAG, políticas europeas y
+  glosario. Excepción declarada a los heros de pantalla entera: aquí abre el
+  vídeo. El carrusel no avanza solo; cada punto tiene su dirección
+  (`#punto-2-4-9`) para los Reels, y un aviso `aria-live` dice qué vídeo
+  entra. Sin JS, todos los vídeos y pautas a la vista. Un punto nuevo es una
+  entrada en `PUNTOS` con su texto en los tres idiomas; probar con uno, con
+  tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
+  europeas» se revisan cuando el Diario Oficial la cite. `GuiaCierre.astro`
+  enlaza la guía antes del cierre de contacto en todas las páginas menos en
+  la suya, con la carita feliz del vídeo. Es la única página con imagen
+  para compartir (`imagen` de `Base`).
 
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
   inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.
