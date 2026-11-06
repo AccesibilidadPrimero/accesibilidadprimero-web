@@ -316,7 +316,7 @@ disciplina personal a las once de la noche.
   `VERSION_VIDEOS`: se sube al sustituir los archivos. Debajo, la pauta del
   vídeo que se ve, en ficha: título a la izquierda, frase y referencia a la
   vista y qué falla, cómo se arregla y cómo comprobarlo en «Leer más», con
-  filetes en Silk, sobre el mismo amarillo que el hero, pegada a él. Cambia
+  filetes en Ink, sobre el mismo amarillo que el hero, pegada a él. Cambia
   con el vídeo. Preguntas frecuentes sobre gris claro, con el título encima
   y dos columnas debajo: solo la pregunta a la vista, sin «+» y sin signos
   de interrogación (titulares con las palabras que se buscan). Y
