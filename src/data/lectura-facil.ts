@@ -196,7 +196,7 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       nombre: 'Quiénes somos',
       titulo: 'Quiénes somos',
       entrada: [
-        'Accesibilidad Primero es un estudio de diseño.',
+        'Somos un estudio de diseño pequeño.',
         'Un estudio de diseño es una empresa que diseña.',
         'Diseñamos webs y aplicaciones.',
         'Una aplicación es un programa para el móvil o para el ordenador.',
@@ -222,7 +222,6 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
               frases: [
                 'Johnny Vigas creó el estudio en marzo de 2026.',
                 'Johnny diseña las webs.',
-                'Somos un estudio pequeño.',
                 'Si trabajas con nosotros, hablas con Johnny.',
               ],
             },
@@ -510,7 +509,7 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       nombre: 'Qui som',
       titulo: 'Qui som',
       entrada: [
-        'Accesibilidad Primero és un estudi de disseny.',
+        'Som un estudi de disseny petit.',
         'Un estudi de disseny és una empresa que dissenya.',
         'Dissenyem webs i aplicacions.',
         'Una aplicació és un programa per al mòbil o per a l’ordinador.',
@@ -536,7 +535,6 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
               frases: [
                 'Johnny Vigas va crear l’estudi el març de 2026.',
                 'Johnny dissenya les webs.',
-                'Som un estudi petit.',
                 'Si treballes amb nosaltres, parles amb Johnny.',
               ],
             },
