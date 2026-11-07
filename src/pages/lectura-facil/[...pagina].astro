@@ -1,0 +1,14 @@
+---
+/* Ruta es de la lectura fácil (07/11/2026). La plantilla vive en src/paginas/lectura-facil.astro. */
+import Pagina from '../../paginas/lectura-facil.astro';
+import { SLUG_LF, type IdLF } from '../../data/lectura-facil';
+
+export function getStaticPaths() {
+  return (Object.keys(SLUG_LF) as IdLF[]).map((id) => ({
+    params: { pagina: SLUG_LF[id].es || undefined },
+    props: { id },
+  }));
+}
+---
+
+<Pagina {...Astro.props} />

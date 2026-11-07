@@ -27,6 +27,8 @@ const axeSource = readFileSync(axePath, 'utf8');
    página nueva se añade aquí. */
 const RUTAS = [
   '/', '/contacto/', '/estudio/', '/servicios/', '/que-hace-una-web-accesible/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
+  /* Lectura fácil (07/11/2026). */
+  '/lectura-facil/', '/lectura-facil/quienes-somos/', '/lectura-facil/que-hacemos/', '/lectura-facil/contacto/', '/lectura-facil/accesibilidad/',
   /* Blog (11/10/2026): el listado, una categoría y tres artículos que juntan
      todo lo que puede traer un Markdown: demostraciones y tablas (tipografía),
      tablas e imágenes (WCAG), y el más largo, con seis imágenes (A11y Primero). */

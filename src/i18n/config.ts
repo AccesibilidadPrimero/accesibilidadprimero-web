@@ -45,7 +45,9 @@ export type RouteKey =
   | 'contacto'
   | 'privacidad'
   | 'cookies'
-  | 'accesibilidad';
+  | 'accesibilidad'
+  /* La web en lectura fácil (Johnny, 07/11/2026): castellano y catalán. */
+  | 'lecturaFacil';
 
 /** Los destinos del menú principal, en orden. Productos salió el 14/10/2026:
     los productos propios viven dentro de Proyectos, con su filtro. Servicios
@@ -74,13 +76,20 @@ const SEGMENT: Record<RouteKey, Record<Lang, string>> = {
   privacidad:    { es: 'privacidad',                ca: 'privacitat',                en: 'privacy' },
   cookies:       { es: 'cookies',                   ca: 'galetes',                   en: 'cookies' },
   accesibilidad: { es: 'declaracion-de-accesibilidad', ca: 'declaracio-accessibilitat', en: 'accessibility-statement' },
+  /* Sin versión inglesa: el segmento está por la forma del tipo, no se usa. */
+  lecturaFacil:  { es: 'lectura-facil',             ca: 'lectura-facil',             en: 'easy-read' },
 };
 
+/** El tramo final de una dirección: el mismo en todos los idiomas (los
+    casos) o uno por idioma (las páginas en lectura fácil). */
+export type Slug = string | Partial<Record<Lang, string>>;
+const slugEn = (slug: Slug | undefined, lang: Lang) => (typeof slug === 'object' ? slug[lang] : slug);
+
 /** URL de una ruta. Siempre con barra final (astro.config: trailingSlash). */
-export function path(key: RouteKey, lang: Lang = DEFAULT_LANG, slug?: string): string {
+export function path(key: RouteKey, lang: Lang = DEFAULT_LANG, slug?: Slug): string {
   const prefix = lang === DEFAULT_LANG ? '' : `/${lang}`;
   const segment = SEGMENT[key][lang];
-  const parts = [prefix, segment, slug].filter(Boolean);
+  const parts = [prefix, segment, slugEn(slug, lang)].filter(Boolean);
   const joined = parts.join('/');
   return joined === '' ? '/' : `/${joined.replace(/^\/+/, '')}/`;
 }
@@ -99,10 +108,13 @@ export interface Alternate {
  */
 /** Rutas que solo existen en castellano (05/11/2026): el blog no se traduce. */
 const SOLO_ES: RouteKey[] = ['blog'];
+/** Rutas sin versión inglesa (07/11/2026): la lectura fácil, en castellano y
+    catalán. Su selector enseña solo ES y CA. */
+const SIN_EN: RouteKey[] = ['lecturaFacil'];
 
-export function alternates(current: RouteKey, slug?: string): Alternate[] {
+export function alternates(current: RouteKey, slug?: Slug): Alternate[] {
   if (!hasMultipleLangs() || SOLO_ES.includes(current)) return [];
-  return ACTIVE.map((lang) => ({
+  return ACTIVE.filter((lang) => !(lang === 'en' && SIN_EN.includes(current))).map((lang) => ({
     lang,
     href: path(current, lang, slug),
     hreflang: lang,
