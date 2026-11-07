@@ -30,10 +30,10 @@
 
 # ── Páginas de servicios: a /servicios/ desde el 30/10/2026 ──
 # (/servicios/ ya no se redirige: desde ese día es una página propia.)
-/diseno-y-tecnologia/  /servicios/  301
-/formacion/  /servicios/  301
-/auditoria-de-accesibilidad-wcag/  /servicios/  301
-/auditoria-express-de-accesibilidad-en-tiempo-real/  /servicios/  301
+/diseno-y-tecnologia/  /servicios/#diseno  301
+/formacion/  /servicios/#formacion  301
+/auditoria-de-accesibilidad-wcag/  /servicios/#auditoria  301
+/auditoria-express-de-accesibilidad-en-tiempo-real/  /servicios/#auditoria  301
 /accesibilidad-web-valencia/  /estudio/  301
 
 # ── Legales y contacto ──
@@ -59,13 +59,29 @@
 /ca/qui-som/  /ca/estudi/  301
 /en/who-we-are/  /en/studio/  301
 /ca/manifest/  /ca/estudi/  301
-/ca/formacio/  /ca/serveis/  301
-/en/training/  /en/services/  301
+/ca/formacio/  /ca/serveis/#formacion  301
+/en/training/  /en/services/#formacion  301
 /ca/comunicacio-inclusiva/  /ca/serveis/  301
 /en/inclusive-communication/  /en/services/  301
-/ca/disseny-i-tecnologia/  /ca/serveis/  301
-/en/design-tech/  /en/services/  301
-/ca/auditoria-daccessibilitat/  /ca/serveis/  301
-/en/wcag-accessibility-audit/  /en/services/  301
+/ca/disseny-i-tecnologia/  /ca/serveis/#diseno  301
+/en/design-tech/  /en/services/#diseno  301
+/ca/auditoria-daccessibilitat/  /ca/serveis/#auditoria  301
+/en/wcag-accessibility-audit/  /en/services/#auditoria  301
 /en/accessibility-policy/  /en/accessibility-statement/  301
 /en/statement/  /en/accessibility-statement/  301
+
+# ── Direcciones para compartir, una por servicio (Johnny, 07/11/2026) ──
+# Llevan al servicio dentro de /servicios/, con su desplegable abierto
+# (plegable.ts abre el que coincide con el ancla). 302 y no 301: si un día
+# cada servicio tiene su página, la dirección pasa a ser esa página sin que
+# ningún navegador se quede con la redirección guardada. No suman SEO por
+# sí solas: Google no cuenta lo que va detrás de la #.
+/auditoria-accesibilidad-wcag/  /servicios/#auditoria  302
+/diseno-desarrollo-web-accesible/  /servicios/#diseno  302
+/formacion-accesibilidad-web/  /servicios/#formacion  302
+/ca/auditoria-accessibilitat-wcag/  /ca/serveis/#auditoria  302
+/ca/disseny-desenvolupament-web-accessible/  /ca/serveis/#diseno  302
+/ca/formacio-accessibilitat-web/  /ca/serveis/#formacion  302
+# /en/wcag-accessibility-audit/ ya existía (WordPress, 301 de arriba).
+/en/accessible-web-design-development/  /en/services/#diseno  302
+/en/web-accessibility-training/  /en/services/#formacion  302
