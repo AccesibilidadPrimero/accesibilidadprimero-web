@@ -343,18 +343,21 @@ disciplina personal a las once de la noche.
   con imagen para compartir (`imagen` de `Base`).
 
 - **Lectura fácil (07/11/2026, borrador para validar con Plena inclusión).**
-  Cinco páginas en castellano y catalán (`/lectura-facil/` y
-  `/ca/lectura-facil/`): Inicio, Quiénes somos, Qué hacemos, Cómo escribirnos
-  y Accesibilidad. Textos en `src/data/lectura-facil.ts`, escritos con la
-  norma UNE 153101 (las reglas, en su cabecera); plantilla en
-  `src/paginas/lectura-facil.astro`. Excepciones declaradas, porque las pide
-  la norma: sin hero a pantalla entera, interlineado 1,5, una frase por
-  párrafo y los títulos y las palabras del glosario en el tamaño grande (sin
-  negrita: un solo peso). Cada página lleva su propio glosario. Acceso:
-  «Lectura fácil» junto a los idiomas (cabecera desde 1280, menú por debajo
-  de 1024) y en el pie; en inglés no existe y no se enseña. Hasta que Plena
-  inclusión la valide no lleva el logotipo europeo de lectura fácil, y un
-  cambio de texto vuelve a pasar por validación.
+  El CONTENIDO de cinco páginas en lectura fácil, en castellano y catalán
+  (`/lectura-facil/` y `/ca/lectura-facil/`): Inicio, Quiénes somos, Qué
+  hacemos, Cómo escribirnos y Accesibilidad. No es una página sobre la
+  lectura fácil (Johnny, revisión 2): sin aviso ni recuadro de glosario; la
+  palabra difícil se explica en la frase siguiente. Como las webs de
+  referencia (PAGe, GOV.UK y Mencap en Easy Read): título con lo importante,
+  entrada de 3 a 5 frases e imagen junto al texto que explica. Textos en
+  `src/data/lectura-facil.ts` con la norma UNE 153101 (las reglas, en su
+  cabecera); plantilla en `src/paginas/lectura-facil.astro`. Excepciones
+  declaradas, porque las pide la norma: sin hero a pantalla entera,
+  interlineado 1,5, una frase por párrafo y títulos en el tamaño grande.
+  Acceso: «Lectura fácil» junto a los idiomas (cabecera desde 1280, menú por
+  debajo de 1024) y en el pie; en inglés no existe y no se enseña. Hasta que
+  Plena inclusión la valide no lleva el logotipo europeo de lectura fácil, y
+  un cambio de texto vuelve a pasar por validación.
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e
   inglés británico en `/en/`, con los segmentos de `src/i18n/config.ts`.
   Traducción nativa, no literal, con el glosario de `src/i18n/GLOSARIO.md`.
