@@ -18,8 +18,8 @@ const ui = t(lang);
         ))
       }
       {/* La lectura fácil, también en el pie (07/11/2026): en la cabecera
-          solo cabe desde 1280. Castellano y catalán. */}
-      {lang !== 'en' && <li><a href={path('lecturaFacil', lang)} class="pie__enlace">{ui.nav.lecturaFacil}</a></li>}
+          solo cabe desde 1280. */}
+      <li><a href={path('lecturaFacil', lang)} class="pie__enlace">{ui.nav.lecturaFacil}</a></li>
     </ul>
   </nav>
 </footer>

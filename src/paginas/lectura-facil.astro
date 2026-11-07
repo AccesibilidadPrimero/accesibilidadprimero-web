@@ -45,7 +45,8 @@ const EN_CATALAN = ['Universitat Politècnica de València', 'Foc i Cor'];
 const escapar = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const frase = (s: string) => {
   let h = escapar(s).replace('@', '@<wbr>');
-  if (lang === 'es') for (const n of EN_CATALAN) h = h.replaceAll(n, `<span lang="ca">${n}</span>`);
+  if (lang !== 'ca') for (const n of EN_CATALAN) h = h.replaceAll(n, `<span lang="ca">${n}</span>`);
+  if (lang === 'en') h = h.replaceAll('Cátedra dicaTIC', '<span lang="es">Cátedra dicaTIC</span>');
   return h;
 };
 const ANCHOS = [320, 480, 640, 800];

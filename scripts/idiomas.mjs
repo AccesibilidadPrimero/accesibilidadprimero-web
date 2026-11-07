@@ -7,16 +7,17 @@ const SEG = {
   en: { proyectos: 'projects', servicios: 'services', estudio: 'studio', contacto: 'contact', privacidad: 'privacy', cookies: 'cookies', 'declaracion-de-accesibilidad': 'accessibility-statement', 'que-hace-una-web-accesible': 'what-makes-a-website-accessible' },
 };
 
-/* La lectura fácil (07/11/2026): castellano y catalán, cada página con su
+/* La lectura fácil (07/11/2026): en los tres idiomas, cada página con su
    propio tramo final (src/data/lectura-facil.ts). */
 const LF_CA = { 'quienes-somos': 'qui-som', 'que-hacemos': 'que-fem', contacto: 'contacte', accesibilidad: 'accessibilitat' };
+const LF_EN = { 'quienes-somos': 'about-us', 'que-hacemos': 'what-we-do', contacto: 'contact', accesibilidad: 'accessibility' };
 
 export function enIdioma(url, lang) {
   if (lang === 'es') return url;
   if (url.startsWith('/blog')) return null;
   if (url.startsWith('/lectura-facil/')) {
-    if (lang === 'en') return null;
     const sub = url.split('/')[2];
+    if (lang === 'en') return `/en/easy-read/${sub ? `${LF_EN[sub]}/` : ''}`;
     return `/ca/lectura-facil/${sub ? `${LF_CA[sub]}/` : ''}`;
   }
   const [, primero = '', ...resto] = url.split('/');

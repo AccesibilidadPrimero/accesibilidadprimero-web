@@ -76,7 +76,6 @@ const SEGMENT: Record<RouteKey, Record<Lang, string>> = {
   privacidad:    { es: 'privacidad',                ca: 'privacitat',                en: 'privacy' },
   cookies:       { es: 'cookies',                   ca: 'galetes',                   en: 'cookies' },
   accesibilidad: { es: 'declaracion-de-accesibilidad', ca: 'declaracio-accessibilitat', en: 'accessibility-statement' },
-  /* Sin versión inglesa: el segmento está por la forma del tipo, no se usa. */
   lecturaFacil:  { es: 'lectura-facil',             ca: 'lectura-facil',             en: 'easy-read' },
 };
 
@@ -108,9 +107,9 @@ export interface Alternate {
  */
 /** Rutas que solo existen en castellano (05/11/2026): el blog no se traduce. */
 const SOLO_ES: RouteKey[] = ['blog'];
-/** Rutas sin versión inglesa (07/11/2026): la lectura fácil, en castellano y
-    catalán. Su selector enseña solo ES y CA. */
-const SIN_EN: RouteKey[] = ['lecturaFacil'];
+/** Rutas sin versión inglesa. Ninguna desde el 07/11/2026: la lectura fácil
+    también tiene inglés (Easy Read). */
+const SIN_EN: RouteKey[] = [];
 
 export function alternates(current: RouteKey, slug?: Slug): Alternate[] {
   if (!hasMultipleLangs() || SOLO_ES.includes(current)) return [];

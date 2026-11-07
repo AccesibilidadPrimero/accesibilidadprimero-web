@@ -1,5 +1,6 @@
 /* ---------------------------------------------------------------------------
-   El contenido de la web en lectura fácil · castellano y catalán.
+   El contenido de la web en lectura fácil · castellano, catalán e inglés
+   (Easy Read, desde el 07/11/2026).
 
    Revisión 2 (Johnny, 07/11/2026): «quiero una versión de lectura fácil del
    contenido de la web, no explicar qué es lectura fácil». Como las webs de
@@ -26,18 +27,18 @@
    --------------------------------------------------------------------------- */
 import type { RouteKey } from '../i18n/config';
 
-export type LangLF = 'es' | 'ca';
-export const IDIOMAS_LF: LangLF[] = ['es', 'ca'];
+export type LangLF = 'es' | 'ca' | 'en';
+export const IDIOMAS_LF: LangLF[] = ['es', 'ca', 'en'];
 
 export type IdLF = 'inicio' | 'quienes' | 'hacemos' | 'contacto' | 'accesibilidad';
 
 /** La dirección de cada página dentro de /lectura-facil/ (vacía, la portada). */
 export const SLUG_LF: Record<IdLF, Record<LangLF, string>> = {
-  inicio: { es: '', ca: '' },
-  quienes: { es: 'quienes-somos', ca: 'qui-som' },
-  hacemos: { es: 'que-hacemos', ca: 'que-fem' },
-  contacto: { es: 'contacto', ca: 'contacte' },
-  accesibilidad: { es: 'accesibilidad', ca: 'accessibilitat' },
+  inicio: { es: '', ca: '', en: '' },
+  quienes: { es: 'quienes-somos', ca: 'qui-som', en: 'about-us' },
+  hacemos: { es: 'que-hacemos', ca: 'que-fem', en: 'what-we-do' },
+  contacto: { es: 'contacto', ca: 'contacte', en: 'contact' },
+  accesibilidad: { es: 'accesibilidad', ca: 'accessibilitat', en: 'accessibility' },
 };
 
 /** Las imágenes que se pueden poner junto a un texto (src/paginas/lectura-facil.astro). */
@@ -83,6 +84,7 @@ export const CORREO = 'proyectos@accesibilidadprimero.com';
 export const UI_LF: Record<LangLF, { otras: string; completa: string; enlace: string }> = {
   es: { otras: 'Otras páginas', completa: 'Ver esta página en la web completa', enlace: 'Lectura fácil' },
   ca: { otras: 'Altres pàgines', completa: 'Veure aquesta pàgina a la web completa', enlace: 'Lectura fàcil' },
+  en: { otras: 'Other pages', completa: 'See this page on the full website', enlace: 'Easy read' },
 };
 
 /** La página de la web completa que corresponde a cada una. */
@@ -729,6 +731,317 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Et responem en 20 dies feiners o menys.',
           ],
           enlaces: [{ texto: 'Escriure un correu electrònic', url: `mailto:${CORREO}` }],
+        },
+      ],
+    },
+  ],
+  en: [
+    {
+      id: 'inicio',
+      nombre: 'Home',
+      titulo: 'We make websites for everyone',
+      entrada: [
+        'We are Accesibilidad Primero.',
+        'We are a design studio in Valencia, in Spain.',
+        'We design websites for organisations and projects that help people.',
+        'Everyone can use our websites.',
+        'For example, a blind person or a person who cannot use a mouse.',
+      ],
+      descripcion: 'Accesibilidad Primero in easy read: we make websites for everyone.',
+      bloques: [
+        {
+          titulo: 'Some websites we make',
+          tarjetas: [
+            {
+              imagen: 'foc', alt: 'The Foc i Cor website on a mobile phone.',
+              titulo: 'Foc i Cor',
+              frases: [
+                'Foc i Cor is a training restaurant in Catarroja.',
+                'In a training restaurant, people learn to work in a restaurant.',
+                'On its website you can read the menu and book a table.',
+              ],
+            },
+            {
+              imagen: 'eci', alt: 'The website of the ECI Conference Madrid 2027.',
+              titulo: 'ECI Conference Madrid 2027',
+              frases: [
+                'It is a conference for people who work with young children.',
+                'A conference is a meeting of many people who do the same work.',
+                'On its website you can see the programme and send your work.',
+              ],
+            },
+            {
+              imagen: 'izaskun', alt: 'A work by Izaskun Etxebarria on her website: a metal ring on the grass, next to the sea.',
+              titulo: 'Izaskun Etxebarria',
+              frases: [
+                'Izaskun Etxebarria is an artist.',
+                'On her website you can see her work.',
+              ],
+            },
+          ],
+        },
+        {
+          titulo: 'Our tools',
+          frases: ['We also make computer programs that solve accessibility problems.'],
+          tarjetas: [
+            {
+              imagen: 'itza', alt: 'Itza on a website: a person asks a question and Itza answers.',
+              titulo: 'Itza',
+              frases: [
+                'Itza is part of a website.',
+                'Itza answers questions from the people who visit that website.',
+              ],
+            },
+            {
+              imagen: 'a11y', alt: 'A11y Primero shows a score of 92 and the barriers on a website.',
+              titulo: 'A11y Primero',
+              frases: [
+                'A11y Primero finds the barriers on a website.',
+                'A barrier is a problem that stops a person using the website.',
+              ],
+            },
+            {
+              imagen: 'abstracts', alt: 'The Accesible Abstracts form for sending work to a conference.',
+              titulo: 'Accesible Abstracts',
+              frases: [
+                'Accesible Abstracts sorts the work that a conference receives.',
+                'An abstract is a short summary of a piece of work.',
+              ],
+            },
+          ],
+        },
+        {
+          titulo: 'Tell us about your project',
+          frases: ['If you have a project, write to us.'],
+          enlaces: [{ texto: 'How to write to us', lf: 'contacto' }],
+        },
+      ],
+    },
+    {
+      id: 'quienes',
+      nombre: 'About us',
+      titulo: 'About us',
+      entrada: [
+        'We are a small design studio.',
+        'A design studio is a company that designs things.',
+        'We design websites and apps.',
+        'An app is a program for a mobile phone or a computer.',
+      ],
+      descripcion: 'About Accesibilidad Primero, in easy read.',
+      bloques: [
+        {
+          titulo: 'We think about everyone',
+          frases: [
+            'We think about accessibility before we design a website.',
+            'Accessibility means that everyone can use a website.',
+            'This way, no person finds barriers on the website.',
+            'A barrier is a problem that stops a person using the website.',
+            'For example, very small letters are a barrier for a person who cannot see well.',
+          ],
+        },
+        {
+          titulo: 'Who works in the studio',
+          tarjetas: [
+            {
+              imagen: 'johnny', alt: 'Portrait of Johnny Vigas.',
+              titulo: 'Johnny Vigas',
+              frases: [
+                'Johnny Vigas started the studio in March 2026.',
+                'Johnny designs the websites.',
+                'If you work with us, you talk to Johnny.',
+              ],
+            },
+          ],
+        },
+        {
+          titulo: 'The university',
+          frases: [
+            'We work with the Universitat Politècnica de València.',
+            'It is a university in Valencia.',
+            'At the university there is a working group.',
+            'The group is called Cátedra dicaTIC.',
+            'This group wants to remove the barriers in technology for disabled people.',
+            'Technology means computers, mobile phones and websites.',
+          ],
+        },
+        {
+          titulo: 'Who we work with',
+          frases: ['We work with charities, artists, architects and conferences.'],
+          lista: [
+            'Cesal is a charity.',
+            'Cesal runs the Foc i Cor training restaurant in Catarroja.',
+            'AEIPI and Eurlyaid organise the ECI Conference Madrid 2027.',
+            'Izaskun Etxebarria is an artist.',
+            'Pau Jordà is an architect.',
+          ],
+        },
+        {
+          titulo: 'Tell us about your project',
+          frases: ['If you have a project, write to us.'],
+          enlaces: [{ texto: 'How to write to us', lf: 'contacto' }],
+        },
+      ],
+    },
+    {
+      id: 'hacemos',
+      nombre: 'What we do',
+      titulo: 'What we do',
+      entrada: ['We do 3 kinds of work:'],
+      entradaLista: [
+        'We design and build accessible websites.',
+        'We check websites.',
+        'We train the people who change the words and the photos on a website.',
+      ],
+      descripcion: 'What Accesibilidad Primero does, in easy read: accessible websites, website checks and training.',
+      bloques: [
+        {
+          titulo: 'We design and build websites',
+          imagen: { archivo: 'foc', alt: 'The Foc i Cor website on a mobile phone.' },
+          frases: [
+            'We design a new website for each organisation.',
+            'We think about accessibility before we design the website.',
+            'Some people cannot use a mouse.',
+            'These people only use the keyboard.',
+            'That is why we test every website with the keyboard.',
+            'We also test every website with a screen reader.',
+            'A screen reader is a program that reads the website out loud.',
+            'Your team can change the words and the photos on the website.',
+            'Your team does not need to write code for these changes.',
+          ],
+        },
+        {
+          titulo: 'We check websites',
+          imagen: { archivo: 'a11y', alt: 'A11y Primero shows a score of 92 and the barriers on a website.' },
+          frases: [
+            'We check your website with the WCAG guidelines.',
+            'The WCAG guidelines are rules for making accessible websites.',
+            'We explain each barrier on your website.',
+            'We give you a plan to remove the barriers.',
+            'We also write the accessibility statement for your website.',
+            'An accessibility statement is a page that says what your website does well and what it does not.',
+          ],
+        },
+        {
+          titulo: 'The price of a check',
+          lista: [
+            'A website with up to 10 pages costs between 590 euros and 790 euros.',
+            'A website with up to 25 pages costs between 1200 euros and 1800 euros.',
+            'A website for a public body or a large company costs 2500 euros or more.',
+          ],
+          despues: [
+            'You also pay VAT on top of this price.',
+            'VAT is a tax.',
+          ],
+        },
+        {
+          titulo: 'We give training',
+          frases: [
+            'We train the people who change the words and the photos on a website.',
+            'This way the website stays accessible after every change.',
+            'There is training for each job: design, code and writing.',
+            'There are also short sessions about one subject.',
+            'For example, one session shows how to make an accessible PDF document.',
+          ],
+        },
+        {
+          titulo: 'Tell us about your project',
+          frases: ['If you want us to do this work, write to us.'],
+          enlaces: [{ texto: 'How to write to us', lf: 'contacto' }],
+        },
+      ],
+    },
+    {
+      id: 'contacto',
+      nombre: 'How to write to us',
+      titulo: 'How to write to us',
+      entrada: [
+        'You can send us an email.',
+        'This is our email address:',
+        CORREO,
+      ],
+      entradaEnlaces: [{ texto: 'Send an email', url: `mailto:${CORREO}` }],
+      descripcion: 'How to write to Accesibilidad Primero, in easy read.',
+      bloques: [
+        {
+          titulo: 'What you can tell us',
+          frases: [
+            'Tell us what your organisation does.',
+            'Tell us what you want to do.',
+            'You can write to us with an idea that is not finished.',
+          ],
+        },
+        {
+          titulo: 'We always answer',
+          frases: [
+            'We answer every email.',
+            'Sometimes we are not the right studio for your project.',
+            'Then we also answer and explain why.',
+          ],
+        },
+        {
+          titulo: 'Other ways to write to us',
+          frases: [
+            'There is a form on the full website.',
+            'A form is a page with spaces to write your name and your message.',
+          ],
+          enlaces: [{ texto: 'Go to the form', ruta: 'contacto' }],
+        },
+        {
+          titulo: 'Our social media',
+          enlaces: REDES,
+        },
+      ],
+    },
+    {
+      id: 'accesibilidad',
+      nombre: 'Accessibility',
+      titulo: 'How accessible this website is',
+      entrada: [
+        'We want a website for everyone.',
+        'We last checked this website on 5 November 2026.',
+        'The website meets almost all the WCAG guidelines.',
+        'The WCAG guidelines are rules for making accessible websites.',
+      ],
+      descripcion: 'What the Accesibilidad Primero website does well and what it does not, in easy read.',
+      bloques: [
+        {
+          titulo: 'What this website does well',
+          frases: [
+            'You can use the whole website with the keyboard.',
+            'You can read the words well on the background.',
+            'The buttons and the links are big.',
+            'They are easy to press with your finger.',
+            'The videos have no sound.',
+            'Each video has words that explain its pictures.',
+          ],
+        },
+        {
+          titulo: 'What this website does not do well',
+          frases: [
+            'On the full website there is a page about our studio.',
+            'On that page there is a drawing that moves all the time.',
+            'The drawing has no button to stop it.',
+            'Your phone and your computer have a setting to reduce movement.',
+            'If you turn on this setting, the drawing stops.',
+          ],
+        },
+        {
+          titulo: 'What we still need to check',
+          frases: [
+            'We still need to test the whole website with a screen reader.',
+            'A screen reader is a program that reads the website out loud.',
+            'After this test, we will write the results on this page.',
+          ],
+        },
+        {
+          titulo: 'If you find a problem',
+          frases: [
+            'Send us an email.',
+            'Tell us what you want to do.',
+            'Tell us the name of the page too.',
+            'We answer in 20 working days or less.',
+          ],
+          enlaces: [{ texto: 'Send an email', url: `mailto:${CORREO}` }],
         },
       ],
     },
