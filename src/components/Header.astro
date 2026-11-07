@@ -13,14 +13,23 @@
    medido otra vez a 1024: el logotipo acaba en 216 y la navegación empieza
    en 314 (es), 376 (en) y 380 (ca). Cabe, sin desbordar.
    --------------------------------------------------------------------------- */
-import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { NAV, path, alternates, type Lang, type RouteKey, type Slug } from '../i18n/config';
 import { t } from '../i18n/ui';
 import MenuModal from './MenuModal.astro';
+import { UI_LF, SLUG_LF, lfDesde, type LangLF } from '../data/lectura-facil';
 
-interface Props { lang: Lang; current: RouteKey; slug?: string }
+interface Props { lang: Lang; current: RouteKey; slug?: Slug }
 const { lang, current, slug } = Astro.props;
 const ui = t(lang);
 const langs = alternates(current, slug);
+/* «Lectura fácil», junto a los idiomas (Johnny, 07/11/2026). Solo en
+   castellano y catalán, que es donde existe. Lleva a la página que cuenta lo
+   mismo; en las páginas en lectura fácil, a su portada y marcado como actual. */
+const enLF = current === 'lecturaFacil';
+const lf = lang !== 'en' ? {
+  texto: UI_LF[lang as LangLF].enlace,
+  href: path('lecturaFacil', lang, SLUG_LF[enLF ? 'inicio' : lfDesde(current)][lang as LangLF]),
+} : undefined;
 ---
 
 <header class="header">
@@ -71,6 +80,9 @@ const langs = alternates(current, slug);
               ))
             }
           </ul>
+          {lf && (
+            <a href={lf.href} class="header__lang-link header__lf" aria-current={enLF ? 'true' : undefined}>{lf.texto}</a>
+          )}
         </div>
       )
     }
@@ -145,7 +157,20 @@ const langs = alternates(current, slug);
      palabra son los 12 + 12 de relleno de los dos enlaces: 24. Las zonas
      pulsables se tocan, pero cada una sigue midiendo 44 de alto. */
   .header__list { display: flex; gap: 0; margin-inline-end: calc(var(--space-12) * -1); }
+  .header__lang { display: none; }
   .header__lang-list { display: flex; gap: var(--space-4); }
+  @media (min-width: 1024px) {
+    .header__lang { display: flex; align-items: center; gap: var(--space-16); }
+  }
+  /* «Lectura fácil» junto a los idiomas desde 1280: entre 1024 y 1280 no cabe
+     sin desbordar (medido: 98 px de más en castellano). En ese tramo está en
+     el pie; por debajo de 1024, en el menú. */
+  .header__lang .header__lf { display: none; }
+  @media (min-width: 1280px) { .header__lang .header__lf { display: inline-flex; } }
+  /* Sin partir: «Lectura fàcil» y «Sobre AP» en dos renglones descolocaban
+     la cabecera a 1024 (07/11/2026). */
+  .header__link, .header__lang-link { white-space: nowrap; }
+  .header__lf { padding-inline: var(--space-8); }
 
   .header__link, .header__lang-link {
     display: inline-flex;

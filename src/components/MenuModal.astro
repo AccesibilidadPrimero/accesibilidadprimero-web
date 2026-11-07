@@ -27,15 +27,16 @@
    botón muerto en pantalla.
    --------------------------------------------------------------------------- */
 
-import { NAV, path, alternates, type Lang, type RouteKey } from '../i18n/config';
+import { NAV, path, alternates, type Lang, type RouteKey, type Slug } from '../i18n/config';
 import { t } from '../i18n/ui';
+import { UI_LF, SLUG_LF, lfDesde, type LangLF } from '../data/lectura-facil';
 
 interface Props {
   lang: Lang;
   current: RouteKey;
   /** El slug, si la página es una entrada de una colección. Se usa para que el
    *  selector de idioma apunte a la misma página y no a la portada. */
-  slug?: string;
+  slug?: Slug;
 }
 
 const { lang, current, slug } = Astro.props;
@@ -125,6 +126,14 @@ const langs = alternates(current, slug);
             })
           }
         </ul>
+        {/* «Lectura fácil», junto a los idiomas como en la cabecera. */}
+        {lang !== 'en' && (
+          <a
+            href={path('lecturaFacil', lang, SLUG_LF[current === 'lecturaFacil' ? 'inicio' : lfDesde(current)][lang as LangLF])}
+            class="menu__lang-link menu__lf"
+            aria-current={current === 'lecturaFacil' ? 'true' : undefined}
+          >{UI_LF[lang as LangLF].enlace}</a>
+        )}
       </div>
       )
     }

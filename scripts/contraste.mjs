@@ -43,6 +43,8 @@ const RUTAS = [
   { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
     preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
   { nombre: 'Estudio', url: '/estudio/', minimo: 30 },
+  { nombre: 'Lectura fácil', url: '/lectura-facil/', minimo: 15 },
+  { nombre: 'Lectura fácil · Qué hacemos', url: '/lectura-facil/que-hacemos/', minimo: 15 },
   /* Servicios: la banda del hero pasa por tres colores. Se mide en cada uno
      (30/10/2026) y con todos los desplegables abiertos: lo que está cerrado
      no se pinta y no se mediría (03/11/2026). */
