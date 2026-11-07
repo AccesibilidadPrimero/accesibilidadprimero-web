@@ -3,8 +3,8 @@
 
    Una conversación de verdad con /api/chat (itza-worker/index.ts), con lo
    que el caso de estudio dice que hace Itza:
-   · <dialog> con showModal(): la página queda inerte, el foco entra en la
-     ventana, Escape la cierra y el foco vuelve a la barra que la abrió.
+   · En línea, dentro del hero: sin ventana, el foco no se mueve solo y
+     nada atrapa el teclado.
    · Cada mensaje entra en un role="log": el lector de pantalla lo anuncia
      sin que el foco se mueva del campo de texto.
    · Primero pregunta cómo llamarte; después ofrece las preguntas sugeridas,
@@ -14,7 +14,7 @@
    · Un tope de mensajes: es una demo, y cada respuesta cuesta una llamada a
      la API. El Worker pone el mismo tope.
 
-   Sin JavaScript la barra no se pinta y la página dice cómo ver Itza.
+   Sin JavaScript la caja no se pinta y la página dice cómo ver Itza.
    --------------------------------------------------------------------------- */
 
 interface Textos {
@@ -26,24 +26,22 @@ interface Mensaje { role: 'user' | 'assistant'; content: string }
 const TOPE = 12;
 
 function iniciar() {
-  const dialogo = document.querySelector<HTMLDialogElement>('[data-itza-chat]');
-  const abrir = document.querySelector<HTMLButtonElement>('[data-itza-abrir]');
-  if (!dialogo || !abrir || typeof dialogo.showModal !== 'function') return;
+  /* La demo va en línea, en el hero (sistema de producto, 07/11/2026): no
+     hay ventana que abrir. Sin JS la caja no se pinta (CSS: html.js). */
+  const caja = document.querySelector<HTMLElement>('[data-itza-chat]');
+  if (!caja) return;
 
-  const T = JSON.parse(dialogo.dataset.itzaChat ?? '{}') as Textos;
-  const log = dialogo.querySelector<HTMLElement>('[data-itza-log]')!;
-  const form = dialogo.querySelector<HTMLFormElement>('[data-itza-form]')!;
+  const T = JSON.parse(caja.dataset.itzaChat ?? '{}') as Textos;
+  const log = caja.querySelector<HTMLElement>('[data-itza-log]')!;
+  const form = caja.querySelector<HTMLFormElement>('[data-itza-form]')!;
   const campo = form.querySelector('textarea')!;
   const enviar = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-  const sugerencias = dialogo.querySelector<HTMLElement>('[data-itza-sugerencias]')!;
-  const cerrar = dialogo.querySelector<HTMLButtonElement>('[data-itza-cerrar]')!;
-  const botonHablar = dialogo.querySelector<HTMLButtonElement>('[data-itza-hablar]')!;
-  const botonLeer = dialogo.querySelector<HTMLButtonElement>('[data-itza-leer]')!;
-
-  const logo = document.querySelector<HTMLImageElement>('#chat-titulo .logo-itza');
+  const sugerencias = caja.querySelector<HTMLElement>('[data-itza-sugerencias]')!;
+  const botonHablar = caja.querySelector<HTMLButtonElement>('[data-itza-hablar]')!;
+  const botonLeer = caja.querySelector<HTMLButtonElement>('[data-itza-leer]')!;
+  const logo = caja.querySelector<HTMLImageElement>('#demo-titulo .logo-itza');
   const historia: Mensaje[] = [];
   let ocupado = false;
-  let empezada = false;
 
   /* Una línea en la conversación. Quién habla va escrito para el lector de
      pantalla («Tú:», «Itza:»); a la vista lo dice la posición y el color. */
@@ -66,14 +64,9 @@ function iniciar() {
     return p;
   }
 
-  abrir.hidden = false;
-  abrir.addEventListener('click', () => {
-    dialogo.showModal();
-    if (!empezada) { empezada = true; linea(T.bienvenida, 'itza'); }
-    campo.focus();
-  });
-  cerrar.addEventListener('click', () => dialogo.close());
-  dialogo.addEventListener('close', () => { window.speechSynthesis?.cancel(); abrir.focus(); });
+  /* El saludo ya está al cargar. El log no lo anuncia (solo anuncia lo que
+     entra después), y no hace falta: está escrito y se lee en orden. */
+  linea(T.bienvenida, 'itza');
 
   async function preguntar(texto: string) {
     const limpio = texto.trim();

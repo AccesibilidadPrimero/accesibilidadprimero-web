@@ -8,22 +8,28 @@
    Worker (wrangler.itza.toml + itza-worker/index.ts). En la web de AP no
    existen: /itza/ no se publica.
 
-   El sistema de AP (un peso, todo en Ink, la misma rejilla y los mismos
-   tokens) con el menta de Itza en las superficies, como en su caso de
-   estudio. Sin la cabecera ni el pie de AP: es otro producto, con su marca
-   arriba y el estudio abajo.
+   SISTEMA DE PRODUCTO, NO EL DE AP (Johnny, 07/11/2026: «la landing de Itza
+   es más comercial, de diseño de producto»; dirección A, «Noche menta», con
+   un gris oscuro sedoso en lugar de negro). Lo que cambia respecto a la web:
+   · fondo #282B2A (casi negro, no negro) y el menta del logo, #C7EAE4;
+   · dos pesos, 400 y 500 (la tipografía servida llega a 500: un 600 sería
+     negrita sintética) y una escala de producto de cinco tamaños;
+   · botones con fondo para la acción principal;
+   · la demo de Itza en el hero: el producto es la portada.
+   Lo que NO cambia: contraste AA medido (menta sobre el gris, 11:1; el texto
+   secundario #D3DCD9, 10:1), objetivos de 44 px, foco visible en menta,
+   reducir movimiento, sin texto en imágenes salvo el logo, y la firma de
+   Accesibilidad Primero. Es la base de las landings de los tres productos.
 
-   La demo es Itza de verdad: la ventana (src/scripts/itza-demo.ts) habla con
-   /api/chat, que el Worker pasa a la API de Anthropic. Sin JavaScript no hay
-   demo, y se dice.
+   La demo es Itza de verdad, en línea dentro del hero
+   (src/scripts/itza-demo.ts): habla con /api/chat, que el Worker pasa a la
+   API de Anthropic. Sin JavaScript no hay demo, y se dice.
    --------------------------------------------------------------------------- */
 import '../../styles/fonts.css';
 import '../../styles/tokens.css';
 import '../../styles/base.css';
-import CtaLink from '../../components/CtaLink.astro';
-import VideoPausable from '../../components/VideoPausable.astro';
-import posterHero from '../../assets/proyectos/itza/itza-hero-fotograma.png';
 import logoItza from '../../assets/productos/itza-logo.png';
+import logoMenta from '../../assets/productos/itza-logo-menta.png';
 import { LANGS, LANG_CODE, LANG_NAME, path, type Lang } from '../../i18n/config';
 import { SITIO, INDEXABLE, DOMINIO } from '../../data/sitio';
 import { CORREO_ESTUDIO } from '../../data/contacto';
@@ -64,10 +70,12 @@ const datos = JSON.stringify([
    la frase entera y al ampliar crece con el texto (va en em). Un logotipo es
    la excepción de 1.4.5, la única imagen con letras que entra en la web. El
    logo trae su propia marca (el corazón CC), así que el ® del texto sobra.
-   Sale de arte/productos/itza-logo.png, en Ink. */
+   Dos versiones en arte/productos/: en menta sobre el fondo oscuro y en Ink
+   sobre el menta y el blanco (la caja del precio y la demo). */
 const ALTO_LOGO = 341, ANCHO_LOGO = 968;
-const logo = (alt = 'Itza') => `<img class="logo-itza" src="${logoItza.src}" alt="${alt}" width="${ANCHO_LOGO}" height="${ALTO_LOGO}" />`;
+const logo = (alt = 'Itza', claro = false) => `<img class="logo-itza" src="${(claro ? logoItza : logoMenta).src}" alt="${alt}" width="${ANCHO_LOGO}" height="${ALTO_LOGO}" />`;
 const marca = (s: string) => s.replace(/Itza®?/g, () => logo());
+const marcaClara = (s: string) => s.replace(/Itza®?/g, () => logo('Itza', true));
 const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 ---
 
@@ -82,7 +90,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
     {LANGS.map((l) => <link rel="alternate" hreflang={l} href={new URL(raiz(l), ORIGEN).href} />)}
     <link rel="alternate" hreflang="x-default" href={new URL('/', ORIGEN).href} />
     <script type="application/ld+json" set:html={datos} />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="dark" />
     <script is:inline>document.documentElement.classList.add('js');</script>
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -94,127 +102,139 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 
     <header class="cabeza">
       <a class="cabeza__marca" href={raiz(lang)} set:html={logo(T.inicio)} />
-      <nav class="cabeza__idiomas" aria-label={T.idioma}>
-        <ul>
-          {LANGS.map((l) => (
-            <li>
-              <a href={raiz(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
-                <span aria-hidden="true">{LANG_CODE[l]}</span><span class="sr-only">{LANG_NAME[l]}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <div class="cabeza__derecha">
+        <nav class="cabeza__idiomas" aria-label={T.idioma}>
+          <ul>
+            {LANGS.map((l) => (
+              <li>
+                <a href={raiz(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+                  <span aria-hidden="true">{LANG_CODE[l]}</span><span class="sr-only">{LANG_NAME[l]}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <a class="boton boton--menta boton--pequeno" href="#contacto">{T.pedir}</a>
+      </div>
     </header>
 
     <main id="contenido" tabindex="-1">
       <section class="hero" aria-labelledby="hero-titulo">
         <div class="hero__texto">
-          <h1 id="hero-titulo" class="grande"><span class="linea" set:html={marca(T.heroL1)} /> <span class="linea" set:html={marca(T.heroL2)} /></h1>
-          <p set:html={marca(T.heroTexto)} />
-          <ul class="enlaces">
-            <li><CtaLink href="#demo"><Fragment set:html={marca(T.probar)} /></CtaLink></li>
-            <li><CtaLink href="#precio">{T.verPrecio}</CtaLink></li>
+          <h1 id="hero-titulo" class="t-hero"><span set:html={marca(T.heroL1)} /> <span class="menta" set:html={marca(T.heroL2)} /></h1>
+          <p class="suave" set:html={marca(T.heroTexto)} />
+          <ul class="botones">
+            <li><a class="boton boton--menta" href="#demo" set:html={marcaClara(T.probar)} /></li>
+            <li><a class="boton boton--borde" href="#precio">{T.verPrecio}</a></li>
           </ul>
+          <p class="firma">{T.firma}</p>
         </div>
-        <VideoPausable
-          class="hero__video"
-          auto
-          escritorio={{ archivo: '/video/itza-hero.mp4', poster: posterHero }}
-          alt={T.altHero}
-          nombre={T.nombreHero}
-          lang={lang}
-          sizes={{ escritorio: '400px', tableta: '330px', movil: '286px' }}
-        />
+
+        {/* La demo, en línea: el producto es la portada. Sin JS, la página
+            explica cómo ver Itza y la caja no se pinta. */}
+        <section id="demo" class="demo" aria-labelledby="demo-titulo" data-itza-chat={chat}>
+          <div class="demo__cabeza">
+            <h2 id="demo-titulo"><span set:html={logo('Itza', true)} /><span class="sr-only">{T.demoTitulo}</span></h2>
+            <span class="demo__estado"><span class="demo__punto" aria-hidden="true"></span>{T.chat.enLinea}</span>
+          </div>
+          <div class="demo__log" role="log" aria-label={T.chat.conversacion} tabindex="0" data-itza-log></div>
+          {/* role="log": lo que entra se anuncia solo, sin mover el foco (4.1.3).
+              tabindex="0": la conversación se desplaza, y con teclado también
+              tiene que poder leerse hacia atrás (2.1.1). */}
+          <div class="demo__sugerencias" data-itza-sugerencias hidden>
+            <p id="chat-sugeridas" class="sr-only">{T.chat.sugerencias}</p>
+            <ul aria-labelledby="chat-sugeridas">
+              {T.chat.sugeridas.map((q) => <li><button type="button" class="sugerencia" data-texto={q} set:html={marcaClara(q)} /></li>)}
+            </ul>
+          </div>
+          <form class="demo__form" data-itza-form>
+            <label for="chat-mensaje">{T.chat.etiqueta}</label>
+            <div class="demo__fila">
+              <textarea id="chat-mensaje" rows="1" maxlength="500" autocomplete="off"></textarea>
+              <button type="submit" class="boton boton--oscuro">{T.chat.enviar}</button>
+            </div>
+            <div class="demo__voz">
+              <button type="button" class="sugerencia" data-itza-hablar hidden>{T.chat.hablar}</button>
+              <button type="button" class="sugerencia" data-itza-leer aria-pressed="false" hidden>{T.chat.leer}</button>
+            </div>
+          </form>
+          <p class="demo__nota" set:html={marcaClara(T.demoPrivacidad)} />
+        </section>
+        <div class="sin-js">
+          <p set:html={marca(T.demoSinJs)} />
+          <a class="boton boton--borde" href={ap('proyectos', 'itza')} set:html={marca(T.demoCaso)} />
+        </div>
       </section>
 
       <dl class="datos">
-        {T.datos.map(([d, v]) => <div><dt set:html={marca(d)} /><dd set:html={marca(v)} /></div>)}
+        {T.cifras.map(([cifra, texto]) => <div><dt class="t-dato">{cifra}</dt><dd class="suave">{texto}</dd></div>)}
       </dl>
 
-      <section class="bloque" aria-labelledby="preguntas-titulo">
-        <h2 id="preguntas-titulo" class="grande" set:html={marca(T.preguntasTitulo)} />
-        <div class="bloque__cuerpo">
-          <p set:html={marca(T.preguntasIntro)} />
-          <ul class="lista">{T.preguntas.map((q) => <li>{q}</li>)}</ul>
-          <p set:html={marca(T.preguntasCierre)} />
+      <section class="seccion" aria-labelledby="preguntas-titulo">
+        <div class="seccion__cabeza">
+          <h2 id="preguntas-titulo" class="t-titulo" set:html={marca(T.preguntasTitulo)} />
+          <p class="suave" set:html={marca(T.preguntasIntro)} />
         </div>
+        <ul class="burbujas">{T.preguntas.map((q) => <li>{q.replace(/\.$/, '')}</li>)}</ul>
+        <p class="suave seccion__pie" set:html={marca(T.preguntasCierre)} />
       </section>
 
-      <section class="bloque" aria-labelledby="para-titulo">
-        <h2 id="para-titulo" class="grande">{T.paraTitulo}</h2>
-        <div class="bloque__cuerpo"><p set:html={marca(T.paraTexto)} /></div>
-      </section>
-
-      <section id="demo" class="demo" aria-labelledby="demo-titulo">
-        <h2 id="demo-titulo" class="grande">{T.demoTitulo}</h2>
-        <div class="bloque__cuerpo">
-          <p set:html={marca(T.demoTexto)} />
-          {/* La barra, como en el producto, pero dentro de la sección y no
-              fija al pie: una barra fija taparía el foco al tabular (2.4.11). */}
-          <button type="button" class="barra" data-itza-abrir hidden>
-            <span>{T.barra}</span>
-            <span class="barra__punto" aria-hidden="true"></span>
-          </button>
-          <p class="sin-js" set:html={marca(T.demoSinJs)} />
-          <p class="sin-js"><CtaLink href={ap('proyectos', 'itza')}><Fragment set:html={marca(T.demoCaso)} /></CtaLink></p>
-          <p class="nota" set:html={marca(T.demoPrivacidad)} />
+      <section class="seccion seccion--superficie" aria-labelledby="que-titulo">
+        <div class="seccion__cabeza">
+          <h2 id="que-titulo" class="t-titulo" set:html={marca(T.queTitulo)} />
+          <p class="suave" set:html={marca(T.paraTexto)} />
         </div>
-      </section>
-
-      <section class="bloque" aria-labelledby="que-titulo">
-        <h2 id="que-titulo" class="grande" set:html={marca(T.queTitulo)} />
-        <ul class="rejilla">
+        <ul class="tarjetas">
           {T.que.map((b) => (
-            <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>
+            <li><h3 class="t-sub menta" set:html={marca(b.titulo.replace(/\.$/, ''))} /><p class="suave" set:html={marca(b.texto)} /></li>
           ))}
         </ul>
       </section>
 
-      <section class="bloque" aria-labelledby="acc-titulo">
-        <h2 id="acc-titulo" class="grande" set:html={marca(T.accTitulo)} />
-        <div class="bloque__cuerpo">
-          <p set:html={marca(T.accTexto)} />
-          <ul class="lista">{T.acc.map((a) => <li set:html={marca(a)} />)}</ul>
+      <section class="seccion" aria-labelledby="acc-titulo">
+        <div class="seccion__cabeza">
+          <h2 id="acc-titulo" class="t-titulo" set:html={marca(T.accTitulo)} />
+          <p class="suave" set:html={marca(T.accTexto)} />
         </div>
+        <ul class="checks">{T.acc.map((a) => <li set:html={marca(a)} />)}</ul>
       </section>
 
-      <section id="precio" class="precio" aria-labelledby="precio-titulo">
-        <h2 id="precio-titulo" class="grande">{T.precioTitulo}</h2>
+      <section id="precio" class="seccion precio" aria-labelledby="precio-titulo">
+        <div class="seccion__cabeza">
+          <h2 id="precio-titulo" class="t-titulo" set:html={marca(T.precioTitulo)} />
+          <p class="suave">{T.permanencia} {T.precioNota}</p>
+        </div>
         <div class="precio__caja">
-          <p class="precio__cifra"><span class="grande">{T.precio}</span> {T.precioUnidad} {T.precioIva}</p>
+          <p class="precio__cifra"><span class="t-precio">{T.precio}</span> <span>{T.precioUnidad} {T.precioIva}</span></p>
           <p>{T.instalacion}</p>
-          <p>{T.permanencia}</p>
-          <h3>{T.incluyeTitulo}</h3>
-          <ul class="lista">{T.incluye.map((i) => <li set:html={marca(i)} />)}</ul>
-          <p>{T.precioNota}</p>
-          <CtaLink href="#contacto">{T.pedir}</CtaLink>
+          <h3 class="t-sub">{T.incluyeTitulo}</h3>
+          <ul class="checks checks--oscuro">{T.incluye.map((i) => <li set:html={marcaClara(i)} />)}</ul>
+          <a class="boton boton--oscuro boton--ancho" href="#contacto">{T.pedir}</a>
         </div>
       </section>
 
-      <section class="bloque" aria-labelledby="como-titulo">
-        <h2 id="como-titulo" class="grande" set:html={marca(T.comoTitulo)} />
+      <section class="seccion seccion--superficie" aria-labelledby="como-titulo">
+        <h2 id="como-titulo" class="t-titulo" set:html={marca(T.comoTitulo)} />
         <ol class="pasos">
-          {T.como.map((b) => <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>)}
+          {T.como.map((b) => <li><h3 class="t-sub" set:html={marca(b.titulo)} /><p class="suave" set:html={marca(b.texto)} /></li>)}
         </ol>
       </section>
 
-      <section class="bloque" aria-labelledby="faq-titulo">
-        <h2 id="faq-titulo" class="grande">{T.faqTitulo}</h2>
+      <section class="seccion" aria-labelledby="faq-titulo">
+        <h2 id="faq-titulo" class="t-titulo">{T.faqTitulo}</h2>
         <div class="faq">
           {T.faq.map((q) => (
-            <div class="faq__item"><h3 set:html={marca(q.pregunta)} /><p set:html={marca(q.respuesta)} /></div>
+            <div class="faq__item"><h3 class="t-sub" set:html={marca(q.pregunta)} /><p class="suave" set:html={marca(q.respuesta)} /></div>
           ))}
         </div>
       </section>
 
       <section id="contacto" class="cierre" aria-labelledby="cierre-titulo">
-        <h2 id="cierre-titulo" class="grande" set:html={marca(T.cierreTitulo)} />
-        <p set:html={marca(T.cierreTexto)} />
-        <ul class="enlaces">
-          <li><CtaLink href={ap('contacto')} size="large">{T.escribenos}</CtaLink></li>
-          {/* El correo no cabe a 320 sin partirse: puede cortar detrás de la arroba. */}
-          <li><CtaLink href={`mailto:${CORREO_ESTUDIO}`}>{T.correo.split('@')[0]}@<wbr />{T.correo.split('@')[1]}</CtaLink></li>
+        <h2 id="cierre-titulo" class="t-titulo" set:html={marca(T.cierreTitulo)} />
+        <p class="suave">{T.cierreTexto}</p>
+        <ul class="botones">
+          <li><a class="boton boton--menta" href={ap('contacto')}>{T.escribenos}</a></li>
+          <li><a class="boton boton--borde" href={`mailto:${CORREO_ESTUDIO}`}>{T.correo.split('@')[0]}@<wbr />{T.correo.split('@')[1]}</a></li>
         </ul>
       </section>
     </main>
@@ -231,35 +251,6 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
       </nav>
     </footer>
 
-    {/* La ventana de la demo. <dialog> con showModal(): el navegador deja
-        inerte la página, lleva el foco dentro y la cierra con Escape. */}
-    <dialog class="chat" aria-labelledby="chat-titulo" data-itza-chat={chat}>
-      <div class="chat__cabeza">
-        <h2 id="chat-titulo" set:html={logo()} />
-        <button type="button" class="chat__boton" data-itza-cerrar>{T.chat.cerrar}</button>
-      </div>
-      {/* role="log": lo que entra se anuncia solo, sin mover el foco (4.1.3).
-          tabindex="0": la conversación se desplaza, y con teclado también
-          tiene que poder leerse hacia atrás (2.1.1). */}
-      <div class="chat__log" role="log" aria-label={T.chat.conversacion} tabindex="0" data-itza-log></div>
-      <div class="chat__sugerencias" data-itza-sugerencias hidden>
-        <p id="chat-sugeridas">{T.chat.sugerencias}</p>
-        <ul aria-labelledby="chat-sugeridas">
-          {T.chat.sugeridas.map((s) => <li><button type="button" class="chat__sugerencia" data-texto={s} set:html={marca(s)} /></li>)}
-        </ul>
-      </div>
-      <form class="chat__form" data-itza-form>
-        <label for="chat-mensaje">{T.chat.etiqueta}</label>
-        <textarea id="chat-mensaje" rows="2" maxlength="500" autocomplete="off"></textarea>
-        <div class="chat__acciones">
-          <button type="submit" class="chat__boton chat__boton--fuerte">{T.chat.enviar}</button>
-          <button type="button" class="chat__boton" data-itza-hablar hidden>{T.chat.hablar}</button>
-          <button type="button" class="chat__boton" data-itza-leer aria-pressed="false" hidden>{T.chat.leer}</button>
-        </div>
-      </form>
-      <p class="chat__nota">{T.demoPrivacidad}</p>
-    </dialog>
-
     <script>
       import '../../scripts/itza-demo';
     </script>
@@ -267,156 +258,207 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 </html>
 
 <style>
+  /* ---- Tokens del sistema de producto (ver la cabecera) ---- */
+  :root {
+    --p-fondo: #282B2A;       /* gris oscuro sedoso, casi negro */
+    --p-superficie: #313534;
+    --p-linea: #444A48;       /* decorativa: filetes y bordes de tarjeta */
+    --p-menta: #C7EAE4;
+    --p-texto: #F2F7F5;       /* 13,2:1 sobre el fondo */
+    --p-suave: #D3DCD9;       /* 10,2:1 sobre el fondo, 8,9:1 sobre la superficie */
+    --p-blanco: #FFFFFF;
+    --p-gris-claro: #F2F4F3;
+    --p-ancho: 1200px;
+    --p-margen: clamp(24px, 4vw, 48px);
+    --p-radio: 16px;
+  }
+  :global(html), :global(body) { background: var(--p-fondo); color: var(--p-texto); }
+  :global(body) { font-size: 18px; line-height: 1.5; }
+  @media (min-width: 1024px) { :global(body) { font-size: 20px; } }
+  /* El foco, en menta sobre el fondo oscuro y en Ink sobre lo claro. */
+  :global(:focus-visible) { outline: 3px solid var(--p-menta); outline-offset: 3px; }
+  .demo :global(:focus-visible), .precio__caja :global(:focus-visible) { outline-color: var(--p-fondo); }
   main:focus { outline: none; }
+  :global(.sr-only) { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .saltar {
-    position: absolute; inset-block-start: var(--space-8); inset-inline-start: var(--space-8); z-index: 200;
-    transform: translateY(calc(-100% - var(--space-16)));
-    display: inline-flex; align-items: center; min-height: var(--touch-min); padding: var(--space-12) var(--space-16);
-    background: var(--surface-raised); color: var(--text);
+    position: absolute; inset-block-start: 8px; inset-inline-start: 8px; z-index: 200;
+    transform: translateY(calc(-100% - 16px));
+    display: inline-flex; align-items: center; min-height: 44px; padding: 12px 16px;
+    background: var(--p-menta); color: var(--p-fondo);
   }
   .saltar:focus { transform: none; }
-  :global(.sr-only) { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-  .grande { font-size: var(--display-size); line-height: var(--display-leading); font-weight: 400; }
   h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
-  h3 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  p, li, dd, dt { max-inline-size: var(--measure); }
+  /* base.css pinta los encabezados y los enlaces en Ink: aquí heredan. */
+  h1, h2, h3, dt { color: inherit; }
+  ul, ol { padding: 0; list-style: none; }
+  p, li, dd { max-inline-size: 62ch; }
+  .menta { color: var(--p-menta); }
+  .suave { color: var(--p-suave); }
+  a { color: inherit; }
+  .demo__log :global(p) { color: var(--p-fondo); }
+
+  /* ---- Escala de producto: cinco tamaños, dos pesos ---- */
+  .t-hero { font-size: clamp(40px, 5.2vw, 72px); line-height: 1.04; font-weight: 500; letter-spacing: -0.02em; max-inline-size: 15ch; text-wrap: balance; }
+  .t-titulo { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 500; letter-spacing: -0.01em; max-inline-size: 22ch; text-wrap: balance; }
+  .t-dato { font-size: clamp(28px, 2.8vw, 40px); line-height: 1.1; font-weight: 500; color: var(--p-menta); }
+  .t-sub { font-size: 1.1em; line-height: 1.3; font-weight: 500; }
+  .t-precio { font-size: clamp(56px, 5vw, 72px); line-height: 1; font-weight: 500; }
+  .firma { font-size: 16px; color: var(--p-suave); }
+
   /* El logo, a la altura de la letra en cualquier tamaño. */
   :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
-  .cabeza__marca :global(.logo-itza) { block-size: 28px; }
-  .linea { display: block; }
+  .cabeza__marca :global(.logo-itza) { block-size: 32px; }
+  .demo__cabeza :global(.logo-itza) { block-size: 24px; vertical-align: middle; }
 
-  /* ---- Cabecera: la marca y los idiomas ---- */
+  /* ---- Botones: la acción principal con fondo ---- */
+  .botones { display: flex; flex-wrap: wrap; gap: 16px; }
+  .boton {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.3em;
+    min-height: 56px; padding: 0 28px; border-radius: 999px; border: 1px solid transparent;
+    font: inherit; font-weight: 500; text-decoration: none; cursor: pointer; text-align: center;
+  }
+  .boton--pequeno { min-height: 44px; padding: 0 20px; font-size: 16px; }
+  .boton--menta { background: var(--p-menta); color: var(--p-fondo); }
+  .boton--borde { border-color: var(--p-menta); color: var(--p-menta); }
+  .boton--oscuro { background: var(--p-fondo); color: var(--p-blanco); }
+  .boton--ancho { inline-size: 100%; box-sizing: border-box; }
+  .boton:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+
+  /* ---- Cabecera ---- */
   .cabeza {
-    display: flex; align-items: center; justify-content: space-between; gap: var(--space-24);
-    padding: var(--space-12) var(--gutter-page); background: var(--mint);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+    padding: 12px var(--p-margen); border-block-end: 1px solid var(--p-linea);
   }
-  .cabeza__marca, .cabeza__idiomas a {
-    display: inline-flex; align-items: center; min-height: var(--touch-min); text-decoration: none; color: var(--text);
-  }
-  .cabeza__idiomas ul { display: flex; list-style: none; padding: 0; margin: 0; gap: var(--space-4); }
-  .cabeza__idiomas a { padding: 0 var(--space-12); }
-  .cabeza__idiomas a:hover, .cabeza__idiomas a[aria-current] {
-    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
-  }
+  .cabeza__marca { display: inline-flex; align-items: center; min-height: 44px; }
+  .cabeza__derecha { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .cabeza__idiomas ul { display: flex; gap: 4px; font-size: 16px; }
+  .cabeza__idiomas a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; text-decoration: none; }
+  .cabeza__idiomas a:hover, .cabeza__idiomas a[aria-current] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 
-  /* ---- Hero, en el menta de Itza ---- */
+  /* ---- Hero con la demo ---- */
   .hero {
-    display: flex; flex-direction: column; gap: var(--space-48);
-    padding: var(--space-64) var(--gutter-page) var(--ritmo-seccion); background: var(--mint);
+    max-inline-size: var(--p-ancho); margin-inline: auto; box-sizing: content-box;
+    padding: clamp(48px, 7vw, 96px) var(--p-margen) clamp(48px, 6vw, 80px);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 48px 64px;
   }
-  .hero__texto { display: flex; flex-direction: column; gap: var(--space-32); }
-  .hero :global(.hero__video) { inline-size: min(100%, 400px); align-self: center; }
-  @media (min-width: 1024px) {
-    .hero { flex-direction: row; align-items: center; justify-content: space-between; }
-    .hero__texto { flex: 1 1 0; max-inline-size: 760px; }
+  .hero__texto { flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+  .demo {
+    flex: 1 1 340px; min-width: 0; max-inline-size: 460px;
+    display: none; flex-direction: column; border-radius: 20px; background: var(--p-blanco); color: var(--p-fondo);
+    overflow: hidden;
   }
-  .enlaces { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-32); }
-
-  /* ---- Datos rápidos ---- */
-  .datos {
-    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24);
-    padding: var(--space-48) var(--gutter-page) 0;
-  }
-  @media (min-width: 768px) { .datos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (min-width: 1024px) { .datos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-  .datos div { display: flex; flex-direction: column; gap: var(--space-4); padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
-
-  /* ---- Bloques: título a la izquierda, texto a la derecha desde 1024 ---- */
-  .bloque, .demo, .precio, .cierre {
-    display: flex; flex-direction: column; gap: var(--space-32);
-    padding: var(--ritmo-seccion) var(--gutter-page) 0;
-  }
-  .bloque__cuerpo, .precio__caja { display: flex; flex-direction: column; gap: var(--space-24); }
-  .lista { padding-inline-start: 1.2em; display: flex; flex-direction: column; gap: var(--space-8); }
-  .rejilla, .pasos { list-style: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48) var(--space-24); }
-  .rejilla li, .pasos li { display: flex; flex-direction: column; gap: var(--space-8); }
-  @media (min-width: 768px) {
-    .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (min-width: 1024px) {
-    .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .pasos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  }
-  .pasos { counter-reset: paso; }
-  .pasos li { padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
-
-  /* ---- Demo ---- */
-  .demo { padding-block-end: var(--ritmo-seccion); margin-block-start: var(--ritmo-seccion); background: var(--mint); }
+  :global(html.js) .demo { display: flex; }
   :global(html.js) .sin-js { display: none; }
-  .barra {
-    display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-24);
-    inline-size: min(100%, 480px); min-height: 56px; padding: 0 var(--space-24);
-    border: 1px solid var(--text); border-radius: 999px; background: var(--white); color: var(--text);
-    font: inherit; cursor: pointer; text-align: start;
+  .sin-js { display: flex; flex-direction: column; gap: 16px; flex: 1 1 340px; }
+  .demo__cabeza { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 16px; background: var(--p-menta); }
+  .demo__cabeza h2 { font-size: 1em; display: inline-flex; align-items: center; min-height: 44px; }
+  .demo__estado { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; }
+  .demo__punto { inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--p-fondo); }
+  .demo__log {
+    display: flex; flex-direction: column; gap: 10px; padding: 16px;
+    block-size: 240px; overflow-y: auto; font-size: 17px;
   }
-  .barra:hover span:first-child { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
-  .barra__punto { inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--ink); flex: none; }
-  .nota { max-inline-size: var(--measure); }
+  .demo__log :global(p) { max-inline-size: 85%; padding: 10px 14px; border-radius: 14px; background: var(--p-gris-claro); }
+  .demo__log :global(p.tu) { align-self: flex-end; background: var(--p-menta); }
+  .demo__log :global(.logo-itza) { block-size: 0.9em; }
+  .demo__sugerencias { padding: 0 16px 12px; }
+  .demo__sugerencias ul, .demo__voz { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sugerencia {
+    display: inline-flex; align-items: center; gap: 0.25em; min-height: 44px; padding: 0 14px;
+    border: 1px solid var(--p-fondo); border-radius: 999px; background: var(--p-blanco); color: var(--p-fondo);
+    font: inherit; font-size: 16px; cursor: pointer; text-align: start;
+  }
+  .sugerencia:hover { background: var(--p-gris-claro); }
+  .sugerencia[aria-pressed='true'] { background: var(--p-menta); }
+  .demo__form { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 16px; border-block-start: 1px solid #E3E3E3; font-size: 16px; }
+  .demo__fila { display: flex; gap: 8px; align-items: stretch; }
+  .demo__fila textarea {
+    flex: 1 1 auto; min-width: 0; min-height: 44px; box-sizing: border-box; padding: 10px 12px;
+    border: 1px solid var(--p-fondo); border-radius: 10px; font: inherit; color: var(--p-fondo); resize: vertical;
+    /* La página es oscura (color-scheme: dark): el campo, dentro de la caja
+       blanca, se pinta claro a propósito. */
+    background: var(--p-blanco); color-scheme: light;
+  }
+  .demo__fila .boton { min-height: 44px; padding: 0 18px; }
+  .demo__voz:has(> :not([hidden])) { padding-block-start: 4px; }
+  .demo__nota { padding: 0 16px 16px; font-size: 14px; line-height: 1.45; color: var(--p-fondo); }
+
+  /* ---- Datos ---- */
+  .datos {
+    max-inline-size: var(--p-ancho); margin-inline: auto; box-sizing: content-box;
+    padding: 0 var(--p-margen) clamp(64px, 8vw, 112px);
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px;
+  }
+  @media (min-width: 1024px) { .datos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .datos div { padding-block-start: 16px; border-block-start: 1px solid var(--p-menta); display: flex; flex-direction: column; gap: 8px; }
+  .datos dd { font-size: 16px; }
+
+  /* ---- Secciones ---- */
+  .seccion, .cierre {
+    max-inline-size: var(--p-ancho); margin-inline: auto; box-sizing: content-box;
+    padding: clamp(64px, 8vw, 112px) var(--p-margen); display: flex; flex-direction: column; gap: 40px;
+  }
+  .seccion--superficie { max-inline-size: none; background: var(--p-superficie); padding-inline: max(var(--p-margen), calc((100% - var(--p-ancho)) / 2)); }
+  .seccion__cabeza { display: flex; flex-direction: column; gap: 16px; }
+  .seccion__pie { max-inline-size: 62ch; }
+
+  .burbujas { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  @media (min-width: 768px) { .burbujas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .burbujas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .burbujas li { padding: 16px 20px; border: 1px solid var(--p-linea); border-radius: var(--p-radio); background: var(--p-superficie); }
+
+  .tarjetas { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  @media (min-width: 768px) { .tarjetas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .tarjetas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tarjetas li { display: flex; flex-direction: column; gap: 12px; padding: 28px; border-radius: var(--p-radio); background: var(--p-fondo); }
+
+  /* Las marcas de las listas son dibujo: el texto ya es la lista. */
+  .checks { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px 32px; }
+  @media (min-width: 1024px) { .seccion > .checks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .checks li { position: relative; padding-inline-start: 32px; }
+  .checks li::before {
+    content: ''; position: absolute; inset-inline-start: 2px; inset-block-start: 0.45em;
+    inline-size: 14px; block-size: 7px; border-inline-start: 2px solid var(--p-menta); border-block-end: 2px solid var(--p-menta);
+    transform: rotate(-45deg);
+  }
+  .checks--oscuro li::before { border-color: var(--p-fondo); }
 
   /* ---- Precio ---- */
+  .precio { flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 48px 64px; }
+  .precio .seccion__cabeza { flex: 999 1 360px; min-width: 0; }
   .precio__caja {
-    padding: var(--space-32) var(--space-24); border: 1px solid var(--text); border-radius: var(--radio);
-    max-inline-size: 640px; align-items: flex-start;
+    flex: 1 1 420px; min-width: 0; max-inline-size: 520px; box-sizing: border-box;
+    display: flex; flex-direction: column; gap: 20px; padding: clamp(28px, 3vw, 40px);
+    border-radius: 20px; background: var(--p-menta); color: var(--p-fondo);
   }
-  .precio__cifra .grande { margin-inline-end: var(--space-4); }
+  .precio__cifra { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+  .precio__caja :global(.logo-itza) { block-size: 0.9em; }
+
+  /* ---- Pasos ---- */
+  .pasos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px 24px; counter-reset: paso; }
+  @media (min-width: 768px) { .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .pasos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .pasos li { display: flex; flex-direction: column; gap: 8px; padding-block-start: 16px; border-block-start: 1px solid var(--p-menta); }
 
   /* ---- Preguntas ---- */
-  .faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-32) var(--space-24); }
+  .faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px 48px; }
   @media (min-width: 1024px) { .faq { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .faq__item { display: flex; flex-direction: column; gap: var(--space-8); padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
+  .faq__item { display: flex; flex-direction: column; gap: 8px; padding-block-start: 16px; border-block-start: 1px solid var(--p-linea); }
 
   /* ---- Cierre y pie ---- */
-  .cierre { padding-block-end: var(--ritmo-seccion); }
+  .cierre { align-items: flex-start; gap: 24px; }
   .pie {
-    display: flex; flex-direction: column; gap: var(--space-16);
-    padding: var(--space-32) var(--gutter-page); border-block-start: 1px solid var(--hairline);
+    display: flex; flex-direction: column; gap: 12px; font-size: 16px; color: var(--p-suave);
+    padding: 24px var(--p-margen); border-block-start: 1px solid var(--p-linea);
   }
-  .pie ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-24); }
-  .pie a { display: inline-flex; align-items: center; min-height: var(--touch-min); color: var(--text); text-decoration: none; }
-  .pie a:hover { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  .pie ul { display: flex; flex-wrap: wrap; gap: 0 24px; }
+  .pie a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+  .pie a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
   @media (min-width: 1024px) { .pie { flex-direction: row; align-items: center; justify-content: space-between; } }
 
-  /* ---- La ventana de la demo ---- */
-  .chat {
-    inline-size: min(100% - 32px, 560px); max-block-size: min(100% - 32px, 760px);
-    padding: 0; border: 1px solid var(--text); border-radius: var(--radio);
-    background: var(--white); color: var(--text);
-  }
-  .chat[open] { display: flex; flex-direction: column; }
-  .chat::backdrop { background: rgb(23 23 23 / 0.4); }
-  .chat__cabeza {
-    display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);
-    padding: var(--space-8) var(--space-16); background: var(--mint);
-  }
-  .chat__cabeza h2 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
-  .chat__log {
-    flex: 1 1 auto; overflow-y: auto; min-block-size: 160px;
-    display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-16);
-  }
-  .chat__log :global(p) { max-inline-size: 85%; padding: var(--space-8) var(--space-12); border-radius: var(--radio); background: var(--silk); }
-  .chat__log :global(p.tu) { align-self: flex-end; background: var(--mint); }
-  .chat__sugerencias { display: flex; flex-direction: column; gap: var(--space-8); padding: 0 var(--space-16) var(--space-16); }
-  .chat__sugerencias ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-8); }
-  .chat__sugerencia, .chat__boton {
-    display: inline-flex; align-items: center; min-height: var(--touch-min); padding: 0 var(--space-16);
-    border: 1px solid var(--text); border-radius: 999px; background: var(--white); color: var(--text);
-    font: inherit; cursor: pointer; text-align: start;
-  }
-  .chat__sugerencia:hover, .chat__boton:hover { background: var(--silk); }
-  /* Enviar, en menta: todo el texto va en Ink, también en los botones. */
-  .chat__boton--fuerte, .chat__boton--fuerte:hover { background: var(--mint); }
-  .chat__boton--fuerte:hover { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
-  .chat__boton[aria-pressed='true'] { background: var(--mint); }
-  .chat__form { display: flex; flex-direction: column; gap: var(--space-8); padding: var(--space-16); border-block-start: 1px solid var(--hairline); }
-  .chat__form textarea {
-    font: inherit; color: var(--text); padding: var(--space-8) var(--space-12); min-height: var(--touch-min);
-    border: 1px solid var(--text); border-radius: var(--radio); resize: vertical;
-  }
-  .chat__acciones { display: flex; flex-wrap: wrap; gap: var(--space-8); }
-  .chat__nota { padding: 0 var(--space-16) var(--space-16); }
   @media (forced-colors: active) {
-    .barra__punto { background: CanvasText; }
+    .demo__punto, .checks li::before { forced-color-adjust: auto; border-color: CanvasText; background: CanvasText; }
+    .boton, .sugerencia { border-color: ButtonText; }
   }
 </style>

@@ -30,6 +30,8 @@ export const ITZA: Record<Lang, {
   pedir: string;
   heroL1: string; heroL2: string; heroTexto: string; probar: string; verPrecio: string;
   datos: [string, string][];
+  /* Las cifras del hero del sistema de producto (07/11/2026). */
+  cifras: [string, string][]; firma: string;
   altHero: string; nombreHero: string;
   preguntasTitulo: string; preguntasIntro: string; preguntas: string[]; preguntasCierre: string;
   paraTitulo: string; paraTexto: string;
@@ -47,7 +49,7 @@ export const ITZA: Record<Lang, {
   chat: {
     titulo: string; cerrar: string; bienvenida: string; etiqueta: string; enviar: string;
     escribiendo: string; error: string; sugerencias: string; sugeridas: string[];
-    hablar: string; escuchando: string; leer: string; tu: string; itza: string; conversacion: string;
+    hablar: string; escuchando: string; leer: string; tu: string; itza: string; conversacion: string; enLinea: string;
     limite: string;
   };
 }> = {
@@ -61,6 +63,8 @@ export const ITZA: Record<Lang, {
     heroTexto: 'Un asistente accesible para asociaciones, fundaciones, centros educativos y proyectos culturales. Atiende las 24 horas, responde con la información de tu organización y recoge el contacto de quien quiere que le escribáis.',
     probar: 'Probar Itza', verPrecio: 'Ver el precio',
     datos: [['Atiende', 'las 24 horas'], ['Se usa', 'con teclado, voz y lector de pantalla'], ['Cuesta', '36 € al mes + IVA'], ['Funciona', 'en unas 48 horas']],
+    cifras: [['24 h', 'atendiendo cada día'], ['WCAG 2.2', 'diseñado con el nivel AA'], ['36 €', 'al mes + IVA, sin permanencia'], ['48 h', 'para tenerlo funcionando']],
+    firma: 'Un producto de Accesibilidad Primero, el estudio de diseño y accesibilidad de Valencia.',
     altHero: 'Una consulta en Itza: Marta pulsa la barra “Pregúntame lo que necesites”, se abre la ventana y el asistente le pregunta cómo llamarla. Escribe “Me llamo Marta”, elige una pregunta sugerida y el asistente le responde.',
     nombreHero: 'la consulta de Marta',
     preguntasTitulo: 'Las preguntas de siempre, respondidas a cualquier hora.',
@@ -137,7 +141,7 @@ export const ITZA: Record<Lang, {
       sugerencias: 'Preguntas sugeridas',
       sugeridas: ['¿Qué es Itza y para quién es?', '¿Cuánto cuesta?', '¿Cómo se instala?', '¿Qué hace por la accesibilidad?', 'Quiero probarlo en mi organización'],
       hablar: 'Hablar', escuchando: 'Escuchando…', leer: 'Leer las respuestas en voz alta',
-      tu: 'Tú:', itza: 'Itza:', conversacion: 'Conversación con Itza',
+      tu: 'Tú:', itza: 'Itza:', conversacion: 'Conversación con Itza', enLinea: 'En línea',
       limite: 'La demo termina aquí. Si quieres seguir, escríbenos a proyectos@accesibilidadprimero.com.',
     },
   },
@@ -151,6 +155,8 @@ export const ITZA: Record<Lang, {
     heroTexto: 'Un assistent accessible per a associacions, fundacions, centres educatius i projectes culturals. Atén les 24 hores, respon amb la informació de la teva organització i recull el contacte de qui vol que li escriviu.',
     probar: 'Prova Itza', verPrecio: 'Mira el preu',
     datos: [['Atén', 'les 24 hores'], ['Es fa servir', 'amb teclat, veu i lector de pantalla'], ['Costa', '36 € al mes + IVA'], ['Funciona', 'en unes 48 hores']],
+    cifras: [['24 h', 'atenent cada dia'], ['WCAG 2.2', 'dissenyat amb el nivell AA'], ['36 €', 'al mes + IVA, sense permanència'], ['48 h', 'per tenir-lo funcionant']],
+    firma: 'Un producte d’Accesibilidad Primero, l’estudi de disseny i accessibilitat de València.',
     altHero: 'Una consulta a Itza: la Marta prem la barra “Pregunta’m el que necessitis”, s’obre la finestra i l’assistent li pregunta com dir-li. Escriu “Em dic Marta”, tria una pregunta suggerida i l’assistent li respon.',
     nombreHero: 'la consulta de la Marta',
     preguntasTitulo: 'Les preguntes de sempre, respostes a qualsevol hora.',
@@ -227,7 +233,7 @@ export const ITZA: Record<Lang, {
       sugerencias: 'Preguntes suggerides',
       sugeridas: ['Què és Itza i per a qui és?', 'Quant costa?', 'Com s’instal·la?', 'Què fa per l’accessibilitat?', 'Vull provar-lo a la meva organització'],
       hablar: 'Parla', escuchando: 'Escoltant…', leer: 'Llegeix les respostes en veu alta',
-      tu: 'Tu:', itza: 'Itza:', conversacion: 'Conversa amb Itza',
+      tu: 'Tu:', itza: 'Itza:', conversacion: 'Conversa amb Itza', enLinea: 'En línia',
       limite: 'La demo acaba aquí. Si vols continuar, escriu-nos a proyectos@accesibilidadprimero.com.',
     },
   },
@@ -241,6 +247,8 @@ export const ITZA: Record<Lang, {
     heroTexto: 'An accessible assistant for associations, foundations, schools and cultural projects. It works 24 hours a day, answers with your organisation’s information and collects the details of anyone who wants you to get in touch.',
     probar: 'Try Itza', verPrecio: 'See the price',
     datos: [['Available', '24 hours a day'], ['Works with', 'keyboard, voice and screen readers'], ['Costs', '€36 a month + VAT'], ['Ready', 'in about 48 hours']],
+    cifras: [['24 h', 'helping every day'], ['WCAG 2.2', 'designed to level AA'], ['€36', 'a month + VAT, no minimum term'], ['48 h', 'to have it up and running']],
+    firma: 'A product by Accesibilidad Primero, the design and accessibility studio in Valencia.',
     altHero: 'A conversation in Itza: Marta presses the bar “Ask me anything you need”, the window opens and the assistant asks what to call her. She types “I’m Marta”, picks a suggested question and the assistant answers.',
     nombreHero: 'Marta’s conversation',
     preguntasTitulo: 'The usual questions, answered at any time.',
@@ -317,7 +325,7 @@ export const ITZA: Record<Lang, {
       sugerencias: 'Suggested questions',
       sugeridas: ['What is Itza and who is it for?', 'How much does it cost?', 'How is it installed?', 'What does it do for accessibility?', 'I’d like to try it in my organisation'],
       hablar: 'Speak', escuchando: 'Listening…', leer: 'Read the answers aloud',
-      tu: 'You:', itza: 'Itza:', conversacion: 'Conversation with Itza',
+      tu: 'You:', itza: 'Itza:', conversacion: 'Conversation with Itza', enLinea: 'Online',
       limite: 'The demo ends here. If you’d like to keep going, write to us at proyectos@accesibilidadprimero.com.',
     },
   },
