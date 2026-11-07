@@ -18,7 +18,8 @@
      la anual, sin permanencia). El prompt del proxy viejo todavía traía tres
      planes de 49, 69 y 89 €: el de esta landing (itza-worker/index.ts) lleva
      los buenos.
-   · Off Escuela: «lo estamos instalando», como dice el caso de estudio.
+   · Off Escuela fuera (Johnny, 07/11/2026: «Itza no está instalada en
+     Off»). No se nombra ningún cliente hasta que Itza funcione en su web.
    --------------------------------------------------------------------------- */
 import type { Lang } from '../../i18n/config';
 
@@ -33,7 +34,7 @@ export const ITZA: Record<Lang, {
   preguntasTitulo: string; preguntasIntro: string; preguntas: string[]; preguntasCierre: string;
   paraTitulo: string; paraTexto: string;
   demoTitulo: string; demoTexto: string; demoPrivacidad: string; demoSinJs: string; demoCaso: string;
-  demoOff: string; barra: string;
+  barra: string;
   queTitulo: string; que: Bloque[];
   accTitulo: string; accTexto: string; acc: string[];
   precioTitulo: string; precio: string; precioUnidad: string; precioIva: string;
@@ -73,7 +74,6 @@ export const ITZA: Record<Lang, {
     demoPrivacidad: 'Lo que escribas se envía a la API de Claude, de Anthropic, para generar la respuesta. No lo guardamos. No escribas datos personales en la demo.',
     demoSinJs: 'La demo necesita JavaScript. Si lo tienes desactivado, puedes ver cómo funciona Itza en su caso de estudio.',
     demoCaso: 'Ver el caso de estudio',
-    demoOff: 'Ahora lo estamos instalando en Off Escuela, la escuela de artes escénicas de Off Valencia.',
     barra: 'Pregúntame lo que necesites',
     queTitulo: 'Qué hace Itza.',
     que: [
@@ -164,7 +164,6 @@ export const ITZA: Record<Lang, {
     demoPrivacidad: 'El que escriguis s’envia a l’API de Claude, d’Anthropic, per generar la resposta. No ho guardem. No escriguis dades personals a la demo.',
     demoSinJs: 'La demo necessita JavaScript. Si el tens desactivat, pots veure com funciona Itza al seu cas d’estudi.',
     demoCaso: 'Mira el cas d’estudi',
-    demoOff: 'Ara l’estem instal·lant a Off Escuela, l’escola d’arts escèniques d’Off València.',
     barra: 'Pregunta’m el que necessitis',
     queTitulo: 'Què fa Itza.',
     que: [
@@ -255,7 +254,6 @@ export const ITZA: Record<Lang, {
     demoPrivacidad: 'What you type is sent to Anthropic’s Claude API to generate the answer. We don’t keep it. Don’t type personal details into the demo.',
     demoSinJs: 'The demo needs JavaScript. If it’s turned off, you can see how Itza works in its case study.',
     demoCaso: 'See the case study',
-    demoOff: 'We’re now installing it at Off Escuela, the performing arts school of Off Valencia.',
     barra: 'Ask me anything you need',
     queTitulo: 'What Itza does.',
     que: [
