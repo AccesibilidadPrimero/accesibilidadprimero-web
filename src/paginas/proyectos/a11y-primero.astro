@@ -31,6 +31,7 @@ import MicroDecision from '../../components/MicroDecision.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
+import { aplicacion } from '../../data/datos-estructurados';
 import HeroPagina from '../../components/HeroPagina.astro';
 import { path } from '../../i18n/config';
 import { idiomaDe } from '../../i18n/idioma';
@@ -226,6 +227,8 @@ const anchos = (w: number, lista: number[]) => [...lista.filter((x) => x < w), w
 <Base
   lang={lang}
   current="proyectos"
+  slug="a11y-primero"
+  datos={aplicacion('a11y-primero', lang)}
   title={`${titulo} · ${T.seccion} · Accesibilidad Primero`}
   description={T.descripcion}
 >

@@ -570,6 +570,23 @@ final. La declaración dice «parcialmente conforme» hasta que Johnny haga la
 revisión manual; al hacerla se actualizan fecha, conformidad, limitaciones,
 método y compatibilidad.
 
+**SEO sin tocar lo que se ve (07/11/2026).** Todo en el `<head>` o fuera
+de la página:
+- `hreflang` en el `<head>` de cada página con sus versiones en los tres
+  idiomas y `x-default` en castellano. Salen de `alternates()`, lo mismo que
+  el selector de idioma, así que una página con versiones necesita su `slug`
+  en `Base` (los casos lo pasan; antes el selector de un caso llevaba al
+  listado de Proyectos del otro idioma). El blog no lleva ninguno.
+- Datos estructurados (`datos` de `Base`, `src/data/datos-estructurados.ts`):
+  `ProfessionalService` en la portada y `SoftwareApplication` en los casos de
+  Itza, A11y Primero y Accesible Abstracts. Solo datos que la web ya enseña.
+  La guía lleva su `FAQPage`.
+- «Idioma» es un `<p>`, no un `<h2>`: no es una sección del contenido.
+- `npm run build` genera `sitemap.xml` (con las versiones de idioma) y
+  `robots.txt` desde `dist/` (`scripts/sitemap.mjs`). La base sale de
+  `src/data/sitio.ts`: el día del cambio a `final` nombran el .com solos.
+  `robots.txt` no bloquea nada nunca: un bloqueo impediría ver el noindex.
+
 **La web de pruebas no se indexa (11/10/2026).** `public/_headers` pone
 `X-Robots-Tag: noindex` solo en los hosts `*.workers.dev`, y `worker/index.ts`
 hace lo mismo con lo que responde el Worker. El dominio final no la recibe.

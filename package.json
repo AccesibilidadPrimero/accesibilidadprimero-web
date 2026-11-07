@@ -6,7 +6,7 @@
   "description": "accesibilidadprimero.com v2 — Astro + Cloudflare Workers",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/sitemap.mjs",
     "arte": "node scripts/svg.mjs",
     "preview": "astro preview",
     "check": "astro check",

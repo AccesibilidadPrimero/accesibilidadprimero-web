@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { estudio } from '../data/datos-estructurados';
 import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
 import Mesa from '../components/Mesa.astro';
@@ -106,6 +107,7 @@ const conCuerpo = await Promise.all(
 <Base
   lang={lang}
   current="home"
+  datos={estudio(lang, T.description)}
   title={T.title}
   description={T.description}
 >
