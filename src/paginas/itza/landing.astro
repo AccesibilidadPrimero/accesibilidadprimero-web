@@ -23,6 +23,7 @@ import '../../styles/base.css';
 import CtaLink from '../../components/CtaLink.astro';
 import VideoPausable from '../../components/VideoPausable.astro';
 import posterHero from '../../assets/proyectos/itza/itza-hero-fotograma.png';
+import logoItza from '../../assets/productos/itza-logo.png';
 import { LANGS, LANG_CODE, LANG_NAME, path, type Lang } from '../../i18n/config';
 import { SITIO, INDEXABLE, DOMINIO } from '../../data/sitio';
 import { CORREO_ESTUDIO } from '../../data/contacto';
@@ -58,8 +59,15 @@ const datos = JSON.stringify([
   },
 ]).replace(/</g, '\\u003c');
 
-/* La marca lleva su ® siempre, más pequeño y sin peso nuevo. */
-const marca = (s: string) => s.replace(/Itza®?/g, 'Itza<span class="reg">®</span>');
+/* EL LOGO CADA VEZ QUE SE NOMBRA ITZA (Johnny, 07/11/2026). Va dentro de la
+   frase, a la altura de la letra, con alt="Itza": el lector de pantalla lee
+   la frase entera y al ampliar crece con el texto (va en em). Un logotipo es
+   la excepción de 1.4.5, la única imagen con letras que entra en la web. El
+   logo trae su propia marca (el corazón CC), así que el ® del texto sobra.
+   Sale de arte/productos/itza-logo.png, en Ink. */
+const ALTO_LOGO = 341, ANCHO_LOGO = 968;
+const logo = (alt = 'Itza') => `<img class="logo-itza" src="${logoItza.src}" alt="${alt}" width="${ANCHO_LOGO}" height="${ALTO_LOGO}" />`;
+const marca = (s: string) => s.replace(/Itza®?/g, () => logo());
 const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 ---
 
@@ -85,7 +93,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
     <a class="saltar" href="#contenido">{T.saltar}</a>
 
     <header class="cabeza">
-      <a class="cabeza__marca" href={raiz(lang)} aria-label={T.inicio} set:html={marca('Itza®')} />
+      <a class="cabeza__marca" href={raiz(lang)} set:html={logo(T.inicio)} />
       <nav class="cabeza__idiomas" aria-label={T.idioma}>
         <ul>
           {LANGS.map((l) => (
@@ -105,7 +113,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
           <h1 id="hero-titulo" class="grande"><span class="linea" set:html={marca(T.heroL1)} /> <span class="linea" set:html={marca(T.heroL2)} /></h1>
           <p set:html={marca(T.heroTexto)} />
           <ul class="enlaces">
-            <li><CtaLink href="#demo">{T.probar}</CtaLink></li>
+            <li><CtaLink href="#demo"><Fragment set:html={marca(T.probar)} /></CtaLink></li>
             <li><CtaLink href="#precio">{T.verPrecio}</CtaLink></li>
           </ul>
         </div>
@@ -121,13 +129,13 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
       </section>
 
       <dl class="datos">
-        {T.datos.map(([d, v]) => <div><dt>{d}</dt><dd>{v}</dd></div>)}
+        {T.datos.map(([d, v]) => <div><dt set:html={marca(d)} /><dd set:html={marca(v)} /></div>)}
       </dl>
 
       <section class="bloque" aria-labelledby="preguntas-titulo">
-        <h2 id="preguntas-titulo" class="grande">{T.preguntasTitulo}</h2>
+        <h2 id="preguntas-titulo" class="grande" set:html={marca(T.preguntasTitulo)} />
         <div class="bloque__cuerpo">
-          <p>{T.preguntasIntro}</p>
+          <p set:html={marca(T.preguntasIntro)} />
           <ul class="lista">{T.preguntas.map((q) => <li>{q}</li>)}</ul>
           <p set:html={marca(T.preguntasCierre)} />
         </div>
@@ -135,7 +143,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 
       <section class="bloque" aria-labelledby="para-titulo">
         <h2 id="para-titulo" class="grande">{T.paraTitulo}</h2>
-        <div class="bloque__cuerpo"><p>{T.paraTexto}</p></div>
+        <div class="bloque__cuerpo"><p set:html={marca(T.paraTexto)} /></div>
       </section>
 
       <section id="demo" class="demo" aria-labelledby="demo-titulo">
@@ -148,9 +156,9 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
             <span>{T.barra}</span>
             <span class="barra__punto" aria-hidden="true"></span>
           </button>
-          <p class="sin-js">{T.demoSinJs}</p>
-          <p class="sin-js"><CtaLink href={ap('proyectos', 'itza')}>{T.demoCaso}</CtaLink></p>
-          <p class="nota">{T.demoPrivacidad}</p>
+          <p class="sin-js" set:html={marca(T.demoSinJs)} />
+          <p class="sin-js"><CtaLink href={ap('proyectos', 'itza')}><Fragment set:html={marca(T.demoCaso)} /></CtaLink></p>
+          <p class="nota" set:html={marca(T.demoPrivacidad)} />
         </div>
       </section>
 
@@ -158,16 +166,16 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
         <h2 id="que-titulo" class="grande" set:html={marca(T.queTitulo)} />
         <ul class="rejilla">
           {T.que.map((b) => (
-            <li><h3>{b.titulo}</h3><p>{b.texto}</p></li>
+            <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>
           ))}
         </ul>
       </section>
 
       <section class="bloque" aria-labelledby="acc-titulo">
-        <h2 id="acc-titulo" class="grande">{T.accTitulo}</h2>
+        <h2 id="acc-titulo" class="grande" set:html={marca(T.accTitulo)} />
         <div class="bloque__cuerpo">
           <p set:html={marca(T.accTexto)} />
-          <ul class="lista">{T.acc.map((a) => <li>{a}</li>)}</ul>
+          <ul class="lista">{T.acc.map((a) => <li set:html={marca(a)} />)}</ul>
         </div>
       </section>
 
@@ -178,16 +186,16 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
           <p>{T.instalacion}</p>
           <p>{T.permanencia}</p>
           <h3>{T.incluyeTitulo}</h3>
-          <ul class="lista">{T.incluye.map((i) => <li>{i}</li>)}</ul>
+          <ul class="lista">{T.incluye.map((i) => <li set:html={marca(i)} />)}</ul>
           <p>{T.precioNota}</p>
           <CtaLink href="#contacto">{T.pedir}</CtaLink>
         </div>
       </section>
 
       <section class="bloque" aria-labelledby="como-titulo">
-        <h2 id="como-titulo" class="grande">{T.comoTitulo}</h2>
+        <h2 id="como-titulo" class="grande" set:html={marca(T.comoTitulo)} />
         <ol class="pasos">
-          {T.como.map((b) => <li><h3>{b.titulo}</h3><p set:html={marca(b.texto)} /></li>)}
+          {T.como.map((b) => <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>)}
         </ol>
       </section>
 
@@ -202,7 +210,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
 
       <section id="contacto" class="cierre" aria-labelledby="cierre-titulo">
         <h2 id="cierre-titulo" class="grande" set:html={marca(T.cierreTitulo)} />
-        <p>{T.cierreTexto}</p>
+        <p set:html={marca(T.cierreTexto)} />
         <ul class="enlaces">
           <li><CtaLink href={ap('contacto')} size="large">{T.escribenos}</CtaLink></li>
           {/* El correo no cabe a 320 sin partirse: puede cortar detrás de la arroba. */}
@@ -227,7 +235,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
         inerte la página, lleva el foco dentro y la cierra con Escape. */}
     <dialog class="chat" aria-labelledby="chat-titulo" data-itza-chat={chat}>
       <div class="chat__cabeza">
-        <h2 id="chat-titulo" set:html={marca('Itza®')} />
+        <h2 id="chat-titulo" set:html={logo()} />
         <button type="button" class="chat__boton" data-itza-cerrar>{T.chat.cerrar}</button>
       </div>
       {/* role="log": lo que entra se anuncia solo, sin mover el foco (4.1.3).
@@ -237,7 +245,7 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
       <div class="chat__sugerencias" data-itza-sugerencias hidden>
         <p id="chat-sugeridas">{T.chat.sugerencias}</p>
         <ul aria-labelledby="chat-sugeridas">
-          {T.chat.sugeridas.map((s) => <li><button type="button" class="chat__sugerencia">{s}</button></li>)}
+          {T.chat.sugeridas.map((s) => <li><button type="button" class="chat__sugerencia" data-texto={s} set:html={marca(s)} /></li>)}
         </ul>
       </div>
       <form class="chat__form" data-itza-form>
@@ -273,7 +281,9 @@ const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
   h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
   h3 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
   p, li, dd, dt { max-inline-size: var(--measure); }
-  :global(.reg) { font-size: 0.6em; vertical-align: text-top; margin-inline-start: -0.05em; }
+  /* El logo, a la altura de la letra en cualquier tamaño. */
+  :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
+  .cabeza__marca :global(.logo-itza) { block-size: 28px; }
   .linea { display: block; }
 
   /* ---- Cabecera: la marca y los idiomas ---- */

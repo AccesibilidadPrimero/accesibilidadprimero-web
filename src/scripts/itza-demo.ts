@@ -40,6 +40,7 @@ function iniciar() {
   const botonHablar = dialogo.querySelector<HTMLButtonElement>('[data-itza-hablar]')!;
   const botonLeer = dialogo.querySelector<HTMLButtonElement>('[data-itza-leer]')!;
 
+  const logo = document.querySelector<HTMLImageElement>('#chat-titulo .logo-itza');
   const historia: Mensaje[] = [];
   let ocupado = false;
   let empezada = false;
@@ -52,7 +53,14 @@ function iniciar() {
     const etiqueta = document.createElement('span');
     etiqueta.className = 'sr-only';
     etiqueta.textContent = `${quien === 'tu' ? T.tu : T.itza} `;
-    p.append(etiqueta, document.createTextNode(texto));
+    p.append(etiqueta);
+    /* «Itza» con su logo también en la conversación, como en la página. */
+    texto.split(/(Itza®?)/).forEach((trozo) => {
+      if (/^Itza®?$/.test(trozo) && logo) {
+        const img = logo.cloneNode() as HTMLImageElement;
+        p.append(img);
+      } else if (trozo) p.append(document.createTextNode(trozo));
+    });
     log.append(p);
     log.scrollTop = log.scrollHeight;
     return p;
@@ -111,7 +119,8 @@ function iniciar() {
   });
   sugerencias.addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest('button');
-    if (b) { preguntar(b.textContent ?? ''); campo.focus(); }
+    /* El texto sale de data-texto: dentro del botón, «Itza» es el logo. */
+    if (b) { preguntar(b.dataset.texto ?? b.textContent ?? ''); campo.focus(); }
   });
 
   /* ---- Voz, solo en castellano ---- */
