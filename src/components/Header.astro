@@ -22,14 +22,14 @@ interface Props { lang: Lang; current: RouteKey; slug?: Slug }
 const { lang, current, slug } = Astro.props;
 const ui = t(lang);
 const langs = alternates(current, slug);
-/* «Lectura fácil», junto a los idiomas (Johnny, 07/11/2026). Solo en
-   castellano y catalán, que es donde existe. Lleva a la página que cuenta lo
-   mismo; en las páginas en lectura fácil, a su portada y marcado como actual. */
+/* «Lectura fácil», junto a los idiomas (Johnny, 07/11/2026), en los tres
+   idiomas («Easy read» en inglés). Lleva a la página que cuenta lo mismo; en
+   las páginas en lectura fácil, a su portada y marcado como actual. */
 const enLF = current === 'lecturaFacil';
-const lf = lang !== 'en' ? {
+const lf = {
   texto: UI_LF[lang as LangLF].enlace,
   href: path('lecturaFacil', lang, SLUG_LF[enLF ? 'inicio' : lfDesde(current)][lang as LangLF]),
-} : undefined;
+};
 ---
 
 <header class="header">

@@ -127,13 +127,12 @@ const langs = alternates(current, slug);
           }
         </ul>
         {/* «Lectura fácil», junto a los idiomas como en la cabecera. */}
-        {lang !== 'en' && (
-          <a
-            href={path('lecturaFacil', lang, SLUG_LF[current === 'lecturaFacil' ? 'inicio' : lfDesde(current)][lang as LangLF])}
-            class="menu__lang-link menu__lf"
-            aria-current={current === 'lecturaFacil' ? 'true' : undefined}
-          >{UI_LF[lang as LangLF].enlace}</a>
-        )}
+        <a
+          href={path('lecturaFacil', lang, SLUG_LF[current === 'lecturaFacil' ? 'inicio' : lfDesde(current)][lang as LangLF])}
+          class="menu__lang-link menu__lf"
+          aria-current={current === 'lecturaFacil' ? 'true' : undefined}
+        >{UI_LF[lang as LangLF].enlace}</a>
+
       </div>
       )
     }
