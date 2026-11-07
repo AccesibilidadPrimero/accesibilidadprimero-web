@@ -354,8 +354,10 @@ disciplina personal a las once de la noche.
   cabecera); plantilla en `src/paginas/lectura-facil.astro`. Excepciones
   declaradas, porque las pide la norma: sin hero a pantalla entera,
   interlineado 1,5, una frase por párrafo y títulos en el tamaño grande.
-  Acceso: «Lectura fácil» junto a los idiomas (cabecera desde 1280, menú por
-  debajo de 1024) y en el pie, en los tres idiomas («Easy read» en inglés). Hasta que
+  Acceso: «Lectura fácil» junto a los idiomas (cabecera desde 1160, menú por
+  debajo de 1024), en los tres idiomas («Easy read» en inglés). En el pie
+  solo entre 1024 y 1159, donde no cabe en la cabecera (Johnny, 07/11/2026:
+  quitarla del pie; el pie lleva «Blog»). Hasta que
   Plena inclusión la valide no lleva el logotipo europeo de lectura fácil, y
   un cambio de texto vuelve a pasar por validación.
 - **Tres idiomas (05/11/2026).** Castellano sin prefijo, catalán en `/ca/` e

@@ -12,14 +12,17 @@ const ui = t(lang);
   <!-- Dos <nav> en la misma página: los dos con aria-label, y distintos. -->
   <nav aria-label={ui.footerNavLabel} class="pie__nav">
     <ul class="pie__lista">
+      {/* El blog, en el pie (Johnny, 07/11/2026): fuera del menú, pero a la
+          vista. La lectura fácil sale del pie: ya está en la cabecera (desde 1160)
+          y en el menú (por debajo de 1024). Solo queda aquí entre 1024 y 1159,
+          donde no cabe en la cabecera y el menú no se abre. */}
+      <li><a href={path('blog', lang)} class="pie__enlace">{ui.nav.blog}</a></li>
       {
         NAV_LEGAL.map((key) => (
           <li><a href={path(key, lang)} class="pie__enlace">{ui.nav[key]}</a></li>
         ))
       }
-      {/* La lectura fácil, también en el pie (07/11/2026): en la cabecera
-          solo cabe desde 1280. */}
-      <li><a href={path('lecturaFacil', lang)} class="pie__enlace">{ui.nav.lecturaFacil}</a></li>
+      <li class="pie__lf"><a href={path('lecturaFacil', lang)} class="pie__enlace">{ui.nav.lecturaFacil}</a></li>
     </ul>
   </nav>
 </footer>
@@ -51,6 +54,9 @@ const ui = t(lang);
     margin-inline-end: var(--space-8);
   }
   .pie__lista li { display: flex; align-items: center; }
+  /* La lectura fácil, solo donde la cabecera no la enseña. */
+  .pie__lista .pie__lf { display: none; }
+  @media (min-width: 1024px) and (max-width: 1159px) { .pie__lista .pie__lf { display: flex; } }
 
   /* Como la navegación de la cabecera: sin subrayado en reposo, fino al
      pasar. Son una lista de destinos dentro de un <nav>, no enlaces dentro de
