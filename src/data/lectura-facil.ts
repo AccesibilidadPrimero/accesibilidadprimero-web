@@ -197,7 +197,7 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       titulo: 'Quiénes somos',
       entrada: [
         'Accesibilidad Primero es un estudio de diseño.',
-        'Un estudio de diseño es una empresa pequeña.',
+        'Un estudio de diseño es una empresa que diseña.',
         'Diseñamos webs y aplicaciones.',
         'Una aplicación es un programa para el móvil o para el ordenador.',
       ],
@@ -511,7 +511,7 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       titulo: 'Qui som',
       entrada: [
         'Accesibilidad Primero és un estudi de disseny.',
-        'Un estudi de disseny és una empresa petita.',
+        'Un estudi de disseny és una empresa que dissenya.',
         'Dissenyem webs i aplicacions.',
         'Una aplicació és un programa per al mòbil o per a l’ordinador.',
       ],
