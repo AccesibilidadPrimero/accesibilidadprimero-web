@@ -1,0 +1,278 @@
+---
+/* ---------------------------------------------------------------------------
+   Artículo del Blog · Figma `Producción · Blog · Artículo` (3334:200):
+   Desktop 3334:323 · Tablet 3334:559 · Móvil 3334:786.
+
+   El sistema de la Home: un cuerpo, un peso, todo en Ink. Los h2 y h3 del
+   artículo van a cuerpo de texto y se separan por espacio (64 antes de cada
+   h2, 32 antes de cada h3): la jerarquía la lleva el marcado.
+
+   Desde escritorio el texto va en la columna de contenido de Bloque (a 456
+   de 1392 del margen, 888 de ancho), para que el artículo caiga en la misma
+   rejilla que Estudio y las legales.
+
+   Los enlaces DENTRO de un párrafo son la única excepción a los 44 px de la
+   web: un enlace en mitad de una frase mide lo que mide la línea. Es la
+   excepción «en línea» de 2.5.8, y `npm run a11y` la aplica solo dentro de
+   `.prosa` y solo a enlaces en línea (AGENTS.md §4).
+   --------------------------------------------------------------------------- */
+import { render } from 'astro:content';
+import { Picture, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import HeroPagina from '../../components/HeroPagina.astro';
+import TarjetaArticulo from '../../components/TarjetaArticulo.astro';
+import CtaLink from '../../components/CtaLink.astro';
+import { path } from '../../i18n/config';
+import { NOMBRE_CATEGORIA, UI_BLOG, fechaLarga, hrefArticulo, idiomaDeArticulo, type Articulo } from '../../data/blog';
+import { articulo as datosArticulo, preguntasFrecuentes } from '../../data/datos-estructurados';
+
+/* La página la montan src/pages/{,ca/,en/}blog/[slug].astro, cada una con
+   los artículos de su idioma (getStaticPaths vive allí). */
+interface Props { articulo: Articulo; relacionados: Articulo[]; versiones: import('../../i18n/config').Slug }
+const { articulo, relacionados, versiones } = Astro.props;
+const lang = idiomaDeArticulo(articulo);
+const ui = UI_BLOG[lang];
+const { Content } = await render(articulo);
+const d = articulo.data;
+const firmado = d.autor === 'johnny';
+const nota = [
+  fechaLarga(d.fecha, lang),
+  d.categorias.map((c) => NOMBRE_CATEGORIA[lang][c]).join(', '),
+  ...(firmado ? [`${ui.por} Johnny Vale Vigas`] : []),
+].join(' · ');
+
+/* La portada, en 1200 × 630 para quien comparta el enlace, y la misma
+   dirección en el JSON-LD. */
+const social = (await getImage({ src: d.imagen, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 'high' })).src;
+const url = hrefArticulo(articulo);
+const datos = [
+  datosArticulo({ tipo: d.tipoSchema, titulo: d.titulo, descripcion: d.descripcion, url, imagen: social, fecha: d.fecha, lang, firmado }),
+  ...(d.preguntas?.length ? [preguntasFrecuentes(lang, d.preguntas)] : []),
+];
+---
+
+<Base
+  lang={lang}
+  current="blog"
+  slug={versiones}
+  title={`${d.tituloSeo ?? d.titulo} · Accesibilidad Primero`}
+  description={d.descripcion}
+  imagen={social}
+  datos={datos}
+>
+  <HeroPagina volver={{ href: path('blog', lang), texto: ui.volver }} titulo={d.titulo} texto={[d.descripcion]} nota={nota} />
+
+  <div class="articulo">
+    <div class="articulo__columna">
+      <Picture
+        src={d.imagen}
+        alt={d.imagenAlt}
+        formats={['avif', 'webp']}
+        widths={[400, 900, 1800]}
+        sizes="(min-width: 1440px) 888px, (min-width: 1024px) 62vw, 100vw"
+        class="articulo__portada"
+      />
+      <div class="prosa">
+        <Content />
+      </div>
+
+      {/* La caja de contacto: el mismo enlace grande que el cierre de cada
+          página (CtaLink), con una frase propia del artículo. */}
+      {d.cta && (
+        <aside class="caja-cta" aria-labelledby="caja-cta-titulo">
+          <h2 id="caja-cta-titulo" class="caja-cta__titulo">{d.cta.titulo}</h2>
+          <p>{d.cta.texto}</p>
+          <CtaLink href={`${path(d.cta.destino, lang)}${d.cta.ancla ?? ''}`}>{d.cta.enlace}</CtaLink>
+        </aside>
+      )}
+
+      {/* Las preguntas, visibles: lo que va en el FAQPage tiene que estar en
+          la página. */}
+      {d.preguntas?.length && (
+        <section class="faq-articulo" aria-labelledby="faq-articulo-titulo">
+          <h2 id="faq-articulo-titulo" class="faq-articulo__titulo">{ui.preguntas}</h2>
+          <div class="faq-articulo__lista">
+            {d.preguntas.map((q) => (
+              <div class="faq-articulo__item">
+                <h3 class="faq-articulo__pregunta">{q.pregunta}</h3>
+                <p>{q.respuesta}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  </div>
+
+  {relacionados.length > 0 && (
+    <section class="sigue" aria-labelledby="sigue-titulo">
+      <h2 id="sigue-titulo" class="sigue__titulo">{ui.sigue}</h2>
+      <ul class="sigue__rejilla">
+        {relacionados.map((a) => (
+          <li>
+            <TarjetaArticulo href={hrefArticulo(a)} titulo={a.data.titulo} fecha={a.data.fecha} imagen={a.data.imagen} nivel={3} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<script>
+  import '../../scripts/demos';
+</script>
+
+<style>
+  .articulo { padding: var(--ritmo-seccion) var(--gutter-page) 0; }
+  .articulo__columna { display: flex; flex-direction: column; gap: var(--space-64); }
+  @media (min-width: 1024px) {
+    .articulo__columna { margin-inline-start: calc(456 / 1392 * 100%); max-width: 888px; }
+  }
+  .articulo :global(.articulo__portada) {
+    display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; border-radius: var(--radio);
+  }
+
+  /* ---- El texto del artículo (viene del Markdown: de ahí los :global) ---- */
+  .prosa { display: flex; flex-direction: column; gap: var(--space-24); }
+  .prosa :global(:is(h2, h3, h4)) { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  /* EL TEXTO, CENTRADO BAJO LA IMAGEN (Johnny, 14/10/2026). La columna mide
+     888 y la llenan la portada, las imágenes, las tablas y las
+     demostraciones; el texto se para en la medida de lectura (52ch) y va
+     centrado en ella, con el mismo borde izquierdo en párrafos, títulos y
+     listas. `inline-size: 100%`: en una columna flex, el margen automático
+     sin ancho haría que cada párrafo midiera lo que su texto. */
+  .prosa > :global(:is(p:not(:has(> img, > picture, > video)), h2, h3, h4, ul, ol, blockquote)) {
+    inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto;
+  }
+  .prosa :global(h2) { margin-block-start: calc(var(--space-64) - var(--space-24)); }
+  .prosa :global(:is(h3, h4)) { margin-block-start: calc(var(--space-32) - var(--space-24)); }
+  .prosa :global(:is(p, ul, ol, blockquote, figure, table)) { margin: 0; }
+  .prosa :global(:is(ul, ol)) { padding-inline-start: var(--space-24); display: flex; flex-direction: column; gap: var(--space-8); }
+  .prosa :global(blockquote) { padding-inline-start: var(--space-24); border-inline-start: 1px solid var(--text); }
+  .prosa :global(code) { font: inherit; }
+  .prosa :global(img) { display: block; width: 100%; height: auto; border-radius: var(--radio); }
+  /* Un enlace dentro de una frase: subrayado siempre (no es la navegación). */
+  .prosa :global(p a) { overflow-wrap: anywhere; }
+
+  .prosa :global(table) { width: 100%; border-collapse: collapse; }
+  .prosa :global(:is(th, td)) {
+    text-align: start; vertical-align: top; font-weight: 400;
+    padding: var(--space-16) var(--space-16) var(--space-16) 0;
+    border-block-start: 1px solid var(--rule); overflow-wrap: anywhere;
+  }
+  .prosa :global(tr:last-child td) { border-block-end: 1px solid var(--rule); }
+
+  /* ---- Demostraciones (artículo de tipografía) ----
+     Fondo Silk, como en el Figma. Lo que lleva `data-ejemplo` se pinta a
+     propósito con otro tamaño o con otro color: es la muestra. tipografia,
+     contraste y a11y lo saben y lo saltan (AGENTS.md §4); lo que explica la
+     muestra va siempre en Ink y a cuerpo de texto, y eso sí se mide. */
+  .prosa :global(.demo) {
+    display: flex; flex-direction: column; gap: var(--space-24);
+    padding: var(--space-24); border-radius: var(--radio); background: var(--silk);
+  }
+  .prosa :global(.demo__columnas) { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24); }
+  @media (min-width: 768px) {
+    .prosa :global(.demo__columnas) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .prosa :global(.demo__caja) {
+    display: flex; flex-direction: column; gap: var(--space-16);
+    padding: var(--space-16); border-radius: var(--radio); background: var(--surface);
+  }
+  .prosa :global(.demo__lista) { list-style: none; padding: 0; gap: var(--space-16); }
+  .prosa :global(.demo__lista li) { display: flex; flex-direction: column; gap: var(--space-4); }
+  .prosa :global(.demo__columnas > div > p) { margin-block-end: var(--space-16); }
+
+  .prosa :global(.demo__control) { display: flex; flex-direction: column; gap: var(--space-8); }
+  .prosa :global(.demo__control input) { width: 100%; min-height: var(--touch-min); accent-color: var(--text); margin: 0; }
+
+  .prosa :global(.demo__muestra--px) { font-size: 16px; line-height: 1.5; }
+  .prosa :global(.demo__muestra--rem) { font-size: 1rem; line-height: 1.5; }
+  .prosa :global(.demo__t32) { font-size: 2rem; line-height: 1.2; }
+  .prosa :global(.demo__t24) { font-size: 1.5rem; line-height: 1.3; }
+  .prosa :global(.demo__t20) { font-size: 1.25rem; line-height: 1.4; }
+  .prosa :global(.demo__t16) { font-size: 1rem; line-height: 1.6; }
+  .prosa :global(.demo__t14) { font-size: 0.875rem; line-height: 1.5; }
+  .prosa :global(.demo__t13) { font-size: 13px; line-height: 1.2; }
+  .prosa :global(.demo__t12) { font-size: 12px; line-height: 1.3; }
+  .prosa :global(.demo__t11) { font-size: 11px; line-height: 1.4; }
+  .prosa :global(.demo__t10) { font-size: 10px; line-height: 1.4; }
+  .prosa :global(.demo__c1a1a1a) { color: #1a1a1a; }
+  .prosa :global(.demo__c595959) { color: #595959; }
+  .prosa :global(.demo__caaaaaa) { color: #aaaaaa; }
+  .prosa :global(.demo__cc0c0c0) { color: #c0c0c0; }
+  /* En alto contraste del sistema, los grises de muestra se los come el
+     navegador: que se vean como lo que son, texto. */
+  @media (forced-colors: active) {
+    .prosa :global([data-ejemplo]) { color: CanvasText; }
+  }
+
+  /* ---- Esquemas (07/11/2026) ----
+     Los dibujos de los artículos de normativa son HTML, no imágenes: el texto
+     se lee, se amplía, se traduce y se copia (AGENTS.md: sin texto dentro de
+     las imágenes). Tres formas, todas en una columna en móvil:
+       .esquema--pasos     cajas en columna, una detrás de otra
+       .esquema--comparar  dos columnas enfrentadas
+       .esquema--linea     fechas en orden
+     Filete de 1 px en Ink y fondo Silk; la columna «buena» de una
+     comparación va en Mint. Las flechas son bordes, no texto. */
+  .prosa :global(.esquema) { margin: 0; display: flex; flex-direction: column; gap: var(--space-16); }
+  .prosa :global(.esquema > :is(ol, ul)) {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24);
+  }
+  .prosa :global(.esquema > :is(ol, ul) > li) {
+    position: relative; display: flex; flex-direction: column; gap: var(--space-8);
+    padding: var(--space-16); border: 1px solid var(--text); border-radius: var(--radio); background: var(--silk);
+  }
+  .prosa :global(.esquema li > p) { margin: 0; }
+  /* La primera línea de cada caja la nombra: se separa por el espacio. */
+  .prosa :global(.esquema > :is(ol, ul) > li > p:first-child) { margin-block-end: var(--space-4); }
+  .prosa :global(.esquema li ul) { list-style: disc; padding-inline-start: 1.2em; gap: var(--space-4); }
+  .prosa :global(.esquema > :is(ol, ul) > li.esquema__bien) { background: var(--mint); }
+  /* Pasos y fechas, en columna y a la medida del texto: en fila, a cuatro
+     cajas, las palabras largas («prescripciones») se partían. */
+  .prosa :global(:is(.esquema--linea, .esquema--pasos) > ol) { inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto; }
+  .prosa :global(.esquema figcaption) { inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto; }
+  /* Pasos y fechas: un filete une cada caja con la siguiente. */
+  .prosa :global(.esquema--pasos > ol > li:not(:last-child)::after),
+  .prosa :global(.esquema--linea > ol > li:not(:last-child)::after) {
+    content: ''; position: absolute; inset-inline-start: calc(var(--space-24) - 1px); inset-block-start: 100%;
+    inline-size: 1px; block-size: var(--space-24); background: var(--text);
+  }
+  @media (min-width: 768px) {
+    .prosa :global(.esquema--comparar > ul) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (forced-colors: active) {
+    .prosa :global(.esquema > :is(ol, ul) > li::after) { background: CanvasText; }
+  }
+
+  /* ---- Caja de contacto y preguntas del final ---- */
+  .caja-cta {
+    display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-16);
+    padding: var(--space-32) var(--space-24); border-radius: var(--radio); background: var(--yellow-ap);
+  }
+  .caja-cta p { margin: 0; max-inline-size: var(--measure); }
+  .caja-cta__titulo, .faq-articulo__titulo, .faq-articulo__pregunta {
+    margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400;
+  }
+  .faq-articulo { display: flex; flex-direction: column; gap: var(--space-32); }
+  .faq-articulo__lista { display: flex; flex-direction: column; gap: var(--space-24); }
+  .faq-articulo__item { display: flex; flex-direction: column; gap: var(--space-8); padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
+  .faq-articulo__item p { margin: 0; max-inline-size: var(--measure); }
+  .faq-articulo, .caja-cta { inline-size: 100%; max-inline-size: var(--measure); margin-inline: auto; box-sizing: border-box; }
+
+  /* ---- Sigue leyendo ---- */
+  .sigue { display: flex; flex-direction: column; gap: var(--ritmo-intro); padding: var(--ritmo-seccion) var(--gutter-page) 0; }
+  .sigue__titulo { margin: 0; font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .sigue__rejilla { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-64) var(--space-24); }
+  @media (min-width: 768px) {
+    .sigue__rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    /* En tableta caben dos: la tercera sobra (Figma 3334:559). */
+    .sigue__rejilla > li:nth-child(3) { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .sigue__rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .sigue__rejilla > li:nth-child(3) { display: block; }
+  }
+</style>

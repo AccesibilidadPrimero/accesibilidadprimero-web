@@ -1,0 +1,10 @@
+---
+/* /en/blog/ · los artículos en en. */
+import { getCollection } from 'astro:content';
+import ListadoBlog from '../../../components/ListadoBlog.astro';
+import { articulosDe } from '../../../data/blog';
+
+const articulos = articulosDe(await getCollection('blog'), 'en');
+---
+
+<ListadoBlog lang="en" articulos={articulos} />

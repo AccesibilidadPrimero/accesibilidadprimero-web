@@ -1,0 +1,19 @@
+---
+/* Una categoría del blog en en. Los filtros del listado son páginas, no un
+   script (ver ListadoBlog.astro). Solo las categorías que tienen artículos en
+   este idioma: una página vacía no sirve a nadie. */
+import { getCollection } from 'astro:content';
+import ListadoBlog from '../../../../components/ListadoBlog.astro';
+import { CATEGORIAS, articulosDe, type Categoria } from '../../../../data/blog';
+
+export async function getStaticPaths() {
+  const todos = articulosDe(await getCollection('blog'), 'en');
+  return (Object.keys(CATEGORIAS) as Categoria[])
+    .map((categoria) => ({ categoria, articulos: todos.filter((a) => a.data.categorias.includes(categoria)) }))
+    .filter((c) => c.articulos.length > 0)
+    .map(({ categoria, articulos }) => ({ params: { categoria }, props: { categoria, articulos } }));
+}
+const { categoria, articulos } = Astro.props;
+---
+
+<ListadoBlog lang="en" articulos={articulos} categoria={categoria} />

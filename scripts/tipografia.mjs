@@ -279,8 +279,11 @@ const INTERIORES = [
   { nombre: 'Blog', url: '/blog/', conErrores: false },
   { nombre: 'Blog · artículo con demostraciones', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', conErrores: false },
   { nombre: 'Blog · artículo con tablas', url: '/blog/pero-que-es-la-wcag/', conErrores: false },
+  { nombre: 'Blog · pasos', url: '/blog/requisitos-accesibilidad-web-licitaciones-publicas-une-en-301549/', conErrores: false },
+  { nombre: 'Blog · código', url: '/blog/autopsia-web-no-accesible-5-errores-de-codigo/', conErrores: false },
+  { nombre: 'Blog · fechas y comparación', url: '/blog/ley-11-2023-accesibilidad-plazos-obligados-multas/', conErrores: false },
 ];
-/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+/* Y lo mismo en catalán e inglés (05/11/2026); del blog, lo que está en los tres (scripts/idiomas.mjs). */
 for (const pagina of paginasTresIdiomas(INTERIORES)) {
 console.log(`\n── ${pagina.nombre} ──\n`);
 for (const ancho of [390, 768, 1440]) {

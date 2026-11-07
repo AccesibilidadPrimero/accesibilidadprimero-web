@@ -77,10 +77,13 @@ const RUTAS = [
   { nombre: 'Blog', url: '/blog/', minimo: 20 },
   { nombre: 'Blog · tipografía', url: '/blog/tipografia-accesible-lo-que-dice-la-wcag/', minimo: 40 },
   { nombre: 'Blog · WCAG', url: '/blog/pero-que-es-la-wcag/', minimo: 60 },
+  { nombre: 'Blog · pasos', url: '/blog/requisitos-accesibilidad-web-licitaciones-publicas-une-en-301549/', minimo: 20 },
+  { nombre: 'Blog · código', url: '/blog/autopsia-web-no-accesible-5-errores-de-codigo/', minimo: 20 },
+  { nombre: 'Blog · fechas y comparación', url: '/blog/ley-11-2023-accesibilidad-plazos-obligados-multas/', minimo: 20 },
 ];
 
 let fallos = 0, medidas = 0;
-/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+/* Y lo mismo en catalán e inglés (05/11/2026); del blog, lo que está en los tres (scripts/idiomas.mjs). */
 for (const ruta of paginasTresIdiomas(RUTAS)) {
   let medidasRuta = 0;
   const page = await navegador.newPage({ viewport: { width: 1440, height: 900 } });

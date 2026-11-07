@@ -105,15 +105,24 @@ export interface Alternate {
  * Los idiomas en los que existe esta misma página. Devuelve lista vacía si
  * solo hay un idioma activo, para que quien la pinte no tenga que saberlo.
  */
-/** Rutas que solo existen en castellano (05/11/2026): el blog no se traduce. */
-const SOLO_ES: RouteKey[] = ['blog'];
+/** Rutas que solo existen en castellano. Ninguna desde el 07/11/2026: el
+    blog abre en catalán e inglés con los seis artículos de licitaciones y
+    normativa. Los ocho anteriores siguen solo en castellano, y cada uno lo
+    dice pasando su tramo final solo en `es` (ver más abajo). */
+const SOLO_ES: RouteKey[] = [];
 /** Rutas sin versión inglesa. Ninguna desde el 07/11/2026: la lectura fácil
     también tiene inglés (Easy Read). */
 const SIN_EN: RouteKey[] = [];
 
 export function alternates(current: RouteKey, slug?: Slug): Alternate[] {
   if (!hasMultipleLangs() || SOLO_ES.includes(current)) return [];
-  return ACTIVE.filter((lang) => !(lang === 'en' && SIN_EN.includes(current))).map((lang) => ({
+  /* Con un tramo final por idioma, solo existen los idiomas que lo tienen (un
+     artículo del blog sin traducir trae solo `es`). Si queda uno, no hay
+     selector: un selector con un único idioma no lleva a ninguna parte. */
+  const conPagina = ACTIVE.filter((lang) => !(lang === 'en' && SIN_EN.includes(current)))
+    .filter((lang) => typeof slug !== 'object' || Boolean(slug[lang]));
+  if (conPagina.length < 2) return [];
+  return conPagina.map((lang) => ({
     lang,
     href: path(current, lang, slug),
     hreflang: lang,

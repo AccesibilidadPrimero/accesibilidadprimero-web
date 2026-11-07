@@ -14,46 +14,56 @@ import TarjetaArticulo from './TarjetaArticulo.astro';
 /* La ilustración del hero (Johnny, 30/10/2026). La compila `npm run arte`
    desde arte/blog/hero.svg. */
 import ilustracionBlog from '../assets/blog/hero.svg';
-import { DEFAULT_LANG } from '../i18n/config';
-import { CATEGORIAS } from '../data/blog';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { LANGS, path, type Lang } from '../i18n/config';
+import { CATEGORIAS, NOMBRE_CATEGORIA, SEG_CATEGORIA, UI_BLOG, articulosDe, hrefArticulo, hrefCategoria, type Categoria } from '../data/blog';
 import '../styles/listados.css';
-import type { CollectionEntry } from 'astro:content';
 
 interface Props {
+  lang: Lang;
   articulos: CollectionEntry<'blog'>[];
   /** La categoría de esta página; sin ella, «Todos». */
-  categoria?: keyof typeof CATEGORIAS;
+  categoria?: Categoria;
 }
-const { articulos, categoria } = Astro.props;
-const lang = DEFAULT_LANG;
+const { lang, articulos, categoria } = Astro.props;
+const ui = UI_BLOG[lang];
 
+/* Solo se ofrecen las categorías que tienen artículos en este idioma, y el
+   selector de idioma de una categoría solo lleva a los idiomas donde existe. */
+const todos = await getCollection('blog');
+const conArticulos = (l: Lang) => new Set(articulosDe(todos, l).flatMap((a) => a.data.categorias));
+const aqui = conArticulos(lang);
 const filtros = [
-  { href: '/blog/', texto: 'Todos', actual: !categoria },
-  ...Object.entries(CATEGORIAS).map(([clave, texto]) => ({
-    href: `/blog/categoria/${clave}/`, texto, actual: clave === categoria,
+  { href: path('blog', lang), texto: ui.todos, actual: !categoria },
+  ...(Object.keys(CATEGORIAS) as Categoria[]).filter((c) => aqui.has(c)).map((clave) => ({
+    href: hrefCategoria(clave, lang), texto: NOMBRE_CATEGORIA[lang][clave], actual: clave === categoria,
   })),
 ];
-const nombre = categoria ? CATEGORIAS[categoria] : null;
+const slug = categoria
+  ? Object.fromEntries(LANGS.filter((l) => conArticulos(l).has(categoria)).map((l) => [l, `${SEG_CATEGORIA[l]}/${categoria}`]))
+  : undefined;
+const nombre = categoria ? NOMBRE_CATEGORIA[lang][categoria] : null;
 ---
 
 <Base
   lang={lang}
   current="blog"
+  slug={slug}
   title={nombre ? `Blog · ${nombre} · Accesibilidad Primero` : 'Blog · Accesibilidad Primero'}
-  description="Lo que aprendemos diseñando webs accesibles: normativa, tipografía, herramientas y decisiones de diseño, contado sin tecnicismos de más."
+  description={ui.description}
 >
   <HeroPagina
     ilustracion={ilustracionBlog}
-    alt="Una garza rosa mira una jaula de pájaro con dos personas diminutas dentro."
+    alt={ui.altHero}
     ilustracionComoHome
-    titulo={nombre ? `Blog · ${nombre}` : 'Blog'}
-    texto={['Lo que aprendemos diseñando webs accesibles, contado sin tecnicismos de más.']}
+    titulo={nombre ? `Blog · ${nombre}` : ui.titulo}
+    texto={[ui.entrada]}
   />
 
   <div class="listado">
     {/* Segundo <nav> de la página: lleva su propio nombre, distinto del menú
         principal (AGENTS.md §3). */}
-    <nav class="filtros" aria-label="Categorías del blog">
+    <nav class="filtros" aria-label={ui.categorias}>
       <ul class="filtros__lista">
         {filtros.map((f) => (
           <li><a class="filtros__enlace" href={f.href} aria-current={f.actual ? 'page' : undefined}>{f.texto}</a></li>
@@ -64,8 +74,8 @@ const nombre = categoria ? CATEGORIAS[categoria] : null;
     {/* `tarjetas`: entrada y cambio de categoría (src/styles/listados.css). */}
     <ul class="rejilla tarjetas">
       {articulos.map((a, n) => (
-        <li data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${a.id}`}>
-          <TarjetaArticulo href={`/blog/${a.id}/`} titulo={a.data.titulo} fecha={a.data.fecha} imagen={a.data.imagen} />
+        <li data-mov-propio style={`--i: ${Math.min(n, 5)}; view-transition-name: t-${a.id.replace('/', '-')}`}>
+          <TarjetaArticulo href={hrefArticulo(a)} titulo={a.data.titulo} fecha={a.data.fecha} imagen={a.data.imagen} />
         </li>
       ))}
     </ul>

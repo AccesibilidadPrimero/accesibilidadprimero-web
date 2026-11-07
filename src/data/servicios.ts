@@ -8,6 +8,8 @@
    Diseño y desarrollo es texto nuevo, propuesto por Claude. Revisión de voz
    del 03/11/2026 (Johnny): sin garantías sobre el resultado, sí sobre el
    método; ver «Web 2.0 AP · Propuesta de mejora de redacción y tono».
+   Marca blanca para agencias y consultoras, en la entrada de Diseño y
+   desarrollo (Johnny, 07/11/2026: «Sí, lo ofrecemos»).
    --------------------------------------------------------------------------- */
 
 import type { Tipo as Microanimacion } from '../components/Microanimacion.astro';
@@ -33,7 +35,7 @@ export const DISENO = {
   traducciones: {
     ca: {
       intro:
-        'Dissenyem i desenvolupem webs des del concepte fins al codi. L’accessibilitat és a cada decisió des de la primera línia de codi, no s’hi afegeix al final. També fem accessibles documents i presentacions, PDF inclosos.',
+        'Dissenyem i desenvolupem webs des del concepte fins al codi. L’accessibilitat és a cada decisió des de la primera línia de codi, no s’hi afegeix al final. També fem accessibles documents i presentacions, PDF inclosos. I treballem en marca blanca per a agències i consultores.',
       puntos: [
         { nombre: 'Disseny a mida.', texto: 'Cada web parteix de qui hi ha al darrere: la seva identitat, el seu públic i el que vol explicar. Sense plantilles.' },
         { nombre: 'Un stack propi i accessible.', texto: 'Desenvolupem sobre una base tècnica pròpia, pensada per complir WCAG 2.2 AA. Cada component està provat amb teclat i lector de pantalla, i cada canvi passa comprovacions automàtiques de contrast, reflow i navegació abans de publicar-se.' },
@@ -45,7 +47,7 @@ export const DISENO = {
     },
     en: {
       intro:
-        'We design and build websites from concept to code. Accessibility is part of every decision from the first line of code, not added at the end. We also make documents and presentations accessible, PDFs included.',
+        'We design and build websites from concept to code. Accessibility is part of every decision from the first line of code, not added at the end. We also make documents and presentations accessible, PDFs included. And we work white-label for agencies and consultancies.',
       puntos: [
         { nombre: 'Bespoke design.', texto: 'Every website starts from the people behind it: their identity, their audience and what they want to say. No templates.' },
         { nombre: 'Our own accessible stack.', texto: 'We build on our own technical foundation, designed to meet WCAG 2.2 AA. Every component is tested with a keyboard and a screen reader, and every change goes through automated checks for contrast, reflow and navigation before it goes live.' },
@@ -57,7 +59,7 @@ export const DISENO = {
     },
   },
   intro:
-    'Diseñamos y desarrollamos webs del concepto al código. La accesibilidad está en cada decisión desde la primera línea de código, no se añade al final. También hacemos accesibles documentos y presentaciones, incluidos los PDF.',
+    'Diseñamos y desarrollamos webs del concepto al código. La accesibilidad está en cada decisión desde la primera línea de código, no se añade al final. También hacemos accesibles documentos y presentaciones, incluidos los PDF. Y trabajamos en marca blanca para agencias y consultoras.',
   puntos: [
     {
       nombre: 'Diseño a medida.',

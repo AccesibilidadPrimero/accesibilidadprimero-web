@@ -289,9 +289,9 @@ const proyectos = defineCollection({
    Blog (11/10/2026). Los 8 artículos vienen de WordPress, convertidos a mano
    a Markdown (ver blog-borradores/LEEME.md, que cuenta qué se tocó).
 
-   · Solo en castellano por ahora (Johnny, 11/10/2026). La regla del 30/09
-     —cada artículo en los tres idiomas o no compila— entra el día que se
-     activen catalán e inglés.
+   · En tres idiomas desde el 07/11/2026: los artículos con `clave` van en
+     castellano, catalán e inglés o no compila (src/data/blog.ts). Los ocho
+     de WordPress siguen solo en castellano.
    · `urlAntigua` es la dirección de WordPress: tiene que existir una 301 en
      public/_redirects hacia /blog/<slug>/. `npm run redirecciones` lo mira.
    · Sin `imagenAlt` no compila, como en Proyectos. Y no vale cualquier cosa:
@@ -312,6 +312,30 @@ const blog = defineCollection({
         imagen: image(),
         imagenAlt: z.string().min(20, 'Una alternativa de menos de 20 caracteres no describe la portada.'),
         urlAntigua: z.string().regex(/^\/[a-z0-9-]+\/$/).optional(),
+
+        /* ---- Desde el 07/11/2026: los artículos en tres idiomas ----
+           `clave` une las tres versiones de un artículo (src/data/blog.ts). */
+        clave: z.string().regex(/^[a-z0-9-]+$/).optional(),
+        /* El tipo de schema.org: un artículo de código es TechArticle. */
+        tipoSchema: z.enum(['Article', 'TechArticle']).default('Article'),
+        /* Quién lo firma. Sale en pantalla y en el JSON-LD, que enlaza a
+           Sobre AP. Los de WordPress no lo traen: no se supone. */
+        autor: z.literal('johnny').optional(),
+        /* La caja de contacto del final. El destino es una ruta de la web,
+           con su ancla si va a una sección (#diseno en Servicios). */
+        cta: z.object({
+          titulo: z.string(),
+          texto: z.string(),
+          enlace: z.string(),
+          destino: z.enum(['contacto', 'servicios']),
+          ancla: z.string().regex(/^#[a-z-]+$/).optional(),
+        }).optional(),
+        /* Las preguntas del final: se ven en la página y van en el FAQPage.
+           Las preguntas sin «¿?», como en la guía (06/11/2026). */
+        preguntas: z.array(z.object({
+          pregunta: z.string().refine((q) => !/[¿?]/.test(q), 'Las preguntas van sin «¿?».'),
+          respuesta: z.string().min(40),
+        })).optional(),
       })
       .superRefine((d, ctx) => {
         if (/^[A-ZÁÉÍÓÚÑ\s·—-]{8,}$/.test(d.titulo)) {

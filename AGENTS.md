@@ -370,8 +370,12 @@ disciplina personal a las once de la noche.
     `traducciones: { ca, en }` con la misma forma que el original, y se leen
     con `localizar(dato, lang)`, que mezcla campo a campo y las listas por
     posición. Una página nueva o un texto nuevo entra en los tres idiomas.
-  · El blog NO se traduce: solo existe en castellano y no enseña el selector
-    de idioma (`alternates()` devuelve lista vacía para `blog`).
+  · El blog, en tres idiomas desde el 07/11/2026, pero solo lo que tiene
+    traducción: los artículos con `clave` (castellano en `src/content/blog/`,
+    catalán en `ca/`, inglés en `en/`) van en los tres o el build se para.
+    Los ocho de WordPress siguen solo en castellano y no enseñan selector
+    (pasan su tramo final solo en `es`, y `alternates()` no pinta un selector
+    de un solo idioma).
   · Las legales traducidas avisan de que prevalece la versión castellana; el
     testimonio traducido dice que es una traducción.
   · Las partículas a final de línea tienen lista por idioma
@@ -398,8 +402,14 @@ disciplina personal a las once de la noche.
   alternativa sea buena sigue siendo trabajo humano, al publicar.
 
 - **Blog (11/10/2026).** Los artículos son Markdown en `src/content/blog/`,
-  migrados de WordPress con el mismo slug. Solo en castellano, también con
-  la web en tres idiomas (Johnny, 05/11/2026). Sin
+  migrados de WordPress con el mismo slug. Los nuevos desde el 07/11/2026
+  van en tres idiomas (ver §i18n y `src/data/blog.ts`) y pueden llevar
+  `cta` (caja de contacto con CtaLink), `preguntas` (visibles al final y en
+  un FAQPage, sin «¿?»), `autor: johnny` (sale en la nota del hero y en el
+  JSON-LD Article/TechArticle, que enlaza a Sobre AP) y esquemas en HTML
+  (`<figure class="esquema esquema--pasos|comparar|linea">`), nunca texto
+  dentro de una imagen. Las fuentes legales se citan con enlace al BOE o a
+  EUR-Lex dentro de la frase. Sin
   negritas (un peso). `urlAntigua` obliga a una 301 en `public/_redirects`, y
   `npm run redirecciones` comprueba que existe y que cada destino es una
   página de verdad. Los filtros del listado son páginas
@@ -592,10 +602,12 @@ de la página:
   idiomas y `x-default` en castellano. Salen de `alternates()`, lo mismo que
   el selector de idioma, así que una página con versiones necesita su `slug`
   en `Base` (los casos lo pasan; antes el selector de un caso llevaba al
-  listado de Proyectos del otro idioma). El blog no lleva ninguno.
+  listado de Proyectos del otro idioma). En el blog, solo los artículos
+  traducidos, el listado y las categorías que existen en ese idioma.
 - Datos estructurados (`datos` de `Base`, `src/data/datos-estructurados.ts`):
-  `ProfessionalService` en la portada y `SoftwareApplication` en los casos de
-  Itza, A11y Primero y Accesible Abstracts. Solo datos que la web ya enseña.
+  `ProfessionalService` en la portada, `SoftwareApplication` en los casos de
+  Itza, A11y Primero y Accesible Abstracts, y `Article`/`TechArticle` más
+  `FAQPage` en los artículos del blog que traen preguntas. Solo datos que la web ya enseña.
   La guía lleva su `FAQPage`.
 - «Idioma» es un `<p>`, no un `<h2>`: no es una sección del contenido.
 - `npm run build` genera `sitemap.xml` (con las versiones de idioma) y
