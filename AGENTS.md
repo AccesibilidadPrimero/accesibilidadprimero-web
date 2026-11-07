@@ -434,6 +434,19 @@ disciplina personal a las once de la noche.
   pasaron a tablas de verdad; las infografías se irán rehaciendo en HTML.
   Ninguna imagen nueva entra con texto.
 
+- **Landing de Itza (07/11/2026): itza.accesibilidadprimero.eu.** Se
+  construye con la web (`src/pages/itza/` → `src/paginas/itza/landing.astro`,
+  textos en `src/paginas/itza/textos.ts`) y `scripts/itza.mjs` la saca de
+  `dist/itza/` a `dist-itza/`, que sirve su propio Worker
+  (`wrangler.itza.toml`, `itza-worker/index.ts`). En la web de AP `/itza/` no
+  existe. Mismo sistema (un peso, Ink) con el menta de Itza. La demo es Itza
+  de verdad: `src/scripts/itza-demo.ts` habla con `/api/chat`, que el Worker
+  pasa a la API de Anthropic con el secreto `ANTHROPIC_API_KEY` (nunca en el
+  repo) y un tope de 12 preguntas. El prompt del Worker y los textos de la
+  landing dicen lo mismo: si cambia un precio, cambia en los dos. Nada de
+  «certificado WCAG» ni de «no sale de tus servidores»: las preguntas pasan
+  por la API de Anthropic, y se dice.
+
 ## 7. Flujo de trabajo
 
 - **Claude Code construye, Codex revisa.** Dos modelos distintos, uno

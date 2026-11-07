@@ -8,5 +8,5 @@
      copia vieja de un componente dejó `npm run check` en 4 errores, y con él
      `verificar` y `publicar`. Pasó el 09/10/2026 y bloqueó una publicación.
      `capturas/` va por lo mismo: es salida, no fuente. */
-  "exclude": ["dist", "_to_delete", "capturas"]
+  "exclude": ["dist", "dist-itza", "_to_delete", "capturas"]
 }

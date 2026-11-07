@@ -9,8 +9,11 @@
 import type { Lang } from './config';
 
 export function idiomaDe(url: URL): Lang {
-  if (url.pathname === '/ca' || url.pathname.startsWith('/ca/')) return 'ca';
-  if (url.pathname === '/en' || url.pathname.startsWith('/en/')) return 'en';
+  /* La landing de Itza se construye en /itza/… y se publica en la raíz de
+     itza.accesibilidadprimero.eu (scripts/itza.mjs): el idioma va detrás. */
+  const ruta = url.pathname.replace(/^\/itza(?=\/|$)/, '') || '/';
+  if (ruta === '/ca' || ruta.startsWith('/ca/')) return 'ca';
+  if (ruta === '/en' || ruta.startsWith('/en/')) return 'en';
   return 'es';
 }
 

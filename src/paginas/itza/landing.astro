@@ -1,0 +1,422 @@
+---
+/* ---------------------------------------------------------------------------
+   Itza · landing de producto en itza.accesibilidadprimero.eu (Johnny,
+   07/11/2026).
+
+   Cómo se publica: estas páginas se construyen con la web (src/pages/itza/),
+   y `scripts/itza.mjs` las saca de dist/ a dist-itza/, que sirve su propio
+   Worker (wrangler.itza.toml + itza-worker/index.ts). En la web de AP no
+   existen: /itza/ no se publica.
+
+   El sistema de AP (un peso, todo en Ink, la misma rejilla y los mismos
+   tokens) con el menta de Itza en las superficies, como en su caso de
+   estudio. Sin la cabecera ni el pie de AP: es otro producto, con su marca
+   arriba y el estudio abajo.
+
+   La demo es Itza de verdad: la ventana (src/scripts/itza-demo.ts) habla con
+   /api/chat, que el Worker pasa a la API de Anthropic. Sin JavaScript no hay
+   demo, y se dice.
+   --------------------------------------------------------------------------- */
+import '../../styles/fonts.css';
+import '../../styles/tokens.css';
+import '../../styles/base.css';
+import CtaLink from '../../components/CtaLink.astro';
+import VideoPausable from '../../components/VideoPausable.astro';
+import posterHero from '../../assets/proyectos/itza/itza-hero-fotograma.png';
+import logoItza from '../../assets/productos/itza-logo.png';
+import { LANGS, LANG_CODE, LANG_NAME, path, type Lang } from '../../i18n/config';
+import { SITIO, INDEXABLE, DOMINIO } from '../../data/sitio';
+import { CORREO_ESTUDIO } from '../../data/contacto';
+import { ITZA } from './textos';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const T = ITZA[lang];
+
+/* Las direcciones de la landing, en su propio dominio. */
+const ORIGEN = `https://itza.${DOMINIO}`;
+const raiz = (l: Lang) => (l === 'es' ? '/' : `/${l}/`);
+const ap = (r: Parameters<typeof path>[0], slug?: string) => new URL(path(r, lang, slug), SITIO).href;
+
+const datos = JSON.stringify([
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Itza',
+    description: T.description,
+    url: new URL(raiz(lang), ORIGEN).href,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'WordPress',
+    inLanguage: lang,
+    offers: { '@type': 'Offer', price: '36', priceCurrency: 'EUR', description: `${T.precio} ${T.precioUnidad} ${T.precioIva}` },
+    creator: { '@id': `${SITIO}/#estudio`, '@type': 'ProfessionalService', name: 'Accesibilidad Primero' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang,
+    mainEntity: T.faq.map((q) => ({ '@type': 'Question', name: q.pregunta, acceptedAnswer: { '@type': 'Answer', text: q.respuesta } })),
+  },
+]).replace(/</g, '\\u003c');
+
+/* EL LOGO CADA VEZ QUE SE NOMBRA ITZA (Johnny, 07/11/2026). Va dentro de la
+   frase, a la altura de la letra, con alt="Itza": el lector de pantalla lee
+   la frase entera y al ampliar crece con el texto (va en em). Un logotipo es
+   la excepción de 1.4.5, la única imagen con letras que entra en la web. El
+   logo trae su propia marca (el corazón CC), así que el ® del texto sobra.
+   Sale de arte/productos/itza-logo.png, en Ink. */
+const ALTO_LOGO = 341, ANCHO_LOGO = 968;
+const logo = (alt = 'Itza') => `<img class="logo-itza" src="${logoItza.src}" alt="${alt}" width="${ANCHO_LOGO}" height="${ALTO_LOGO}" />`;
+const marca = (s: string) => s.replace(/Itza®?/g, () => logo());
+const chat = JSON.stringify({ ...T.chat, lang, voz: lang === 'es' });
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{T.title}</title>
+    <meta name="description" content={T.description} />
+    {INDEXABLE ? <link rel="canonical" href={new URL(raiz(lang), ORIGEN).href} /> : <meta name="robots" content="noindex" />}
+    {LANGS.map((l) => <link rel="alternate" hreflang={l} href={new URL(raiz(l), ORIGEN).href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL('/', ORIGEN).href} />
+    <script type="application/ld+json" set:html={datos} />
+    <meta name="color-scheme" content="light" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">{T.saltar}</a>
+
+    <header class="cabeza">
+      <a class="cabeza__marca" href={raiz(lang)} set:html={logo(T.inicio)} />
+      <nav class="cabeza__idiomas" aria-label={T.idioma}>
+        <ul>
+          {LANGS.map((l) => (
+            <li>
+              <a href={raiz(l)} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>
+                <span aria-hidden="true">{LANG_CODE[l]}</span><span class="sr-only">{LANG_NAME[l]}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+
+    <main id="contenido" tabindex="-1">
+      <section class="hero" aria-labelledby="hero-titulo">
+        <div class="hero__texto">
+          <h1 id="hero-titulo" class="grande"><span class="linea" set:html={marca(T.heroL1)} /> <span class="linea" set:html={marca(T.heroL2)} /></h1>
+          <p set:html={marca(T.heroTexto)} />
+          <ul class="enlaces">
+            <li><CtaLink href="#demo"><Fragment set:html={marca(T.probar)} /></CtaLink></li>
+            <li><CtaLink href="#precio">{T.verPrecio}</CtaLink></li>
+          </ul>
+        </div>
+        <VideoPausable
+          class="hero__video"
+          auto
+          escritorio={{ archivo: '/video/itza-hero.mp4', poster: posterHero }}
+          alt={T.altHero}
+          nombre={T.nombreHero}
+          lang={lang}
+          sizes={{ escritorio: '400px', tableta: '330px', movil: '286px' }}
+        />
+      </section>
+
+      <dl class="datos">
+        {T.datos.map(([d, v]) => <div><dt set:html={marca(d)} /><dd set:html={marca(v)} /></div>)}
+      </dl>
+
+      <section class="bloque" aria-labelledby="preguntas-titulo">
+        <h2 id="preguntas-titulo" class="grande" set:html={marca(T.preguntasTitulo)} />
+        <div class="bloque__cuerpo">
+          <p set:html={marca(T.preguntasIntro)} />
+          <ul class="lista">{T.preguntas.map((q) => <li>{q}</li>)}</ul>
+          <p set:html={marca(T.preguntasCierre)} />
+        </div>
+      </section>
+
+      <section class="bloque" aria-labelledby="para-titulo">
+        <h2 id="para-titulo" class="grande">{T.paraTitulo}</h2>
+        <div class="bloque__cuerpo"><p set:html={marca(T.paraTexto)} /></div>
+      </section>
+
+      <section id="demo" class="demo" aria-labelledby="demo-titulo">
+        <h2 id="demo-titulo" class="grande">{T.demoTitulo}</h2>
+        <div class="bloque__cuerpo">
+          <p set:html={marca(T.demoTexto)} />
+          {/* La barra, como en el producto, pero dentro de la sección y no
+              fija al pie: una barra fija taparía el foco al tabular (2.4.11). */}
+          <button type="button" class="barra" data-itza-abrir hidden>
+            <span>{T.barra}</span>
+            <span class="barra__punto" aria-hidden="true"></span>
+          </button>
+          <p class="sin-js" set:html={marca(T.demoSinJs)} />
+          <p class="sin-js"><CtaLink href={ap('proyectos', 'itza')}><Fragment set:html={marca(T.demoCaso)} /></CtaLink></p>
+          <p class="nota" set:html={marca(T.demoPrivacidad)} />
+        </div>
+      </section>
+
+      <section class="bloque" aria-labelledby="que-titulo">
+        <h2 id="que-titulo" class="grande" set:html={marca(T.queTitulo)} />
+        <ul class="rejilla">
+          {T.que.map((b) => (
+            <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="bloque" aria-labelledby="acc-titulo">
+        <h2 id="acc-titulo" class="grande" set:html={marca(T.accTitulo)} />
+        <div class="bloque__cuerpo">
+          <p set:html={marca(T.accTexto)} />
+          <ul class="lista">{T.acc.map((a) => <li set:html={marca(a)} />)}</ul>
+        </div>
+      </section>
+
+      <section id="precio" class="precio" aria-labelledby="precio-titulo">
+        <h2 id="precio-titulo" class="grande">{T.precioTitulo}</h2>
+        <div class="precio__caja">
+          <p class="precio__cifra"><span class="grande">{T.precio}</span> {T.precioUnidad} {T.precioIva}</p>
+          <p>{T.instalacion}</p>
+          <p>{T.permanencia}</p>
+          <h3>{T.incluyeTitulo}</h3>
+          <ul class="lista">{T.incluye.map((i) => <li set:html={marca(i)} />)}</ul>
+          <p>{T.precioNota}</p>
+          <CtaLink href="#contacto">{T.pedir}</CtaLink>
+        </div>
+      </section>
+
+      <section class="bloque" aria-labelledby="como-titulo">
+        <h2 id="como-titulo" class="grande" set:html={marca(T.comoTitulo)} />
+        <ol class="pasos">
+          {T.como.map((b) => <li><h3 set:html={marca(b.titulo)} /><p set:html={marca(b.texto)} /></li>)}
+        </ol>
+      </section>
+
+      <section class="bloque" aria-labelledby="faq-titulo">
+        <h2 id="faq-titulo" class="grande">{T.faqTitulo}</h2>
+        <div class="faq">
+          {T.faq.map((q) => (
+            <div class="faq__item"><h3 set:html={marca(q.pregunta)} /><p set:html={marca(q.respuesta)} /></div>
+          ))}
+        </div>
+      </section>
+
+      <section id="contacto" class="cierre" aria-labelledby="cierre-titulo">
+        <h2 id="cierre-titulo" class="grande" set:html={marca(T.cierreTitulo)} />
+        <p set:html={marca(T.cierreTexto)} />
+        <ul class="enlaces">
+          <li><CtaLink href={ap('contacto')} size="large">{T.escribenos}</CtaLink></li>
+          {/* El correo no cabe a 320 sin partirse: puede cortar detrás de la arroba. */}
+          <li><CtaLink href={`mailto:${CORREO_ESTUDIO}`}>{T.correo.split('@')[0]}@<wbr />{T.correo.split('@')[1]}</CtaLink></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <p set:html={marca(T.pieProducto)} />
+      <nav aria-label="Accesibilidad Primero">
+        <ul>
+          <li><a href={ap('home')}>{T.pieAp}</a></li>
+          <li><a href={ap('proyectos', 'itza')}>{T.pieCaso}</a></li>
+          <li><a href={ap('privacidad')}>{T.piePrivacidad}</a></li>
+          <li><a href={ap('accesibilidad')}>{T.pieAccesibilidad}</a></li>
+        </ul>
+      </nav>
+    </footer>
+
+    {/* La ventana de la demo. <dialog> con showModal(): el navegador deja
+        inerte la página, lleva el foco dentro y la cierra con Escape. */}
+    <dialog class="chat" aria-labelledby="chat-titulo" data-itza-chat={chat}>
+      <div class="chat__cabeza">
+        <h2 id="chat-titulo" set:html={logo()} />
+        <button type="button" class="chat__boton" data-itza-cerrar>{T.chat.cerrar}</button>
+      </div>
+      {/* role="log": lo que entra se anuncia solo, sin mover el foco (4.1.3).
+          tabindex="0": la conversación se desplaza, y con teclado también
+          tiene que poder leerse hacia atrás (2.1.1). */}
+      <div class="chat__log" role="log" aria-label={T.chat.conversacion} tabindex="0" data-itza-log></div>
+      <div class="chat__sugerencias" data-itza-sugerencias hidden>
+        <p id="chat-sugeridas">{T.chat.sugerencias}</p>
+        <ul aria-labelledby="chat-sugeridas">
+          {T.chat.sugeridas.map((s) => <li><button type="button" class="chat__sugerencia" data-texto={s} set:html={marca(s)} /></li>)}
+        </ul>
+      </div>
+      <form class="chat__form" data-itza-form>
+        <label for="chat-mensaje">{T.chat.etiqueta}</label>
+        <textarea id="chat-mensaje" rows="2" maxlength="500" autocomplete="off"></textarea>
+        <div class="chat__acciones">
+          <button type="submit" class="chat__boton chat__boton--fuerte">{T.chat.enviar}</button>
+          <button type="button" class="chat__boton" data-itza-hablar hidden>{T.chat.hablar}</button>
+          <button type="button" class="chat__boton" data-itza-leer aria-pressed="false" hidden>{T.chat.leer}</button>
+        </div>
+      </form>
+      <p class="chat__nota">{T.demoPrivacidad}</p>
+    </dialog>
+
+    <script>
+      import '../../scripts/itza-demo';
+    </script>
+  </body>
+</html>
+
+<style>
+  main:focus { outline: none; }
+  .saltar {
+    position: absolute; inset-block-start: var(--space-8); inset-inline-start: var(--space-8); z-index: 200;
+    transform: translateY(calc(-100% - var(--space-16)));
+    display: inline-flex; align-items: center; min-height: var(--touch-min); padding: var(--space-12) var(--space-16);
+    background: var(--surface-raised); color: var(--text);
+  }
+  .saltar:focus { transform: none; }
+  :global(.sr-only) { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  .grande { font-size: var(--display-size); line-height: var(--display-leading); font-weight: 400; }
+  h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+  h3 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  p, li, dd, dt { max-inline-size: var(--measure); }
+  /* El logo, a la altura de la letra en cualquier tamaño. */
+  :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
+  .cabeza__marca :global(.logo-itza) { block-size: 28px; }
+  .linea { display: block; }
+
+  /* ---- Cabecera: la marca y los idiomas ---- */
+  .cabeza {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-24);
+    padding: var(--space-12) var(--gutter-page); background: var(--mint);
+  }
+  .cabeza__marca, .cabeza__idiomas a {
+    display: inline-flex; align-items: center; min-height: var(--touch-min); text-decoration: none; color: var(--text);
+  }
+  .cabeza__idiomas ul { display: flex; list-style: none; padding: 0; margin: 0; gap: var(--space-4); }
+  .cabeza__idiomas a { padding: 0 var(--space-12); }
+  .cabeza__idiomas a:hover, .cabeza__idiomas a[aria-current] {
+    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
+  }
+
+  /* ---- Hero, en el menta de Itza ---- */
+  .hero {
+    display: flex; flex-direction: column; gap: var(--space-48);
+    padding: var(--space-64) var(--gutter-page) var(--ritmo-seccion); background: var(--mint);
+  }
+  .hero__texto { display: flex; flex-direction: column; gap: var(--space-32); }
+  .hero :global(.hero__video) { inline-size: min(100%, 400px); align-self: center; }
+  @media (min-width: 1024px) {
+    .hero { flex-direction: row; align-items: center; justify-content: space-between; }
+    .hero__texto { flex: 1 1 0; max-inline-size: 760px; }
+  }
+  .enlaces { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-32); }
+
+  /* ---- Datos rápidos ---- */
+  .datos {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-24);
+    padding: var(--space-48) var(--gutter-page) 0;
+  }
+  @media (min-width: 768px) { .datos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 1024px) { .datos { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .datos div { display: flex; flex-direction: column; gap: var(--space-4); padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
+
+  /* ---- Bloques: título a la izquierda, texto a la derecha desde 1024 ---- */
+  .bloque, .demo, .precio, .cierre {
+    display: flex; flex-direction: column; gap: var(--space-32);
+    padding: var(--ritmo-seccion) var(--gutter-page) 0;
+  }
+  .bloque__cuerpo, .precio__caja { display: flex; flex-direction: column; gap: var(--space-24); }
+  .lista { padding-inline-start: 1.2em; display: flex; flex-direction: column; gap: var(--space-8); }
+  .rejilla, .pasos { list-style: none; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48) var(--space-24); }
+  .rejilla li, .pasos li { display: flex; flex-direction: column; gap: var(--space-8); }
+  @media (min-width: 768px) {
+    .rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pasos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pasos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .pasos { counter-reset: paso; }
+  .pasos li { padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
+
+  /* ---- Demo ---- */
+  .demo { padding-block-end: var(--ritmo-seccion); margin-block-start: var(--ritmo-seccion); background: var(--mint); }
+  :global(html.js) .sin-js { display: none; }
+  .barra {
+    display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-24);
+    inline-size: min(100%, 480px); min-height: 56px; padding: 0 var(--space-24);
+    border: 1px solid var(--text); border-radius: 999px; background: var(--white); color: var(--text);
+    font: inherit; cursor: pointer; text-align: start;
+  }
+  .barra:hover span:first-child { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  .barra__punto { inline-size: 12px; block-size: 12px; border-radius: 50%; background: var(--ink); flex: none; }
+  .nota { max-inline-size: var(--measure); }
+
+  /* ---- Precio ---- */
+  .precio__caja {
+    padding: var(--space-32) var(--space-24); border: 1px solid var(--text); border-radius: var(--radio);
+    max-inline-size: 640px; align-items: flex-start;
+  }
+  .precio__cifra .grande { margin-inline-end: var(--space-4); }
+
+  /* ---- Preguntas ---- */
+  .faq { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-32) var(--space-24); }
+  @media (min-width: 1024px) { .faq { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .faq__item { display: flex; flex-direction: column; gap: var(--space-8); padding-block-start: var(--space-16); border-block-start: 1px solid var(--text); }
+
+  /* ---- Cierre y pie ---- */
+  .cierre { padding-block-end: var(--ritmo-seccion); }
+  .pie {
+    display: flex; flex-direction: column; gap: var(--space-16);
+    padding: var(--space-32) var(--gutter-page); border-block-start: 1px solid var(--hairline);
+  }
+  .pie ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0 var(--space-24); }
+  .pie a { display: inline-flex; align-items: center; min-height: var(--touch-min); color: var(--text); text-decoration: none; }
+  .pie a:hover { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  @media (min-width: 1024px) { .pie { flex-direction: row; align-items: center; justify-content: space-between; } }
+
+  /* ---- La ventana de la demo ---- */
+  .chat {
+    inline-size: min(100% - 32px, 560px); max-block-size: min(100% - 32px, 760px);
+    padding: 0; border: 1px solid var(--text); border-radius: var(--radio);
+    background: var(--white); color: var(--text);
+  }
+  .chat[open] { display: flex; flex-direction: column; }
+  .chat::backdrop { background: rgb(23 23 23 / 0.4); }
+  .chat__cabeza {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-16);
+    padding: var(--space-8) var(--space-16); background: var(--mint);
+  }
+  .chat__cabeza h2 { font-size: var(--texto-size); line-height: var(--texto-leading); font-weight: 400; }
+  .chat__log {
+    flex: 1 1 auto; overflow-y: auto; min-block-size: 160px;
+    display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-16);
+  }
+  .chat__log :global(p) { max-inline-size: 85%; padding: var(--space-8) var(--space-12); border-radius: var(--radio); background: var(--silk); }
+  .chat__log :global(p.tu) { align-self: flex-end; background: var(--mint); }
+  .chat__sugerencias { display: flex; flex-direction: column; gap: var(--space-8); padding: 0 var(--space-16) var(--space-16); }
+  .chat__sugerencias ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-8); }
+  .chat__sugerencia, .chat__boton {
+    display: inline-flex; align-items: center; min-height: var(--touch-min); padding: 0 var(--space-16);
+    border: 1px solid var(--text); border-radius: 999px; background: var(--white); color: var(--text);
+    font: inherit; cursor: pointer; text-align: start;
+  }
+  .chat__sugerencia:hover, .chat__boton:hover { background: var(--silk); }
+  /* Enviar, en menta: todo el texto va en Ink, también en los botones. */
+  .chat__boton--fuerte, .chat__boton--fuerte:hover { background: var(--mint); }
+  .chat__boton--fuerte:hover { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  .chat__boton[aria-pressed='true'] { background: var(--mint); }
+  .chat__form { display: flex; flex-direction: column; gap: var(--space-8); padding: var(--space-16); border-block-start: 1px solid var(--hairline); }
+  .chat__form textarea {
+    font: inherit; color: var(--text); padding: var(--space-8) var(--space-12); min-height: var(--touch-min);
+    border: 1px solid var(--text); border-radius: var(--radio); resize: vertical;
+  }
+  .chat__acciones { display: flex; flex-wrap: wrap; gap: var(--space-8); }
+  .chat__nota { padding: 0 var(--space-16) var(--space-16); }
+  @media (forced-colors: active) {
+    .barra__punto { background: CanvasText; }
+  }
+</style>
