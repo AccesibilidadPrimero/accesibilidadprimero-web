@@ -1,0 +1,35 @@
+# La landing de Itza (07/11/2026): un Worker propio, separado de la web de AP.
+#
+# Se despliega desde el mismo repositorio con otro proyecto de Workers Builds
+# en Cloudflare (Johnny lo crea una vez):
+#   · comando de build:   npm run build
+#   · comando de deploy:  npx wrangler deploy -c wrangler.itza.toml
+#   · rama:               main
+# `npm run build` deja la landing en dist-itza/ (scripts/itza.mjs).
+#
+# Secreto (panel → Worker «itza» → Settings → Variables and Secrets):
+#   ANTHROPIC_API_KEY   la clave de la API de Anthropic. Nunca en el repo.
+
+name = "itza"
+compatibility_date = "2026-10-01"
+main = "itza-worker/index.ts"
+
+# El subdominio lo da de alta el propio despliegue: el dominio
+# accesibilidadprimero.eu tiene que estar en la misma cuenta de Cloudflare.
+routes = [
+  { pattern = "itza.accesibilidadprimero.eu", custom_domain = true },
+]
+
+[assets]
+directory = "./dist-itza"
+binding = "ASSETS"
+not_found_handling = "404-page"
+# El Worker solo entra en /api/*: la demo. El resto lo sirven los assets.
+run_worker_first = ["/api/*"]
+
+[vars]
+# El modelo de la demo. El mismo que el proxy de la landing .com.
+ITZA_MODELO = "claude-haiku-4-5-20251001"
+
+[observability]
+enabled = true

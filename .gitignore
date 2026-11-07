@@ -14,3 +14,6 @@ arte/**/*.gif
 
 # Los masters de vídeo (itza.mov pesa 1,15 GB). Al repositorio va el .mp4.
 arte/**/*.mov
+
+# La landing de Itza: la genera `npm run build` (scripts/itza.mjs).
+dist-itza/
