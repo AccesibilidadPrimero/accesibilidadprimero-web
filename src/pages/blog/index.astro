@@ -1,9 +1,10 @@
 ---
-/* /blog/ · todos los artículos, del más reciente al más antiguo. */
+/* /blog/ · todos los artículos en castellano, del más reciente al más antiguo. */
 import { getCollection } from 'astro:content';
 import ListadoBlog from '../../components/ListadoBlog.astro';
+import { articulosDe } from '../../data/blog';
 
-const articulos = (await getCollection('blog')).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+const articulos = articulosDe(await getCollection('blog'), 'es');
 ---
 
-<ListadoBlog articulos={articulos} />
+<ListadoBlog lang="es" articulos={articulos} />

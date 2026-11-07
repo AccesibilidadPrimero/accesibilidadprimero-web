@@ -1,0 +1,16 @@
+---
+/* Un artículo del blog en en. La página está en src/paginas/blog/articulo.astro. */
+import { getCollection } from 'astro:content';
+import Articulo from '../../../paginas/blog/articulo.astro';
+import { articulosDe, relacionadosDe, slugDeArticulo, versionesDe } from '../../../data/blog';
+
+export async function getStaticPaths() {
+  const todos = await getCollection('blog');
+  return articulosDe(todos, 'en').map((articulo) => ({
+    params: { slug: slugDeArticulo(articulo) },
+    props: { articulo, relacionados: relacionadosDe(articulo, todos), versiones: versionesDe(articulo, todos) },
+  }));
+}
+---
+
+<Articulo {...Astro.props} />

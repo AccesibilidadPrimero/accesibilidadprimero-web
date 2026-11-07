@@ -66,3 +66,55 @@ export function aplicacion(caso: string, lang: Lang) {
     creator: { '@id': ID_ESTUDIO, '@type': 'ProfessionalService', name: 'Accesibilidad Primero' },
   };
 }
+
+/** Johnny, autor de los artículos firmados. Su página es Sobre AP, donde la
+    web lo presenta (Johnny, 07/11/2026: «enlace a Sobre AP», sin página de
+    autor propia). */
+export function autor(lang: Lang) {
+  return {
+    '@type': 'Person',
+    name: 'Johnny Vale Vigas',
+    url: absoluta(path('estudio', lang)),
+    worksFor: { '@id': ID_ESTUDIO },
+  };
+}
+
+/** Un artículo del blog. `tipo` es Article o TechArticle. */
+export function articulo(a: {
+  tipo: 'Article' | 'TechArticle';
+  titulo: string;
+  descripcion: string;
+  url: string;
+  imagen: string;
+  fecha: Date;
+  lang: Lang;
+  firmado: boolean;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': a.tipo,
+    headline: a.titulo,
+    description: a.descripcion,
+    url: absoluta(a.url),
+    mainEntityOfPage: absoluta(a.url),
+    image: absoluta(a.imagen),
+    datePublished: a.fecha.toISOString().slice(0, 10),
+    inLanguage: a.lang,
+    ...(a.firmado ? { author: autor(a.lang) } : {}),
+    publisher: { '@id': ID_ESTUDIO, '@type': 'ProfessionalService', name: 'Accesibilidad Primero', logo: absoluta('/apple-touch-icon.png') },
+  };
+}
+
+/** Las preguntas frecuentes que se ven al final de un artículo. */
+export function preguntasFrecuentes(lang: Lang, preguntas: { pregunta: string; respuesta: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: lang,
+    mainEntity: preguntas.map((q) => ({
+      '@type': 'Question',
+      name: q.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.respuesta },
+    })),
+  };
+}

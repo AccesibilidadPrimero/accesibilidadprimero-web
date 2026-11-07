@@ -35,6 +35,12 @@ const RUTAS = [
   '/proyectos/', '/proyectos/tipo/aplicaciones/', '/proyectos/tipo/extensiones/', '/proyectos/foc-i-cor/', '/proyectos/eci-conference/', '/proyectos/izaskun-etxebarria/', '/proyectos/elogio-de-la-linea/', '/proyectos/a11y-primero/', '/proyectos/itza/', '/proyectos/accesible-abstracts/',
   '/blog/', '/blog/categoria/diseno/',
   '/blog/tipografia-accesible-lo-que-dice-la-wcag/', '/blog/pero-que-es-la-wcag/', '/blog/a11yprimero/',
+  /* Los seis de licitaciones y normativa (07/11/2026), en los tres idiomas:
+     esquemas en HTML, caja de contacto y preguntas. */
+  '/blog/categoria/accesibilidad-digital/',
+  '/blog/requisitos-accesibilidad-web-licitaciones-publicas-une-en-301549/', '/blog/plugins-widgets-accesibilidad-ley-11-2023/',
+  '/blog/accesibilidad-web-licitaciones-generalitat-catalunya-valenciana/', '/blog/autopsia-web-no-accesible-5-errores-de-codigo/',
+  '/blog/ley-11-2023-accesibilidad-plazos-obligados-multas/', '/blog/european-accessibility-act-licitaciones-europeas/',
 ];
 const PUERTO = 4399;
 const BASE = `http://localhost:${PUERTO}`;
@@ -49,7 +55,7 @@ const navegador = await chromium.launch(
 );
 let fallos = 0;
 
-/* Y lo mismo en catalán e inglés (05/11/2026); el blog, solo en castellano. */
+/* Y lo mismo en catalán e inglés (05/11/2026); del blog, lo que está en los tres (scripts/idiomas.mjs). */
 for (const ruta of tresIdiomas(RUTAS)) {
   for (const [nombre, viewport] of [
     ['Móvil 390', { width: 390, height: 844 }],
