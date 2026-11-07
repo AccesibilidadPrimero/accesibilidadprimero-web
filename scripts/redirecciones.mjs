@@ -27,8 +27,12 @@ for (const [origen, destino, codigo] of reglas) {
   if (vistos.has(origen)) mal(`${origen} aparece dos veces`);
   vistos.add(origen);
   if (origen === destino) mal(`${origen} se redirige a sí misma`);
-  const pagina = join(RAIZ, 'dist', destino, 'index.html');
+  /* Un destino puede llevar ancla (/servicios/#auditoria, 07/11/2026): la
+     página tiene que existir y el ancla, ser un id de esa página. */
+  const [ruta, ancla] = destino.split('#');
+  const pagina = join(RAIZ, 'dist', ruta, 'index.html');
   if (!existsSync(pagina)) mal(`${origen} → ${destino}: esa página no existe en dist/`);
+  else if (ancla && !readFileSync(pagina, 'utf8').includes(`id="${ancla}"`)) mal(`${origen} → ${destino}: la página no tiene id="${ancla}"`);
   /* Y al revés: una redirección no puede tapar una página que existe. Pasó el
      30/10/2026: /servicios/ seguía redirigiendo a /estudio/ (de la web de
      WordPress) y la página nueva de Servicios no se veía en producción. */
