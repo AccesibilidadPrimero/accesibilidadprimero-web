@@ -101,7 +101,9 @@ const langs = alternates(current, slug);
          peores que no tener selector (2.4.4). */
       langs.length > 0 && (
       <div class="menu__lang">
-        <h2 class="menu__lang-title" id="menu-idioma">{ui.langGroupLabel}</h2>
+        {/* Un <p>, no un <h2> (SEO, 07/11/2026). Se ve igual: la clase fija
+            cuerpo, interlineado y espaciado. */}
+        <p class="menu__lang-title" id="menu-idioma">{ui.langGroupLabel}</p>
         <ul class="menu__lang-list" aria-labelledby="menu-idioma">
           {
             langs.map((l) => {

@@ -24,6 +24,7 @@ import { Picture } from 'astro:assets';
 import MicroDecision from '../../components/MicroDecision.astro';
 import CierreProyecto from '../../components/CierreProyecto.astro';
 import Base from '../../layouts/Base.astro';
+import { aplicacion } from '../../data/datos-estructurados';
 import HeroPagina from '../../components/HeroPagina.astro';
 import CtaLink from '../../components/CtaLink.astro';
 import { path } from '../../i18n/config';
@@ -245,6 +246,8 @@ const centro = '(min-width: 1440px) 1100px, (min-width: 1024px) 76vw, calc(100vw
 <Base
   lang={lang}
   current="proyectos"
+  slug="accesible-abstracts"
+  datos={aplicacion('accesible-abstracts', lang)}
   title={`${titulo} · ${T.seccion} · Accesibilidad Primero`}
   description={T.descripcion}
 >

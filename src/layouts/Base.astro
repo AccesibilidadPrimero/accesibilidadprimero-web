@@ -12,7 +12,7 @@ import Header from '../components/Header.astro';
 import ContactCTA from '../components/ContactCTA.astro';
 import GuiaCierre from '../components/GuiaCierre.astro';
 import Footer from '../components/Footer.astro';
-import { type Lang, type RouteKey } from '../i18n/config';
+import { alternates, type Lang, type RouteKey } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
 import { CF_WEB_ANALYTICS_TOKEN } from '../data/analitica';
 import { INDEXABLE } from '../data/sitio';
@@ -30,6 +30,9 @@ interface Props {
   /** Imagen para compartir (Open Graph), ruta servida. Hoy solo la guía
       (06/11/2026): es la página pensada para circular en redes. */
   imagen?: string;
+  /** Datos estructurados (schema.org) de la página, en JSON-LD. No se ven:
+      dicen a los buscadores qué es cada cosa (SEO, 07/11/2026). */
+  datos?: object | object[];
 }
 const {
   title,
@@ -40,9 +43,18 @@ const {
   conCta = true,
   ctaTitulo,
   imagen,
+  datos,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
+/* Las versiones de esta página en cada idioma, para los buscadores (SEO,
+   07/11/2026): las mismas que enlaza el selector de idioma, en absoluto y en
+   el <head>, más «x-default» en castellano. El blog solo existe en
+   castellano, así que no lleva ninguna. */
+const versiones = alternates(current, slug).map((a) => ({ hreflang: a.hreflang, href: new URL(a.href, Astro.site).href }));
+const porDefecto = versiones.find((v) => v.hreflang === 'es');
+/* `<` escapado: un texto con «</script>» no puede cerrar el bloque. */
+const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
 ---
 
 <!doctype html>
@@ -57,6 +69,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         y SIN canonical. Juntos mandan señales contrarias a Google, y el
         canonical apuntaría a páginas del .com que hoy son el WordPress. */}
     {INDEXABLE ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
+    {versiones.map((v) => <link rel="alternate" hreflang={v.hreflang} href={v.href} />)}
+    {porDefecto && <link rel="alternate" hreflang="x-default" href={porDefecto.href} />}
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <meta name="color-scheme" content="light" />
     {imagen && (
       <>

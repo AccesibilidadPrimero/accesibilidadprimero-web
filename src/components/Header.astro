@@ -50,7 +50,9 @@ const langs = alternates(current, slug);
     {
       langs.length > 0 && (
         <div class="header__lang">
-          <h2 class="sr-only" id="cabecera-idioma">{ui.langGroupLabel}</h2>
+          {/* Un <p>, no un <h2> (SEO, 07/11/2026): «Idioma» no es una sección
+              del contenido. La lista sigue nombrándose con él. */}
+          <p class="sr-only" id="cabecera-idioma">{ui.langGroupLabel}</p>
           <ul class="header__lang-list" aria-labelledby="cabecera-idioma">
             {
               langs.map((l) => (
