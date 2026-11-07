@@ -332,7 +332,7 @@ disciplina personal a las once de la noche.
   una entrada con `id` fijo y su texto en los tres idiomas; probar con uno,
   con tres y con cinco (§2.8). Las fechas de la EN 301 549 v4.1.1 de «Políticas
   europeas» se revisan cuando el Diario Oficial la cite. Preguntas frecuentes
-  (14, sobre la ley, pensadas para buscadores) en `src/data/preguntas.ts`:
+  (15, sobre la ley española, catalana y europea, pensadas para buscadores) en `src/data/preguntas.ts`:
   la primera frase contesta de entrada y el resto va al desplegar;
   fechadas y con aviso de que no son asesoramiento jurídico. Si cambia una
   norma, se cambia ahí. `GuiaCierre.astro` enlaza la guía antes del cierre
