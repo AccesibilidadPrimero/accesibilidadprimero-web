@@ -439,7 +439,15 @@ disciplina personal a las once de la noche.
   textos en `src/paginas/itza/textos.ts`) y `scripts/itza.mjs` la saca de
   `dist/itza/` a `dist-itza/`, que sirve su propio Worker
   (`wrangler.itza.toml`, `itza-worker/index.ts`). En la web de AP `/itza/` no
-  existe. Mismo sistema (un peso, Ink) con el menta de Itza. La demo es Itza
+  existe. **Sistema de producto, no el de AP** (Johnny, 07/11/2026: «la
+  landing de Itza es más comercial, de diseño de producto»; dirección A,
+  «Noche menta»): fondo gris oscuro sedoso #282B2A (no negro), el menta del
+  logo, dos pesos (400 y 500; la tipografía servida no llega a 600), cinco
+  tamaños y botones con fondo. Es la excepción declarada a «un peso» y a
+  «todo en Ink», solo en las landings de producto, y la base de las de los
+  tres productos. Las reglas de accesibilidad no cambian. El logo de Itza va
+  cada vez que se nombra Itza (en menta sobre oscuro, en Ink sobre claro).
+  La demo va en línea en el hero y es Itza
   de verdad: `src/scripts/itza-demo.ts` habla con `/api/chat`, que el Worker
   pasa a la API de Anthropic con el secreto `ANTHROPIC_API_KEY` (nunca en el
   repo) y un tope de 12 preguntas. El prompt del Worker y los textos de la
