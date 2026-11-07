@@ -27,9 +27,9 @@ export interface Pregunta {
 }
 
 export const ACTUALIZADO: Record<Lang, string> = {
-  es: 'Respuestas sobre la ley española y europea, actualizadas el 6 de noviembre de 2026. No son asesoramiento jurídico: si necesitas saber exactamente qué obliga a tu organización, confírmalo con asesoría jurídica.',
-  ca: 'Respostes sobre la llei espanyola i europea, actualitzades el 6 de novembre de 2026. No són assessorament jurídic: si necessites saber exactament què obliga la teva organització, confirma-ho amb assessoria jurídica.',
-  en: 'Answers about Spanish and EU law, updated on 6 November 2026. They are not legal advice: if you need to know exactly what applies to your organisation, check with a legal adviser.',
+  es: 'Respuestas sobre la ley española, catalana y europea, actualizadas el 7 de noviembre de 2026. No son asesoramiento jurídico: si necesitas saber exactamente qué obliga a tu organización, confírmalo con asesoría jurídica.',
+  ca: 'Respostes sobre la llei espanyola, catalana i europea, actualitzades el 7 de novembre de 2026. No són assessorament jurídic: si necessites saber exactament què obliga la teva organització, confirma-ho amb assessoria jurídica.',
+  en: 'Answers about Spanish, Catalan and EU law, updated on 7 November 2026. They are not legal advice: if you need to know exactly what applies to your organisation, check with a legal adviser.',
 };
 
 export const PREGUNTAS: Record<Lang, Pregunta[]> = {
@@ -43,6 +43,16 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
         'Empresas: la Ley 11/2023, que traspone el Acta Europea de Accesibilidad, obliga desde el 28 de junio de 2025 a los servicios de comercio electrónico, banca para consumidores, transporte de viajeros, comunicaciones electrónicas, libros electrónicos y acceso a servicios audiovisuales, entre otros.',
         'Grandes empresas: la LSSI ya obligaba a las de más de cien trabajadores en sectores como banca, seguros, suministros, telecomunicaciones, transporte, agencias de viajes o comercio minorista.',
         'Aunque no te obligue, una web accesible la puede usar más gente. Y si trabajas con el sector público o recibes ayudas, te lo pueden exigir igualmente.',
+      ],
+    },
+    {
+      id: 'cataluna',
+      pregunta: 'Qué exige la normativa catalana a una web',
+      corta: 'En Cataluña, el Código de accesibilidad pide el nivel AA de la WCAG 2.1 a las webs y las apps del sector público y de muchas empresas privadas: bancos, suministros, telecomunicaciones, supermercados grandes, hoteles, cines, teatros y centros educativos.',
+      detalle: [
+        'Son dos normas. La Ley 13/2014 de accesibilidad de Cataluña (artículo 33.4) obliga a las administraciones y a quien presta servicios públicos a tener webs accesibles y a indicar en ellas su nivel de accesibilidad y la fecha de la última revisión. El Código de accesibilidad de Cataluña (Decreto 209/2023, en vigor desde el 1 de marzo de 2024) concreta cómo: la norma UNE-EN 301 549 y el nivel AA de la WCAG 2.1.',
+        'Va más allá de la ley estatal y la europea, porque incluye empresas privadas por sector y no solo por tamaño. Una web nueva o que se modifica tiene que cumplir desde el primer día; las que ya existían tienen plazos de adaptación por sector, en el anexo 6b del Código.',
+        'Las multas de la Ley 13/2014 van de 301 a 6.000 euros si la infracción es leve, hasta 30.000 si es grave y hasta 300.000 si es muy grave, y pagarlas no exime de arreglar la web (artículo 71). La Generalitat y su sector público tienen, además, su propio decreto para webs y apps, el 216/2023.',
       ],
     },
     {
@@ -188,6 +198,16 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       ],
     },
     {
+      id: 'cataluna',
+      pregunta: 'Què exigeix la normativa catalana a una web',
+      corta: 'A Catalunya, el Codi d’accessibilitat demana el nivell AA de la WCAG 2.1 a les webs i les apps del sector públic i de moltes empreses privades: bancs, subministraments, telecomunicacions, supermercats grans, hotels, cinemes, teatres i centres educatius.',
+      detalle: [
+        'Són dues normes. La Llei 13/2014 d’accessibilitat de Catalunya (article 33.4) obliga les administracions i qui presta serveis públics a tenir webs accessibles i a indicar-hi el nivell d’accessibilitat i la data de l’última revisió. El Codi d’accessibilitat (Decret 209/2023, en vigor des de l’1 de març de 2024) concreta com: la norma UNE-EN 301 549 i el nivell AA de la WCAG 2.1.',
+        'Va més enllà de la llei estatal i l’europea, perquè inclou empreses privades per sector i no només per mida. Una web nova o que es modifica ha de complir des del primer dia; les que ja existien tenen terminis d’adaptació per sector, a l’annex 6b del Codi.',
+        'Les multes de la Llei 13/2014 van de 301 a 6.000 euros si la infracció és lleu, fins a 30.000 si és greu i fins a 300.000 si és molt greu, i pagar-les no eximeix d’arreglar la web (article 71). La Generalitat i el seu sector públic tenen, a més, el seu propi decret per a webs i apps, el 216/2023.',
+      ],
+    },
+    {
       id: 'multa',
       pregunta: 'Multes per tenir una web que no és accessible',
       corta: 'Si la teva organització hi està obligada, les multes van de 301 euros a 1.000.000 d’euros, segons la gravetat.',
@@ -327,6 +347,16 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
         'Businesses: Act 11/2023, which transposes the European Accessibility Act, has applied since 28 June 2025 to e-commerce, consumer banking, passenger transport, electronic communications, e-books and access to audiovisual media services, among others.',
         'Large companies: Spain’s e-commerce act (LSSI) already required companies with more than a hundred employees in sectors such as banking, insurance, utilities, telecoms, transport, travel agencies and retail to have accessible websites.',
         'Even if the law does not apply to you, more people can use an accessible website. And if you work with the public sector or receive public funding, it may be required anyway.',
+      ],
+    },
+    {
+      id: 'cataluna',
+      pregunta: 'What Catalan law requires of a website',
+      corta: 'In Catalonia, the Accessibility Code requires WCAG 2.1 level AA for the websites and apps of the public sector and of many private businesses: banks, utilities, telecoms, large supermarkets, hotels, cinemas, theatres and schools.',
+      detalle: [
+        'There are two pieces of law. Catalonia’s Accessibility Act, Law 13/2014 (article 33.4), requires public administrations and providers of public services to have accessible websites and to state on them their accessibility level and the date of the last review. The Accessibility Code (Decree 209/2023, in force since 1 March 2024) sets out how: the EN 301 549 standard and WCAG 2.1 level AA.',
+        'It goes further than Spanish and EU law, because it covers private businesses by sector and not only by size. A new or modified website must comply from day one; existing ones have adaptation deadlines by sector, in annex 6b of the Code.',
+        'Fines under Law 13/2014 range from €301 to €6,000 for a minor breach, up to €30,000 for a serious one and up to €300,000 for a very serious one, and paying them does not remove the duty to fix the website (article 71). The Generalitat and its public sector also have their own decree for websites and apps, Decree 216/2023.',
       ],
     },
     {
