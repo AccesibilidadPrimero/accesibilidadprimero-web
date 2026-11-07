@@ -1,27 +1,28 @@
 /* ---------------------------------------------------------------------------
-   La web en lectura fácil · castellano y catalán (Johnny, 07/11/2026).
+   El contenido de la web en lectura fácil · castellano y catalán.
 
-   Cinco páginas: Inicio, Quiénes somos, Qué hacemos, Contacto y
-   Accesibilidad. La guía en vídeo y el blog quedan fuera. La va a validar
-   Plena inclusión con su grupo de personas validadoras: hasta entonces es
-   un BORRADOR y no lleva el logotipo europeo de lectura fácil.
+   Revisión 2 (Johnny, 07/11/2026): «quiero una versión de lectura fácil del
+   contenido de la web, no explicar qué es lectura fácil». Como las webs de
+   referencia (el PAGe de la Administración, las guías Easy Read de GOV.UK y
+   Mencap): cada página cuenta lo mismo que su página de la web completa, con
+   lo importante primero, y una imagen junto al texto cuando ayuda a
+   entenderlo. Sin aviso sobre la lectura fácil y sin recuadro de glosario:
+   la palabra difícil se explica en la frase siguiente, donde aparece.
 
-   CÓMO SE ESCRIBE (UNE 153101:2018 EX). No es estilo: es la norma con la
-   que se valida, así que cualquier cambio la sigue igual.
-   · Una idea por frase y una frase por línea: cada frase es un elemento de
-     `frases` y se pinta en su propio párrafo.
+   Cinco páginas: Inicio, Quiénes somos, Qué hacemos, Cómo escribirnos y
+   Accesibilidad. La va a validar Plena inclusión: hasta entonces es un
+   BORRADOR y no lleva el logotipo europeo de lectura fácil.
+
+   CÓMO SE ESCRIBE (UNE 153101:2018 EX). Es la norma con la que se valida:
+   · Una idea por frase y una frase por línea (cada frase, su párrafo).
    · Presente, frases afirmativas y en activa. Sin gerundios, sin
-     subjuntivos y sin dos verbos seguidos, salvo poder, querer y deber.
-   · Sin paréntesis, sin punto y coma, sin comillas, sin «etcétera» y sin
-     símbolos como % o /.
+     subjuntivos, sin «se + verbo» y sin dos verbos seguidos, salvo poder,
+     querer y deber.
+   · Sin paréntesis, punto y coma, comillas, «etcétera» ni símbolos como %.
    · Sin siglas sin explicar (AP no se usa: siempre Accesibilidad Primero).
-   · Sin adverbios en -mente, sin palabras en otro idioma que no se
-     expliquen y siempre la misma palabra para la misma idea.
-   · Números en cifras y fechas completas.
-   · Las palabras difíciles van en el `glosario` del principio de la página,
-     con un ejemplo. La norma pide negrita o un tamaño mayor para la palabra:
-     aquí, tamaño mayor, porque la web usa un solo peso (AGENTS.md §4).
-   · Listas para más de tres elementos.
+   · Sin adverbios en -mente, sin palabras vagas (algo, cosa), sin metáforas
+     y siempre la misma palabra para la misma idea.
+   · Números en cifras y fechas completas. Listas para más de 3 elementos.
    --------------------------------------------------------------------------- */
 import type { RouteKey } from '../i18n/config';
 
@@ -39,73 +40,49 @@ export const SLUG_LF: Record<IdLF, Record<LangLF, string>> = {
   accesibilidad: { es: 'accesibilidad', ca: 'accessibilitat' },
 };
 
-/** Un enlace: a otra página en lectura fácil, a una página de la web
-    completa o a otra web. Siempre en su propia línea (44 px). */
+/** Las imágenes que se pueden poner junto a un texto (src/paginas/lectura-facil.astro). */
+export type ImagenLF = 'johnny' | 'foc' | 'eci' | 'izaskun' | 'itza' | 'a11y' | 'abstracts';
+
+/** Un enlace: a otra página en lectura fácil, a la web completa o a otra web.
+    Siempre en su propia línea (44 px). */
 export type EnlaceLF =
   | { texto: string; lf: IdLF }
-  | { texto: string; ruta: RouteKey; ancla?: string }
+  | { texto: string; ruta: RouteKey }
   | { texto: string; url: string };
 
-export interface TerminoLF { palabra: string; explicacion: string[] }
+/** Una fila con imagen y texto: un proyecto, una herramienta, una persona. */
+export interface TarjetaLF { imagen: ImagenLF; alt: string; titulo: string; frases: string[] }
 
 export interface BloqueLF {
   titulo: string;
   frases?: string[];
   lista?: string[];
-  /** Frases que van detrás de la lista. */
   despues?: string[];
+  tarjetas?: TarjetaLF[];
+  /** Una imagen junto a todo el bloque. */
+  imagen?: { archivo: ImagenLF; alt: string };
   enlaces?: EnlaceLF[];
 }
 
 export interface PaginaLF {
   id: IdLF;
-  /** El nombre corto, para el índice y el título de la pestaña. */
+  /** El nombre corto, para el pie de la página y la pestaña. */
   nombre: string;
   titulo: string;
+  /** Lo primero que se lee, debajo del título: lo más importante. */
+  entrada: string[];
+  /** Una lista o un enlace que forman parte de la entrada. */
+  entradaLista?: string[];
+  entradaEnlaces?: EnlaceLF[];
   descripcion: string;
-  glosario?: TerminoLF[];
   bloques: BloqueLF[];
 }
 
 export const CORREO = 'proyectos@accesibilidadprimero.com';
 
-/* Textos fijos de la plantilla. */
-export const UI_LF: Record<LangLF, {
-  aviso: string[];
-  glosario: string;
-  indice: string;
-  completa: string;
-  completaInicio: string;
-  enlace: string;
-}> = {
-  es: {
-    aviso: [
-      'Esta página está en lectura fácil.',
-      'Un grupo de personas con discapacidad intelectual revisa este texto.',
-      'Así sabemos si las personas entienden bien el texto.',
-      'Esta web también tiene una versión con textos más largos.',
-      'Esa versión se llama web completa.',
-    ],
-    glosario: 'Palabras para entender esta página',
-    indice: 'Páginas en lectura fácil',
-    completa: 'Ver esta página en la web completa',
-    completaInicio: 'Ir a la web completa',
-    enlace: 'Lectura fácil',
-  },
-  ca: {
-    aviso: [
-      'Aquesta pàgina és en lectura fàcil.',
-      'Un grup de persones amb discapacitat intel·lectual revisa aquest text.',
-      'Així sabem si les persones entenen bé el text.',
-      'Aquesta web també té una versió amb textos més llargs.',
-      'Aquesta versió es diu web completa.',
-    ],
-    glosario: 'Paraules per entendre aquesta pàgina',
-    indice: 'Pàgines en lectura fàcil',
-    completa: 'Veure aquesta pàgina a la web completa',
-    completaInicio: 'Anar a la web completa',
-    enlace: 'Lectura fàcil',
-  },
+export const UI_LF: Record<LangLF, { otras: string; completa: string; enlace: string }> = {
+  es: { otras: 'Otras páginas', completa: 'Ver esta página en la web completa', enlace: 'Lectura fácil' },
+  ca: { otras: 'Altres pàgines', completa: 'Veure aquesta pàgina a la web completa', enlace: 'Lectura fàcil' },
 };
 
 /** La página de la web completa que corresponde a cada una. */
@@ -124,191 +101,93 @@ export function lfDesde(current: RouteKey): IdLF {
   return id ?? 'inicio';
 }
 
-/* LAS PALABRAS DIFÍCILES. Una vez aquí y en el glosario de CADA página que
-   las usa: las páginas se abren sueltas, desde la web completa, y su glosario
-   dice «para entender esta página» (revisión del 07/11/2026). */
-type ClaveG =
-  | 'accesibilidad' | 'web' | 'estudio' | 'organizacion' | 'congreso' | 'disenar' | 'barrera'
-  | 'herramienta' | 'tecnologia' | 'lector' | 'declaracion' | 'actualizar' | 'programacion'
-  | 'impuesto' | 'pautas' | 'formulario' | 'correo';
-
-const G: Record<LangLF, Record<ClaveG, TerminoLF>> = {
-  es: {
-    accesibilidad: { palabra: 'Accesibilidad', explicacion: [
-      'Accesibilidad quiere decir que todas las personas pueden usar un lugar, un objeto o una web.',
-      'Por ejemplo, una rampa hace accesible una puerta para una persona en silla de ruedas.',
-    ] },
-    web: { palabra: 'Web', explicacion: [
-      'Una web es un grupo de páginas en internet.',
-      'Por ejemplo, esta página forma parte de la web de Accesibilidad Primero.',
-    ] },
-    estudio: { palabra: 'Estudio de diseño', explicacion: [
-      'Un estudio de diseño es una empresa pequeña.',
-      'En un estudio de diseño, las personas diseñan webs, carteles o libros.',
-    ] },
-    organizacion: { palabra: 'Organización social', explicacion: [
-      'Una organización social es un grupo de personas.',
-      'Este grupo ayuda a otras personas.',
-    ] },
-    congreso: { palabra: 'Congreso', explicacion: [
-      'Un congreso es una reunión de muchas personas con el mismo trabajo.',
-      'En un congreso, estas personas hablan de su trabajo.',
-    ] },
-    disenar: { palabra: 'Diseñar', explicacion: [
-      'Diseñar es decidir la forma de un objeto antes de hacerlo.',
-      'Por ejemplo, diseñar una web es decidir los textos, las fotos y los colores de cada página.',
-    ] },
-    barrera: { palabra: 'Barrera', explicacion: [
-      'Una barrera hace difícil a una persona entrar en un lugar o usar una web.',
-      'Por ejemplo, una escalera es una barrera para una persona en silla de ruedas.',
-      'En una web, una letra muy pequeña es una barrera para una persona que ve poco.',
-    ] },
-    herramienta: { palabra: 'Herramienta', explicacion: [
-      'Aquí, una herramienta es un programa de ordenador para hacer un trabajo.',
-    ] },
-    tecnologia: { palabra: 'Tecnología', explicacion: [
-      'La tecnología son los aparatos y los programas que usamos cada día.',
-      'Por ejemplo, los ordenadores, los móviles y las webs.',
-    ] },
-    lector: { palabra: 'Lector de pantalla', explicacion: [
-      'Un lector de pantalla es un programa.',
-      'Este programa lee en voz alta los textos de la pantalla.',
-      'Por ejemplo, muchas personas ciegas usan un lector de pantalla para leer una web.',
-    ] },
-    declaracion: { palabra: 'Declaración de accesibilidad', explicacion: [
-      'Una declaración de accesibilidad es una página de la web.',
-      'Esta página explica qué pautas de accesibilidad cumple la web y qué pautas no cumple.',
-    ] },
-    actualizar: { palabra: 'Actualizar una web', explicacion: [
-      'Actualizar una web es cambiar los textos y las fotos de la web.',
-    ] },
-    programacion: { palabra: 'Programación', explicacion: [
-      'La programación es escribir las instrucciones de un programa o de una web.',
-    ] },
-    impuesto: { palabra: 'Impuesto', explicacion: [
-      'Un impuesto es un dinero para el Estado.',
-      'Pagamos un impuesto cuando compramos un producto o pagamos un trabajo.',
-      'El IVA es el nombre de un impuesto.',
-    ] },
-    pautas: { palabra: 'Pautas WCAG', explicacion: [
-      'Las pautas WCAG son unas normas para hacer webs accesibles.',
-      'WCAG son las letras de un nombre en inglés.',
-      'Muchos países usan estas pautas.',
-      'Las pautas WCAG tienen 3 niveles.',
-      'Las leyes de España y de Europa piden el nivel del medio.',
-      'Ese nivel se llama doble A.',
-    ] },
-    formulario: { palabra: 'Formulario', explicacion: [
-      'Un formulario es una página con espacios para escribir tus datos y tu mensaje.',
-    ] },
-    correo: { palabra: 'Correo electrónico', explicacion: [
-      'Un correo electrónico es un mensaje por internet.',
-      'Para mandar un correo electrónico necesitas la dirección de la otra persona.',
-    ] },
-  },
-  ca: {
-    accesibilidad: { palabra: 'Accessibilitat', explicacion: [
-      'Accessibilitat vol dir que totes les persones poden utilitzar un lloc, un objecte o una web.',
-      'Per exemple, una rampa fa accessible una porta per a una persona en cadira de rodes.',
-    ] },
-    web: { palabra: 'Web', explicacion: [
-      'Una web és un grup de pàgines a internet.',
-      'Per exemple, aquesta pàgina forma part de la web d’Accesibilidad Primero.',
-    ] },
-    estudio: { palabra: 'Estudi de disseny', explicacion: [
-      'Un estudi de disseny és una empresa petita.',
-      'En un estudi de disseny, les persones dissenyen webs, cartells o llibres.',
-    ] },
-    organizacion: { palabra: 'Organització social', explicacion: [
-      'Una organització social és un grup de persones.',
-      'Aquest grup ajuda altres persones.',
-    ] },
-    congreso: { palabra: 'Congrés', explicacion: [
-      'Un congrés és una reunió de moltes persones amb la mateixa feina.',
-      'En un congrés, aquestes persones parlen de la seva feina.',
-    ] },
-    disenar: { palabra: 'Dissenyar', explicacion: [
-      'Dissenyar és decidir la forma d’un objecte abans de fer-lo.',
-      'Per exemple, dissenyar una web és decidir els textos, les fotos i els colors de cada pàgina.',
-    ] },
-    barrera: { palabra: 'Barrera', explicacion: [
-      'Una barrera fa difícil a una persona entrar en un lloc o utilitzar una web.',
-      'Per exemple, una escala és una barrera per a una persona en cadira de rodes.',
-      'En una web, una lletra molt petita és una barrera per a una persona que hi veu poc.',
-    ] },
-    herramienta: { palabra: 'Eina', explicacion: [
-      'Aquí, una eina és un programa d’ordinador per fer una feina.',
-    ] },
-    tecnologia: { palabra: 'Tecnologia', explicacion: [
-      'La tecnologia són els aparells i els programes que utilitzem cada dia.',
-      'Per exemple, els ordinadors, els mòbils i les webs.',
-    ] },
-    lector: { palabra: 'Lector de pantalla', explicacion: [
-      'Un lector de pantalla és un programa.',
-      'Aquest programa llegeix en veu alta els textos de la pantalla.',
-      'Per exemple, moltes persones cegues utilitzen un lector de pantalla per llegir una web.',
-    ] },
-    declaracion: { palabra: 'Declaració d’accessibilitat', explicacion: [
-      'Una declaració d’accessibilitat és una pàgina de la web.',
-      'Aquesta pàgina explica quines pautes d’accessibilitat compleix la web i quines pautes no compleix.',
-    ] },
-    actualizar: { palabra: 'Actualitzar una web', explicacion: [
-      'Actualitzar una web és canviar els textos i les fotos de la web.',
-    ] },
-    programacion: { palabra: 'Programació', explicacion: [
-      'La programació és escriure les instruccions d’un programa o d’una web.',
-    ] },
-    impuesto: { palabra: 'Impost', explicacion: [
-      'Un impost és un diner per a l’Estat.',
-      'Paguem un impost quan comprem un producte o paguem una feina.',
-      'L’IVA és el nom d’un impost.',
-    ] },
-    pautas: { palabra: 'Pautes WCAG', explicacion: [
-      'Les pautes WCAG són unes normes per fer webs accessibles.',
-      'WCAG són les lletres d’un nom en anglès.',
-      'Molts països utilitzen aquestes pautes.',
-      'Les pautes WCAG tenen 3 nivells.',
-      'Les lleis d’Espanya i d’Europa demanen el nivell del mig.',
-      'Aquest nivell es diu doble A.',
-    ] },
-    formulario: { palabra: 'Formulari', explicacion: [
-      'Un formulari és una pàgina amb espais per escriure les teves dades i el teu missatge.',
-    ] },
-    correo: { palabra: 'Correu electrònic', explicacion: [
-      'Un correu electrònic és un missatge per internet.',
-      'Per enviar un correu electrònic necessites l’adreça de l’altra persona.',
-    ] },
-  },
-};
-const g = (lang: LangLF, ...claves: ClaveG[]) => claves.map((c) => G[lang][c]);
+const REDES: EnlaceLF[] = [
+  { texto: 'LinkedIn', url: 'https://www.linkedin.com/company/aprimero' },
+  { texto: 'Instagram', url: 'https://www.instagram.com/accesibilidadprimero/' },
+  { texto: 'Mastodon', url: 'https://mastodon.social/@accesibilidadprimero' },
+];
 
 export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
   es: [
     {
       id: 'inicio',
       nombre: 'Inicio',
-      titulo: 'Accesibilidad Primero en lectura fácil',
-      descripcion: 'La web de Accesibilidad Primero en lectura fácil: quiénes somos, qué hacemos y cómo escribirnos.',
-      glosario: g('es', 'accesibilidad', 'web', 'estudio', 'organizacion', 'congreso'),
+      titulo: 'Hacemos webs para todas las personas',
+      entrada: [
+        'Somos Accesibilidad Primero.',
+        'Somos un estudio de diseño en Valencia.',
+        'Diseñamos webs para organizaciones y proyectos que ayudan a las personas.',
+        'Todas las personas pueden usar nuestras webs.',
+        'Por ejemplo, una persona ciega o una persona que no puede usar el ratón.',
+      ],
+      descripcion: 'Accesibilidad Primero en lectura fácil: hacemos webs para todas las personas.',
       bloques: [
         {
-          titulo: 'Quiénes somos',
-          frases: [
-            'Accesibilidad Primero es un estudio de diseño.',
-            'Estamos en Valencia.',
-            'Hacemos webs accesibles.',
-            'Trabajamos con organizaciones sociales, con artistas, con arquitectos y con congresos.',
+          titulo: 'Algunas webs que hacemos',
+          tarjetas: [
+            {
+              imagen: 'foc', alt: 'La web de Foc i Cor en un teléfono móvil.',
+              titulo: 'Foc i Cor',
+              frases: [
+                'Foc i Cor es un restaurante escuela en Catarroja.',
+                'En un restaurante escuela, las personas aprenden el trabajo de un restaurante.',
+                'En su web puedes leer la carta y reservar una mesa.',
+              ],
+            },
+            {
+              imagen: 'eci', alt: 'La web del congreso ECI Conference Madrid 2027.',
+              titulo: 'ECI Conference Madrid 2027',
+              frases: [
+                'Es un congreso para profesionales que trabajan con niñas y niños pequeños.',
+                'Un congreso es una reunión de muchas personas con el mismo trabajo.',
+                'En su web puedes ver el programa y mandar tu trabajo.',
+              ],
+            },
+            {
+              imagen: 'izaskun', alt: 'Una obra de Izaskun Etxebarria en su web: un aro de metal sobre la hierba, junto al mar.',
+              titulo: 'Izaskun Etxebarria',
+              frases: [
+                'Izaskun Etxebarria es una artista.',
+                'En su web puedes ver sus obras.',
+              ],
+            },
           ],
         },
         {
-          titulo: 'Qué hay en esta web',
-          frases: ['Esta web tiene 4 páginas más en lectura fácil.'],
-          enlaces: [
-            { texto: 'Quiénes somos', lf: 'quienes' },
-            { texto: 'Qué hacemos', lf: 'hacemos' },
-            { texto: 'Cómo escribirnos', lf: 'contacto' },
-            { texto: 'La accesibilidad de esta web', lf: 'accesibilidad' },
+          titulo: 'Nuestras herramientas',
+          frases: ['También hacemos programas para resolver problemas de accesibilidad.'],
+          tarjetas: [
+            {
+              imagen: 'itza', alt: 'Itza en una web: una persona pregunta y Itza responde.',
+              titulo: 'Itza',
+              frases: [
+                'Itza está dentro de una web.',
+                'Itza responde a las preguntas de las personas que visitan esa web.',
+              ],
+            },
+            {
+              imagen: 'a11y', alt: 'A11y Primero muestra una nota de 92 y las barreras de una web.',
+              titulo: 'A11y Primero',
+              frases: [
+                'A11y Primero encuentra las barreras de una web.',
+                'Una barrera es un problema que impide usar la web a una persona.',
+              ],
+            },
+            {
+              imagen: 'abstracts', alt: 'El formulario de Accesible Abstracts para mandar un trabajo a un congreso.',
+              titulo: 'Accesible Abstracts',
+              frases: [
+                'Accesible Abstracts ordena los trabajos que recibe un congreso.',
+                'Abstract es una palabra en inglés.',
+                'Abstract quiere decir resumen.',
+              ],
+            },
           ],
+        },
+        {
+          titulo: 'Cuéntanos tu proyecto',
+          frases: ['Si tienes un proyecto, escríbenos.'],
+          enlaces: [{ texto: 'Cómo escribirnos', lf: 'contacto' }],
         },
       ],
     },
@@ -316,43 +195,37 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'quienes',
       nombre: 'Quiénes somos',
       titulo: 'Quiénes somos',
+      entrada: [
+        'Accesibilidad Primero es un estudio de diseño.',
+        'Un estudio de diseño es una empresa pequeña.',
+        'Diseñamos webs y aplicaciones.',
+        'Una aplicación es un programa para el móvil o para el ordenador.',
+      ],
       descripcion: 'Quiénes somos en Accesibilidad Primero, en lectura fácil.',
-      glosario: g('es', 'estudio', 'disenar', 'accesibilidad', 'organizacion', 'congreso', 'tecnologia', 'barrera', 'herramienta'),
       bloques: [
         {
-          titulo: 'El estudio',
+          titulo: 'Pensamos en todas las personas',
           frases: [
-            'Accesibilidad Primero es un estudio de diseño.',
-            'Diseñamos webs y aplicaciones.',
-            'Una aplicación es un programa para el teléfono móvil o para el ordenador.',
             'Pensamos en la accesibilidad antes de diseñar una web.',
-            'Así todas las personas pueden usar la web.',
+            'Accesibilidad quiere decir que todas las personas pueden usar una web.',
+            'Así ninguna persona encuentra barreras en la web.',
+            'Una barrera es un problema que impide usar la web a una persona.',
+            'Por ejemplo, una letra muy pequeña es una barrera para una persona que ve poco.',
           ],
         },
         {
           titulo: 'Quién trabaja en el estudio',
-          frases: [
-            'Somos un estudio pequeño.',
-            'Johnny Vigas creó el estudio en marzo de 2026.',
-            'Johnny diseña las webs.',
-            'Si trabajas con nosotros, hablas con Johnny.',
-          ],
-        },
-        {
-          titulo: 'Con quién trabajamos',
-          frases: [
-            'Trabajamos con organizaciones sociales, con artistas, con arquitectos y con congresos.',
-            'Por ejemplo:',
-          ],
-          lista: [
-            'Foc i Cor es un restaurante escuela en Catarroja.',
-            'ECI es un congreso europeo para profesionales que trabajan con niñas y niños pequeños.',
-            'Izaskun Etxebarria es una artista.',
-            'Pau Jordà es un arquitecto.',
-          ],
-          despues: [
-            'En un restaurante escuela, las personas aprenden el trabajo de un restaurante.',
-            'Un arquitecto diseña edificios.',
+          tarjetas: [
+            {
+              imagen: 'johnny', alt: 'Retrato de Johnny Vigas.',
+              titulo: 'Johnny Vigas',
+              frases: [
+                'Johnny Vigas creó el estudio en marzo de 2026.',
+                'Johnny diseña las webs.',
+                'Somos un estudio pequeño.',
+                'Si trabajas con nosotros, hablas con Johnny.',
+              ],
+            },
           ],
         },
         {
@@ -363,21 +236,24 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'En la universidad hay un grupo de trabajo.',
             'Ese grupo se llama Cátedra dicaTIC.',
             'Este grupo quiere quitar las barreras de la tecnología para las personas con discapacidad.',
+            'La tecnología son los ordenadores, los móviles y las webs.',
           ],
         },
         {
-          titulo: 'Nuestras herramientas',
-          frases: ['También hacemos 3 herramientas.'],
+          titulo: 'Con quién trabajamos',
+          frases: ['Trabajamos con organizaciones sociales, artistas, arquitectos y congresos.'],
           lista: [
-            'Itza está dentro de una web y contesta las preguntas de las personas que visitan esa web.',
-            'A11y Primero encuentra las barreras de una web.',
-            'Accesible Abstracts ordena los textos que recibe un congreso.',
+            'Cesal es una organización social.',
+            'Cesal tiene el restaurante escuela Foc i Cor en Catarroja.',
+            'AEIPI y Eurlyaid organizan el congreso ECI Conference Madrid 2027.',
+            'Izaskun Etxebarria es una artista.',
+            'Pau Jordà es un arquitecto.',
           ],
-          despues: [
-            'A11y es una forma corta de escribir accesibilidad en inglés.',
-            'Abstracts es una palabra en inglés.',
-            'Abstracts quiere decir resúmenes.',
-          ],
+        },
+        {
+          titulo: 'Cuéntanos tu proyecto',
+          frases: ['Si tienes un proyecto, escríbenos.'],
+          enlaces: [{ texto: 'Cómo escribirnos', lf: 'contacto' }],
         },
       ],
     },
@@ -385,19 +261,17 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'hacemos',
       nombre: 'Qué hacemos',
       titulo: 'Qué hacemos',
+      entrada: ['Hacemos 3 trabajos:'],
+      entradaLista: [
+        'Diseñamos y hacemos webs accesibles.',
+        'Revisamos webs.',
+        'Damos clases a las personas que cambian los textos y las fotos de una web.',
+      ],
       descripcion: 'Qué hace Accesibilidad Primero, en lectura fácil: webs accesibles, revisión de webs y clases.',
-      glosario: g('es', 'disenar', 'accesibilidad', 'barrera', 'lector', 'actualizar', 'programacion', 'pautas', 'declaracion', 'impuesto'),
       bloques: [
         {
-          titulo: 'Hacemos 3 trabajos',
-          lista: [
-            'Diseñamos y hacemos webs accesibles.',
-            'Revisamos webs.',
-            'Damos clases a las personas que actualizan una web.',
-          ],
-        },
-        {
           titulo: 'Diseñamos y hacemos webs',
+          imagen: { archivo: 'foc', alt: 'La web de Foc i Cor en un teléfono móvil.' },
           frases: [
             'Diseñamos una web nueva para cada organización.',
             'Pensamos en la accesibilidad antes de diseñar la web.',
@@ -405,19 +279,21 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Estas personas usan solo el teclado.',
             'Por eso probamos cada web con el teclado.',
             'También probamos cada web con un lector de pantalla.',
+            'Un lector de pantalla es un programa que lee la web en voz alta.',
             'Tu equipo puede cambiar los textos y las fotos de la web.',
-            'Para estos cambios, tu equipo no necesita programación.',
-            'También hacemos accesibles los documentos PDF.',
-            'Un documento PDF es un documento para leer en el ordenador o en el móvil.',
+            'Tu equipo hace estos cambios sin programar.',
           ],
         },
         {
           titulo: 'Revisamos webs',
+          imagen: { archivo: 'a11y', alt: 'A11y Primero muestra una nota de 92 y las barreras de una web.' },
           frases: [
             'Revisamos tu web con las pautas WCAG.',
+            'Las pautas WCAG son unas normas para hacer webs accesibles.',
             'Te explicamos cada barrera de tu web.',
             'Te damos un plan para quitar las barreras.',
             'También escribimos la declaración de accesibilidad de tu web.',
+            'La declaración de accesibilidad es una página que explica qué cumple tu web y qué no cumple.',
           ],
         },
         {
@@ -428,19 +304,24 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Una web de una administración pública o de una empresa grande cuesta 2500 euros o más.',
           ],
           despues: [
-            'Además de este precio, pagas un impuesto.',
-            'Ese impuesto es el IVA.',
+            'Además de este precio, pagas el IVA.',
+            'El IVA es un impuesto.',
           ],
         },
         {
           titulo: 'Damos clases',
           frases: [
-            'Damos clases a las personas que actualizan una web.',
+            'Damos clases a las personas que cambian los textos y las fotos de una web.',
             'Así la web es accesible también después de cada cambio.',
             'Hay clases para cada trabajo: diseño, programación y textos.',
             'También hay clases cortas sobre un solo tema.',
             'Por ejemplo, una clase explica cómo hacer un documento PDF accesible.',
           ],
+        },
+        {
+          titulo: 'Cuéntanos tu proyecto',
+          frases: ['Si quieres uno de estos trabajos, escríbenos.'],
+          enlaces: [{ texto: 'Cómo escribirnos', lf: 'contacto' }],
         },
       ],
     },
@@ -448,18 +329,14 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'contacto',
       nombre: 'Cómo escribirnos',
       titulo: 'Cómo escribirnos',
+      entrada: [
+        'Puedes escribirnos un correo electrónico.',
+        'Nuestra dirección de correo electrónico es esta:',
+        CORREO,
+      ],
+      entradaEnlaces: [{ texto: 'Escribir un correo electrónico', url: `mailto:${CORREO}` }],
       descripcion: 'Cómo escribir a Accesibilidad Primero, en lectura fácil.',
-      glosario: g('es', 'correo', 'formulario'),
       bloques: [
-        {
-          titulo: 'Escríbenos un correo electrónico',
-          frases: [
-            'Puedes escribirnos un correo electrónico.',
-            'Nuestra dirección de correo electrónico es esta:',
-            CORREO,
-          ],
-          enlaces: [{ texto: 'Escribir un correo electrónico', url: `mailto:${CORREO}` }],
-        },
         {
           titulo: 'Qué puedes contarnos',
           frases: [
@@ -477,18 +354,16 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
           ],
         },
         {
-          titulo: 'El formulario',
-          frases: ['En la web completa hay un formulario para escribirnos.'],
+          titulo: 'Otras formas de escribirnos',
+          frases: [
+            'En la web completa hay un formulario.',
+            'Un formulario es una página con espacios para escribir tu nombre y tu mensaje.',
+          ],
           enlaces: [{ texto: 'Ir al formulario', ruta: 'contacto' }],
         },
         {
           titulo: 'Nuestras redes sociales',
-          frases: ['También estamos en 3 redes sociales.'],
-          enlaces: [
-            { texto: 'LinkedIn', url: 'https://www.linkedin.com/company/aprimero' },
-            { texto: 'Instagram', url: 'https://www.instagram.com/accesibilidadprimero/' },
-            { texto: 'Mastodon', url: 'https://mastodon.social/@accesibilidadprimero' },
-          ],
+          enlaces: REDES,
         },
       ],
     },
@@ -496,17 +371,23 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'accesibilidad',
       nombre: 'Accesibilidad',
       titulo: 'La accesibilidad de esta web',
+      entrada: [
+        'Queremos una web para todas las personas.',
+        'La última revisión de esta web es del 5 de noviembre de 2026.',
+        'La web cumple casi todas las pautas WCAG.',
+        'Las pautas WCAG son unas normas para hacer webs accesibles.',
+      ],
       descripcion: 'Qué cumple y qué no cumple la web de Accesibilidad Primero, en lectura fácil.',
-      glosario: g('es', 'accesibilidad', 'pautas', 'lector', 'correo'),
       bloques: [
         {
           titulo: 'Lo que cumple esta web',
           frases: [
-            'Queremos una web para todas las personas.',
-            'La última revisión de esta web es del 5 de noviembre de 2026.',
-            'La web cumple casi todas las pautas WCAG del nivel doble A.',
-            'Los botones y los enlaces de esta web son grandes.',
+            'Puedes usar toda la web con el teclado.',
+            'Puedes leer bien los textos sobre el fondo.',
+            'Los botones y los enlaces son grandes.',
             'Son fáciles de pulsar con el dedo.',
+            'Los vídeos no tienen sonido.',
+            'Cada vídeo tiene un texto que cuenta sus imágenes.',
           ],
         },
         {
@@ -518,20 +399,12 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Tu móvil y tu ordenador tienen una opción para reducir el movimiento.',
             'Si activas esta opción, el dibujo se para.',
           ],
-          enlaces: [{ texto: 'Ver la página sobre nuestro estudio', ruta: 'estudio' }],
-        },
-        {
-          titulo: 'Los vídeos',
-          frases: [
-            'Los vídeos de esta web no tienen sonido.',
-            'Cada vídeo tiene un texto.',
-            'El texto explica las imágenes del vídeo.',
-          ],
         },
         {
           titulo: 'Lo que todavía debemos revisar',
           frases: [
             'Todavía debemos probar toda la web con un lector de pantalla.',
+            'Un lector de pantalla es un programa que lee la web en voz alta.',
             'Después de esta prueba, escribimos los resultados en esta página.',
           ],
         },
@@ -553,28 +426,82 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
     {
       id: 'inicio',
       nombre: 'Inici',
-      titulo: 'Accesibilidad Primero en lectura fàcil',
-      descripcion: 'La web d’Accesibilidad Primero en lectura fàcil: qui som, què fem i com escriure’ns.',
-      glosario: g('ca', 'accesibilidad', 'web', 'estudio', 'organizacion', 'congreso'),
+      titulo: 'Fem webs per a totes les persones',
+      entrada: [
+        'Som Accesibilidad Primero.',
+        'Som un estudi de disseny a València.',
+        'Dissenyem webs per a organitzacions i projectes que ajuden les persones.',
+        'Totes les persones poden utilitzar les nostres webs.',
+        'Per exemple, una persona cega o una persona que no pot utilitzar el ratolí.',
+      ],
+      descripcion: 'Accesibilidad Primero en lectura fàcil: fem webs per a totes les persones.',
       bloques: [
         {
-          titulo: 'Qui som',
-          frases: [
-            'Accesibilidad Primero és un estudi de disseny.',
-            'Som a València.',
-            'Fem webs accessibles.',
-            'Treballem amb organitzacions socials, amb artistes, amb arquitectes i amb congressos.',
+          titulo: 'Algunes webs que fem',
+          tarjetas: [
+            {
+              imagen: 'foc', alt: 'La web de Foc i Cor en un telèfon mòbil.',
+              titulo: 'Foc i Cor',
+              frases: [
+                'Foc i Cor és un restaurant escola a Catarroja.',
+                'En un restaurant escola, les persones aprenen la feina d’un restaurant.',
+                'A la seva web pots llegir la carta i reservar una taula.',
+              ],
+            },
+            {
+              imagen: 'eci', alt: 'La web del congrés ECI Conference Madrid 2027.',
+              titulo: 'ECI Conference Madrid 2027',
+              frases: [
+                'És un congrés per a professionals que treballen amb nenes i nens petits.',
+                'Un congrés és una reunió de moltes persones amb la mateixa feina.',
+                'A la seva web pots veure el programa i enviar el teu treball.',
+              ],
+            },
+            {
+              imagen: 'izaskun', alt: 'Una obra d’Izaskun Etxebarria a la seva web: un cèrcol de metall sobre l’herba, al costat del mar.',
+              titulo: 'Izaskun Etxebarria',
+              frases: [
+                'Izaskun Etxebarria és una artista.',
+                'A la seva web pots veure les seves obres.',
+              ],
+            },
           ],
         },
         {
-          titulo: 'Què hi ha en aquesta web',
-          frases: ['Aquesta web té 4 pàgines més en lectura fàcil.'],
-          enlaces: [
-            { texto: 'Qui som', lf: 'quienes' },
-            { texto: 'Què fem', lf: 'hacemos' },
-            { texto: 'Com escriure’ns', lf: 'contacto' },
-            { texto: 'L’accessibilitat d’aquesta web', lf: 'accesibilidad' },
+          titulo: 'Les nostres eines',
+          frases: ['També fem programes per resoldre problemes d’accessibilitat.'],
+          tarjetas: [
+            {
+              imagen: 'itza', alt: 'Itza en una web: una persona pregunta i Itza respon.',
+              titulo: 'Itza',
+              frases: [
+                'Itza és dins d’una web.',
+                'Itza respon les preguntes de les persones que visiten aquesta web.',
+              ],
+            },
+            {
+              imagen: 'a11y', alt: 'A11y Primero mostra una nota de 92 i les barreres d’una web.',
+              titulo: 'A11y Primero',
+              frases: [
+                'A11y Primero troba les barreres d’una web.',
+                'Una barrera és un problema que impedeix utilitzar la web a una persona.',
+              ],
+            },
+            {
+              imagen: 'abstracts', alt: 'El formulari d’Accesible Abstracts per enviar un treball a un congrés.',
+              titulo: 'Accesible Abstracts',
+              frases: [
+                'Accesible Abstracts ordena els treballs que rep un congrés.',
+                'Abstract és una paraula en anglès.',
+                'Abstract vol dir resum.',
+              ],
+            },
           ],
+        },
+        {
+          titulo: 'Explica’ns el teu projecte',
+          frases: ['Si tens un projecte, escriu-nos.'],
+          enlaces: [{ texto: 'Com escriure’ns', lf: 'contacto' }],
         },
       ],
     },
@@ -582,43 +509,37 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'quienes',
       nombre: 'Qui som',
       titulo: 'Qui som',
+      entrada: [
+        'Accesibilidad Primero és un estudi de disseny.',
+        'Un estudi de disseny és una empresa petita.',
+        'Dissenyem webs i aplicacions.',
+        'Una aplicació és un programa per al mòbil o per a l’ordinador.',
+      ],
       descripcion: 'Qui som a Accesibilidad Primero, en lectura fàcil.',
-      glosario: g('ca', 'estudio', 'disenar', 'accesibilidad', 'organizacion', 'congreso', 'tecnologia', 'barrera', 'herramienta'),
       bloques: [
         {
-          titulo: 'L’estudi',
+          titulo: 'Pensem en totes les persones',
           frases: [
-            'Accesibilidad Primero és un estudi de disseny.',
-            'Dissenyem webs i aplicacions.',
-            'Una aplicació és un programa per al telèfon mòbil o per a l’ordinador.',
             'Pensem en l’accessibilitat abans de dissenyar una web.',
-            'Així totes les persones poden utilitzar la web.',
+            'Accessibilitat vol dir que totes les persones poden utilitzar una web.',
+            'Així cap persona troba barreres a la web.',
+            'Una barrera és un problema que impedeix utilitzar la web a una persona.',
+            'Per exemple, una lletra molt petita és una barrera per a una persona que hi veu poc.',
           ],
         },
         {
           titulo: 'Qui treballa a l’estudi',
-          frases: [
-            'Som un estudi petit.',
-            'Johnny Vigas va crear l’estudi el març de 2026.',
-            'Johnny dissenya les webs.',
-            'Si treballes amb nosaltres, parles amb Johnny.',
-          ],
-        },
-        {
-          titulo: 'Amb qui treballem',
-          frases: [
-            'Treballem amb organitzacions socials, amb artistes, amb arquitectes i amb congressos.',
-            'Per exemple:',
-          ],
-          lista: [
-            'Foc i Cor és un restaurant escola a Catarroja.',
-            'ECI és un congrés europeu per a professionals que treballen amb nenes i nens petits.',
-            'Izaskun Etxebarria és una artista.',
-            'Pau Jordà és un arquitecte.',
-          ],
-          despues: [
-            'En un restaurant escola, les persones aprenen la feina d’un restaurant.',
-            'Un arquitecte dissenya edificis.',
+          tarjetas: [
+            {
+              imagen: 'johnny', alt: 'Retrat de Johnny Vigas.',
+              titulo: 'Johnny Vigas',
+              frases: [
+                'Johnny Vigas va crear l’estudi el març de 2026.',
+                'Johnny dissenya les webs.',
+                'Som un estudi petit.',
+                'Si treballes amb nosaltres, parles amb Johnny.',
+              ],
+            },
           ],
         },
         {
@@ -629,21 +550,24 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'A la universitat hi ha un grup de treball.',
             'Aquest grup es diu Càtedra dicaTIC.',
             'Aquest grup vol treure les barreres de la tecnologia per a les persones amb discapacitat.',
+            'La tecnologia són els ordinadors, els mòbils i les webs.',
           ],
         },
         {
-          titulo: 'Les nostres eines',
-          frases: ['També fem 3 eines.'],
+          titulo: 'Amb qui treballem',
+          frases: ['Treballem amb organitzacions socials, artistes, arquitectes i congressos.'],
           lista: [
-            'Itza és dins d’una web i contesta les preguntes de les persones que visiten aquesta web.',
-            'A11y Primero troba les barreres d’una web.',
-            'Accesible Abstracts ordena els textos que rep un congrés.',
+            'Cesal és una organització social.',
+            'Cesal té el restaurant escola Foc i Cor a Catarroja.',
+            'AEIPI i Eurlyaid organitzen el congrés ECI Conference Madrid 2027.',
+            'Izaskun Etxebarria és una artista.',
+            'Pau Jordà és un arquitecte.',
           ],
-          despues: [
-            'A11y és una manera curta d’escriure accessibilitat en anglès.',
-            'Abstracts és una paraula en anglès.',
-            'Abstracts vol dir resums.',
-          ],
+        },
+        {
+          titulo: 'Explica’ns el teu projecte',
+          frases: ['Si tens un projecte, escriu-nos.'],
+          enlaces: [{ texto: 'Com escriure’ns', lf: 'contacto' }],
         },
       ],
     },
@@ -651,19 +575,17 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'hacemos',
       nombre: 'Què fem',
       titulo: 'Què fem',
+      entrada: ['Fem 3 feines:'],
+      entradaLista: [
+        'Dissenyem i fem webs accessibles.',
+        'Revisem webs.',
+        'Donem classes a les persones que canvien els textos i les fotos d’una web.',
+      ],
       descripcion: 'Què fa Accesibilidad Primero, en lectura fàcil: webs accessibles, revisió de webs i classes.',
-      glosario: g('ca', 'disenar', 'accesibilidad', 'barrera', 'lector', 'actualizar', 'programacion', 'pautas', 'declaracion', 'impuesto'),
       bloques: [
         {
-          titulo: 'Fem 3 feines',
-          lista: [
-            'Dissenyem i fem webs accessibles.',
-            'Revisem webs.',
-            'Donem classes a les persones que actualitzen una web.',
-          ],
-        },
-        {
           titulo: 'Dissenyem i fem webs',
+          imagen: { archivo: 'foc', alt: 'La web de Foc i Cor en un telèfon mòbil.' },
           frases: [
             'Dissenyem una web nova per a cada organització.',
             'Pensem en l’accessibilitat abans de dissenyar la web.',
@@ -671,19 +593,21 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Aquestes persones utilitzen només el teclat.',
             'Per això provem cada web amb el teclat.',
             'També provem cada web amb un lector de pantalla.',
+            'Un lector de pantalla és un programa que llegeix la web en veu alta.',
             'El teu equip pot canviar els textos i les fotos de la web.',
-            'Per a aquests canvis, el teu equip no necessita programació.',
-            'També fem accessibles els documents PDF.',
-            'Un document PDF és un document per llegir a l’ordinador o al mòbil.',
+            'El teu equip fa aquests canvis sense programar.',
           ],
         },
         {
           titulo: 'Revisem webs',
+          imagen: { archivo: 'a11y', alt: 'A11y Primero mostra una nota de 92 i les barreres d’una web.' },
           frases: [
             'Revisem la teva web amb les pautes WCAG.',
+            'Les pautes WCAG són unes normes per fer webs accessibles.',
             'T’expliquem cada barrera de la teva web.',
             'Et donem un pla per treure les barreres.',
             'També escrivim la declaració d’accessibilitat de la teva web.',
+            'La declaració d’accessibilitat és una pàgina que explica què compleix la teva web i què no compleix.',
           ],
         },
         {
@@ -694,19 +618,24 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'Una web d’una administració pública o d’una empresa gran costa 2500 euros o més.',
           ],
           despues: [
-            'A més d’aquest preu, pagues un impost.',
-            'Aquest impost és l’IVA.',
+            'A més d’aquest preu, pagues l’IVA.',
+            'L’IVA és un impost.',
           ],
         },
         {
           titulo: 'Donem classes',
           frases: [
-            'Donem classes a les persones que actualitzen una web.',
+            'Donem classes a les persones que canvien els textos i les fotos d’una web.',
             'Així la web és accessible també després de cada canvi.',
             'Hi ha classes per a cada feina: disseny, programació i textos.',
             'També hi ha classes curtes sobre un sol tema.',
             'Per exemple, una classe explica com fer un document PDF accessible.',
           ],
+        },
+        {
+          titulo: 'Explica’ns el teu projecte',
+          frases: ['Si vols una d’aquestes feines, escriu-nos.'],
+          enlaces: [{ texto: 'Com escriure’ns', lf: 'contacto' }],
         },
       ],
     },
@@ -714,18 +643,14 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'contacto',
       nombre: 'Com escriure’ns',
       titulo: 'Com escriure’ns',
+      entrada: [
+        'Ens pots escriure un correu electrònic.',
+        'La nostra adreça de correu electrònic és aquesta:',
+        CORREO,
+      ],
+      entradaEnlaces: [{ texto: 'Escriure un correu electrònic', url: `mailto:${CORREO}` }],
       descripcion: 'Com escriure a Accesibilidad Primero, en lectura fàcil.',
-      glosario: g('ca', 'correo', 'formulario'),
       bloques: [
-        {
-          titulo: 'Escriu-nos un correu electrònic',
-          frases: [
-            'Ens pots escriure un correu electrònic.',
-            'La nostra adreça de correu electrònic és aquesta:',
-            CORREO,
-          ],
-          enlaces: [{ texto: 'Escriure un correu electrònic', url: `mailto:${CORREO}` }],
-        },
         {
           titulo: 'Què ens pots explicar',
           frases: [
@@ -743,18 +668,16 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
           ],
         },
         {
-          titulo: 'El formulari',
-          frases: ['A la web completa hi ha un formulari per escriure’ns.'],
+          titulo: 'Altres maneres d’escriure’ns',
+          frases: [
+            'A la web completa hi ha un formulari.',
+            'Un formulari és una pàgina amb espais per escriure el teu nom i el teu missatge.',
+          ],
           enlaces: [{ texto: 'Anar al formulari', ruta: 'contacto' }],
         },
         {
           titulo: 'Les nostres xarxes socials',
-          frases: ['També som a 3 xarxes socials.'],
-          enlaces: [
-            { texto: 'LinkedIn', url: 'https://www.linkedin.com/company/aprimero' },
-            { texto: 'Instagram', url: 'https://www.instagram.com/accesibilidadprimero/' },
-            { texto: 'Mastodon', url: 'https://mastodon.social/@accesibilidadprimero' },
-          ],
+          enlaces: REDES,
         },
       ],
     },
@@ -762,17 +685,23 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
       id: 'accesibilidad',
       nombre: 'Accessibilitat',
       titulo: 'L’accessibilitat d’aquesta web',
+      entrada: [
+        'Volem una web per a totes les persones.',
+        'L’última revisió d’aquesta web és del 5 de novembre de 2026.',
+        'La web compleix gairebé totes les pautes WCAG.',
+        'Les pautes WCAG són unes normes per fer webs accessibles.',
+      ],
       descripcion: 'Què compleix i què no compleix la web d’Accesibilidad Primero, en lectura fàcil.',
-      glosario: g('ca', 'accesibilidad', 'pautas', 'lector', 'correo'),
       bloques: [
         {
           titulo: 'El que compleix aquesta web',
           frases: [
-            'Volem una web per a totes les persones.',
-            'L’última revisió d’aquesta web és del 5 de novembre de 2026.',
-            'La web compleix gairebé totes les pautes WCAG del nivell doble A.',
-            'Els botons i els enllaços d’aquesta web són grans.',
+            'Pots utilitzar tota la web amb el teclat.',
+            'Pots llegir bé els textos sobre el fons.',
+            'Els botons i els enllaços són grans.',
             'Són fàcils de prémer amb el dit.',
+            'Els vídeos no tenen so.',
+            'Cada vídeo té un text que explica les seves imatges.',
           ],
         },
         {
@@ -784,20 +713,12 @@ export const PAGINAS_LF: Record<LangLF, PaginaLF[]> = {
             'El teu mòbil i el teu ordinador tenen una opció per reduir el moviment.',
             'Si actives aquesta opció, el dibuix s’atura.',
           ],
-          enlaces: [{ texto: 'Veure la pàgina sobre el nostre estudi', ruta: 'estudio' }],
-        },
-        {
-          titulo: 'Els vídeos',
-          frases: [
-            'Els vídeos d’aquesta web no tenen so.',
-            'Cada vídeo té un text.',
-            'El text explica les imatges del vídeo.',
-          ],
         },
         {
           titulo: 'El que encara hem de revisar',
           frases: [
             'Encara hem de provar tota la web amb un lector de pantalla.',
+            'Un lector de pantalla és un programa que llegeix la web en veu alta.',
             'Després d’aquesta prova, escrivim els resultats en aquesta pàgina.',
           ],
         },
