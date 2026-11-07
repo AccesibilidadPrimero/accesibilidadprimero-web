@@ -4,10 +4,37 @@ name: Accesibilidad y build
 # tests automáticos cogen alrededor de un tercio de los problemas WCAG. La
 # pasada de teclado y de lector de pantalla la hace Johnny.
 
+# MINUTOS (07/11/2026: 1.803 de 2.000 gastados en una semana). Cada cambio
+# pasaba DOS veces, ~21 min cada una: en la PR y otra vez al fusionar en main.
+# La segunda no comprobaba nada nuevo (main recibe solo PR ya verificadas, y
+# quien publica es Cloudflare, no este flujo), así que se quita. Además:
+#   · solo corre si cambia algo que afecta a la web, no por un .md de notas;
+#   · un push nuevo a la misma PR cancela la pasada anterior;
+#   · la caché de imágenes de Astro (2.311 variantes) y Chromium se guardan
+#     entre pasadas.
+# Para pasarlo a mano sobre main: Actions → «Run workflow».
 on:
   pull_request:
-  push:
-    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'arte/**'
+      - 'scripts/**'
+      - 'worker/**'
+      - 'itza-worker/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'astro.config.*'
+      - 'tsconfig.json'
+      - 'wrangler*.toml'
+      - 'lighthouserc*'
+      - '.lighthouserc*'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+concurrency:
+  group: verificar-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verificar:
@@ -22,6 +49,15 @@ jobs:
 
       - run: npm ci
 
+      # Las variantes optimizadas de las imágenes: sin caché, el build las
+      # vuelve a generar todas en cada pasada.
+      - name: Caché de imágenes de Astro
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-imagenes-${{ hashFiles('src/assets/**', 'public/**') }}
+          restore-keys: astro-imagenes-
+
       # El esquema de contenido rompe aquí si falta un alt, si un caso tiene
       # seis decisiones o si las tres cifras son de accesibilidad.
       - name: Build (incluye las reglas de contenido)
@@ -30,8 +66,20 @@ jobs:
       - name: Tipos y plantillas
         run: npm run check
 
+      - name: Caché de Chromium
+        id: chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
       - name: Instalar Chromium
+        if: steps.chromium.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      - name: Dependencias del sistema para Chromium
+        if: steps.chromium.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: axe-core, objetivos táctiles y reflow a 320 px
         run: npm run a11y

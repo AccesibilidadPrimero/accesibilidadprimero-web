@@ -465,6 +465,11 @@ disciplina personal a las once de la noche.
 - Una rama por cambio, PR siempre, nunca commits directos a `main`.
 - El CI (`axe-core` + Lighthouse CI) rompe el build ante regresiones. Cubre
   también los componentes de demo de los casos, no solo las páginas.
+- **El CI corre una vez por cambio, en la PR** (07/11/2026: los minutos de
+  GitHub Actions se gastaban el doble pasando también al fusionar en main).
+  Solo si cambia algo de la web (no por un `.md` de notas), una pasada nueva
+  cancela la anterior de la misma PR y las imágenes de Astro y Chromium van
+  en caché. Para pasarlo sobre main: Actions → «Run workflow».
 - Si algo de este archivo deja de ser cierto, se cambia **aquí** en el mismo PR
   que lo cambia en el código.
 
