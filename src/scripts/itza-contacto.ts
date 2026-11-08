@@ -147,3 +147,7 @@ async function iniciar() {
 }
 
 iniciar();
+
+/* Módulo, no script global: sin esto TypeScript junta sus nombres con los de
+   itza-demo.ts (los dos tienen `iniciar` y `TOPE`). */
+export {};
