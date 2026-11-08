@@ -670,11 +670,17 @@ de Turnstile sea la de prueba.
 - **Itza en Contacto (08/11/2026): Itza ES la página y sustituye al
   formulario** (Johnny: «si no, no tiene sentido Itza»; «sin texto de
   introducción»; «nada de la política de privacidad, que funcione tal cual
-  Itza»). Página en menta, el h1 es la pastilla «Itza · ¿Cómo podemos
-  ayudarte?» (botón de desplegar, `aria-expanded`). Al abrirla: charla con
+  Itza»). Página en menta; Itza, con SU interfaz y no la de AP («Itza tiene
+  su propia interfaz y estilos, hay que mantener su singularidad visual»):
+  la barra oscura y la ventana del plugin, con sus colores (#1a1a2e,
+  #5b4fcf, #3d33a0), burbujas, «En línea» y firma. Es la excepción
+  declarada a «todo en Ink» dentro de la ventana; un peso, 44 px y foco
+  visible sí se cumplen. El h1 es la barra «¿Cómo podemos ayudarte?» (botón
+  de desplegar, `aria-expanded`); la ✕ y Escape la pliegan y el foco vuelve
+  a la barra. Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
-  PÁGINA, no la IA, pide nombre y correo (no salen hacia Anthropic);
+  PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
   revisión con «Cambiar algo»; envío por `/api/contacto` con `via=itza`,
   sin casilla de consentimiento (el Worker solo la exige al formulario).
   `src/scripts/itza-contacto.ts`. Solo con JS y si el Worker tiene
