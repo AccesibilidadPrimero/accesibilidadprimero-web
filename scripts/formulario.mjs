@@ -182,6 +182,18 @@ console.log('\n── Worker ──\n');
   anthropic.texto = 'Esto no es JSON';
   ri = await itza(pregunta);
   ok(ri.status === 200 && ri.cuerpo.reply === 'Esto no es JSON' && ri.cuerpo.listo === false, 'Itza: si no responde en JSON, el texto vale como pregunta');
+  /* Respuestas rápidas: texto corto y como mucho cinco. */
+  anthropic.texto = JSON.stringify({ respuesta: '¿Hay fecha límite?', listo: false, opciones: ['Sí', 'No', 7, 'x'.repeat(60), 'a', 'b', 'c', 'd'] });
+  ri = await itza(pregunta);
+  ok(JSON.stringify(ri.cuerpo.opciones) === JSON.stringify(['Sí', 'No', 'a', 'b', 'c']), 'Itza: las opciones, solo texto corto y cinco como mucho', JSON.stringify(ri.cuerpo.opciones));
+  /* JSON roto, tal como salió en producción el 08/11/2026: la dirección
+     suelta dentro del objeto. No se enseña el JSON. */
+  anthropic.texto = '{"respuesta": "Las tarifas están en el apartado de servicios. ¿Qué tipo de auditoría buscas?", "listo": false, "/servicios/"}';
+  ri = await itza(pregunta);
+  ok(ri.cuerpo.reply === 'Las tarifas están en el apartado de servicios. ¿Qué tipo de auditoría buscas?\n/servicios/' && ri.cuerpo.listo === false, 'Itza: JSON roto, se rescata la respuesta y el apartado', ri.cuerpo.reply);
+  anthropic.texto = '{"respuesta": , "listo": false}';
+  ri = await itza(pregunta);
+  ok(!ri.cuerpo.reply.includes('{') && ri.cuerpo.reply.length > 0, 'Itza: JSON roto sin nada que rescatar, una frase y nunca el JSON', ri.cuerpo.reply);
   anthropic.falla = true;
   ri = await itza(pregunta);
   ok(ri.status === 502, 'Itza: si la API falla, 502');
@@ -333,7 +345,7 @@ async function conItza(respuestas, ancho = 390) {
 }
 {
   const { p, ctx, enviadas } = await conItza([
-    { reply: '¿Qué necesitáis?', listo: false },
+    { reply: '¿Quieres añadir algo más?', listo: false, opciones: ['Sí', 'No'] },
     { reply: 'Gracias, ya lo tengo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
   ]);
   ok(await p.isVisible('#itza-pregunta') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la barra y sin el formulario');
@@ -356,42 +368,41 @@ async function conItza(respuestas, ancho = 390) {
   await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 2 && !document.querySelector('[data-itza-log] .escribiendo'));
   ok((await p.locator('[data-itza-log] p.tu').first().textContent()).includes('Somos una fundación cultural.'), 'Itza: la conversación empieza con la pregunta');
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: tras responder, el foco sigue en el campo');
-  await p.keyboard.type('Una web nueva, antes de marzo.');
-  await p.keyboard.press('Enter');
+  ok(await p.locator('[data-itza-rapidas] button').allTextContents().then((t) => t.join('|')) === 'Sí|No', 'Itza: a una pregunta de sí o no, los botones «Sí» y «No»');
+  const altoRapida = await p.locator('[data-itza-rapidas] button').first().evaluate((b) => b.getBoundingClientRect().height);
+  ok(altoRapida >= 44, 'Itza: los botones de respuesta rápida, con su estilo y 44 de alto', String(altoRapida));
+  await p.click('[data-itza-rapidas] button >> text=No');
+  ok(enviadas.at(-1)?.messages.at(-1)?.content === 'No' && !(await p.isVisible('[data-itza-rapidas]')), 'Itza: pulsar «No» lo envía y los botones se van');
   await p.waitForSelector('#itza-nombre:visible', { timeout: 5000 }).catch(() => {});
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: al tenerlo, pide nombre y correo, y el foco va al nombre');
-  ok(!(await p.isVisible('#itza-mensaje')), 'Itza: la charla se retira');
+  ok(!(await p.isVisible('#itza-mensaje')) && await p.textContent('[data-paso="datos"] .itza-chat__boton') === 'Enviar', 'Itza: la charla se retira y el botón es «Enviar»');
   await p.click('[data-paso="datos"] .itza-chat__boton');
   ok(await p.isVisible('#itza-nombre-error') && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: vacíos, los dos errores y el foco al primero');
   await p.fill('#itza-nombre', 'Ana Pérez');
   await p.fill('#itza-correo', 'ana@ejemplo');
   await p.click('[data-paso="datos"] .itza-chat__boton');
   ok(!(await p.isVisible('#itza-nombre-error')) && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-correo', 'Itza: correo sin dominio, su error y el foco ahí');
-  await p.fill('#itza-correo', 'ana@ejemplo.com');
-  await p.keyboard.press('Enter');
-  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2', 'Itza: la revisión, con el foco en su encabezado');
-  ok(await p.textContent('[data-r="mensaje"]') === 'Somos una fundación cultural y queremos una web accesible antes de marzo.' && await p.textContent('[data-r="organizacion"]') === 'Fundación Ejemplo', 'Itza: el resumen y la organización, a la vista');
-  ok(!JSON.stringify(enviadas).includes('Ana Pérez') && !JSON.stringify(enviadas).includes('ana@ejemplo.com'), 'Itza: el nombre y el correo no van a la IA');
-  await p.click('.itza-chat__cambiar');
-  ok(await p.isVisible('#itza-e-mensaje') && await p.getAttribute('.itza-chat__cambiar', 'aria-expanded') === 'true', 'Itza: «Cambiar algo» abre los campos');
-  await p.fill('#itza-e-organizacion', 'Fundación Otra');
-  ok(await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: lo cambiado se ve en el resumen');
   await p.keyboard.press('Escape');
   ok(!(await p.isVisible('#itza-panel')) && await p.evaluate(() => document.activeElement.id) === 'itza-pregunta', 'Itza: Escape cierra y el foco vuelve a la barra');
   await p.keyboard.press('Enter');
-  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2' && await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: al reabrir, sigue donde estaba');
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-nombre' && await p.inputValue('#itza-nombre') === 'Ana Pérez', 'Itza: al reabrir, sigue donde estaba');
   const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
   await p.addScriptTag({ content: axe });
   const v = await p.evaluate(async () => (await axe.run(document)).violations.map((x) => x.id));
   ok(v.length === 0, 'Itza: axe sin fallos', v.join(', '));
   const ancho = await p.evaluate(() => document.documentElement.scrollWidth);
   ok(ancho <= 390, 'Itza: sin scroll horizontal a 390', String(ancho));
+  ok(!JSON.stringify(enviadas).includes('Ana Pérez'), 'Itza: el nombre y el correo no van a la IA');
   brevo.llamadas = [];
-  await p.click('[data-paso="revision"] .itza-chat__boton');
+  await p.fill('#itza-correo', 'ana@ejemplo.com');
+  await p.keyboard.press('Enter');
   await p.waitForSelector('[data-itza-hecho]:visible', { timeout: 8000 }).catch(() => {});
-  ok(await p.isVisible('[data-itza-hecho]') && await p.evaluate(() => document.activeElement.hasAttribute('data-itza-hecho')), 'Itza: enviado, y el foco en la confirmación');
+  ok(await p.isVisible('[data-itza-hecho]') && await p.evaluate(() => document.activeElement.hasAttribute('data-itza-hecho')), 'Itza: con el correo, se envía sin revisión y el foco va a la confirmación');
   const correo = brevo.llamadas.at(-1)?.cuerpo;
-  ok(correo?.textContent.includes('Fundación Otra') && correo?.textContent.includes('Enviado con Itza') && correo?.replyTo.email === 'ana@ejemplo.com', 'Itza: el correo llega con lo revisado', JSON.stringify(correo ?? {}).slice(0, 200));
+  const t = correo?.textContent ?? '';
+  ok(t.includes('Somos una fundación cultural y queremos una web accesible antes de marzo.') && t.includes('Fundación Ejemplo') && t.includes('Enviado con Itza') && correo?.replyTo.email === 'ana@ejemplo.com', 'Itza: el correo llega con el resumen', t.slice(0, 200));
+  ok(t.includes('Tú: Somos una fundación cultural.') && t.includes('Itza: ¿Quieres añadir algo más?') && t.includes('Tú: No'), 'Itza: y con la conversación entera debajo', t.slice(0, 400));
+  ok(!JSON.stringify(enviadas).includes('ana@ejemplo.com'), 'Itza: el correo tampoco fue a la IA');
   await ctx.close();
 }
 {

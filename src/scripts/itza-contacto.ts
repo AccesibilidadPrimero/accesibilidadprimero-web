@@ -11,8 +11,10 @@
       Cuando tiene bastante, devuelve listo + un resumen.
    3. Nombre y correo, juntos, como el formulario del plugin. Los pide la
       página, no la IA: no salen hacia Anthropic, van solo a /api/contacto.
-   4. Revisión: lo que va a llegar, a la vista, con «Cambiar algo».
-   5. Envío por /api/contacto (Turnstile invisible, Brevo), con via=itza.
+   4. Enviar, en el mismo paso (sin revisión, Johnny 08/11/2026), por
+      /api/contacto (Turnstile invisible, Brevo) con via=itza. El correo
+      lleva el resumen de Itza y la conversación entera.
+   Cuando Itza propone respuestas cortas (sí / no…), salen como botones.
 
    Lo que dice Itza entra en un role="log", que el lector de pantalla
    anuncia sin mover el foco. Cada paso nuevo se lleva el foco a su campo.
@@ -25,12 +27,12 @@ import { fichero } from './turnstile';
 interface Textos {
   lang: 'es' | 'ca' | 'en';
   escribiendo: string; error: string; pideDatos: string;
-  faltaNombre: string; faltaCorreo: string; pideRevision: string; enviado: string;
-  tu: string; yo: string; hablar: string; escuchando: string; pestanaNueva: string;
+  faltaNombre: string; faltaCorreo: string; enviado: string;
+  tu: string; yo: string; conversacion: string; hablar: string; escuchando: string; pestanaNueva: string;
   mapa: { ruta: string; nombre: string }[];
 }
 interface Mensaje { role: 'user' | 'assistant'; content: string }
-interface Respuesta { reply?: string; listo?: boolean; resumen?: string; organizacion?: string }
+interface Respuesta { reply?: string; listo?: boolean; resumen?: string; organizacion?: string; opciones?: string[] }
 
 /* El mismo tope que el Worker (ITZA_TOPE_PREGUNTAS). */
 const TOPE = 8;
@@ -58,7 +60,8 @@ async function iniciar() {
   const cerrar = panel.querySelector<HTMLButtonElement>('[data-itza-cerrar]')!;
   const log = panel.querySelector<HTMLElement>('[data-itza-log]')!;
   const paso = (n: string) => panel.querySelector<HTMLFormElement>(`[data-paso="${n}"]`)!;
-  const charla = paso('charla'), pDatos = paso('datos'), revision = paso('revision');
+  const charla = paso('charla'), pDatos = paso('datos');
+  const rapidas = panel.querySelector<HTMLElement>('[data-itza-rapidas]')!;
   const campoCharla = charla.querySelector('input')!;
   const campoNombre = pDatos.querySelector<HTMLInputElement>('#itza-nombre')!;
   const campoCorreo = pDatos.querySelector<HTMLInputElement>('#itza-correo')!;
@@ -141,7 +144,7 @@ async function iniciar() {
   }
 
   function mostrar(siguiente: HTMLElement, foco: HTMLElement) {
-    for (const f of [charla, pDatos, revision, hecho]) f.hidden = f !== siguiente;
+    for (const f of [charla, pDatos, hecho]) f.hidden = f !== siguiente;
     actual = siguiente;
     foco.focus();
   }
@@ -149,7 +152,6 @@ async function iniciar() {
   function focoDelPaso() {
     if (actual === charla) return campoCharla;
     if (actual === pDatos) return campoNombre;
-    if (actual === revision) return revision.querySelector<HTMLElement>('h2')!;
     return hecho;
   }
 
@@ -198,8 +200,12 @@ async function iniciar() {
 
   /* ---- 2. La charla con la IA ---- */
   function aDatos(r: Respuesta) {
-    const delUsuario = historia.filter((m) => m.role === 'user').map((m) => m.content);
-    datos.mensaje = (r.resumen ?? '').trim() || delUsuario.join('\n\n');
+    /* Sin revisión, el correo lleva el resumen de Itza Y la conversación
+       entera: lo que la persona no ha leído antes de enviar, el equipo lo
+       puede contrastar con lo que dijo de verdad. */
+    const conversacion = historia.map((m) => `${m.role === 'user' ? T.tu : T.yo} ${m.content}`).join('\n');
+    const resumen = (r.resumen ?? '').trim();
+    datos.mensaje = (resumen ? `${resumen}\n\n-- ${T.conversacion} --\n${conversacion}` : conversacion).slice(0, 5000);
     datos.organizacion = (r.organizacion ?? '').trim();
     linea(T.pideDatos, 'itza');
     mostrar(pDatos, campoNombre);
@@ -210,10 +216,23 @@ async function iniciar() {
     preguntar(campoCharla.value);
   });
 
+  /* Las respuestas rápidas: un botón por opción; se vacían al responder. */
+  function ponerRapidas(opciones: string[] = []) {
+    rapidas.replaceChildren(...opciones.map((o) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = o;
+      b.addEventListener('click', () => { preguntar(o); campoCharla.focus(); });
+      return b;
+    }));
+    rapidas.hidden = opciones.length === 0;
+  }
+
   async function preguntar(bruto: string) {
     const texto = bruto.trim();
     if (!texto || ocupado) return;
     ocupado = true;
+    ponerRapidas();
     linea(texto, 'tu');
     historia.push({ role: 'user', content: texto });
     campoCharla.value = '';
@@ -231,7 +250,7 @@ async function iniciar() {
       linea(d.reply, 'itza');
       /* Listo, o el tope de preguntas: a por los datos. */
       if (d.listo || historia.filter((m) => m.role === 'user').length >= TOPE) aDatos(d);
-      else campoCharla.focus();
+      else { ponerRapidas(d.opciones); campoCharla.focus(); }
     } catch {
       /* La IA no responde: lo dice y deja el formulario de siempre, con lo
          que ya había escrito la persona en el mensaje. */
@@ -305,8 +324,10 @@ async function iniciar() {
     else campo.removeAttribute('aria-invalid');
   }
 
-  pDatos.addEventListener('submit', (e) => {
+  /* ---- 4. Enviar, en el mismo paso que los datos ---- */
+  pDatos.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (ocupado) return;
     const nombre = campoNombre.value.trim();
     const correo = campoCorreo.value.trim();
     marcar(campoNombre, nombre ? '' : T.faltaNombre);
@@ -316,58 +337,9 @@ async function iniciar() {
     if (!CORREO.test(correo)) { campoCorreo.focus(); return; }
     datos.nombre = nombre;
     datos.correo = correo;
-    linea(`${nombre} · ${correo}`, 'tu');
-    aRevision();
-  });
-
-  /* ---- 4. Revisión ---- */
-  const editar = revision.querySelector<HTMLElement>('#itza-editar')!;
-  const cambiar = revision.querySelector<HTMLButtonElement>('.itza-chat__cambiar')!;
-  const ed = {
-    nombre: revision.querySelector<HTMLInputElement>('#itza-e-nombre')!,
-    correo: revision.querySelector<HTMLInputElement>('#itza-e-correo')!,
-    organizacion: revision.querySelector<HTMLInputElement>('#itza-e-organizacion')!,
-    mensaje: revision.querySelector<HTMLTextAreaElement>('#itza-e-mensaje')!,
-  };
-  const claves = Object.keys(ed) as (keyof typeof ed)[];
-
-  function pintarResumen() {
-    for (const k of claves) revision.querySelector<HTMLElement>(`[data-r="${k}"]`)!.textContent = datos[k];
-    revision.querySelector<HTMLElement>('[data-r-org]')!.hidden = !datos.organizacion;
-  }
-
-  function aRevision() {
-    for (const k of claves) ed[k].value = datos[k];
-    pintarResumen();
-    linea(T.pideRevision, 'itza');
-    mostrar(revision, revision.querySelector<HTMLElement>('h2')!);
-  }
-
-  function abrirEdicion(campo?: HTMLElement) {
-    editar.hidden = false;
-    cambiar.setAttribute('aria-expanded', 'true');
-    (campo ?? ed.mensaje).focus();
-  }
-  cambiar.addEventListener('click', () => {
-    if (editar.hidden) { abrirEdicion(); return; }
-    editar.hidden = true;
-    cambiar.setAttribute('aria-expanded', 'false');
-  });
-  for (const k of claves) {
-    ed[k].addEventListener('input', () => { datos[k] = ed[k].value.trim(); pintarResumen(); });
-  }
-
-  /* ---- 5. Envío ---- */
-  revision.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    if (ocupado) return;
-    /* Si al cambiar algo ha quedado vacío o mal, vuelve a ese campo. */
-    if (!datos.nombre) { abrirEdicion(ed.nombre); return; }
-    if (!CORREO.test(datos.correo)) { abrirEdicion(ed.correo); return; }
-    if (!datos.mensaje) { abrirEdicion(ed.mensaje); return; }
     ocupado = true;
     errorEnvio.hidden = true;
-    const boton = revision.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const boton = pDatos.querySelector<HTMLButtonElement>('button[type="submit"]')!;
     boton.disabled = true;
     try {
       const cuerpo = new FormData();
