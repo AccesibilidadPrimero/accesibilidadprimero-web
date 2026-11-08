@@ -68,6 +68,16 @@ for (const ancho of [1440, 390]) {
   const titular = 'También creamos herramientas para resolver problemas que encontramos por el camino.';
   const nombre = await p.getByRole('heading', { name: titular, exact: true }).count();
   anota(nombre === 1, `${ancho} · en espera, el lector oye la frase entera y una sola vez`);
+  /* La frase no se recompone a mitad de subida (08/11/2026): el script leía
+     «.9s» como 0,9 ms y la devolvía a su sitio a los ~140 ms, con un salto.
+     A los 400 ms de entrar, los renglones tienen que seguir ahí. */
+  const enCurso = await p.evaluate(async () => {
+    const f = document.querySelector('.productos__intro');
+    scrollTo(0, f.getBoundingClientRect().top + scrollY - innerHeight / 2);
+    await new Promise((r) => setTimeout(r, 400));
+    return f.querySelectorAll('.frase__renglon').length;
+  });
+  anota(enCurso > 0, `${ancho} · a los 400 ms la frase sigue subiendo, sin salto al recomponerse`);
   await recorrer(p);
   e = await estado(p);
   anota(e.espera === 0 && e.desplazados === 0, `${ancho} · al recorrer, todo en su sitio (${e.espera} en espera, ${e.desplazados} desplazados)`);
