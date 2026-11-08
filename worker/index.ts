@@ -1,9 +1,11 @@
 /**
  * Worker · accesibilidadprimero.com
  *
- * Existe para una sola cosa que un sitio estático no puede hacer: recibir el
- * formulario de contacto. Todo lo demás lo sirve el runtime de assets sin
- * pasar por aquí (wrangler.toml: `run_worker_first` solo para /api/*).
+ * Existe para lo que un sitio estático no puede hacer: recibir el
+ * formulario de contacto y, desde el 08/11/2026, dar voz a Itza en esa misma
+ * página (/api/itza-contacto, más abajo). Todo lo demás lo sirve el runtime
+ * de assets sin pasar por aquí (wrangler.toml: `run_worker_first` solo para
+ * /api/*).
  *
  * El recorrido de un mensaje (Johnny, 10/10/2026: Worker + Brevo):
  *
@@ -24,11 +26,14 @@
  *
  * Secretos (panel de Cloudflare → Worker → Settings → Variables and Secrets):
  *   BREVO_API_KEY      clave de API de Brevo
+ *   ANTHROPIC_API_KEY  Itza en Contacto; sin ella, Itza no sale en la página
  *   TURNSTILE_SECRET   clave secreta del widget de Turnstile
  * Variables (wrangler.toml, [vars]):
  *   CORREO_DESTINO, CORREO_REMITENTE, TURNSTILE_HOSTNAMES
  */
+import { mapaEnTexto } from '../src/data/itza-mapa.ts';
 import { hostSinIndexar } from '../src/data/sitio.ts';
+import { llamarClaude, validarConversacion } from '../itza-worker/claude.ts';
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
   BREVO_API_KEY?: string;
@@ -37,6 +42,9 @@ export interface Env {
   CORREO_REMITENTE?: string;
   /** Dominios desde los que se acepta el formulario, separados por comas. */
   TURNSTILE_HOSTNAMES?: string;
+  /** Itza en Contacto (08/11/2026). Sin la clave, Itza no se enseña. */
+  ANTHROPIC_API_KEY?: string;
+  ITZA_MODELO?: string;
 }
 
 const ACCION = 'contacto';
@@ -99,6 +107,11 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
   const organizacion = texto(datos, 'organizacion');
   const mensaje = texto(datos, 'mensaje');
   const consentimiento = texto(datos, 'consentimiento');
+  /* Por Itza no hay casilla (Johnny, 08/11/2026: «Nada de la política de
+     privacidad, que funcione tal cual Itza»). La base para contestar es que
+     la persona lo pide (RGPD 6.1.b, medidas precontractuales), no un
+     consentimiento; el formulario de respaldo sigue con su casilla. */
+  const porItza = texto(datos, 'via') === 'itza';
   const ficha = texto(datos, 'cf-turnstile-response');
 
   const camposMal =
@@ -106,7 +119,7 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
     !correo || correo.length > MAX.correo || !CORREO_VALIDO.test(correo) ||
     organizacion.length > MAX.organizacion ||
     !mensaje || mensaje.length > MAX.mensaje ||
-    consentimiento !== 'on';
+    (!porItza && consentimiento !== 'on');
   if (camposMal) return fallo('campos', 400);
 
   /* Siteverify, en la forma canónica de Cloudflare. Cualquier cosa rara —red
@@ -153,8 +166,10 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
     mensaje,
     '',
     '-- ',
-    'Enviado desde el formulario de accesibilidadprimero.com/contacto/.',
-    'Ha aceptado la política de privacidad. Para contestar, responde a este correo.',
+    porItza
+      ? 'Enviado con Itza desde accesibilidadprimero.com/contacto/. Para contestar, responde a este correo.'
+      : 'Enviado desde el formulario de accesibilidadprimero.com/contacto/.',
+    ...(porItza ? [] : ['Ha aceptado la política de privacidad. Para contestar, responde a este correo.']),
   ].join('\n');
 
   try {
@@ -187,6 +202,97 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
   return json({ ok: true });
 }
 
+/* ------------------------------------------------------------------------
+   Itza en Contacto (Johnny, 08/11/2026: «algo más inteligente e intuitivo
+   que un formulario aburrido»). Itza hace tres o
+   cuatro preguntas y prepara el mensaje; después la página pide el nombre y
+   el correo (sin pasar por la IA), enseña el mensaje para revisarlo y lo
+   envía por el camino de siempre (/api/contacto, con Turnstile y Brevo).
+   Johnny, 08/11/2026: Itza hace todo el proceso y sustituye al formulario,
+   que queda como respaldo si Itza no está disponible.
+
+   GET  /api/itza-contacto  → { disponible }: la página solo enseña a Itza si
+                              el Worker tiene la clave. Así no sale un chat
+                              roto mientras no esté configurado.
+   POST /api/itza-contacto  → { reply, listo, resumen?, organizacion? }
+
+   Nombre y correo NO pasan por aquí: los pide la página, no la IA. Lo que se escribe a Itza va a la API de Anthropic (dicho en
+   la página y en la política de privacidad) y aquí no se guarda.
+   ------------------------------------------------------------------------ */
+const ITZA_TOPE_PREGUNTAS = 8;
+const ITZA_TOPE_TEXTO = 1200;
+const ITZA_IDIOMA = { es: 'castellano', ca: 'catalán', en: 'inglés' } as const;
+
+/* Los apartados de la web, en el idioma de la página (src/data/itza-mapa.ts,
+   el mismo que usa la página para saber qué puede convertir en enlace). */
+const itzaMapa = (lang: 'es' | 'ca' | 'en') => `Los apartados de la web y lo que hay en cada uno:
+${mapaEnTexto(lang)}
+
+Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual, sola, en la última línea de tu respuesta (dentro del texto de "respuesta"). Solo direcciones de esta lista, exactamente como están: ni inventadas ni con el dominio. No la anuncies con «aquí» ni «en este enlace»: la página la convierte en un enlace debajo de tu mensaje. Si no sabes dónde está, no pongas ninguna.`;
+
+const ITZA_SISTEMA = `Eres Itza, la asistente de Accesibilidad Primero, un estudio de diseño y accesibilidad digital de Valencia. Estás en su página de Contacto. Tu trabajo es ayudar a la persona a contar su proyecto para que el equipo le responda bien. No vendes ni das presupuestos.
+
+La persona empieza escribiendo en una barra que dice «¿Cómo podemos ayudarte?», así que su primer mensaje responde a eso. Si pregunta algo sobre el estudio o duda de algo que está en la web, contéstalo en una o dos frases si lo sabes, enlaza el apartado donde lo encontrará (más abajo te digo cómo) y sigue.
+
+Si solo quiere el correo o contactar sin más (por ejemplo «quiero contactar», «¿cuál es vuestro email?», «¿me podéis llamar?»): dale el correo, proyectos@accesibilidadprimero.com, y dile en la misma frase que, si quiere, también puede dejar aquí su mensaje y su contacto en un momento. Si dice que sí, sigue con las preguntas. Si dice que no, o que solo quiere que le escriban, termina ya (listo) con un resumen corto de lo que haya dicho, aunque sea una frase. No hay teléfono que dar: si pide que le llamen, dile que puede pedirlo en el mensaje.
+
+Haz estas preguntas, de una en una y con pocas palabras, saltándote lo que la persona ya haya contado:
+1. Qué hace su organización o su proyecto.
+2. Qué necesita: una web nueva o rediseñar la que tiene, una auditoría de accesibilidad, formación para su equipo, documentos accesibles, trabajo en marca blanca para una agencia u otra cosa.
+3. Si hay un plazo, una licitación, una subvención o una ley que les afecte.
+4. Si quiere añadir algo más.
+Como mucho cuatro preguntas. Si la persona quiere terminar antes, termina.
+
+No pidas nombre, correo, teléfono ni otros datos personales: la página los pide después, sin pasar por ti. Si los escribe, no los repitas ni los pongas en el resumen.
+Nunca des precios, plazos de entrega ni compromisos: el equipo responde con una propuesta. No inventes nada sobre el estudio. Si te preguntan algo que no sabes, dilo y sigue.
+Lenguaje claro, frases cortas, sin rellenos de cortesía, sin markdown y sin el masculino genérico cuando haya una alternativa natural.
+
+Responde SIEMPRE con un único objeto JSON y nada más:
+Mientras preguntas: {"respuesta": "tu pregunta", "listo": false}
+Cuando tengas lo necesario: {"respuesta": "una frase corta de agradecimiento, sin pedir nada (los datos de contacto los pide la página después)", "listo": true, "resumen": "el mensaje para el equipo, escrito como si lo escribiera la persona, de 3 a 6 frases, sin datos personales", "organizacion": "el nombre de su organización o proyecto si lo ha dicho; si no, cadena vacía"}`;
+
+/* La respuesta del modelo, leída con cuidado: si no es el JSON pedido, se
+   usa el texto tal cual como una pregunta más. */
+function leerItza(texto: string) {
+  const a = texto.indexOf('{'), b = texto.lastIndexOf('}');
+  try {
+    const d = JSON.parse(texto.slice(a, b + 1)) as { respuesta?: unknown; listo?: unknown; resumen?: unknown; organizacion?: unknown };
+    if (typeof d.respuesta !== 'string' || !d.respuesta.trim()) throw new Error('sin respuesta');
+    const listo = d.listo === true && typeof d.resumen === 'string' && d.resumen.trim().length > 0;
+    return {
+      reply: d.respuesta.trim(),
+      listo,
+      ...(listo ? {
+        resumen: String(d.resumen).trim().slice(0, MAX.mensaje),
+        organizacion: typeof d.organizacion === 'string' ? d.organizacion.trim().slice(0, MAX.organizacion) : '',
+      } : {}),
+    };
+  } catch {
+    return { reply: texto.trim(), listo: false };
+  }
+}
+
+export async function itzaContacto(request: Request, env: Env): Promise<Response> {
+  if (request.method === 'GET') return json({ disponible: Boolean(env.ANTHROPIC_API_KEY) });
+  if (request.method !== 'POST') return new Response('Método no permitido', { status: 405, headers: { allow: 'GET, POST' } });
+  const url = new URL(request.url);
+  if (request.headers.get('origin') !== url.origin) return json({ ok: false, motivo: 'origen' }, 403);
+  if (!env.ANTHROPIC_API_KEY) return json({ ok: false, motivo: 'configuracion' }, 503);
+
+  const datos = validarConversacion(await request.json().catch(() => null), { topePreguntas: ITZA_TOPE_PREGUNTAS, topeTexto: ITZA_TOPE_TEXTO });
+  if (!datos) return json({ ok: false, motivo: 'conversacion' }, 400);
+
+  const texto = await llamarClaude(env.ANTHROPIC_API_KEY, {
+    modelo: env.ITZA_MODELO,
+    sistema: `${ITZA_SISTEMA}\n\n${itzaMapa(datos.lang)}\n\nLa página está en ${ITZA_IDIOMA[datos.lang]}; responde en el idioma en que te escriba la persona.`,
+    mensajes: datos.mensajes,
+    maxTokens: 700,
+    registro: 'itza-contacto',
+  });
+  if (!texto) return json({ ok: false, motivo: 'api' }, 502);
+  return json(leerItza(texto));
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -199,6 +305,12 @@ export default {
       /* La web de pruebas no se indexa (public/_headers). Esa regla solo
          cubre los estáticos; lo que responde el Worker lleva la cabecera
          desde aquí. */
+      if (hostSinIndexar(url.hostname)) r.headers.set('X-Robots-Tag', 'noindex');
+      return r;
+    }
+
+    if (url.pathname === '/api/itza-contacto') {
+      const r = await itzaContacto(request, env);
       if (hostSinIndexar(url.hostname)) r.headers.set('X-Robots-Tag', 'noindex');
       return r;
     }

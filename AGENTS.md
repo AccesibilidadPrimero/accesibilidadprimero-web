@@ -667,6 +667,39 @@ de Turnstile sea la de prueba.
 
 ## 10. Formulario de contacto (10/10/2026)
 
+- **Itza en Contacto (08/11/2026): Itza ES la página y sustituye al
+  formulario** (Johnny: «si no, no tiene sentido Itza»; «sin texto de
+  introducción»; «nada de la política de privacidad, que funcione tal cual
+  Itza»). Página en menta; Itza, con SU interfaz y no la de AP («Itza tiene
+  su propia interfaz y estilos, hay que mantener su singularidad visual»):
+  la barra oscura y la ventana del plugin, con sus colores (#1a1a2e,
+  #5b4fcf, #3d33a0), burbujas, «En línea» y firma. Es la excepción
+  declarada a «todo en Ink» dentro de la ventana; un peso, 44 px y foco
+  visible sí se cumplen. Hero a pantalla entera con la barra «¿Cómo
+  podemos ayudarte?» abajo, a 24 del borde: es un campo (con micrófono si el
+  navegador reconoce la voz; vacía enseña el micrófono, con texto, enviar).
+  La conversación no sale hasta que se pregunta algo; entonces la ventana
+  se abre encima y la barra se retira. La ✕ y Escape la cierran y el foco
+  vuelve a la barra. En la cabecera de la ventana, el emblema de AP.
+  Encima de la barra, las opciones (píldoras del plugin): cada una empieza
+  la conversación con su texto, y «Contactar por email» es un `mailto:` a
+  proyectos@. Si preguntan algo que está en la web, Itza responde corto y
+  da el apartado: el mapa vive en `src/data/itza-mapa.ts`, lo leen el
+  prompt y la página, y solo una dirección de ese mapa se pinta como
+  enlace (en su línea, 44 px, en otra pestaña y avisado). Una sección nueva
+  de la web que Itza deba conocer, se añade ahí. Si solo quieren el correo,
+  lo da y ofrece seguir. Al abrirla: charla con
+  la IA sobre el proyecto (`/api/itza-contacto`, prompt en
+  `worker/index.ts`; no pide datos personales ni da precios); después la
+  PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
+  revisión con «Cambiar algo»; envío por `/api/contacto` con `via=itza`,
+  sin casilla de consentimiento (el Worker solo la exige al formulario).
+  `src/scripts/itza-contacto.ts`. Solo con JS y si el Worker tiene
+  `ANTHROPIC_API_KEY` (GET → `disponible`); si no, o si la IA falla,
+  `html.sin-itza` y vuelve la página de siempre con su formulario, que es el
+  respaldo. La política de privacidad nombra a Anthropic.
+  `npm run formulario` lo prueba con la API simulada.
+
 - Va a `/api/contacto`, en el Worker: comprueba los campos, canjea la ficha de
   **Turnstile invisible** (acción `contacto`, solo nuestros dominios) y manda
   el correo con **Brevo** a proyectos@, con «Responder a» en quien escribe.

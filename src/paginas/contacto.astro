@@ -26,6 +26,9 @@ import Redes from '../components/Redes.astro';
 import { path } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
+import logoItza from '../assets/productos/itza-logo.png';
+import iconoAP from '../assets/estudio/icono.svg';
+import { mapaItza } from '../data/itza-mapa';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
@@ -57,6 +60,42 @@ const T = {
     enviar: 'Enviar mensaje',
     gracias: 'Gracias, ya tenemos tu mensaje. Te responderemos a',
     redes: 'Redes',
+    itza: {
+      pildora: '¿Cómo podemos ayudarte?',
+      conversacion: 'Conversación con Itza',
+      etiqueta: 'Tu respuesta para Itza',
+      responder: 'Responder',
+      escribiendo: 'Itza está escribiendo…',
+      error: 'Ahora no puedo responder. Te dejo el formulario para que nos escribas.',
+      nombre: 'Tu nombre',
+      faltaNombre: 'Escribe tu nombre.',
+      correo: 'Tu correo electrónico',
+      faltaCorreo: 'Revisa el correo: tiene que llevar @ y un dominio, como nombre@correo.com.',
+      siguiente: 'Continuar',
+      pideRevision: 'Así nos llegará tu mensaje. ¿Lo envío?',
+      revision: 'Tu mensaje',
+      etNombre: 'Nombre',
+      etCorreo: 'Correo',
+      etOrganizacion: 'Organización',
+      etMensaje: 'Mensaje',
+      cambiar: 'Cambiar algo',
+      organizacion: 'Organización o proyecto (opcional)',
+      enviar: 'Enviar',
+      errorEnvio: 'No he podido enviarlo. Inténtalo otra vez o escríbenos a',
+      enviado: 'Enviado, {nombre}. Te responderemos a {correo}.',
+      tu: 'Tú:',
+      yo: 'Itza:',
+      enLinea: 'En línea',
+      cerrar: 'Cerrar',
+      escribe: 'Escribe tu mensaje…',
+      pideDatos: 'Para terminar, déjanos tu nombre y tu correo y te respondemos. Solo los usaremos para eso.',
+      marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Hablar',
+      escuchando: 'Escuchando. Pulsa para parar',
+      opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia'],
+      porCorreo: 'Contactar por email',
+      pestanaNueva: 'se abre en una pestaña nueva',
+    },
   },
   ca: {
     title: 'Contacte · Accesibilidad Primero',
@@ -81,6 +120,42 @@ const T = {
     enviar: 'Envia el missatge',
     gracias: 'Gràcies, ja tenim el teu missatge. Et respondrem a',
     redes: 'Xarxes',
+    itza: {
+      pildora: 'Com et podem ajudar?',
+      conversacion: 'Conversa amb Itza',
+      etiqueta: 'La teva resposta per a Itza',
+      responder: 'Respon',
+      escribiendo: 'Itza està escrivint…',
+      error: 'Ara no puc respondre. Et deixo el formulari perquè ens escriguis.',
+      nombre: 'El teu nom',
+      faltaNombre: 'Escriu el teu nom.',
+      correo: 'El teu correu electrònic',
+      faltaCorreo: 'Revisa el correu: ha de portar @ i un domini, com nom@correu.cat.',
+      siguiente: 'Continua',
+      pideRevision: 'Així ens arribarà el teu missatge. L’envio?',
+      revision: 'El teu missatge',
+      etNombre: 'Nom',
+      etCorreo: 'Correu',
+      etOrganizacion: 'Organització',
+      etMensaje: 'Missatge',
+      cambiar: 'Canvia alguna cosa',
+      organizacion: 'Organització o projecte (opcional)',
+      enviar: 'Envia',
+      errorEnvio: 'No l’he pogut enviar. Torna-ho a provar o escriu-nos a',
+      enviado: 'Enviat, {nombre}. Et respondrem a {correo}.',
+      tu: 'Tu:',
+      yo: 'Itza:',
+      enLinea: 'En línia',
+      cerrar: 'Tanca',
+      escribe: 'Escriu el teu missatge…',
+      pideDatos: 'Per acabar, deixa’ns el teu nom i el teu correu i et responem. Només els farem servir per a això.',
+      marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Parla',
+      escuchando: 'Escoltant. Prem per aturar',
+      opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència'],
+      porCorreo: 'Contactar per correu',
+      pestanaNueva: 's’obre en una pestanya nova',
+    },
   },
   en: {
     title: 'Contact · Accesibilidad Primero',
@@ -105,8 +180,49 @@ const T = {
     enviar: 'Send message',
     gracias: 'Thank you, we have your message. We’ll reply to',
     redes: 'Social media',
+    itza: {
+      pildora: 'How can we help?',
+      conversacion: 'Conversation with Itza',
+      etiqueta: 'Your reply to Itza',
+      responder: 'Reply',
+      escribiendo: 'Itza is typing…',
+      error: 'I can’t reply right now. Here’s the form so you can write to us.',
+      nombre: 'Your name',
+      faltaNombre: 'Enter your name.',
+      correo: 'Your email address',
+      faltaCorreo: 'Check your email address: it needs an @ and a domain, like name@example.com.',
+      siguiente: 'Continue',
+      pideRevision: 'This is how your message will reach us. Shall I send it?',
+      revision: 'Your message',
+      etNombre: 'Name',
+      etCorreo: 'Email',
+      etOrganizacion: 'Organisation',
+      etMensaje: 'Message',
+      cambiar: 'Change something',
+      organizacion: 'Organisation or project (optional)',
+      enviar: 'Send',
+      errorEnvio: 'I couldn’t send it. Try again or email us at',
+      enviado: 'Sent, {nombre}. We’ll reply to {correo}.',
+      tu: 'You:',
+      yo: 'Itza:',
+      enLinea: 'Online',
+      cerrar: 'Close',
+      escribe: 'Type your message…',
+      pideDatos: 'To finish, leave us your name and email and we’ll reply. We’ll only use them for that.',
+      marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Speak',
+      escuchando: 'Listening. Press to stop',
+      opciones: ['An accessible website', 'An audit', 'Training for my team', 'White label for my agency'],
+      porCorreo: 'Contact us by email',
+      pestanaNueva: 'opens in a new tab',
+    },
   },
 }[lang];
+
+/* «Itza», con su logo cada vez que se nombra (Johnny, 07/11/2026). En Ink
+   sobre el blanco de la página. Un logotipo es la excepción de 1.4.5. */
+const LOGO_ITZA = `<img class="logo-itza" src="${logoItza.src}" alt="Itza" width="968" height="341" />`;
+const conLogo = (s: string) => s.replace(/Itza/g, LOGO_ITZA);
 
 const CAMPOS = [
   {
@@ -160,6 +276,140 @@ const CAMPOS = [
       ya quiere escribir y la primera pantalla era una presentación). El
       titular, a tamaño de texto en la columna de los rótulos, como un bloque
       más; la introducción, el correo y el formulario, juntos en la otra. */}
+  {/* ITZA EN CONTACTO (Johnny, 08/11/2026: «Itza tiene que poder hacer todo
+      el proceso y sustituir el formulario»; «sin texto de introducción, debe
+      ser un ejemplo de lo increíble que funciona Itza»). La página en menta,
+      la pastilla de Itza y, al desplegarla, la conversación: Itza pregunta
+      por el proyecto, pide nombre y correo (estos sin pasar por la IA),
+      enseña el mensaje y lo envía por /api/contacto.
+      Solo con JS (html.js). Si el Worker dice que Itza no está configurada
+      (GET /api/itza-contacto) o la API falla, src/scripts/itza-contacto.ts
+      pone html.sin-itza y vuelve la página de siempre, con su formulario:
+      es el respaldo. Sin JS, también la de siempre. */}
+  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang, mapa: mapaItza(lang).map(({ ruta, nombre }) => ({ ruta, nombre })) })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
+    {/* Itza con SU interfaz, no la de AP (Johnny, 08/11/2026: «Itza tiene su
+        propia interfaz y estilos, hay que mantener su singularidad
+        visual»): la barra oscura, la ventana con cabecera, «En línea», las
+        burbujas en morado y la firma. Los mismos colores que el plugin
+        (ap-chat-widget.php): #1a1a2e, #5b4fcf, #3d33a0.
+        Hero a pantalla entera en menta con la barra abajo; la ventana, al
+        preguntar. */}
+    {/* El h1, para quien navega por encabezados; a la vista, la barra ya
+        dice dónde está. */}
+    <h1 class="sr-only">{T.titulo}</h1>
+
+    <div id="itza-panel" class="itza-chat" hidden>
+      <div class="itza-chat__cabeza">
+        {/* Solo el emblema de AP y «En línea» (Johnny, 08/11/2026). Decorativo:
+            quién habla lo dice cada mensaje al lector de pantalla. */}
+        <span class="itza-chat__icono"><img src={iconoAP.src} width={iconoAP.width} height={iconoAP.height} alt="" /></span>
+        <div class="itza-chat__info">
+          <p class="itza-chat__estado"><span class="itza-chat__punto"></span>{T.itza.enLinea}</p>
+        </div>
+        <button type="button" class="itza-chat__cerrar" data-itza-cerrar>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          <span class="sr-only">{T.itza.cerrar}</span>
+        </button>
+      </div>
+
+      {/* role="log": lo que entra se anuncia solo sin mover el foco (4.1.3);
+          tabindex="0": se desplaza, y con teclado también se tiene que
+          poder leer hacia atrás (2.1.1). */}
+      <div class="itza-chat__mensajes" role="log" aria-label={T.itza.conversacion} tabindex="0" data-itza-log></div>
+
+      {/* 1. La charla. La etiqueta, oculta como en el plugin: la pregunta de
+          Itza, justo encima, ya dice qué escribir. */}
+      <form class="itza-chat__fila" data-paso="charla" novalidate>
+        <label for="itza-mensaje" class="sr-only">{T.itza.etiqueta}</label>
+        <input id="itza-mensaje" type="text" maxlength="1200" autocomplete="off" placeholder={T.itza.escribe} class="itza-chat__entrada" />
+        {/* El micrófono, como en el plugin. Sale `hidden` y solo lo enseña
+            el script si el navegador sabe reconocer la voz (§5). */}
+        <button type="button" class="itza-voz" data-itza-voz hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+          <span class="sr-only" data-itza-voz-texto>{T.itza.hablar}</span>
+        </button>
+        <button type="submit" class="itza-chat__enviar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" /></svg>
+          <span class="sr-only">{T.itza.responder}</span>
+        </button>
+      </form>
+
+      {/* 2. Los datos, como el formulario de contacto del plugin: nombre y
+          correo juntos. Los pide la página, no la IA. Aquí las etiquetas sí
+          se ven: son datos. */}
+      <form class="itza-chat__datos" data-paso="datos" novalidate hidden>
+        <label for="itza-nombre">{T.itza.nombre}</label>
+        <p id="itza-nombre-error" class="itza-chat__error" hidden />
+        <input id="itza-nombre" type="text" autocomplete="name" maxlength="200" aria-describedby="itza-nombre-error" />
+        <label for="itza-correo">{T.itza.correo}</label>
+        <p id="itza-correo-error" class="itza-chat__error" hidden />
+        <input id="itza-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="itza-correo-error" />
+        <button type="submit" class="itza-chat__boton">{T.itza.siguiente}</button>
+      </form>
+
+      {/* 3. La revisión: lo que va a llegar, a la vista y se puede cambiar. */}
+      <form class="itza-chat__datos itza-chat__revision" data-paso="revision" novalidate hidden>
+        <h2 class="itza-chat__subtitulo" tabindex="-1">{T.itza.revision}</h2>
+        <dl class="itza-chat__resumen">
+          <div><dt>{T.itza.etNombre}</dt><dd data-r="nombre"></dd></div>
+          <div><dt>{T.itza.etCorreo}</dt><dd data-r="correo"></dd></div>
+          <div data-r-org><dt>{T.itza.etOrganizacion}</dt><dd data-r="organizacion"></dd></div>
+          <div><dt>{T.itza.etMensaje}</dt><dd data-r="mensaje" class="itza-chat__texto"></dd></div>
+        </dl>
+        <button type="button" class="itza-chat__cambiar" aria-expanded="false" aria-controls="itza-editar">{T.itza.cambiar}</button>
+        <div id="itza-editar" class="itza-chat__editar" hidden>
+          <label for="itza-e-nombre">{T.itza.nombre}</label>
+          <input id="itza-e-nombre" type="text" autocomplete="name" maxlength="200" />
+          <label for="itza-e-correo">{T.itza.correo}</label>
+          <input id="itza-e-correo" type="email" autocomplete="email" maxlength="254" />
+          <label for="itza-e-organizacion">{T.itza.organizacion}</label>
+          <input id="itza-e-organizacion" type="text" autocomplete="organization" maxlength="200" />
+          <label for="itza-e-mensaje">{T.itza.etMensaje}</label>
+          <textarea id="itza-e-mensaje" rows="5" maxlength="5000"></textarea>
+        </div>
+        <div data-itza-turnstile></div>
+        <p class="itza-chat__error-envio" tabindex="-1" data-itza-error-envio hidden>
+          {T.itza.errorEnvio} <a href={`mailto:${CORREO}`}>{CORREO}</a>.
+        </p>
+        <button type="submit" class="itza-chat__boton">{T.itza.enviar}</button>
+      </form>
+
+      <p class="itza-chat__hecho" tabindex="-1" data-itza-hecho hidden></p>
+      <p class="itza-chat__firma" set:html={conLogo(T.itza.marca)} />
+    </div>
+
+    {/* Las opciones, como las preguntas sugeridas del plugin: cada una
+        empieza la conversación con esa respuesta ya dada. «Contactar por
+        email» no pregunta nada: abre el correo de quien visita con nuestra
+        dirección (Johnny, 08/11/2026). Se retiran al empezar a hablar. */}
+    <ul class="itza-opciones" data-itza-opciones>
+      {T.itza.opciones.map((o) => (
+        <li><button type="button" class="itza-opcion" data-texto={o}>{o}</button></li>
+      ))}
+      <li><a class="itza-opcion" href={`mailto:${CORREO}`}>{T.itza.porCorreo}</a></li>
+    </ul>
+
+    {/* La barra, como la del plugin: es un campo. La conversación no sale
+        hasta que se pregunta algo (Johnny, 08/11/2026). La etiqueta va
+        oculta y repite lo que dice la barra: el texto de la barra es lo
+        que se ve, y desaparece al escribir, así que el nombre del campo no
+        puede depender de él. */}
+    <form class="itza-barra" data-itza-barra novalidate>
+      {/* La carita es decoración, como en el plugin. */}
+      <span class="itza-barra__icono" aria-hidden="true">🙂</span>
+      <label for="itza-pregunta" class="sr-only">{T.itza.pildora}</label>
+      <input id="itza-pregunta" type="text" maxlength="1200" autocomplete="off" placeholder={T.itza.pildora} class="itza-barra__entrada" />
+      <button type="button" class="itza-voz itza-voz--barra" data-itza-voz hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+        <span class="sr-only" data-itza-voz-texto>{T.itza.hablar}</span>
+      </button>
+      <button type="submit" class="itza-barra__enviar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" /></svg>
+        <span class="sr-only">{T.itza.responder}</span>
+      </button>
+    </form>
+  </section>
+
   <section class="pagina-contacto" aria-labelledby="contacto-titulo">
     <div class="pagina-contacto__cabeza">
       <h1 id="contacto-titulo" class="pagina-contacto__titulo">{T.titulo}</h1>
@@ -177,6 +427,7 @@ const CAMPOS = [
           <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
         </div>
       </div>
+
       <h2 class="sr-only">{T.escribenos}</h2>
       <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
            su etiqueta, «(opcional)». Así no hace falta explicar qué significa
@@ -186,6 +437,7 @@ const CAMPOS = [
         <p>{T.noscript} <a href={`mailto:${CORREO}`}>{CORREO}</a>.</p>
       </noscript>
       <form
+        id="formulario"
         class="formulario"
         action="/api/contacto"
         method="post"
@@ -316,6 +568,7 @@ const CAMPOS = [
 
 <script>
   import '../scripts/formulario';
+  import '../scripts/itza-contacto';
 </script>
 
 <style>
@@ -448,4 +701,225 @@ const CAMPOS = [
   .resumen__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .resumen__lista { margin: var(--space-8) 0 0; padding-inline-start: 1.2em; }
   .resumen__lista a { display: inline-block; min-block-size: var(--touch-min); padding-block: var(--aire-control); }
+
+  /* ----- Itza en Contacto (08/11/2026) -----------------------------------
+     La página en menta; Itza, con su propia interfaz (la del plugin: barra
+     #1a1a2e, acento #5b4fcf, oscuro #3d33a0). Contrastes medidos: blanco
+     sobre #1a1a2e 17:1, blanco sobre #5b4fcf 6,1:1, #222 sobre la burbuja
+     de Itza 13:1, el verde de «En línea» sobre #1a1a2e 11:1.
+     Con Itza, la página de siempre no se pinta; sin Itza (html.sin-itza) o
+     sin JS, al revés. */
+  .itza {
+    display: none;
+    --itza-fondo: #1a1a2e; --itza-acento: #5b4fcf; --itza-acento-oscuro: #3d33a0;
+    --itza-burbuja: #efedfa; --itza-texto: #222; --itza-suave: #555;
+  }
+  /* Un hero a pantalla entera, como los demás (HeroPagina): sube por
+     debajo de la cabecera y deja la barra abajo, a 24 del borde. La
+     ventana, al abrirse, sale encima de la barra, como en el plugin. */
+  :global(html.js:not(.sin-itza)) .itza {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: var(--space-16);
+    min-block-size: 100svh; box-sizing: border-box;
+    margin-block-start: calc(var(--header-height) * -1);
+    padding: var(--header-height) var(--gutter-page) var(--space-24);
+  }
+  @supports (height: 100lvh) {
+    :global(html.js:not(.sin-itza)) .itza { min-block-size: 100lvh; padding-block-end: calc(var(--space-24) + 100lvh - 100svh); }
+  }
+  :global(html.js:not(.sin-itza)) .pagina-contacto { display: none; }
+  :global(html.js:not(.sin-itza) body) { background: var(--mint); }
+
+  .itza p { margin: 0; }
+  .itza :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
+  /* Las opciones: las píldoras del plugin (aro y texto en el morado, 6,1:1
+     sobre el blanco). */
+  .itza-opciones {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    inline-size: 100%; max-inline-size: 560px; margin: 0; padding: 0; list-style: none;
+  }
+  .itza-opciones[hidden] { display: none; }
+  .itza-opcion {
+    display: inline-flex; align-items: center; min-block-size: var(--touch-min); box-sizing: border-box;
+    padding: 6px 16px; border: 1.5px solid var(--itza-acento); border-radius: 999px; background: #fff;
+    color: var(--itza-acento-oscuro); font: inherit; font-size: 16px; line-height: 1.3; text-decoration: none; cursor: pointer;
+  }
+  .itza-opcion:hover { background: var(--itza-acento); color: #fff; }
+  .itza-opcion:focus-visible { outline: 2px solid var(--itza-fondo); outline-offset: 2px; }
+
+  /* La barra: la del plugin, más corta que la columna. */
+  .itza-barra {
+    display: flex; align-items: center; gap: 10px; inline-size: 100%; max-inline-size: 560px; box-sizing: border-box;
+    padding: 8px 8px 8px 20px; border-radius: 999px; background: var(--itza-fondo);
+    box-shadow: 0 8px 28px rgba(26, 26, 46, 0.28);
+  }
+  .itza-barra[hidden] { display: none; }
+  .itza-barra:focus-within { outline: 3px solid var(--itza-fondo); outline-offset: 4px; }
+  .itza-barra__icono { flex: none; font-size: 1.6rem; line-height: 1; }
+  .itza-barra__entrada {
+    flex: 1; min-inline-size: 0; min-block-size: var(--touch-min); padding: 0 4px; border: 0; background: none;
+    color: #fff; font: inherit; font-size: 18px;
+  }
+  /* El texto de la barra: 9,6:1 sobre #1a1a2e. */
+  .itza-barra__entrada::placeholder { color: rgba(255, 255, 255, 0.72); opacity: 1; }
+  /* El foco lo dibuja la barra entera (:focus-within): un aro dentro de un
+     campo sin borde no se veía. */
+  .itza-barra__entrada:focus { outline: none; }
+  .itza-barra__enviar {
+    flex: none; display: grid; place-items: center; inline-size: 52px; block-size: 52px; padding: 0; border: 0; border-radius: 50%;
+    background: var(--itza-acento); color: #fff; cursor: pointer;
+  }
+  .itza-barra__enviar:hover { background: var(--itza-acento-oscuro); }
+  .itza-barra__enviar:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  /* En el móvil, la pregunta tiene que leerse entera: botones de 44, sin
+     huecos de más y la carita más pequeña. 16 px es el mínimo para que el
+     iPhone no amplíe la página al tocar el campo. */
+  @media (max-width: 479px) {
+    .itza-barra { gap: 6px; padding: 6px 6px 6px 12px; }
+    .itza-barra__icono { font-size: 1.25rem; }
+    .itza-barra__entrada { font-size: 16px; padding: 0 2px; }
+    .itza-barra__enviar, .itza-voz--barra { inline-size: var(--touch-min); block-size: var(--touch-min); }
+  }
+  @media (max-width: 359px) {
+    .itza-barra__icono { display: none; }
+    .itza-barra { padding-inline-start: 16px; }
+    /* A 320 no cabe a 16: el texto de la barra baja a 15 (el campo sigue a
+       16, que es lo que mira el iPhone para no ampliar). */
+    .itza-barra__entrada::placeholder { font-size: 15px; }
+  }
+  /* Como en el plugin y en los chats del móvil: con la barra vacía, el
+     micrófono; al escribir, enviar. Así cabe la pregunta entera. Sin
+     micrófono (el navegador no reconoce la voz), enviar siempre. */
+  .itza-barra.con-voz:not(.con-texto) .itza-barra__enviar,
+  .itza-barra.con-texto .itza-voz--barra { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .itza-barra { transition: transform 0.2s, box-shadow 0.2s; }
+    .itza-barra:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26, 26, 46, 0.32); }
+  }
+
+  /* La ventana. */
+  .itza-chat {
+    display: flex; flex-direction: column; inline-size: 100%; max-inline-size: 560px; box-sizing: border-box;
+    background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+    color: var(--itza-texto); font-size: 16px; line-height: 1.5;
+  }
+  .itza-chat[hidden] { display: none; }
+  .itza-chat__cabeza { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--itza-fondo); color: #fff; }
+  .itza-chat__icono { flex: none; display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 50%; background: #fff; }
+  .itza-chat__icono img { inline-size: 26px; block-size: auto; }
+  .itza-chat__info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .itza-chat__estado { display: flex; align-items: center; gap: 8px; color: #8ff0b4; font-size: 16px; }
+  .itza-chat__punto { inline-size: 10px; block-size: 10px; border-radius: 50%; background: #8ff0b4; }
+  .itza-chat__cerrar {
+    flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);
+    padding: 0; border: 0; border-radius: 8px; background: none; color: #fff; cursor: pointer;
+  }
+  .itza-chat__cerrar:hover { background: rgba(255, 255, 255, 0.12); }
+  .itza-chat__cerrar:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .itza-chat__mensajes {
+    display: flex; flex-direction: column; gap: 10px; padding: 16px;
+    min-block-size: 160px; max-block-size: 50svh; overflow-y: auto;
+  }
+  .itza-chat__mensajes:focus-visible { outline: 2px solid var(--itza-acento); outline-offset: -2px; }
+  /* En una columna flex con alto máximo, los hijos encogen: sin esto el
+     último mensaje se aplastaba en vez de desplazarse. */
+  .itza-chat__mensajes > :global(*) { flex-shrink: 0; }
+  .itza-chat__mensajes :global(p) {
+    margin: 0; max-inline-size: 82%; padding: 10px 14px; border-radius: 12px; overflow-wrap: anywhere;
+    background: var(--itza-burbuja); color: var(--itza-texto); border: 1px solid rgba(0, 0, 0, 0.06); border-end-start-radius: 4px;
+  }
+  .itza-chat__mensajes :global(p.tu) {
+    align-self: flex-end; background: var(--itza-acento); color: #fff; border-color: transparent;
+    border-end-start-radius: 12px; border-end-end-radius: 4px;
+  }
+  .itza-chat__mensajes :global(.logo-itza) { block-size: 0.9em; }
+  /* El enlace al apartado de la web: en su propia línea y con 44 de alto,
+     como todos los enlaces de AP fuera de los artículos. */
+  .itza-chat__mensajes :global(.itza-chat__enlace) {
+    display: flex; align-items: center; gap: 6px; min-block-size: var(--touch-min); margin-block-start: 4px;
+    color: var(--itza-acento-oscuro); text-decoration: underline; text-underline-offset: 3px;
+  }
+  .itza-chat__mensajes :global(.itza-chat__enlace:focus-visible) { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+  /* «Itza está escribiendo»: los tres puntos del plugin; el texto, para el
+     lector de pantalla. */
+  .itza-chat__mensajes :global(p.escribiendo) { display: flex; gap: 5px; align-items: center; padding: 14px 16px; }
+  .itza-chat__mensajes :global(.punto) { inline-size: 7px; block-size: 7px; border-radius: 50%; background: #767676; }
+  @media (prefers-reduced-motion: no-preference) {
+    .itza-chat__mensajes :global(.punto) { animation: itza-salto 0.9s infinite; }
+    .itza-chat__mensajes :global(.punto:nth-of-type(2)) { animation-delay: 0.15s; }
+    .itza-chat__mensajes :global(.punto:nth-of-type(3)) { animation-delay: 0.3s; }
+  }
+  @keyframes itza-salto { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+  .itza-chat__fila { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-block-start: 1px solid #eee; }
+  .itza-chat__fila[hidden], .itza-chat__datos[hidden], .itza-chat__editar[hidden], .itza-chat__hecho[hidden],
+  .itza-chat__error[hidden], .itza-chat__error-envio[hidden] { display: none; }
+  .itza-chat__entrada {
+    flex: 1; min-inline-size: 0; min-block-size: var(--touch-min); box-sizing: border-box;
+    padding: 9px 16px; border: 1px solid #8a8a8a; border-radius: 999px; font: inherit; color: var(--itza-texto); background: #fff;
+  }
+  .itza-chat__entrada::placeholder { color: #6b6b6b; }
+  .itza-chat__entrada:focus { outline: 2px solid var(--itza-acento); outline-offset: 1px; border-color: var(--itza-acento); }
+  .itza-chat__enviar {
+    flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);
+    padding: 0; border: 0; border-radius: 50%; background: var(--itza-acento); color: #fff; cursor: pointer;
+  }
+  .itza-chat__enviar:hover { background: var(--itza-acento-oscuro); }
+  /* El micrófono: en reposo, aro morado; escuchando, relleno (el cambio se
+     ve sin animación) y, con movimiento, además late. */
+  .itza-voz {
+    flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);
+    padding: 0; border: 2px solid var(--itza-acento); border-radius: 50%; background: #fff; color: var(--itza-acento); cursor: pointer;
+  }
+  .itza-voz[hidden] { display: none; }
+  .itza-voz:hover { color: var(--itza-acento-oscuro); border-color: var(--itza-acento-oscuro); }
+  .itza-voz:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+  /* En la barra oscura, el aro en blanco: el morado no llega a 3:1. */
+  .itza-voz--barra { inline-size: 52px; block-size: 52px; border-color: rgba(255, 255, 255, 0.72); background: none; color: #fff; }
+  .itza-voz--barra:hover { color: #fff; border-color: #fff; }
+  .itza-voz--barra:focus-visible { outline-color: #fff; }
+  .itza-voz.escuchando { background: var(--itza-acento); border-color: var(--itza-acento); color: #fff; }
+  @media (prefers-reduced-motion: no-preference) {
+    .itza-voz.escuchando { animation: itza-late 1s infinite; }
+  }
+  @keyframes itza-late { 50% { box-shadow: 0 0 0 6px rgba(91, 79, 207, 0.25); } }
+  .itza-chat__enviar:focus-visible, .itza-chat__boton:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+
+  /* Los datos y la revisión: el formulario de contacto del plugin. */
+  .itza-chat__datos { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-block-start: 1px solid #eee; background: #fafafa; }
+  .itza-chat__datos label { font-size: 14px; color: var(--itza-suave); }
+  .itza-chat__datos label:not(:first-child) { margin-block-start: 8px; }
+  .itza-chat__datos input, .itza-chat__datos textarea {
+    inline-size: 100%; box-sizing: border-box; min-block-size: var(--touch-min); padding: 8px 12px;
+    border: 1px solid #8a8a8a; border-radius: 8px; font: inherit; color: var(--itza-texto); background: #fff;
+  }
+  .itza-chat__datos input:focus, .itza-chat__datos textarea:focus { outline: 2px solid var(--itza-acento); border-color: transparent; }
+  .itza-chat__datos [aria-invalid='true'] { border-color: #b3261e; }
+  .itza-chat__error, .itza-chat__error-envio { color: #b3261e; font-size: 14px; }
+  .itza-chat__boton {
+    inline-size: 100%; min-block-size: var(--touch-min); margin-block-start: 8px; padding: 10px; border: 0; border-radius: 8px;
+    background: var(--itza-acento); color: #fff; font: inherit; cursor: pointer;
+  }
+  .itza-chat__boton:hover { background: var(--itza-acento-oscuro); }
+  .itza-chat__boton:disabled { opacity: 0.6; cursor: progress; }
+  .itza-chat__revision { gap: 12px; }
+  .itza-chat__subtitulo { margin: 0; font-size: 14px; font-weight: 400; color: var(--itza-suave); }
+  .itza-chat__resumen { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .itza-chat__resumen div { display: flex; flex-direction: column; }
+  .itza-chat__resumen [hidden] { display: none; }
+  .itza-chat__resumen dt { font-size: 14px; color: var(--itza-suave); }
+  .itza-chat__resumen dd { margin: 0; overflow-wrap: anywhere; }
+  .itza-chat__texto { white-space: pre-line; }
+  .itza-chat__cambiar {
+    align-self: flex-start; min-block-size: var(--touch-min); padding: 0; border: 0; background: none;
+    color: var(--itza-acento-oscuro); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .itza-chat__editar { display: flex; flex-direction: column; gap: 6px; }
+  .itza-chat__error-envio a { color: var(--itza-acento-oscuro); }
+  .itza-chat__hecho { padding: 14px 16px; border-block-start: 1px solid #eee; background: #fafafa; }
+  .itza-chat__firma { padding: 8px; border-block-start: 1px solid #f0f0f0; text-align: center; font-size: 13px; color: #6b6b6b; }
+  .itza-chat__firma :global(.logo-itza) { filter: grayscale(1) opacity(0.7); }
+  @media (forced-colors: active) {
+    .itza-barra, .itza-chat, .itza-chat__enviar, .itza-chat__boton, .itza-barra__accion { border: 1px solid ButtonText; }
+  }
 </style>

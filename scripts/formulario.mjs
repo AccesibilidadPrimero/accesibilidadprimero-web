@@ -21,7 +21,7 @@
 import { chromium } from 'playwright';
 import { existsSync } from 'node:fs';
 import { servir } from './serve.mjs';
-import { contacto } from '../worker/index.ts';
+import { contacto, itzaContacto } from '../worker/index.ts';
 import { TURNSTILE_SITEKEY, TURNSTILE_SITEKEY_PRUEBA } from '../src/data/contacto.ts';
 
 let fallos = 0, pruebas = 0;
@@ -35,6 +35,7 @@ const ok = (cond, nombre, detalle = '') => {
 const usadas = new Set();
 let brevo = { llamadas: [], falla: false };
 let siteverify = { exito: true, accion: 'contacto', host: 'localhost' };
+let anthropic = { llamadas: [], falla: false, texto: '' };
 const fetchReal = globalThis.fetch;
 globalThis.fetch = async (url, init = {}) => {
   const u = String(url);
@@ -50,6 +51,11 @@ globalThis.fetch = async (url, init = {}) => {
   if (u === 'https://api.brevo.com/v3/smtp/email') {
     brevo.llamadas.push({ headers: init.headers, cuerpo: JSON.parse(String(init.body)) });
     return brevo.falla ? new Response('mal', { status: 500 }) : Response.json({ messageId: 'x' }, { status: 201 });
+  }
+  if (u === 'https://api.anthropic.com/v1/messages') {
+    anthropic.llamadas.push(JSON.parse(String(init.body)));
+    if (anthropic.falla) return new Response('mal', { status: 500 });
+    return Response.json({ content: [{ type: 'text', text: anthropic.texto }] });
   }
   return fetchReal(url, init);
 };
@@ -137,6 +143,58 @@ console.log('\n── Worker ──\n');
   ok(r.status === 502 && r.cuerpo.motivo === 'envio', 'si Brevo falla: 502');
   brevo.falla = false;
 
+  /* Itza en Contacto (08/11/2026): /api/itza-contacto. */
+  const itza = async (cuerpo, { env = { ...ENV, ANTHROPIC_API_KEY: 'clave-itza' }, origen = 'http://localhost:4321', metodo = 'POST' } = {}) => {
+    const r = await itzaContacto(new Request('http://localhost:4321/api/itza-contacto', {
+      method: metodo, headers: { 'content-type': 'application/json', ...(origen ? { origin: origen } : {}) },
+      body: metodo === 'POST' ? JSON.stringify(cuerpo) : undefined,
+    }), env);
+    return { status: r.status, cuerpo: await r.json().catch(() => ({})) };
+  };
+  const pregunta = { messages: [{ role: 'user', content: 'Somos una fundación cultural.' }], lang: 'es' };
+  let ri = await itza(null, { metodo: 'GET', env: ENV });
+  ok(ri.status === 200 && ri.cuerpo.disponible === false, 'Itza: sin clave, la página no la enseña');
+  ri = await itza(null, { metodo: 'GET' });
+  ok(ri.cuerpo.disponible === true, 'Itza: con clave, disponible');
+  ri = await itza(pregunta, { env: ENV });
+  ok(ri.status === 503 && anthropic.llamadas.length === 0, 'Itza: sin clave, 503 y no llama a nadie');
+  ri = await itza(pregunta, { origen: 'https://otra-web.com' });
+  ok(ri.status === 403, 'Itza: desde otra web, 403');
+  for (const [nombre, cuerpo] of [
+    ['empieza Itza', { messages: [{ role: 'assistant', content: 'Hola' }] }],
+    ['dos seguidas de la persona', { messages: [{ role: 'user', content: 'a' }, { role: 'user', content: 'b' }] }],
+    ['pregunta demasiado larga', { messages: [{ role: 'user', content: 'a'.repeat(1201) }] }],
+    ['más de 8 preguntas', { messages: Array.from({ length: 17 }, (_, i) => ({ role: i % 2 ? 'assistant' : 'user', content: 'x' })) }],
+  ]) {
+    ri = await itza(cuerpo);
+    ok(ri.status === 400, `Itza: ${nombre}, 400`);
+  }
+  ok(anthropic.llamadas.length === 0, 'Itza: ninguno de los rechazos gasta una llamada');
+  anthropic.texto = '{"respuesta": "¿Qué necesitáis?", "listo": false}';
+  ri = await itza(pregunta);
+  ok(ri.status === 200 && ri.cuerpo.reply === '¿Qué necesitáis?' && ri.cuerpo.listo === false && !('resumen' in ri.cuerpo), 'Itza: una pregunta, sin resumen');
+  ok(anthropic.llamadas[0]?.system.includes('No pidas nombre, correo'), 'Itza: el prompt le prohíbe pedir datos personales');
+  ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
+  ok(anthropic.llamadas[0]?.system.includes('/servicios/ (Qué hacemos)'), 'Itza: conoce los apartados de la web y sus direcciones');
+  anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
+  ri = await itza(pregunta);
+  ok(ri.cuerpo.listo === true && ri.cuerpo.resumen.startsWith('Somos una fundación') && ri.cuerpo.organizacion === 'Fundación Ejemplo', 'Itza: al terminar, resumen y organización');
+  anthropic.texto = 'Esto no es JSON';
+  ri = await itza(pregunta);
+  ok(ri.status === 200 && ri.cuerpo.reply === 'Esto no es JSON' && ri.cuerpo.listo === false, 'Itza: si no responde en JSON, el texto vale como pregunta');
+  anthropic.falla = true;
+  ri = await itza(pregunta);
+  ok(ri.status === 502, 'Itza: si la API falla, 502');
+  anthropic.falla = false;
+
+  /* Por Itza no hay casilla de consentimiento (via=itza); por el formulario,
+     sigue siendo obligatoria. */
+  brevo.llamadas = [];
+  let rv = await responde(peticion({ consentimiento: undefined, via: 'itza' }));
+  ok(rv.status === 200 && brevo.llamadas.at(-1)?.cuerpo.textContent.includes('Enviado con Itza'), 'por Itza: sin casilla, se envía y el correo lo dice', JSON.stringify(rv));
+  rv = await responde(peticion({ consentimiento: undefined }));
+  ok(rv.status === 400, 'por el formulario: sin casilla, 400');
+
   const worker = (await import('../worker/index.ts')).default;
   const get = await worker.fetch(new Request('http://localhost/api/contacto'), ENV);
   ok(get.status === 405, 'GET a /api/contacto: 405');
@@ -179,6 +237,10 @@ async function pagina(opciones = {}) {
     route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers), body: await r.text() });
   });
   await p.goto(URL_, { waitUntil: 'load' });
+  /* Aquí /api/itza-contacto no existe: la página vuelve al formulario. */
+  if (opciones.javaScriptEnabled !== false) {
+    await p.waitForFunction(() => document.documentElement.classList.contains('sin-itza'), null, { timeout: 5000 }).catch(() => {});
+  }
   return { p, ctx, turnstile };
 }
 const rellenar = async (p) => {
@@ -203,7 +265,7 @@ const foco = (p) => p.evaluate(() => {
   ok(await p.isVisible('form[data-formulario]'), 'con JS: el formulario se pinta');
   ok(turnstile.pedidas === 0, 'Turnstile no se carga al abrir la página');
 
-  await p.click('.boton');
+  await p.click('form[data-formulario] .boton');
   ok(await p.isVisible('[data-resumen]'), 'enviar vacío: aparece el resumen');
   ok((await foco(p)).startsWith('h3.resumen__titulo'), 'enviar vacío: el foco va al titular del resumen', await foco(p));
   ok(await p.locator('[data-resumen] li').count() === 4, 'enviar vacío: cuatro errores en el resumen');
@@ -214,8 +276,8 @@ const foco = (p) => p.evaluate(() => {
   ok(turnstile.pedidas === 1, 'Turnstile se carga al tocar el formulario, una vez');
   ok(await p.getAttribute('#nombre', 'aria-invalid') === null, 'al corregir y salir del campo, el error se va');
   // Dos clics seguidos: un solo correo.
-  await p.click('.boton');
-  await p.click('.boton', { force: true }).catch(() => {});
+  await p.click('form[data-formulario] .boton');
+  await p.click('form[data-formulario] .boton', { force: true }).catch(() => {});
   await p.waitForSelector('[data-confirmacion]:not([hidden])', { timeout: 5000 }).catch(() => {});
   ok(await p.isVisible('[data-confirmacion]'), 'enviado: se ve la confirmación');
   ok(!(await p.isVisible('form[data-formulario]')), 'enviado: el formulario desaparece');
@@ -228,15 +290,151 @@ const foco = (p) => p.evaluate(() => {
   brevo.falla = true;
   const { p, ctx } = await pagina();
   await rellenar(p);
-  await p.click('.boton');
+  await p.click('form[data-formulario] .boton');
   await p.waitForSelector('[data-error-envio]:not([hidden])', { timeout: 5000 }).catch(() => {});
   ok(await p.isVisible('[data-error-envio]'), 'si el envío falla: aviso con el correo');
   ok((await foco(p)).startsWith('p.resumen__titulo'), 'si el envío falla: el foco va al aviso', await foco(p));
   ok(await p.isVisible('form[data-formulario]') && await p.inputValue('#mensaje') === 'Hola. Tres líneas.', 'si el envío falla: no se pierde lo escrito');
   brevo.falla = false;
-  await p.click('.boton');
+  await p.click('form[data-formulario] .boton');
   await p.waitForSelector('[data-confirmacion]:not([hidden])', { timeout: 5000 }).catch(() => {});
   ok(await p.isVisible('[data-confirmacion]'), 'el segundo intento, con ficha nueva, sale');
+  await ctx.close();
+}
+
+/* Itza en Contacto, en el navegador. Sin el Worker configurado, la página
+   de siempre. Con él: la página en menta y la pastilla; Itza pregunta, pide
+   nombre y correo, enseña el mensaje y lo envía por el Worker real. */
+{
+  const { p, ctx } = await pagina();
+  ok(!(await p.isVisible('[data-itza-contacto]')) && await p.isVisible('form[data-formulario]'), 'Itza: sin el Worker configurado, el formulario de siempre');
+  await ctx.close();
+}
+async function conItza(respuestas, ancho = 390) {
+  const ctx = await nav.newContext({ viewport: { width: ancho, height: 844 } });
+  const p = await ctx.newPage();
+  const enviadas = [];
+  await p.route('https://challenges.cloudflare.com/**', (route) => route.fulfill({ contentType: 'text/javascript', body: FALSO_TURNSTILE }));
+  await p.route('**/api/itza-contacto', (route) => {
+    const req = route.request();
+    if (req.method() === 'GET') return route.fulfill({ json: { disponible: true } });
+    enviadas.push(req.postDataJSON());
+    const r = respuestas.shift();
+    return r ? route.fulfill({ json: r }) : route.fulfill({ status: 502, json: { error: 'api' } });
+  });
+  await p.route('**/api/contacto', async (route) => {
+    const req = route.request();
+    const r = await contacto(new Request(req.url(), { method: req.method(), headers: await req.allHeaders(), body: req.postDataBuffer() }), ENV);
+    route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers), body: await r.text() });
+  });
+  await p.goto(URL_, { waitUntil: 'load' });
+  await p.waitForTimeout(300);
+  return { p, ctx, enviadas };
+}
+{
+  const { p, ctx, enviadas } = await conItza([
+    { reply: '¿Qué necesitáis?', listo: false },
+    { reply: 'Gracias, ya lo tengo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
+  ]);
+  ok(await p.isVisible('#itza-pregunta') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la barra y sin el formulario');
+  const fondo = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  ok(fondo === 'rgb(199, 234, 228)', 'Itza: la página en menta', fondo);
+  ok(await p.locator('h1').count() >= 1 && await p.evaluate(() => [...document.querySelectorAll('h1')].filter((h) => h.closest('[data-itza-contacto]')).length === 1), 'Itza: tiene su h1');
+  const caja = await p.locator('[data-itza-barra]').boundingBox();
+  ok(caja && Math.abs(844 - (caja.y + caja.height) - 24) <= 2, 'Itza: la barra, abajo del hero a 24 del borde', JSON.stringify(caja));
+  ok(!(await p.isVisible('#itza-panel')), 'Itza: sin pregunta, no hay conversación');
+  const conVoz = await p.evaluate(() => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  ok((await p.isVisible('[data-itza-barra] [data-itza-voz]')) === conVoz, 'Itza: el micrófono sale solo si el navegador reconoce la voz', String(conVoz));
+  await p.focus('#itza-pregunta');
+  await p.keyboard.press('Enter');
+  ok(!(await p.isVisible('#itza-panel')), 'Itza: con la barra vacía, nada');
+  await p.keyboard.type('Somos una fundación cultural.');
+  await p.keyboard.press('Enter');
+  ok(await p.isVisible('#itza-panel') && !(await p.isVisible('[data-itza-barra]')), 'Itza: al preguntar, sale la ventana y la barra se retira');
+  /* Los tres puntos de «escribiendo» también son un <p>: hay que esperar a
+     que se vayan, no solo a contar burbujas. */
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 2 && !document.querySelector('[data-itza-log] .escribiendo'));
+  ok((await p.locator('[data-itza-log] p.tu').first().textContent()).includes('Somos una fundación cultural.'), 'Itza: la conversación empieza con la pregunta');
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: tras responder, el foco sigue en el campo');
+  await p.keyboard.type('Una web nueva, antes de marzo.');
+  await p.keyboard.press('Enter');
+  await p.waitForSelector('#itza-nombre:visible', { timeout: 5000 }).catch(() => {});
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: al tenerlo, pide nombre y correo, y el foco va al nombre');
+  ok(!(await p.isVisible('#itza-mensaje')), 'Itza: la charla se retira');
+  await p.click('[data-paso="datos"] .itza-chat__boton');
+  ok(await p.isVisible('#itza-nombre-error') && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: vacíos, los dos errores y el foco al primero');
+  await p.fill('#itza-nombre', 'Ana Pérez');
+  await p.fill('#itza-correo', 'ana@ejemplo');
+  await p.click('[data-paso="datos"] .itza-chat__boton');
+  ok(!(await p.isVisible('#itza-nombre-error')) && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-correo', 'Itza: correo sin dominio, su error y el foco ahí');
+  await p.fill('#itza-correo', 'ana@ejemplo.com');
+  await p.keyboard.press('Enter');
+  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2', 'Itza: la revisión, con el foco en su encabezado');
+  ok(await p.textContent('[data-r="mensaje"]') === 'Somos una fundación cultural y queremos una web accesible antes de marzo.' && await p.textContent('[data-r="organizacion"]') === 'Fundación Ejemplo', 'Itza: el resumen y la organización, a la vista');
+  ok(!JSON.stringify(enviadas).includes('Ana Pérez') && !JSON.stringify(enviadas).includes('ana@ejemplo.com'), 'Itza: el nombre y el correo no van a la IA');
+  await p.click('.itza-chat__cambiar');
+  ok(await p.isVisible('#itza-e-mensaje') && await p.getAttribute('.itza-chat__cambiar', 'aria-expanded') === 'true', 'Itza: «Cambiar algo» abre los campos');
+  await p.fill('#itza-e-organizacion', 'Fundación Otra');
+  ok(await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: lo cambiado se ve en el resumen');
+  await p.keyboard.press('Escape');
+  ok(!(await p.isVisible('#itza-panel')) && await p.evaluate(() => document.activeElement.id) === 'itza-pregunta', 'Itza: Escape cierra y el foco vuelve a la barra');
+  await p.keyboard.press('Enter');
+  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2' && await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: al reabrir, sigue donde estaba');
+  const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
+  await p.addScriptTag({ content: axe });
+  const v = await p.evaluate(async () => (await axe.run(document)).violations.map((x) => x.id));
+  ok(v.length === 0, 'Itza: axe sin fallos', v.join(', '));
+  const ancho = await p.evaluate(() => document.documentElement.scrollWidth);
+  ok(ancho <= 390, 'Itza: sin scroll horizontal a 390', String(ancho));
+  brevo.llamadas = [];
+  await p.click('[data-paso="revision"] .itza-chat__boton');
+  await p.waitForSelector('[data-itza-hecho]:visible', { timeout: 8000 }).catch(() => {});
+  ok(await p.isVisible('[data-itza-hecho]') && await p.evaluate(() => document.activeElement.hasAttribute('data-itza-hecho')), 'Itza: enviado, y el foco en la confirmación');
+  const correo = brevo.llamadas.at(-1)?.cuerpo;
+  ok(correo?.textContent.includes('Fundación Otra') && correo?.textContent.includes('Enviado con Itza') && correo?.replyTo.email === 'ana@ejemplo.com', 'Itza: el correo llega con lo revisado', JSON.stringify(correo ?? {}).slice(0, 200));
+  await ctx.close();
+}
+{
+  /* Las opciones: una empieza la conversación; «Contactar por email» abre
+     el correo con nuestra dirección. */
+  const { p, ctx, enviadas } = await conItza([{ reply: '¿Qué hace vuestra organización?', listo: false }], 1440);
+  ok(await p.isVisible('[data-itza-opciones]'), 'Itza: las opciones, a la vista antes de preguntar');
+  ok((await p.getAttribute('[data-itza-opciones] a', 'href')) === 'mailto:proyectos@accesibilidadprimero.com', 'Itza: «Contactar por email» abre el correo con nuestra dirección');
+  await p.click('[data-itza-opciones] button >> nth=1');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 2);
+  ok(await p.isVisible('#itza-panel') && !(await p.isVisible('[data-itza-opciones]')) && enviadas[0]?.messages[0]?.content === 'Una auditoría', 'Itza: una opción empieza la conversación con su texto');
+  await p.click('[data-itza-cerrar]');
+  ok(!(await p.isVisible('[data-itza-opciones]')) && await p.isVisible('[data-itza-barra]'), 'Itza: al cerrar, vuelve la barra pero no las opciones');
+  await ctx.close();
+}
+{
+  /* Si pregunta por algo de la web: el apartado, como enlace; una dirección
+     que no está en el mapa se queda en texto. */
+  const { p, ctx } = await conItza([
+    { reply: 'Las tarifas de las auditorías están en Qué hacemos.\n/servicios/', listo: false },
+    { reply: 'Mira /precios/ para eso.', listo: false },
+  ], 1440);
+  await p.fill('#itza-pregunta', '¿Cuánto cuesta una auditoría?');
+  await p.keyboard.press('Enter');
+  await p.waitForSelector('[data-itza-log] a', { timeout: 5000 }).catch(() => {});
+  const enlace = p.locator('[data-itza-log] p.itza a');
+  ok(await enlace.count() === 1 && await enlace.getAttribute('href') === '/servicios/' && (await enlace.textContent()).startsWith('Qué hacemos'), 'Itza: el apartado de la web, como enlace con su nombre');
+  ok(!(await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/servicios/'), 'Itza: la dirección no se queda escrita en el texto');
+  ok(await enlace.getAttribute('target') === '_blank' && (await enlace.textContent()).includes('pestaña nueva'), 'Itza: se abre en otra pestaña y lo dice');
+  await p.fill('#itza-mensaje', 'Vale');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p.itza:not(.escribiendo)').length === 2);
+  ok(await p.locator('[data-itza-log] a').count() === 1 && (await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/precios/'), 'Itza: una dirección inventada no se convierte en enlace');
+  await ctx.close();
+}
+{
+  /* Si la IA falla, vuelve el formulario con lo que ya se había escrito. */
+  const { p, ctx } = await conItza([], 1440);
+  await p.fill('#itza-pregunta', 'Somos una fundación cultural.');
+  await p.keyboard.press('Enter');
+  await p.waitForSelector('form[data-formulario]:visible', { timeout: 6000 }).catch(() => {});
+  ok(await p.isVisible('form[data-formulario]') && !(await p.isVisible('[data-itza-contacto]')), 'Itza: si la IA falla, vuelve el formulario');
+  ok(await p.inputValue('#mensaje') === 'Somos una fundación cultural.' && await p.evaluate(() => document.activeElement.id) === 'nombre', 'Itza: con lo escrito, y el foco en el nombre');
   await ctx.close();
 }
 

@@ -47,7 +47,7 @@ export const PRIVACIDAD: PaginaLegal = {
   entrada: [
     'Qué datos recogemos, para qué los usamos y cómo puedes pedirnos que los borremos. Explicado para que se entienda a la primera.',
   ],
-  fecha: 'Última actualización: 11 de octubre de 2026.',
+  fecha: 'Última actualización: 8 de noviembre de 2026.',
   descripcion: `Qué datos recogemos en ${DOMINIO}, para qué los usamos y cómo ejercer tus derechos.`,
   bloques: [
     {
@@ -69,6 +69,7 @@ export const PRIVACIDAD: PaginaLegal = {
       titulo: 'Qué datos recogemos',
       piezas: [
         { p: 'Solo los que nos das. Si usas el formulario: tu nombre, tu correo, tu organización si la indicas y lo que nos cuentes. Si nos escribes por correo, lo que haya en tu mensaje.' },
+        { p: 'Si usas a Itza en la página de Contacto, lo que le escribes para preparar tu mensaje. Itza te pide que no le des datos personales: esos van en el formulario.' },
         { p: 'Para proteger el formulario de los envíos automáticos, Cloudflare Turnstile analiza datos técnicos de tu conexión, como la dirección IP y el navegador, sin pedirte nada. No los usamos para identificarte.' },
         { p: 'Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics, que cuenta páginas vistas sin cookies y sin seguir a nadie.' },
       ],
@@ -107,10 +108,11 @@ export const PRIVACIDAD: PaginaLegal = {
           lista: [
             'Cloudflare: aloja la web, recibe el formulario, lo protege de los envíos automáticos y cuenta las visitas.',
             'Brevo: nos hace llegar el mensaje del formulario por correo.',
+            'Anthropic: si usas a Itza en Contacto, genera sus respuestas a partir de lo que le escribes. No guardamos esa conversación.',
             'Google Workspace: nuestro correo, donde llegan y se guardan los mensajes.',
           ],
         },
-        { p: 'Cloudflare y Google pueden tratar datos fuera de la Unión Europea. Lo hacen con las garantías del Marco de Privacidad de Datos UE-EE. UU. y las cláusulas contractuales tipo de la Comisión Europea. Brevo los trata en la Unión Europea.' },
+        { p: 'Cloudflare y Google pueden tratar datos fuera de la Unión Europea. Lo hacen con las garantías del Marco de Privacidad de Datos UE-EE. UU. y las cláusulas contractuales tipo de la Comisión Europea. Brevo los trata en la Unión Europea. Anthropic trata lo que escribes a Itza en Estados Unidos, con las cláusulas contractuales tipo de la Comisión Europea.' },
       ],
     },
     {
@@ -289,7 +291,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
   entrada: [
     'Quines dades recollim, per a què les fem servir i com ens pots demanar que les esborrem. Explicat perquè s’entengui a la primera.',
   ],
-  fecha: 'Darrera actualització: 11 d’octubre de 2026.',
+  fecha: 'Darrera actualització: 8 de novembre de 2026.',
   descripcion: `Quines dades recollim a ${DOMINIO}, per a què les fem servir i com pots exercir els teus drets.`,
   bloques: [
     {
@@ -311,6 +313,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
       titulo: 'Quines dades recollim',
       piezas: [
         { p: 'Només les que ens dones. Si fas servir el formulari: el teu nom, el teu correu, la teva organització si la indiques i el que ens expliquis. Si ens escrius per correu, el que hi hagi al teu missatge.' },
+        { p: 'Si fas servir Itza a la pàgina de Contacte, el que li escrius per preparar el teu missatge. Itza et demana que no li donis dades personals: aquestes van al formulari.' },
         { p: 'Per protegir el formulari dels enviaments automàtics, Cloudflare Turnstile analitza dades tècniques de la teva connexió, com l’adreça IP i el navegador, sense demanar-te res. No les fem servir per identificar-te.' },
         { p: 'Per saber quantes visites rep el web fem servir Cloudflare Web Analytics, que compta les pàgines vistes sense galetes i sense seguir ningú.' },
       ],
@@ -349,10 +352,11 @@ const PRIVACIDAD_CA: PaginaLegal = {
           lista: [
             'Cloudflare: allotja el web, rep el formulari, el protegeix dels enviaments automàtics i compta les visites.',
             'Brevo: ens fa arribar el missatge del formulari per correu.',
+            'Anthropic: si fas servir Itza a Contacte, genera les seves respostes a partir del que li escrius. No guardem aquesta conversa.',
             'Google Workspace: el nostre correu, on arriben i es guarden els missatges.',
           ],
         },
-        { p: 'Cloudflare i Google poden tractar dades fora de la Unió Europea. Ho fan amb les garanties del Marc de Privacitat de Dades UE-EUA i les clàusules contractuals tipus de la Comissió Europea. Brevo les tracta a la Unió Europea.' },
+        { p: 'Cloudflare i Google poden tractar dades fora de la Unió Europea. Ho fan amb les garanties del Marc de Privacitat de Dades UE-EUA i les clàusules contractuals tipus de la Comissió Europea. Brevo les tracta a la Unió Europea. Anthropic tracta el que escrius a Itza als Estats Units, amb les clàusules contractuals tipus de la Comissió Europea.' },
       ],
     },
     {
@@ -380,7 +384,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
   entrada: [
     'What data we collect, what we use it for and how you can ask us to delete it. Written so it makes sense the first time you read it.',
   ],
-  fecha: 'Last updated: 11 October 2026.',
+  fecha: 'Last updated: 8 November 2026.',
   descripcion: `What data we collect on ${DOMINIO}, what we use it for and how to exercise your rights.`,
   bloques: [
     {
@@ -402,6 +406,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
       titulo: 'What data we collect',
       piezas: [
         { p: 'Only what you give us. If you use the form: your name, your email address, your organisation if you include it and whatever you tell us. If you email us, whatever is in your message.' },
+        { p: 'If you use Itza on the Contact page, what you write to it to prepare your message. Itza asks you not to give it personal details: those go in the form.' },
         { p: 'To protect the form from automated submissions, Cloudflare Turnstile analyses technical data about your connection, such as your IP address and browser, without asking you to do anything. We do not use it to identify you.' },
         { p: 'To find out how many visits the website gets, we use Cloudflare Web Analytics, which counts page views without cookies and without tracking anyone.' },
       ],
@@ -440,10 +445,11 @@ const PRIVACIDAD_EN: PaginaLegal = {
           lista: [
             'Cloudflare: hosts the website, receives the form, protects it from automated submissions and counts visits.',
             'Brevo: delivers the form message to us by email.',
+            'Anthropic: if you use Itza on the Contact page, it generates Itza’s replies from what you write. We do not keep that conversation.',
             'Google Workspace: our email, where messages arrive and are stored.',
           ],
         },
-        { p: 'Cloudflare and Google may process data outside the European Union. They do so under the safeguards of the EU-US Data Privacy Framework and the European Commission’s standard contractual clauses. Brevo processes it within the European Union.' },
+        { p: 'Cloudflare and Google may process data outside the European Union. They do so under the safeguards of the EU-US Data Privacy Framework and the European Commission’s standard contractual clauses. Brevo processes it within the European Union. Anthropic processes what you write to Itza in the United States, under the European Commission’s standard contractual clauses.' },
       ],
     },
     {

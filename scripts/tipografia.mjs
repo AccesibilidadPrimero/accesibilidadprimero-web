@@ -291,7 +291,7 @@ for (const ancho of [390, 768, 1440]) {
     const page = await nav.newPage({ viewport: { width: ancho, height: 900 } });
     await page.goto(`http://localhost:${PUERTO}${pagina.url}`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
-    if (conErrores) await page.click('.boton');
+    if (conErrores) await page.click('form[data-formulario] .boton');
     const r = await page.evaluate(({ texto, display, meta }) => {
       const NEGRO = 'rgb(23, 23, 23)', BLANCO = 'rgb(255, 255, 255)';
       const mal = [];
