@@ -171,10 +171,23 @@ function recomponer(frase: HTMLElement) {
   delete frase.dataset.renglones;
 }
 
-/* Duración total de una frase de N renglones, leída de los tokens. */
+/* Duración total de una frase de N renglones, leída de los tokens.
+
+   OJO CON LAS UNIDADES (08/11/2026, Johnny: «no aparecen de forma
+   fluida»). En tokens.css pone `900ms`, pero el CSS que sirve el build está
+   minificado y el navegador devuelve `.9s`. Este cálculo leía el número sin
+   la unidad, así que tomaba 0,9 por 0,9 ms: la frase se recomponía a los
+   ~140 ms, con los renglones a medio subir, y el texto daba un salto hasta su
+   sitio. Se convierte según la unidad que llegue. */
+function aMs(valor: string) {
+  const v = valor.trim();
+  const n = parseFloat(v);
+  if (Number.isNaN(n)) return 0;
+  return v.endsWith('ms') ? n : v.endsWith('s') ? n * 1000 : n;
+}
 function duracion(renglones: number) {
   const raiz = getComputedStyle(document.documentElement);
-  const ms = (v: string) => parseFloat(raiz.getPropertyValue(v)) || 0;
+  const ms = (v: string) => aMs(raiz.getPropertyValue(v));
   return ms('--dur-renglon') + (renglones - 1) * ms('--desfase-renglon');
 }
 
