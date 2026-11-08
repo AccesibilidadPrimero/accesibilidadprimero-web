@@ -236,6 +236,9 @@ async function iniciar() {
      modo. La voz es la del navegador, en el idioma de la página. Se calla
      al cerrar la ventana, al escribir o al volver a pulsar el micrófono. */
   let vieneDeVoz = false;
+  /* Tras hablar Itza, vuelve a escuchar sola (lo pone el bloque del
+     micrófono, si el navegador reconoce la voz). */
+  let reabrirMicro: (() => void) | null = null;
   let modoVoz = false;
   const VOZ = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[T.lang] ?? 'es-ES';
   const sintesis = 'speechSynthesis' in window ? window.speechSynthesis : null;
@@ -256,6 +259,13 @@ async function iniciar() {
     const conOpciones = opciones.length ? `${texto} ${T.puedesDecir} ${opciones.join(', ')}.` : texto;
     const u = new SpeechSynthesisUtterance(conOpciones);
     u.lang = VOZ;
+    /* Manos libres: al acabar de hablar, si seguimos en la charla y en modo
+       voz, el micrófono de la ventana se abre otra vez. Una sola vez por
+       respuesta: si no se oye nada, se queda cerrado. En los datos no: un
+       correo dictado sale mal casi siempre. */
+    u.onend = () => {
+      if (modoVoz && !panel.hidden && actual === charla && !ocupado) reabrirMicro?.();
+    };
     sintesis.speak(u);
   }
   /* Quien escribe a mano, sale del modo voz. */
@@ -339,18 +349,22 @@ async function iniciar() {
     rec.onend = parar;
     rec.onerror = parar;
     barra.classList.add('con-voz');
+    const escuchar = (m: (typeof micros)[number]) => {
+      activo = m;
+      m[0].classList.add('escuchando');
+      m[0].querySelector('[data-itza-voz-texto]')!.textContent = T.escuchando;
+      try { rec.start(); } catch { parar(); }
+    };
     for (const m of micros) {
       const [voz] = m;
       voz.hidden = false;
       voz.addEventListener('click', () => {
         callar();
         if (activo) { rec.stop(); parar(); return; }
-        activo = m;
-        voz.classList.add('escuchando');
-        voz.querySelector('[data-itza-voz-texto]')!.textContent = T.escuchando;
-        rec.start();
+        escuchar(m);
       });
     }
+    reabrirMicro = () => { if (!activo) escuchar(micros[1]); };
   }
 
   /* ---- 3. Nombre y correo, sin IA ---- */

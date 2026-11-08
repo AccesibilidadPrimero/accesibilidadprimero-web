@@ -698,7 +698,10 @@ de Turnstile sea la de prueba.
   Si la persona habla (micrófono), Itza contesta hablando y lee las
   respuestas rápidas («Puedes decir: …»), con la voz del navegador en el
   idioma de la página; si escribe, solo por escrito. Se calla al cerrar,
-  al escribir y al pulsar el micrófono. Al abrirla: charla con
+  al escribir y al pulsar el micrófono.
+  Manos libres: al acabar de hablar Itza, en la charla y en modo voz, el
+  micrófono se abre solo una vez; en los datos, no (un correo dictado sale
+  mal). Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
   PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
