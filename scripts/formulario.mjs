@@ -177,6 +177,7 @@ console.log('\n── Worker ──\n');
   ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
   ok(anthropic.llamadas[0]?.system.includes('NOMBRE PROPIO') && anthropic.llamadas[0]?.system.includes('«Perfecto»') && anthropic.llamadas[0]?.system.includes('SOLO lo que la persona ha dicho'), 'Itza: sin rellenos, sin inventar la organización ni añadir al resumen');
   ok(anthropic.llamadas[0]?.system.includes('/servicios/ (Qué hacemos)'), 'Itza: conoce los apartados de la web y sus direcciones');
+  ok(anthropic.llamadas[0]?.system.includes('/servicios/#formacion (Formación)'), 'Itza: y las secciones de Qué hacemos, con su ancla');
   anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
   ri = await itza(pregunta);
   ok(ri.cuerpo.listo === true && ri.cuerpo.resumen.startsWith('Somos una fundación') && ri.cuerpo.organizacion === 'Fundación Ejemplo', 'Itza: al terminar, resumen y organización');
@@ -424,6 +425,7 @@ async function conItza(respuestas, ancho = 390) {
      que no está en el mapa se queda en texto. */
   const { p, ctx } = await conItza([
     { reply: 'Las tarifas de las auditorías están en Qué hacemos.\n/servicios/', listo: false },
+    { reply: 'Si quieres recibir más información sobre nuestras formaciones, cuéntanos un poco más y te escribimos.\n/servicios/#formacion', listo: false },
     { reply: 'Mira /precios/ para eso.', listo: false },
   ], 1440);
   await p.fill('#itza-pregunta', '¿Cuánto cuesta una auditoría?');
@@ -433,10 +435,15 @@ async function conItza(respuestas, ancho = 390) {
   ok(await enlace.count() === 1 && await enlace.getAttribute('href') === '/servicios/' && (await enlace.textContent()).startsWith('Qué hacemos'), 'Itza: el apartado de la web, como enlace con su nombre');
   ok(!(await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/servicios/'), 'Itza: la dirección no se queda escrita en el texto');
   ok(await enlace.getAttribute('target') === '_blank' && (await enlace.textContent()).includes('pestaña nueva'), 'Itza: se abre en otra pestaña y lo dice');
+  await p.fill('#itza-mensaje', 'Formación para mi equipo');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] a').length === 2);
+  const seccion = p.locator('[data-itza-log] a').nth(1);
+  ok(await seccion.getAttribute('href') === '/servicios/#formacion' && (await seccion.textContent()).startsWith('Formación'), 'Itza: enlaza la sección (con su ancla) y no la página entera');
   await p.fill('#itza-mensaje', 'Vale');
   await p.keyboard.press('Enter');
-  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p.itza:not(.escribiendo)').length === 2);
-  ok(await p.locator('[data-itza-log] a').count() === 1 && (await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/precios/'), 'Itza: una dirección inventada no se convierte en enlace');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p.itza:not(.escribiendo)').length === 3);
+  ok(await p.locator('[data-itza-log] a').count() === 2 && (await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/precios/'), 'Itza: una dirección inventada no se convierte en enlace');
   await ctx.close();
 }
 {

@@ -228,12 +228,14 @@ const ITZA_IDIOMA = { es: 'castellano', ca: 'catalán', en: 'inglés' } as const
 const itzaMapa = (lang: 'es' | 'ca' | 'en') => `Los apartados de la web y lo que hay en cada uno:
 ${mapaEnTexto(lang)}
 
-Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual, sola, en la última línea del texto de "respuesta", DENTRO de esa cadena, nunca como un campo aparte del JSON. Ejemplo: {"respuesta": "Las tarifas están en Qué hacemos. ¿Para qué web sería?\\n/servicios/", "listo": false}
+Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual (si hay una sección con # que encaje, esa y no la página), sola, en la última línea del texto de "respuesta", DENTRO de esa cadena, nunca como un campo aparte del JSON. Ejemplo: {"respuesta": "Las tarifas de las auditorías están en su sección. ¿Para qué web sería?\\n/servicios/#auditoria", "listo": false}
 Solo direcciones de esta lista, exactamente como están: ni inventadas ni con el dominio. No la anuncies con «aquí» ni «en este enlace»: la página la convierte en un enlace debajo de tu mensaje. Si no sabes dónde está, no pongas ninguna.`;
 
 const ITZA_SISTEMA = `Eres Itza, la asistente de Accesibilidad Primero, un estudio de diseño y accesibilidad digital de Valencia. Estás en su página de Contacto. Tu trabajo es ayudar a la persona a contar su proyecto para que el equipo le responda bien. No vendes ni das presupuestos.
 
 La persona empieza escribiendo en una barra que dice «¿Cómo podemos ayudarte?», así que su primer mensaje responde a eso. Si pregunta algo sobre el estudio o duda de algo que está en la web, contéstalo en una o dos frases si lo sabes, enlaza el apartado donde lo encontrará (más abajo te digo cómo) y sigue.
+
+Cuando la persona dice qué necesita y es uno de los servicios (una web, una auditoría, formación), responde con una sola frase que la invite a seguir, en esta forma: «Si quieres recibir más información sobre nuestras formaciones, cuéntanos un poco más y te escribimos.» (cambia «nuestras formaciones» por «nuestras auditorías» o «el diseño y desarrollo de webs» según el caso), enlaza la SECCIÓN de ese servicio (la dirección con #, no la página entera) y sigue con tu siguiente pregunta. No repitas lo que ha dicho ni resumas el servicio.
 
 Si solo quiere el correo o contactar sin más (por ejemplo «quiero contactar», «¿cuál es vuestro email?», «¿me podéis llamar?»): dale el correo, proyectos@accesibilidadprimero.com, y dile en la misma frase que, si quiere, también puede dejar aquí su mensaje y su contacto en un momento. Si dice que sí, sigue con las preguntas. Si dice que no, o que solo quiere que le escriban, termina ya (listo) con un resumen corto de lo que haya dicho, aunque sea una frase. No hay teléfono que dar: si pide que le llamen, dile que puede pedirlo en el mensaje.
 
@@ -286,7 +288,7 @@ function leerItza(texto: string, lang: 'es' | 'ca' | 'en') {
     try { respuesta = m ? (JSON.parse(`"${m[1]}"`) as string).trim() : ''; } catch { respuesta = ''; }
     if (!respuesta && !texto.trim().startsWith('{')) return { reply: texto.trim(), listo: false };
     const rutas = new Set(mapaItza(lang).map((a) => a.ruta));
-    const sueltas = [...new Set(texto.match(/\/[a-z0-9\-\/]+\//g) ?? [])].filter((r) => rutas.has(r) && !respuesta.includes(r));
+    const sueltas = [...new Set(texto.match(/\/[a-z0-9\-\/]+\/(?:#[a-z0-9\-]+)?/g) ?? [])].filter((r) => rutas.has(r) && !respuesta.includes(r));
     const reply = [respuesta || ITZA_SIN_RESPUESTA[lang], ...sueltas].join('\n');
     return { reply, listo: false };
   }
