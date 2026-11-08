@@ -175,6 +175,7 @@ console.log('\n── Worker ──\n');
   ok(ri.status === 200 && ri.cuerpo.reply === '¿Qué necesitáis?' && ri.cuerpo.listo === false && !('resumen' in ri.cuerpo), 'Itza: una pregunta, sin resumen');
   ok(anthropic.llamadas[0]?.system.includes('No pidas nombre, correo'), 'Itza: el prompt le prohíbe pedir datos personales');
   ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
+  ok(anthropic.llamadas[0]?.system.includes('NOMBRE PROPIO') && anthropic.llamadas[0]?.system.includes('«Perfecto»'), 'Itza: sin rellenos y sin inventar el nombre de la organización');
   ok(anthropic.llamadas[0]?.system.includes('/servicios/ (Qué hacemos)'), 'Itza: conoce los apartados de la web y sus direcciones');
   anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
   ri = await itza(pregunta);
