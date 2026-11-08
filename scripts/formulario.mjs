@@ -182,6 +182,14 @@ console.log('\n── Worker ──\n');
   anthropic.texto = 'Esto no es JSON';
   ri = await itza(pregunta);
   ok(ri.status === 200 && ri.cuerpo.reply === 'Esto no es JSON' && ri.cuerpo.listo === false, 'Itza: si no responde en JSON, el texto vale como pregunta');
+  /* JSON roto, tal como salió en producción el 08/11/2026: la dirección
+     suelta dentro del objeto. No se enseña el JSON. */
+  anthropic.texto = '{"respuesta": "Las tarifas están en el apartado de servicios. ¿Qué tipo de auditoría buscas?", "listo": false, "/servicios/"}';
+  ri = await itza(pregunta);
+  ok(ri.cuerpo.reply === 'Las tarifas están en el apartado de servicios. ¿Qué tipo de auditoría buscas?\n/servicios/' && ri.cuerpo.listo === false, 'Itza: JSON roto, se rescata la respuesta y el apartado', ri.cuerpo.reply);
+  anthropic.texto = '{"respuesta": , "listo": false}';
+  ri = await itza(pregunta);
+  ok(!ri.cuerpo.reply.includes('{') && ri.cuerpo.reply.length > 0, 'Itza: JSON roto sin nada que rescatar, una frase y nunca el JSON', ri.cuerpo.reply);
   anthropic.falla = true;
   ri = await itza(pregunta);
   ok(ri.status === 502, 'Itza: si la API falla, 502');

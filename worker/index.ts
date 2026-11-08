@@ -31,7 +31,7 @@
  * Variables (wrangler.toml, [vars]):
  *   CORREO_DESTINO, CORREO_REMITENTE, TURNSTILE_HOSTNAMES
  */
-import { mapaEnTexto } from '../src/data/itza-mapa.ts';
+import { mapaEnTexto, mapaItza } from '../src/data/itza-mapa.ts';
 import { hostSinIndexar } from '../src/data/sitio.ts';
 import { llamarClaude, validarConversacion } from '../itza-worker/claude.ts';
 export interface Env {
@@ -228,7 +228,8 @@ const ITZA_IDIOMA = { es: 'castellano', ca: 'catalán', en: 'inglés' } as const
 const itzaMapa = (lang: 'es' | 'ca' | 'en') => `Los apartados de la web y lo que hay en cada uno:
 ${mapaEnTexto(lang)}
 
-Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual, sola, en la última línea de tu respuesta (dentro del texto de "respuesta"). Solo direcciones de esta lista, exactamente como están: ni inventadas ni con el dominio. No la anuncies con «aquí» ni «en este enlace»: la página la convierte en un enlace debajo de tu mensaje. Si no sabes dónde está, no pongas ninguna.`;
+Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual, sola, en la última línea del texto de "respuesta", DENTRO de esa cadena, nunca como un campo aparte del JSON. Ejemplo: {"respuesta": "Las tarifas están en Qué hacemos. ¿Para qué web sería?\\n/servicios/", "listo": false}
+Solo direcciones de esta lista, exactamente como están: ni inventadas ni con el dominio. No la anuncies con «aquí» ni «en este enlace»: la página la convierte en un enlace debajo de tu mensaje. Si no sabes dónde está, no pongas ninguna.`;
 
 const ITZA_SISTEMA = `Eres Itza, la asistente de Accesibilidad Primero, un estudio de diseño y accesibilidad digital de Valencia. Estás en su página de Contacto. Tu trabajo es ayudar a la persona a contar su proyecto para que el equipo le responda bien. No vendes ni das presupuestos.
 
@@ -253,7 +254,7 @@ Cuando tengas lo necesario: {"respuesta": "una frase corta de agradecimiento, si
 
 /* La respuesta del modelo, leída con cuidado: si no es el JSON pedido, se
    usa el texto tal cual como una pregunta más. */
-function leerItza(texto: string) {
+function leerItza(texto: string, lang: 'es' | 'ca' | 'en') {
   const a = texto.indexOf('{'), b = texto.lastIndexOf('}');
   try {
     const d = JSON.parse(texto.slice(a, b + 1)) as { respuesta?: unknown; listo?: unknown; resumen?: unknown; organizacion?: unknown };
@@ -268,9 +269,28 @@ function leerItza(texto: string) {
       } : {}),
     };
   } catch {
-    return { reply: texto.trim(), listo: false };
+    /* JSON roto (pasó el 08/11/2026: el modelo dejó la dirección del
+       apartado suelta dentro del objeto). Nunca se enseña el JSON a quien
+       escribe: se rescata «respuesta» y las direcciones del mapa que haya
+       por el texto. Si no hay nada que rescatar y parece JSON, una frase
+       neutra; si no parece JSON, el texto tal cual. */
+    const m = texto.match(/"respuesta"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    let respuesta = '';
+    try { respuesta = m ? (JSON.parse(`"${m[1]}"`) as string).trim() : ''; } catch { respuesta = ''; }
+    if (!respuesta && !texto.trim().startsWith('{')) return { reply: texto.trim(), listo: false };
+    const rutas = new Set(mapaItza(lang).map((a) => a.ruta));
+    const sueltas = [...new Set(texto.match(/\/[a-z0-9\-\/]+\//g) ?? [])].filter((r) => rutas.has(r) && !respuesta.includes(r));
+    const reply = [respuesta || ITZA_SIN_RESPUESTA[lang], ...sueltas].join('\n');
+    return { reply, listo: false };
   }
 }
+
+/* Si la respuesta del modelo no se puede leer, esto, en vez del JSON. */
+const ITZA_SIN_RESPUESTA = {
+  es: 'Perdona, no te he entendido bien. ¿Me lo cuentas de otra manera?',
+  ca: 'Perdona, no t’he entès bé. M’ho expliques d’una altra manera?',
+  en: 'Sorry, I didn’t quite get that. Could you put it another way?',
+} as const;
 
 export async function itzaContacto(request: Request, env: Env): Promise<Response> {
   if (request.method === 'GET') return json({ disponible: Boolean(env.ANTHROPIC_API_KEY) });
@@ -290,7 +310,7 @@ export async function itzaContacto(request: Request, env: Env): Promise<Response
     registro: 'itza-contacto',
   });
   if (!texto) return json({ ok: false, motivo: 'api' }, 502);
-  return json(leerItza(texto));
+  return json(leerItza(texto, datos.lang));
 }
 
 export default {
