@@ -149,7 +149,7 @@ async function iniciar() {
   function focoDelPaso() {
     if (actual === charla) return campoCharla;
     if (actual === pDatos) return campoNombre;
-    if (actual === revision) return revision.querySelector<HTMLElement>('h3')!;
+    if (actual === revision) return revision.querySelector<HTMLElement>('h2')!;
     return hecho;
   }
 
@@ -340,7 +340,7 @@ async function iniciar() {
     for (const k of claves) ed[k].value = datos[k];
     pintarResumen();
     linea(T.pideRevision, 'itza');
-    mostrar(revision, revision.querySelector<HTMLElement>('h3')!);
+    mostrar(revision, revision.querySelector<HTMLElement>('h2')!);
   }
 
   function abrirEdicion(campo?: HTMLElement) {

@@ -27,7 +27,6 @@ import { path } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
 import logoItza from '../assets/productos/itza-logo.png';
-import logoMenta from '../assets/productos/itza-logo-menta.png';
 import iconoAP from '../assets/estudio/icono.svg';
 import { mapaItza } from '../data/itza-mapa';
 
@@ -301,11 +300,10 @@ const CAMPOS = [
 
     <div id="itza-panel" class="itza-chat" hidden>
       <div class="itza-chat__cabeza">
-        {/* El emblema de AP: es Itza de Accesibilidad Primero. Decorativo, el
-            nombre lo dice el logo de al lado. */}
+        {/* Solo el emblema de AP y «En línea» (Johnny, 08/11/2026). Decorativo:
+            quién habla lo dice cada mensaje al lector de pantalla. */}
         <span class="itza-chat__icono"><img src={iconoAP.src} width={iconoAP.width} height={iconoAP.height} alt="" /></span>
         <div class="itza-chat__info">
-          <h2 class="itza-chat__nombre"><img src={logoMenta.src} width={logoMenta.width} height={logoMenta.height} alt="Itza" /></h2>
           <p class="itza-chat__estado"><span class="itza-chat__punto"></span>{T.itza.enLinea}</p>
         </div>
         <button type="button" class="itza-chat__cerrar" data-itza-cerrar>
@@ -351,7 +349,7 @@ const CAMPOS = [
 
       {/* 3. La revisión: lo que va a llegar, a la vista y se puede cambiar. */}
       <form class="itza-chat__datos itza-chat__revision" data-paso="revision" novalidate hidden>
-        <h3 class="itza-chat__subtitulo" tabindex="-1">{T.itza.revision}</h3>
+        <h2 class="itza-chat__subtitulo" tabindex="-1">{T.itza.revision}</h2>
         <dl class="itza-chat__resumen">
           <div><dt>{T.itza.etNombre}</dt><dd data-r="nombre"></dd></div>
           <div><dt>{T.itza.etCorreo}</dt><dd data-r="correo"></dd></div>
@@ -809,9 +807,7 @@ const CAMPOS = [
   .itza-chat__icono { flex: none; display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 50%; background: #fff; }
   .itza-chat__icono img { inline-size: 26px; block-size: auto; }
   .itza-chat__info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-  .itza-chat__nombre { margin: 0; line-height: 1; }
-  .itza-chat__nombre img { display: block; block-size: 22px; inline-size: auto; }
-  .itza-chat__estado { display: flex; align-items: center; gap: 6px; color: #8ff0b4; font-size: 14px; }
+  .itza-chat__estado { display: flex; align-items: center; gap: 8px; color: #8ff0b4; font-size: 16px; }
   .itza-chat__punto { inline-size: 10px; block-size: 10px; border-radius: 50%; background: #8ff0b4; }
   .itza-chat__cerrar {
     flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);

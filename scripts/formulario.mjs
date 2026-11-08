@@ -369,7 +369,7 @@ async function conItza(respuestas, ancho = 390) {
   ok(!(await p.isVisible('#itza-nombre-error')) && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-correo', 'Itza: correo sin dominio, su error y el foco ahí');
   await p.fill('#itza-correo', 'ana@ejemplo.com');
   await p.keyboard.press('Enter');
-  ok(await p.evaluate(() => document.activeElement.tagName) === 'H3', 'Itza: la revisión, con el foco en su encabezado');
+  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2', 'Itza: la revisión, con el foco en su encabezado');
   ok(await p.textContent('[data-r="mensaje"]') === 'Somos una fundación cultural y queremos una web accesible antes de marzo.' && await p.textContent('[data-r="organizacion"]') === 'Fundación Ejemplo', 'Itza: el resumen y la organización, a la vista');
   ok(!JSON.stringify(enviadas).includes('Ana Pérez') && !JSON.stringify(enviadas).includes('ana@ejemplo.com'), 'Itza: el nombre y el correo no van a la IA');
   await p.click('.itza-chat__cambiar');
@@ -379,7 +379,7 @@ async function conItza(respuestas, ancho = 390) {
   await p.keyboard.press('Escape');
   ok(!(await p.isVisible('#itza-panel')) && await p.evaluate(() => document.activeElement.id) === 'itza-pregunta', 'Itza: Escape cierra y el foco vuelve a la barra');
   await p.keyboard.press('Enter');
-  ok(await p.evaluate(() => document.activeElement.tagName) === 'H3' && await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: al reabrir, sigue donde estaba');
+  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2' && await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: al reabrir, sigue donde estaba');
   const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
   await p.addScriptTag({ content: axe });
   const v = await p.evaluate(async () => (await axe.run(document)).violations.map((x) => x.id));
