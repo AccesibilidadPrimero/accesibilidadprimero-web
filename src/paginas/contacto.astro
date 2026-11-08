@@ -29,6 +29,7 @@ import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/con
 import logoItza from '../assets/productos/itza-logo.png';
 import logoMenta from '../assets/productos/itza-logo-menta.png';
 import iconoAP from '../assets/estudio/icono.svg';
+import { mapaItza } from '../data/itza-mapa';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
@@ -92,6 +93,9 @@ const T = {
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Hablar',
       escuchando: 'Escuchando. Pulsa para parar',
+      opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia'],
+      porCorreo: 'Contactar por email',
+      pestanaNueva: 'se abre en una pestaña nueva',
     },
   },
   ca: {
@@ -149,6 +153,9 @@ const T = {
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Parla',
       escuchando: 'Escoltant. Prem per aturar',
+      opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència'],
+      porCorreo: 'Contactar per correu',
+      pestanaNueva: 's’obre en una pestanya nova',
     },
   },
   en: {
@@ -206,6 +213,9 @@ const T = {
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Speak',
       escuchando: 'Listening. Press to stop',
+      opciones: ['An accessible website', 'An audit', 'Training for my team', 'White label for my agency'],
+      porCorreo: 'Contact us by email',
+      pestanaNueva: 'opens in a new tab',
     },
   },
 }[lang];
@@ -277,7 +287,7 @@ const CAMPOS = [
       (GET /api/itza-contacto) o la API falla, src/scripts/itza-contacto.ts
       pone html.sin-itza y vuelve la página de siempre, con su formulario:
       es el respaldo. Sin JS, también la de siempre. */}
-  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
+  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang, mapa: mapaItza(lang).map(({ ruta, nombre }) => ({ ruta, nombre })) })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
     {/* Itza con SU interfaz, no la de AP (Johnny, 08/11/2026: «Itza tiene su
         propia interfaz y estilos, hay que mantener su singularidad
         visual»): la barra oscura, la ventana con cabecera, «En línea», las
@@ -369,6 +379,17 @@ const CAMPOS = [
       <p class="itza-chat__hecho" tabindex="-1" data-itza-hecho hidden></p>
       <p class="itza-chat__firma" set:html={conLogo(T.itza.marca)} />
     </div>
+
+    {/* Las opciones, como las preguntas sugeridas del plugin: cada una
+        empieza la conversación con esa respuesta ya dada. «Contactar por
+        email» no pregunta nada: abre el correo de quien visita con nuestra
+        dirección (Johnny, 08/11/2026). Se retiran al empezar a hablar. */}
+    <ul class="itza-opciones" data-itza-opciones>
+      {T.itza.opciones.map((o) => (
+        <li><button type="button" class="itza-opcion" data-texto={o}>{o}</button></li>
+      ))}
+      <li><a class="itza-opcion" href={`mailto:${CORREO}`}>{T.itza.porCorreo}</a></li>
+    </ul>
 
     {/* La barra, como la del plugin: es un campo. La conversación no sale
         hasta que se pregunta algo (Johnny, 08/11/2026). La etiqueta va
@@ -712,6 +733,21 @@ const CAMPOS = [
 
   .itza p { margin: 0; }
   .itza :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
+  /* Las opciones: las píldoras del plugin (aro y texto en el morado, 6,1:1
+     sobre el blanco). */
+  .itza-opciones {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    inline-size: 100%; max-inline-size: 560px; margin: 0; padding: 0; list-style: none;
+  }
+  .itza-opciones[hidden] { display: none; }
+  .itza-opcion {
+    display: inline-flex; align-items: center; min-block-size: var(--touch-min); box-sizing: border-box;
+    padding: 6px 16px; border: 1.5px solid var(--itza-acento); border-radius: 999px; background: #fff;
+    color: var(--itza-acento-oscuro); font: inherit; font-size: 16px; line-height: 1.3; text-decoration: none; cursor: pointer;
+  }
+  .itza-opcion:hover { background: var(--itza-acento); color: #fff; }
+  .itza-opcion:focus-visible { outline: 2px solid var(--itza-fondo); outline-offset: 2px; }
+
   /* La barra: la del plugin, más corta que la columna. */
   .itza-barra {
     display: flex; align-items: center; gap: 10px; inline-size: 100%; max-inline-size: 560px; box-sizing: border-box;
@@ -801,6 +837,13 @@ const CAMPOS = [
     border-end-start-radius: 12px; border-end-end-radius: 4px;
   }
   .itza-chat__mensajes :global(.logo-itza) { block-size: 0.9em; }
+  /* El enlace al apartado de la web: en su propia línea y con 44 de alto,
+     como todos los enlaces de AP fuera de los artículos. */
+  .itza-chat__mensajes :global(.itza-chat__enlace) {
+    display: flex; align-items: center; gap: 6px; min-block-size: var(--touch-min); margin-block-start: 4px;
+    color: var(--itza-acento-oscuro); text-decoration: underline; text-underline-offset: 3px;
+  }
+  .itza-chat__mensajes :global(.itza-chat__enlace:focus-visible) { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
   /* «Itza está escribiendo»: los tres puntos del plugin; el texto, para el
      lector de pantalla. */
   .itza-chat__mensajes :global(p.escribiendo) { display: flex; gap: 5px; align-items: center; padding: 14px 16px; }

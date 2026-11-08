@@ -26,7 +26,8 @@ interface Textos {
   lang: 'es' | 'ca' | 'en';
   escribiendo: string; error: string; pideDatos: string;
   faltaNombre: string; faltaCorreo: string; pideRevision: string; enviado: string;
-  tu: string; yo: string; hablar: string; escuchando: string;
+  tu: string; yo: string; hablar: string; escuchando: string; pestanaNueva: string;
+  mapa: { ruta: string; nombre: string }[];
 }
 interface Mensaje { role: 'user' | 'assistant'; content: string }
 interface Respuesta { reply?: string; listo?: boolean; resumen?: string; organizacion?: string }
@@ -83,6 +84,18 @@ async function iniciar() {
     etiqueta.className = 'sr-only';
     etiqueta.textContent = `${quien === 'tu' ? T.tu : T.yo} `;
     p.append(etiqueta);
+    /* Los apartados de la web que nombre Itza: solo los del mapa
+       (src/data/itza-mapa.ts) se convierten en enlace, debajo del texto.
+       Una dirección que no esté en el mapa se queda como texto. */
+    const enlaces: { ruta: string; nombre: string }[] = [];
+    if (quien === 'itza') {
+      texto = texto.replace(/(^|\s)(\/[a-z0-9\-\/]+\/)(?=[\s.,;:)]|$)/g, (todo, antes: string, ruta: string) => {
+        const a = T.mapa.find((m) => m.ruta === ruta);
+        if (!a) return todo;
+        if (!enlaces.includes(a)) enlaces.push(a);
+        return antes;
+      }).replace(/\s+([.,;:])/g, '$1').trim();
+    }
     texto.split(/(Itza)/).forEach((trozo) => {
       if (trozo === 'Itza' && logo) {
         const img = logo.cloneNode() as HTMLImageElement;
@@ -90,6 +103,20 @@ async function iniciar() {
         p.append(img);
       } else if (trozo) p.append(document.createTextNode(trozo));
     });
+    for (const e of enlaces) {
+      const a = document.createElement('a');
+      a.className = 'itza-chat__enlace';
+      a.href = e.ruta;
+      /* En otra pestaña: en esta se perdería la conversación. Se dice. */
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.append(document.createTextNode(`${e.nombre} ↗`));
+      const aviso = document.createElement('span');
+      aviso.className = 'sr-only';
+      aviso.textContent = ` (${T.pestanaNueva})`;
+      a.append(aviso);
+      p.append(a);
+    }
     log.append(p);
     requestAnimationFrame(() => { log.scrollTop = log.scrollHeight; });
     return p;
@@ -127,9 +154,11 @@ async function iniciar() {
   }
 
   /* ---- 1. La barra y la ventana ---- */
+  const opciones = seccion.querySelector<HTMLElement>('[data-itza-opciones]')!;
   function abrir() {
     panel.hidden = false;
     barra.hidden = true;
+    opciones.hidden = true;
     /* Turnstile se carga al abrir, no con la página. */
     turnstile.preparar().catch(() => {});
     focoDelPaso().focus();
@@ -137,6 +166,8 @@ async function iniciar() {
   function cerrarVentana() {
     panel.hidden = true;
     barra.hidden = false;
+    /* Las opciones solo sirven para empezar. */
+    opciones.hidden = historia.length > 0;
     campoBarra.focus();
   }
   barra.addEventListener('submit', (e) => {
@@ -148,6 +179,14 @@ async function iniciar() {
     alEscribir();
     abrir();
     if (texto && actual === charla) preguntar(texto);
+  });
+  /* Una opción empieza la conversación como si se hubiera escrito. El
+     enlace del correo no es un botón: lo abre el navegador. */
+  opciones.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-texto]');
+    if (!b) return;
+    campoBarra.value = b.dataset.texto ?? '';
+    barra.requestSubmit();
   });
   /* Vacía, el micrófono; con texto, enviar (el CSS cambia el botón). */
   const alEscribir = () => barra.classList.toggle('con-texto', campoBarra.value.trim() !== '');

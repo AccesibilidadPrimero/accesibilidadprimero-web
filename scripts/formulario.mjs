@@ -175,6 +175,7 @@ console.log('\n── Worker ──\n');
   ok(ri.status === 200 && ri.cuerpo.reply === '¿Qué necesitáis?' && ri.cuerpo.listo === false && !('resumen' in ri.cuerpo), 'Itza: una pregunta, sin resumen');
   ok(anthropic.llamadas[0]?.system.includes('No pidas nombre, correo'), 'Itza: el prompt le prohíbe pedir datos personales');
   ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
+  ok(anthropic.llamadas[0]?.system.includes('/servicios/ (Qué hacemos)'), 'Itza: conoce los apartados de la web y sus direcciones');
   anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
   ri = await itza(pregunta);
   ok(ri.cuerpo.listo === true && ri.cuerpo.resumen.startsWith('Somos una fundación') && ri.cuerpo.organizacion === 'Fundación Ejemplo', 'Itza: al terminar, resumen y organización');
@@ -391,6 +392,39 @@ async function conItza(respuestas, ancho = 390) {
   ok(await p.isVisible('[data-itza-hecho]') && await p.evaluate(() => document.activeElement.hasAttribute('data-itza-hecho')), 'Itza: enviado, y el foco en la confirmación');
   const correo = brevo.llamadas.at(-1)?.cuerpo;
   ok(correo?.textContent.includes('Fundación Otra') && correo?.textContent.includes('Enviado con Itza') && correo?.replyTo.email === 'ana@ejemplo.com', 'Itza: el correo llega con lo revisado', JSON.stringify(correo ?? {}).slice(0, 200));
+  await ctx.close();
+}
+{
+  /* Las opciones: una empieza la conversación; «Contactar por email» abre
+     el correo con nuestra dirección. */
+  const { p, ctx, enviadas } = await conItza([{ reply: '¿Qué hace vuestra organización?', listo: false }], 1440);
+  ok(await p.isVisible('[data-itza-opciones]'), 'Itza: las opciones, a la vista antes de preguntar');
+  ok((await p.getAttribute('[data-itza-opciones] a', 'href')) === 'mailto:proyectos@accesibilidadprimero.com', 'Itza: «Contactar por email» abre el correo con nuestra dirección');
+  await p.click('[data-itza-opciones] button >> nth=1');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 2);
+  ok(await p.isVisible('#itza-panel') && !(await p.isVisible('[data-itza-opciones]')) && enviadas[0]?.messages[0]?.content === 'Una auditoría', 'Itza: una opción empieza la conversación con su texto');
+  await p.click('[data-itza-cerrar]');
+  ok(!(await p.isVisible('[data-itza-opciones]')) && await p.isVisible('[data-itza-barra]'), 'Itza: al cerrar, vuelve la barra pero no las opciones');
+  await ctx.close();
+}
+{
+  /* Si pregunta por algo de la web: el apartado, como enlace; una dirección
+     que no está en el mapa se queda en texto. */
+  const { p, ctx } = await conItza([
+    { reply: 'Las tarifas de las auditorías están en Qué hacemos.\n/servicios/', listo: false },
+    { reply: 'Mira /precios/ para eso.', listo: false },
+  ], 1440);
+  await p.fill('#itza-pregunta', '¿Cuánto cuesta una auditoría?');
+  await p.keyboard.press('Enter');
+  await p.waitForSelector('[data-itza-log] a', { timeout: 5000 }).catch(() => {});
+  const enlace = p.locator('[data-itza-log] p.itza a');
+  ok(await enlace.count() === 1 && await enlace.getAttribute('href') === '/servicios/' && (await enlace.textContent()).startsWith('Qué hacemos'), 'Itza: el apartado de la web, como enlace con su nombre');
+  ok(!(await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/servicios/'), 'Itza: la dirección no se queda escrita en el texto');
+  ok(await enlace.getAttribute('target') === '_blank' && (await enlace.textContent()).includes('pestaña nueva'), 'Itza: se abre en otra pestaña y lo dice');
+  await p.fill('#itza-mensaje', 'Vale');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p.itza:not(.escribiendo)').length === 2);
+  ok(await p.locator('[data-itza-log] a').count() === 1 && (await p.locator('[data-itza-log] p.itza').last().textContent()).includes('/precios/'), 'Itza: una dirección inventada no se convierte en enlace');
   await ctx.close();
 }
 {

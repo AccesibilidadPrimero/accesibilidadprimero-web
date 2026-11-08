@@ -680,7 +680,15 @@ de Turnstile sea la de prueba.
   navegador reconoce la voz; vacía enseña el micrófono, con texto, enviar).
   La conversación no sale hasta que se pregunta algo; entonces la ventana
   se abre encima y la barra se retira. La ✕ y Escape la cierran y el foco
-  vuelve a la barra. En la cabecera de la ventana, el emblema de AP. Al abrirla: charla con
+  vuelve a la barra. En la cabecera de la ventana, el emblema de AP.
+  Encima de la barra, las opciones (píldoras del plugin): cada una empieza
+  la conversación con su texto, y «Contactar por email» es un `mailto:` a
+  proyectos@. Si preguntan algo que está en la web, Itza responde corto y
+  da el apartado: el mapa vive en `src/data/itza-mapa.ts`, lo leen el
+  prompt y la página, y solo una dirección de ese mapa se pinta como
+  enlace (en su línea, 44 px, en otra pestaña y avisado). Una sección nueva
+  de la web que Itza deba conocer, se añade ahí. Si solo quieren el correo,
+  lo da y ofrece seguir. Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
   PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
