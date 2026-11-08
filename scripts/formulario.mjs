@@ -344,9 +344,13 @@ async function conItza(respuestas, ancho = 390) {
   ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'true', 'Itza: al pulsarla, se despliega');
   ok((await p.locator('[data-itza-log] p').count()) === 1, 'Itza: empieza con su saludo');
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: el foco va a la respuesta');
+  const conVoz = await p.evaluate(() => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  ok((await p.isVisible('[data-itza-voz]')) === conVoz, 'Itza: el micrófono sale solo si el navegador reconoce la voz', String(conVoz));
   await p.keyboard.type('Somos una fundación cultural.');
   await p.keyboard.press('Enter');
-  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p').length === 3);
+  /* Los tres puntos de «escribiendo» también son un <p>: hay que esperar a
+     que se vayan, no solo a contar burbujas. */
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 3 && !document.querySelector('[data-itza-log] .escribiendo'));
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: tras responder, el foco sigue en el campo');
   await p.keyboard.type('Una web nueva, antes de marzo.');
   await p.keyboard.press('Enter');

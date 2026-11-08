@@ -25,7 +25,7 @@ interface Textos {
   lang: 'es' | 'ca' | 'en';
   bienvenida: string; escribiendo: string; error: string; pideDatos: string;
   faltaNombre: string; faltaCorreo: string; pideRevision: string; enviado: string;
-  tu: string; yo: string;
+  tu: string; yo: string; hablar: string; escuchando: string;
 }
 interface Mensaje { role: 'user' | 'assistant'; content: string }
 interface Respuesta { reply?: string; listo?: boolean; resumen?: string; organizacion?: string }
@@ -196,6 +196,38 @@ async function iniciar() {
       ocupado = false;
     }
   });
+
+  /* El micrófono, como en el plugin: lo que se dice se escribe en el campo
+     y se envía. Usa el reconocimiento de voz del navegador, en el idioma de
+     la página. Solo se enseña si el navegador lo tiene. */
+  type Reconocimiento = { lang: string; interimResults: boolean; start(): void; stop(): void;
+    onresult: ((e: { results: { 0: { 0: { transcript: string } } } }) => void) | null; onend: (() => void) | null; onerror: (() => void) | null };
+  const SR = window as unknown as { SpeechRecognition?: new () => Reconocimiento; webkitSpeechRecognition?: new () => Reconocimiento };
+  const Constructor = SR.SpeechRecognition ?? SR.webkitSpeechRecognition;
+  const voz = charla.querySelector<HTMLButtonElement>('[data-itza-voz]')!;
+  if (Constructor) {
+    const rec = new Constructor();
+    rec.lang = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[T.lang] ?? 'es-ES';
+    rec.interimResults = false;
+    const textoVoz = voz.querySelector<HTMLElement>('[data-itza-voz-texto]')!;
+    let escuchando = false;
+    const parar = () => { escuchando = false; voz.classList.remove('escuchando'); textoVoz.textContent = T.hablar; };
+    rec.onresult = (e) => {
+      parar();
+      campoCharla.value = e.results[0][0].transcript;
+      charla.requestSubmit();
+    };
+    rec.onend = parar;
+    rec.onerror = parar;
+    voz.hidden = false;
+    voz.addEventListener('click', () => {
+      if (escuchando) { rec.stop(); parar(); return; }
+      escuchando = true;
+      voz.classList.add('escuchando');
+      textoVoz.textContent = T.escuchando;
+      rec.start();
+    });
+  }
 
   /* ---- 3. Nombre y correo, sin IA ---- */
   function marcar(campo: HTMLInputElement, mensaje: string) {

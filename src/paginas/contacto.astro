@@ -90,6 +90,8 @@ const T = {
       escribe: 'Escribe tu mensaje…',
       pideDatos: 'Para terminar, déjanos tu nombre y tu correo y te respondemos. Solo los usaremos para eso.',
       marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Hablar',
+      escuchando: 'Escuchando. Pulsa para parar',
     },
   },
   ca: {
@@ -146,6 +148,8 @@ const T = {
       escribe: 'Escriu el teu missatge…',
       pideDatos: 'Per acabar, deixa’ns el teu nom i el teu correu i et responem. Només els farem servir per a això.',
       marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Parla',
+      escuchando: 'Escoltant. Prem per aturar',
     },
   },
   en: {
@@ -202,6 +206,8 @@ const T = {
       escribe: 'Type your message…',
       pideDatos: 'To finish, leave us your name and email and we’ll reply. We’ll only use them for that.',
       marca: 'Itza · Accesibilidad Primero',
+      hablar: 'Speak',
+      escuchando: 'Listening. Press to stop',
     },
   },
 }[lang];
@@ -316,6 +322,12 @@ const CAMPOS = [
       <form class="itza-chat__fila" data-paso="charla" novalidate>
         <label for="itza-mensaje" class="sr-only">{T.itza.etiqueta}</label>
         <input id="itza-mensaje" type="text" maxlength="1200" autocomplete="off" placeholder={T.itza.escribe} class="itza-chat__entrada" />
+        {/* El micrófono, como en el plugin. Sale `hidden` y solo lo enseña
+            el script si el navegador sabe reconocer la voz (§5). */}
+        <button type="button" class="itza-chat__voz" data-itza-voz hidden>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+          <span class="sr-only" data-itza-voz-texto>{T.itza.hablar}</span>
+        </button>
         <button type="submit" class="itza-chat__enviar">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" /></svg>
           <span class="sr-only">{T.itza.responder}</span>
@@ -773,6 +785,20 @@ const CAMPOS = [
     padding: 0; border: 0; border-radius: 50%; background: var(--itza-acento); color: #fff; cursor: pointer;
   }
   .itza-chat__enviar:hover { background: var(--itza-acento-oscuro); }
+  /* El micrófono: en reposo, aro morado; escuchando, relleno (el cambio se
+     ve sin animación) y, con movimiento, además late. */
+  .itza-chat__voz {
+    flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);
+    padding: 0; border: 2px solid var(--itza-acento); border-radius: 50%; background: #fff; color: var(--itza-acento); cursor: pointer;
+  }
+  .itza-chat__voz[hidden] { display: none; }
+  .itza-chat__voz:hover { color: var(--itza-acento-oscuro); border-color: var(--itza-acento-oscuro); }
+  .itza-chat__voz:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+  .itza-chat__voz.escuchando { background: var(--itza-acento); color: #fff; }
+  @media (prefers-reduced-motion: no-preference) {
+    .itza-chat__voz.escuchando { animation: itza-late 1s infinite; }
+  }
+  @keyframes itza-late { 50% { box-shadow: 0 0 0 6px rgba(91, 79, 207, 0.25); } }
   .itza-chat__enviar:focus-visible, .itza-chat__boton:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
 
   /* Los datos y la revisión: el formulario de contacto del plugin. */
