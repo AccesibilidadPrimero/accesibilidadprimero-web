@@ -41,7 +41,7 @@ const RUTAS = [
   { nombre: 'Home', url: '/', minimo: 20 },
   { nombre: 'Contacto', url: '/contacto/', minimo: 15 },
   { nombre: 'Contacto con errores', url: '/contacto/', minimo: 15,
-    preparar: async (p) => { await p.click('.boton'); await p.waitForTimeout(150); } },
+    preparar: async (p) => { await p.click('form[data-formulario] .boton'); await p.waitForTimeout(150); } },
   { nombre: 'Estudio', url: '/estudio/', minimo: 30 },
   { nombre: 'Lectura fácil', url: '/lectura-facil/', minimo: 15 },
   { nombre: 'Lectura fácil · Qué hacemos', url: '/lectura-facil/que-hacemos/', minimo: 15 },

@@ -667,16 +667,21 @@ de Turnstile sea la de prueba.
 
 ## 10. Formulario de contacto (10/10/2026)
 
-- **Itza en Contacto (08/11/2026), al lado del formulario, no en su lugar.**
-  Itza hace tres o cuatro preguntas sobre el proyecto y deja el mensaje
-  escrito en «Tu mensaje» (y la organización en su campo); la persona lo
-  revisa, pone su nombre y su correo y lo envía por el camino de siempre.
-  Itza no envía nada (3.3.4), no pide datos personales y no da precios ni
-  plazos. `/api/itza-contacto` en `worker/index.ts` (prompt incluido) y
-  `src/scripts/itza-contacto.ts`. Solo se enseña si el Worker tiene el
-  secreto `ANTHROPIC_API_KEY` (GET `/api/itza-contacto` → `disponible`): sin
-  él, la página es la de siempre. La política de privacidad nombra a
-  Anthropic. `npm run formulario` lo prueba con la API simulada.
+- **Itza en Contacto (08/11/2026): Itza ES la página y sustituye al
+  formulario** (Johnny: «si no, no tiene sentido Itza»; «sin texto de
+  introducción»; «nada de la política de privacidad, que funcione tal cual
+  Itza»). Página en menta, el h1 es la pastilla «Itza · ¿Cómo podemos
+  ayudarte?» (botón de desplegar, `aria-expanded`). Al abrirla: charla con
+  la IA sobre el proyecto (`/api/itza-contacto`, prompt en
+  `worker/index.ts`; no pide datos personales ni da precios); después la
+  PÁGINA, no la IA, pide nombre y correo (no salen hacia Anthropic);
+  revisión con «Cambiar algo»; envío por `/api/contacto` con `via=itza`,
+  sin casilla de consentimiento (el Worker solo la exige al formulario).
+  `src/scripts/itza-contacto.ts`. Solo con JS y si el Worker tiene
+  `ANTHROPIC_API_KEY` (GET → `disponible`); si no, o si la IA falla,
+  `html.sin-itza` y vuelve la página de siempre con su formulario, que es el
+  respaldo. La política de privacidad nombra a Anthropic.
+  `npm run formulario` lo prueba con la API simulada.
 
 - Va a `/api/contacto`, en el Worker: comprueba los campos, canjea la ficha de
   **Turnstile invisible** (acción `contacto`, solo nuestros dominios) y manda

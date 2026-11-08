@@ -59,19 +59,33 @@ const T = {
     gracias: 'Gracias, ya tenemos tu mensaje. Te responderemos a',
     redes: 'Redes',
     itza: {
-      titulo: 'Cuéntaselo a Itza',
-      texto: 'Itza te hace tres o cuatro preguntas y escribe el mensaje por ti en el formulario. Tú lo revisas, añades tu nombre y tu correo y lo envías.',
-      privacidad: 'Lo que escribas a Itza se envía a la API de Claude, de Anthropic, para preparar el mensaje. No lo guardamos. No le escribas tu nombre, tu correo ni otros datos personales: esos van en el formulario.',
-      prefiero: 'Prefiero el formulario',
+      pildora: '¿Cómo podemos ayudarte?',
       conversacion: 'Conversación con Itza',
-      bienvenida: 'Hola, soy Itza. Te ayudo a contarnos tu proyecto. Para empezar: ¿qué hace tu organización o tu proyecto?',
+      bienvenida: 'Hola, soy Itza. Cuéntame, ¿qué hace tu organización o tu proyecto?',
       etiqueta: 'Tu respuesta para Itza',
-      enviar: 'Responder',
+      responder: 'Responder',
       escribiendo: 'Itza está escribiendo…',
-      error: 'No he podido responder. Puedes escribir directamente en el formulario.',
-      limite: 'Con esto basta. Escribe tu mensaje en el formulario, justo debajo.',
-      revisar: 'Revisar el mensaje y enviarlo',
-      tu: 'Tú:', yo: 'Itza:',
+      error: 'Ahora no puedo responder. Te dejo el formulario para que nos escribas.',
+      pideNombre: 'Para terminar, ¿cómo te llamas?',
+      nombre: 'Tu nombre',
+      faltaNombre: 'Escribe tu nombre.',
+      pideCorreo: 'Gracias, {nombre}. ¿A qué correo te respondemos? Solo lo usaremos para eso.',
+      correo: 'Tu correo electrónico',
+      faltaCorreo: 'Revisa el correo: tiene que llevar @ y un dominio, como nombre@correo.com.',
+      siguiente: 'Siguiente',
+      pideRevision: 'Así nos llegará tu mensaje. ¿Lo envío?',
+      revision: 'Tu mensaje',
+      etNombre: 'Nombre',
+      etCorreo: 'Correo',
+      etOrganizacion: 'Organización',
+      etMensaje: 'Mensaje',
+      cambiar: 'Cambiar algo',
+      organizacion: 'Organización o proyecto (opcional)',
+      enviar: 'Enviar',
+      errorEnvio: 'No he podido enviarlo. Inténtalo otra vez o escríbenos a',
+      enviado: 'Enviado, {nombre}. Te responderemos a {correo}.',
+      tu: 'Tú:',
+      yo: 'Itza:',
     },
   },
   ca: {
@@ -98,19 +112,33 @@ const T = {
     gracias: 'Gràcies, ja tenim el teu missatge. Et respondrem a',
     redes: 'Xarxes',
     itza: {
-      titulo: 'Explica-ho a Itza',
-      texto: 'Itza et fa tres o quatre preguntes i t’escriu el missatge al formulari. Tu el revises, hi afegeixes el teu nom i el teu correu i l’envies.',
-      privacidad: 'El que escriguis a Itza s’envia a l’API de Claude, d’Anthropic, per preparar el missatge. No ho guardem. No li escriguis el teu nom, el teu correu ni altres dades personals: aquestes van al formulari.',
-      prefiero: 'Prefereixo el formulari',
+      pildora: 'Com et podem ajudar?',
       conversacion: 'Conversa amb Itza',
-      bienvenida: 'Hola, soc Itza. T’ajudo a explicar-nos el teu projecte. Per començar: què fa la teva organització o el teu projecte?',
+      bienvenida: 'Hola, soc Itza. Explica’m, què fa la teva organització o el teu projecte?',
       etiqueta: 'La teva resposta per a Itza',
-      enviar: 'Respon',
+      responder: 'Respon',
       escribiendo: 'Itza està escrivint…',
-      error: 'No he pogut respondre. Pots escriure directament al formulari.',
-      limite: 'Amb això n’hi ha prou. Escriu el teu missatge al formulari, just a sota.',
-      revisar: 'Revisa el missatge i envia’l',
-      tu: 'Tu:', yo: 'Itza:',
+      error: 'Ara no puc respondre. Et deixo el formulari perquè ens escriguis.',
+      pideNombre: 'Per acabar, com et dius?',
+      nombre: 'El teu nom',
+      faltaNombre: 'Escriu el teu nom.',
+      pideCorreo: 'Gràcies, {nombre}. A quin correu et responem? Només el farem servir per a això.',
+      correo: 'El teu correu electrònic',
+      faltaCorreo: 'Revisa el correu: ha de portar @ i un domini, com nom@correu.cat.',
+      siguiente: 'Següent',
+      pideRevision: 'Així ens arribarà el teu missatge. L’envio?',
+      revision: 'El teu missatge',
+      etNombre: 'Nom',
+      etCorreo: 'Correu',
+      etOrganizacion: 'Organització',
+      etMensaje: 'Missatge',
+      cambiar: 'Canvia alguna cosa',
+      organizacion: 'Organització o projecte (opcional)',
+      enviar: 'Envia',
+      errorEnvio: 'No l’he pogut enviar. Torna-ho a provar o escriu-nos a',
+      enviado: 'Enviat, {nombre}. Et respondrem a {correo}.',
+      tu: 'Tu:',
+      yo: 'Itza:',
     },
   },
   en: {
@@ -137,19 +165,33 @@ const T = {
     gracias: 'Thank you, we have your message. We’ll reply to',
     redes: 'Social media',
     itza: {
-      titulo: 'Tell Itza about it',
-      texto: 'Itza asks you three or four questions and writes the message for you in the form. You check it, add your name and email, and send it.',
-      privacidad: 'What you write to Itza is sent to Anthropic’s Claude API to prepare the message. We don’t keep it. Don’t give Itza your name, email or other personal details: those go in the form.',
-      prefiero: 'I’d rather use the form',
+      pildora: 'How can we help?',
       conversacion: 'Conversation with Itza',
-      bienvenida: 'Hi, I’m Itza. I’ll help you tell us about your project. To start: what does your organisation or project do?',
+      bienvenida: 'Hi, I’m Itza. Tell me, what does your organisation or project do?',
       etiqueta: 'Your reply to Itza',
-      enviar: 'Reply',
+      responder: 'Reply',
       escribiendo: 'Itza is typing…',
-      error: 'I couldn’t reply. You can write straight into the form.',
-      limite: 'That’s enough to go on. Write your message in the form, just below.',
-      revisar: 'Check the message and send it',
-      tu: 'You:', yo: 'Itza:',
+      error: 'I can’t reply right now. Here’s the form so you can write to us.',
+      pideNombre: 'To finish, what’s your name?',
+      nombre: 'Your name',
+      faltaNombre: 'Enter your name.',
+      pideCorreo: 'Thank you, {nombre}. Which email should we reply to? We’ll only use it for that.',
+      correo: 'Your email address',
+      faltaCorreo: 'Check your email address: it needs an @ and a domain, like name@example.com.',
+      siguiente: 'Next',
+      pideRevision: 'This is how your message will reach us. Shall I send it?',
+      revision: 'Your message',
+      etNombre: 'Name',
+      etCorreo: 'Email',
+      etOrganizacion: 'Organisation',
+      etMensaje: 'Message',
+      cambiar: 'Change something',
+      organizacion: 'Organisation or project (optional)',
+      enviar: 'Send',
+      errorEnvio: 'I couldn’t send it. Try again or email us at',
+      enviado: 'Sent, {nombre}. We’ll reply to {correo}.',
+      tu: 'You:',
+      yo: 'Itza:',
     },
   },
 }[lang];
@@ -211,6 +253,86 @@ const CAMPOS = [
       ya quiere escribir y la primera pantalla era una presentación). El
       titular, a tamaño de texto en la columna de los rótulos, como un bloque
       más; la introducción, el correo y el formulario, juntos en la otra. */}
+  {/* ITZA EN CONTACTO (Johnny, 08/11/2026: «Itza tiene que poder hacer todo
+      el proceso y sustituir el formulario»; «sin texto de introducción, debe
+      ser un ejemplo de lo increíble que funciona Itza»). La página en menta,
+      la pastilla de Itza y, al desplegarla, la conversación: Itza pregunta
+      por el proyecto, pide nombre y correo (estos sin pasar por la IA),
+      enseña el mensaje y lo envía por /api/contacto.
+      Solo con JS (html.js). Si el Worker dice que Itza no está configurada
+      (GET /api/itza-contacto) o la API falla, src/scripts/itza-contacto.ts
+      pone html.sin-itza y vuelve la página de siempre, con su formulario:
+      es el respaldo. Sin JS, también la de siempre. */}
+  <section class="itza" aria-labelledby="itza-pildora" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
+    {/* El h1 de la página ES la pastilla: un botón de desplegar dentro del
+        encabezado (el patrón de acordeón), así quien navega por
+        encabezados llega directo a lo que hay que pulsar. */}
+    <h1 class="itza__h1">
+      <button type="button" id="itza-pildora" class="itza__pildora" aria-expanded="false" aria-controls="itza-panel">
+        <img src={logoItza.src} width={logoItza.width} height={logoItza.height} alt="Itza" class="logo-itza" />
+        <span>{T.itza.pildora}</span>
+      </button>
+    </h1>
+    <div id="itza-panel" class="itza__caja" hidden>
+      {/* role="log": lo que entra se anuncia solo sin mover el foco
+          (4.1.3); tabindex="0": se desplaza, y con teclado también se
+          tiene que poder leer hacia atrás (2.1.1). */}
+      <div class="itza__log" role="log" aria-label={T.itza.conversacion} tabindex="0" data-itza-log></div>
+
+      {/* Los pasos: uno a la vez, cada uno con su etiqueta visible. El
+          script enseña el que toca y pone el foco en su campo. */}
+      <form class="itza__paso" data-paso="charla" novalidate>
+        <label for="itza-mensaje" set:html={conLogo(T.itza.etiqueta)} />
+        <textarea id="itza-mensaje" rows="2" maxlength="1200" autocomplete="off" class="campo__entrada itza__campo"></textarea>
+        <button type="submit" class="boton">{T.itza.responder}</button>
+      </form>
+
+      <form class="itza__paso" data-paso="nombre" novalidate hidden>
+        <label for="itza-nombre">{T.itza.nombre}</label>
+        <p id="itza-nombre-error" class="campo__error" hidden />
+        <input id="itza-nombre" type="text" autocomplete="name" maxlength="200" aria-describedby="itza-nombre-error" class="campo__entrada" />
+        <button type="submit" class="boton">{T.itza.siguiente}</button>
+      </form>
+
+      <form class="itza__paso" data-paso="correo" novalidate hidden>
+        <label for="itza-correo">{T.itza.correo}</label>
+        <p id="itza-correo-error" class="campo__error" hidden />
+        <input id="itza-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="itza-correo-error" class="campo__entrada" />
+        <button type="submit" class="boton">{T.itza.siguiente}</button>
+      </form>
+
+      {/* La revisión: lo que va a llegar, a la vista, y se puede cambiar
+          antes de enviar (3.3.4, aunque aquí no lo exija). */}
+      <form class="itza__paso itza__revision" data-paso="revision" novalidate hidden>
+        <h2 class="itza__subtitulo" tabindex="-1">{T.itza.revision}</h2>
+        <dl class="itza__resumen" data-itza-resumen>
+          <div><dt>{T.itza.etNombre}</dt><dd data-r="nombre"></dd></div>
+          <div><dt>{T.itza.etCorreo}</dt><dd data-r="correo"></dd></div>
+          <div data-r-org><dt>{T.itza.etOrganizacion}</dt><dd data-r="organizacion"></dd></div>
+          <div><dt>{T.itza.etMensaje}</dt><dd data-r="mensaje" class="itza__texto"></dd></div>
+        </dl>
+        <button type="button" class="itza__cambiar" aria-expanded="false" aria-controls="itza-editar">{T.itza.cambiar}</button>
+        <div id="itza-editar" class="itza__editar" hidden>
+          <label for="itza-e-nombre">{T.itza.nombre}</label>
+          <input id="itza-e-nombre" name="nombre" type="text" autocomplete="name" maxlength="200" class="campo__entrada" />
+          <label for="itza-e-correo">{T.itza.correo}</label>
+          <input id="itza-e-correo" name="correo" type="email" autocomplete="email" maxlength="254" class="campo__entrada" />
+          <label for="itza-e-organizacion">{T.itza.organizacion}</label>
+          <input id="itza-e-organizacion" name="organizacion" type="text" autocomplete="organization" maxlength="200" class="campo__entrada" />
+          <label for="itza-e-mensaje">{T.itza.etMensaje}</label>
+          <textarea id="itza-e-mensaje" name="mensaje" rows="6" maxlength="5000" class="campo__entrada campo__entrada--area"></textarea>
+        </div>
+        <div data-itza-turnstile></div>
+        <p class="itza__error-envio" tabindex="-1" data-itza-error-envio hidden>
+          {T.itza.errorEnvio} <a href={`mailto:${CORREO}`}>{CORREO}</a>.
+        </p>
+        <button type="submit" class="boton">{T.itza.enviar}</button>
+      </form>
+
+      <p class="itza__hecho" tabindex="-1" data-itza-hecho hidden></p>
+    </div>
+  </section>
+
   <section class="pagina-contacto" aria-labelledby="contacto-titulo">
     <div class="pagina-contacto__cabeza">
       <h1 id="contacto-titulo" class="pagina-contacto__titulo">{T.titulo}</h1>
@@ -228,29 +350,6 @@ const CAMPOS = [
           <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
         </div>
       </div>
-      {/* ITZA EN CONTACTO (Johnny, 08/11/2026). Al lado del formulario, no en
-          su lugar: Itza pregunta y escribe el mensaje EN el formulario, y la
-          persona lo revisa y lo envía (3.3.4). Sale `hidden` y solo la enseña
-          src/scripts/itza-contacto.ts si el Worker dice que está configurada
-          (GET /api/itza-contacto). Sin JS o sin clave, la página es la de
-          siempre. */}
-      <section class="itza" aria-labelledby="itza-titulo" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} hidden>
-        <h2 id="itza-titulo" class="itza__titulo" set:html={conLogo(T.itza.titulo)} />
-        <p set:html={conLogo(T.itza.texto)} />
-        <div class="itza__caja">
-          {/* role="log": lo que entra se anuncia solo sin mover el foco
-              (4.1.3); tabindex="0": se desplaza, y con teclado también se
-              tiene que poder leer hacia atrás (2.1.1). */}
-          <div class="itza__log" role="log" aria-label={T.itza.conversacion} tabindex="0" data-itza-log></div>
-          <form class="itza__form" data-itza-form>
-            <label for="itza-mensaje" set:html={conLogo(T.itza.etiqueta)} />
-            <textarea id="itza-mensaje" rows="2" maxlength="1200" autocomplete="off" class="campo__entrada itza__campo"></textarea>
-            <button type="submit" class="boton">{T.itza.enviar}</button>
-          </form>
-        </div>
-        <p class="itza__nota" set:html={conLogo(T.itza.privacidad)} />
-        <CtaLink href="#formulario">{T.itza.prefiero}</CtaLink>
-      </section>
 
       <h2 class="sr-only">{T.escribenos}</h2>
       <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
@@ -527,35 +626,80 @@ const CAMPOS = [
   .resumen__lista a { display: inline-block; min-block-size: var(--touch-min); padding-block: var(--aire-control); }
 
   /* ----- Itza en Contacto (08/11/2026) -----------------------------------
-     El mismo sistema que el formulario: un peso, todo en Ink, el borde de
-     los campos y el botón Ink. Itza se distingue por el menta en sus
-     respuestas, nunca solo por color: cada línea dice quién habla al lector
-     de pantalla y va a un lado distinto. */
-  .itza { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 560px; }
-  .itza[hidden] { display: none; }
+     La página en menta, y en el centro la pastilla de Itza. Un peso, todo
+     en Ink. Con Itza, la página de siempre no se pinta; sin Itza
+     (html.sin-itza) o sin JS, al revés. */
+  .itza { display: none; }
+  :global(html.js:not(.sin-itza)) .itza {
+    display: flex; flex-direction: column; align-items: center; gap: var(--space-32);
+    min-block-size: 70svh; justify-content: center; padding-block: var(--space-64);
+    padding-inline: var(--gutter-page); box-sizing: border-box;
+  }
+  :global(html.js:not(.sin-itza)) .itza:has(.itza__pildora[aria-expanded='true']) { justify-content: flex-start; }
+  :global(html.js:not(.sin-itza)) .pagina-contacto,
+  :global(html.js:not(.sin-itza)) :global(#directamente) { display: none; }
+  /* El menta, en toda la página. El pie sigue en su blanco. Ink sobre
+     menta: 14,6:1. */
+  :global(html.js:not(.sin-itza) body) { background: var(--mint); }
+
   .itza p { margin: 0; }
-  .itza__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .itza :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
-  .itza__caja { inline-size: 100%; box-sizing: border-box; border: 1.5px solid var(--grey); border-radius: 3px; }
+  .itza__h1 { margin: 0; max-inline-size: 100%; font-size: var(--display-size); line-height: 1.15; font-weight: 400; text-align: center; }
+  /* En el móvil, a tamaño de pastilla: a 34 px se partía en tres renglones. */
+  @media (max-width: 767px) { .itza__h1 { font-size: calc(var(--texto-size) * 1.3); } }
+  /* La pastilla: como la barra del plugin, dice qué es. Borde Ink de 1,5
+     para que se vea su forma sobre el menta (1.4.11); el +/− dice que
+     despliega, y aria-expanded lo dice al lector de pantalla. */
+  .itza__pildora {
+    display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.35em 0.5em;
+    min-block-size: var(--touch-min); padding: 0.45em 1.1em; max-inline-size: 100%; box-sizing: border-box;
+    border: 1.5px solid var(--ink); border-radius: 1.2em; background: var(--white); color: var(--ink);
+    font: inherit; cursor: pointer; text-align: center;
+  }
+  .itza__pildora :global(.logo-itza) { block-size: 0.8em; vertical-align: 0; }
+  /* El signo, pegado a la última palabra para que no caiga solo. */
+  /* «/ ''»: el signo no entra en el nombre del botón (lo dice aria-expanded). */
+  .itza__pildora span::after { content: '\00a0\00a0+'; content: '\00a0\00a0+' / ''; }
+  .itza__pildora[aria-expanded='true'] span::after { content: '\00a0\00a0\2212'; content: '\00a0\00a0\2212' / ''; }
+  .itza__pildora:hover span { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  @media (prefers-reduced-motion: no-preference) {
+    .itza__pildora { transition: transform 200ms ease; }
+    .itza__pildora:hover { transform: translateY(-2px); }
+  }
+
+  .itza__caja {
+    inline-size: 100%; max-inline-size: 640px; box-sizing: border-box;
+    border: 1.5px solid var(--ink); border-radius: 12px; background: var(--white); overflow: hidden;
+  }
+  .itza__caja[hidden] { display: none; }
   .itza__log {
     display: flex; flex-direction: column; gap: var(--space-12);
-    max-block-size: 360px; min-block-size: 120px; overflow-y: auto; padding: var(--space-16);
+    max-block-size: 50svh; min-block-size: 120px; overflow-y: auto; padding: var(--space-16);
   }
   /* En una columna flex con alto máximo, los hijos encogen: sin esto el
-     último mensaje y el botón se aplastaban en vez de desplazarse. */
+     último mensaje se aplastaba en vez de desplazarse. */
   .itza__log > :global(*) { flex-shrink: 0; }
-  .itza__log :global(p) { margin: 0; max-inline-size: 88%; padding: var(--space-8) var(--space-12); border-radius: 3px; background: var(--mint); }
+  .itza__log :global(p) { margin: 0; max-inline-size: 88%; padding: var(--space-8) var(--space-12); border-radius: 12px; background: var(--mint); }
   .itza__log :global(p.tu) { align-self: flex-end; background: var(--surface-band); }
-  /* El botón que lleva al formulario lo crea el script: estilos globales,
-     los mismos que .boton. */
-  .itza__log :global(.itza__ir) {
-    align-self: flex-start; min-block-size: var(--touch-min); padding: var(--space-16) var(--space-32);
-    border: 0; border-radius: 3px; background: var(--ink); color: var(--white); font: inherit; cursor: pointer; text-align: start;
-  }
-  .itza__log :global(.itza__ir:hover) { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
-  @media (forced-colors: active) { .itza__log :global(.itza__ir) { border: 1.5px solid ButtonText; } }
-  .itza__form[hidden] { display: none; }
-  .itza__form { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: var(--space-16); border-block-start: 1.5px solid var(--grey); }
+  .itza__paso[hidden], .itza__editar[hidden], .itza__hecho[hidden], .itza__error-envio[hidden] { display: none; }
+  .itza__paso { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: var(--space-16); border-block-start: 1.5px solid var(--grey); }
+  .itza__paso .campo__entrada { inline-size: 100%; box-sizing: border-box; }
   .itza__campo { min-block-size: 56px; resize: vertical; }
-  .itza__form .boton { margin-block-start: var(--space-8); }
+  .itza__paso .boton { margin-block-start: var(--space-8); }
+  .itza__revision { gap: var(--space-16); }
+  .itza__subtitulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .itza__resumen { margin: 0; display: flex; flex-direction: column; gap: var(--space-12); inline-size: 100%; }
+  .itza__resumen div { display: flex; flex-direction: column; gap: 2px; }
+  .itza__resumen dd { margin: 0; overflow-wrap: anywhere; }
+  .itza__resumen [hidden] { display: none; }
+  .itza__texto { white-space: pre-line; }
+  /* «Cambiar algo» abre los campos: botón de texto, subrayado, 44 de alto. */
+  .itza__cambiar {
+    min-block-size: var(--touch-min); padding: 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer;
+    text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset);
+  }
+  .itza__editar { display: flex; flex-direction: column; gap: 6px; inline-size: 100%; }
+  .itza__editar label:not(:first-child) { margin-block-start: var(--space-16); }
+  .itza__hecho { margin: 0; padding: var(--space-16); border-block-start: 1.5px solid var(--grey); }
+  .itza__error-envio { margin: 0; }
 </style>

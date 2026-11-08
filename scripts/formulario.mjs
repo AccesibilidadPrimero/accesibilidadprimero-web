@@ -185,6 +185,14 @@ console.log('\n── Worker ──\n');
   ok(ri.status === 502, 'Itza: si la API falla, 502');
   anthropic.falla = false;
 
+  /* Por Itza no hay casilla de consentimiento (via=itza); por el formulario,
+     sigue siendo obligatoria. */
+  brevo.llamadas = [];
+  let rv = await responde(peticion({ consentimiento: undefined, via: 'itza' }));
+  ok(rv.status === 200 && brevo.llamadas.at(-1)?.cuerpo.textContent.includes('Enviado con Itza'), 'por Itza: sin casilla, se envía y el correo lo dice', JSON.stringify(rv));
+  rv = await responde(peticion({ consentimiento: undefined }));
+  ok(rv.status === 400, 'por el formulario: sin casilla, 400');
+
   const worker = (await import('../worker/index.ts')).default;
   const get = await worker.fetch(new Request('http://localhost/api/contacto'), ENV);
   ok(get.status === 405, 'GET a /api/contacto: 405');
@@ -227,6 +235,10 @@ async function pagina(opciones = {}) {
     route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers), body: await r.text() });
   });
   await p.goto(URL_, { waitUntil: 'load' });
+  /* Aquí /api/itza-contacto no existe: la página vuelve al formulario. */
+  if (opciones.javaScriptEnabled !== false) {
+    await p.waitForFunction(() => document.documentElement.classList.contains('sin-itza'), null, { timeout: 5000 }).catch(() => {});
+  }
   return { p, ctx, turnstile };
 }
 const rellenar = async (p) => {
@@ -288,49 +300,98 @@ const foco = (p) => p.evaluate(() => {
   await ctx.close();
 }
 
-/* Itza en Contacto, en el navegador: sin el Worker configurado no sale; con
-   él, pregunta, escribe el mensaje en el formulario y lleva hasta él. */
+/* Itza en Contacto, en el navegador. Sin el Worker configurado, la página
+   de siempre. Con él: la página en menta y la pastilla; Itza pregunta, pide
+   nombre y correo, enseña el mensaje y lo envía por el Worker real. */
 {
   const { p, ctx } = await pagina();
+  ok(!(await p.isVisible('[data-itza-contacto]')) && await p.isVisible('form[data-formulario]'), 'Itza: sin el Worker configurado, el formulario de siempre');
+  await ctx.close();
+}
+async function conItza(respuestas, ancho = 390) {
+  const ctx = await nav.newContext({ viewport: { width: ancho, height: 844 } });
+  const p = await ctx.newPage();
+  const enviadas = [];
+  await p.route('https://challenges.cloudflare.com/**', (route) => route.fulfill({ contentType: 'text/javascript', body: FALSO_TURNSTILE }));
+  await p.route('**/api/itza-contacto', (route) => {
+    const req = route.request();
+    if (req.method() === 'GET') return route.fulfill({ json: { disponible: true } });
+    enviadas.push(req.postDataJSON());
+    const r = respuestas.shift();
+    return r ? route.fulfill({ json: r }) : route.fulfill({ status: 502, json: { error: 'api' } });
+  });
+  await p.route('**/api/contacto', async (route) => {
+    const req = route.request();
+    const r = await contacto(new Request(req.url(), { method: req.method(), headers: await req.allHeaders(), body: req.postDataBuffer() }), ENV);
+    route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers), body: await r.text() });
+  });
+  await p.goto(URL_, { waitUntil: 'load' });
   await p.waitForTimeout(300);
-  ok(!(await p.isVisible('[data-itza-contacto]')), 'Itza: sin el Worker configurado, no se enseña');
+  return { p, ctx, enviadas };
+}
+{
+  const { p, ctx, enviadas } = await conItza([
+    { reply: '¿Qué necesitáis?', listo: false },
+    { reply: 'Gracias, ya lo tengo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
+  ]);
+  ok(await p.isVisible('#itza-pildora') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la pastilla y sin el formulario');
+  const fondo = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  ok(fondo === 'rgb(199, 234, 228)', 'Itza: la página en menta', fondo);
+  ok((await p.locator('h1').evaluateAll((hs) => hs.filter((h) => h.offsetParent).map((h) => h.textContent.trim()))).length === 1, 'Itza: un solo h1 a la vista');
+  ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'false' && !(await p.isVisible('#itza-panel')), 'Itza: la pastilla empieza plegada');
+  await p.focus('#itza-pildora');
+  await p.keyboard.press('Enter');
+  ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'true', 'Itza: al pulsarla, se despliega');
+  ok((await p.locator('[data-itza-log] p').count()) === 1, 'Itza: empieza con su saludo');
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: el foco va a la respuesta');
+  await p.keyboard.type('Somos una fundación cultural.');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p').length === 3);
+  await p.keyboard.type('Una web nueva, antes de marzo.');
+  await p.keyboard.press('Enter');
+  await p.waitForSelector('#itza-nombre:visible', { timeout: 5000 }).catch(() => {});
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: al tenerlo, pide el nombre y el foco va ahí');
+  ok(!(await p.isVisible('#itza-mensaje')), 'Itza: la charla se retira');
+  await p.keyboard.press('Enter');
+  ok(await p.isVisible('#itza-nombre-error') && await p.getAttribute('#itza-nombre', 'aria-invalid') === 'true', 'Itza: nombre vacío, error en su sitio');
+  await p.keyboard.type('Ana Pérez');
+  await p.keyboard.press('Enter');
+  ok(await p.evaluate(() => document.activeElement.id) === 'itza-correo', 'Itza: después, el correo');
+  await p.keyboard.type('ana@ejemplo');
+  await p.keyboard.press('Enter');
+  ok(await p.isVisible('#itza-correo-error'), 'Itza: correo sin dominio, error');
+  await p.fill('#itza-correo', 'ana@ejemplo.com');
+  await p.keyboard.press('Enter');
+  ok(await p.evaluate(() => document.activeElement.tagName) === 'H2', 'Itza: la revisión, con el foco en su encabezado');
+  ok(await p.textContent('[data-r="mensaje"]') === 'Somos una fundación cultural y queremos una web accesible antes de marzo.' && await p.textContent('[data-r="organizacion"]') === 'Fundación Ejemplo', 'Itza: el resumen y la organización, a la vista');
+  ok(!JSON.stringify(enviadas).includes('Ana Pérez') && !JSON.stringify(enviadas).includes('ana@ejemplo.com'), 'Itza: el nombre y el correo no van a la IA');
+  await p.click('.itza__cambiar');
+  ok(await p.isVisible('#itza-e-mensaje') && await p.getAttribute('.itza__cambiar', 'aria-expanded') === 'true', 'Itza: «Cambiar algo» abre los campos');
+  await p.fill('#itza-e-organizacion', 'Fundación Otra');
+  ok(await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: lo cambiado se ve en el resumen');
+  const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
+  await p.addScriptTag({ content: axe });
+  const v = await p.evaluate(async () => (await axe.run(document)).violations.map((x) => x.id));
+  ok(v.length === 0, 'Itza: axe sin fallos', v.join(', '));
+  const ancho = await p.evaluate(() => document.documentElement.scrollWidth);
+  ok(ancho <= 390, 'Itza: sin scroll horizontal a 390', String(ancho));
+  brevo.llamadas = [];
+  await p.click('[data-paso="revision"] .boton');
+  await p.waitForSelector('[data-itza-hecho]:visible', { timeout: 8000 }).catch(() => {});
+  ok(await p.isVisible('[data-itza-hecho]') && await p.evaluate(() => document.activeElement.hasAttribute('data-itza-hecho')), 'Itza: enviado, y el foco en la confirmación');
+  const correo = brevo.llamadas.at(-1)?.cuerpo;
+  ok(correo?.textContent.includes('Fundación Otra') && correo?.textContent.includes('Enviado con Itza') && correo?.replyTo.email === 'ana@ejemplo.com', 'Itza: el correo llega con lo revisado', JSON.stringify(correo ?? {}).slice(0, 200));
   await ctx.close();
 }
 {
-  const ctx = await nav.newContext({ viewport: { width: 390, height: 844 } });
-  const p = await ctx.newPage();
-  let turno = 0;
-  await p.route('**/api/itza-contacto', (route) => {
-    if (route.request().method() === 'GET') return route.fulfill({ json: { disponible: true } });
-    turno++;
-    return route.fulfill({ json: turno === 1
-      ? { reply: '¿Qué necesitáis?', listo: false }
-      : { reply: 'He escrito el mensaje en el formulario. Revísalo y envíalo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' } });
-  });
-  await p.goto(URL_, { waitUntil: 'load' });
-  await p.waitForSelector('[data-itza-contacto]:not([hidden])', { timeout: 5000 }).catch(() => {});
-  ok(await p.isVisible('[data-itza-contacto]'), 'Itza: con el Worker configurado, se enseña');
-  ok(await p.isVisible('form[data-formulario]'), 'Itza: el formulario sigue a la vista');
-  ok((await p.locator('[data-itza-log] p').count()) === 1, 'Itza: empieza con su saludo');
+  /* Si la IA falla, vuelve el formulario con lo que ya se había escrito. */
+  const { p, ctx } = await conItza([], 1440);
+  await p.click('#itza-pildora');
   await p.fill('#itza-mensaje', 'Somos una fundación cultural.');
-  await p.focus('#itza-mensaje');
   await p.keyboard.press('Enter');
-  await p.waitForTimeout(300);
-  await p.fill('#itza-mensaje', 'Una web nueva, antes de marzo.');
-  await p.click('[data-itza-form] .boton');
-  await p.waitForSelector('.itza__ir', { timeout: 5000 }).catch(() => {});
-  ok((await p.inputValue('#mensaje')).startsWith('Somos una fundación cultural'), 'Itza: el resumen queda en «Tu mensaje»');
-  ok(await p.inputValue('#organizacion') === 'Fundación Ejemplo', 'Itza: y la organización en su campo');
-  ok(!(await p.isVisible('[data-itza-form]')), 'Itza: al terminar, su campo se retira');
-  ok((await foco(p)).startsWith('button.itza__ir'), 'Itza: el foco pasa al botón que lleva al formulario', await foco(p));
-  await p.click('.itza__ir');
-  ok((await foco(p)) === 'input.campo__entrada' && await p.evaluate(() => document.activeElement.id) === 'nombre', 'Itza: el botón lleva al nombre del formulario', await foco(p));
-  const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
-  await p.addScriptTag({ content: axe });
-  const v = await p.evaluate(async () => (await axe.run(document.querySelector('[data-itza-contacto]'))).violations.map((x) => x.id));
-  ok(v.length === 0, 'Itza: axe sin fallos en su bloque', v.join(', '));
-  const ancho = await p.evaluate(() => document.documentElement.scrollWidth);
-  ok(ancho <= 390, 'Itza: sin scroll horizontal a 390', String(ancho));
+  await p.waitForSelector('form[data-formulario]:visible', { timeout: 6000 }).catch(() => {});
+  ok(await p.isVisible('form[data-formulario]') && !(await p.isVisible('[data-itza-contacto]')), 'Itza: si la IA falla, vuelve el formulario');
+  ok(await p.inputValue('#mensaje') === 'Somos una fundación cultural.' && await p.evaluate(() => document.activeElement.id) === 'nombre', 'Itza: con lo escrito, y el foco en el nombre');
   await ctx.close();
 }
 

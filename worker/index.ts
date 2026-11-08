@@ -106,6 +106,11 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
   const organizacion = texto(datos, 'organizacion');
   const mensaje = texto(datos, 'mensaje');
   const consentimiento = texto(datos, 'consentimiento');
+  /* Por Itza no hay casilla (Johnny, 08/11/2026: «Nada de la política de
+     privacidad, que funcione tal cual Itza»). La base para contestar es que
+     la persona lo pide (RGPD 6.1.b, medidas precontractuales), no un
+     consentimiento; el formulario de respaldo sigue con su casilla. */
+  const porItza = texto(datos, 'via') === 'itza';
   const ficha = texto(datos, 'cf-turnstile-response');
 
   const camposMal =
@@ -113,7 +118,7 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
     !correo || correo.length > MAX.correo || !CORREO_VALIDO.test(correo) ||
     organizacion.length > MAX.organizacion ||
     !mensaje || mensaje.length > MAX.mensaje ||
-    consentimiento !== 'on';
+    (!porItza && consentimiento !== 'on');
   if (camposMal) return fallo('campos', 400);
 
   /* Siteverify, en la forma canónica de Cloudflare. Cualquier cosa rara —red
@@ -160,8 +165,10 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
     mensaje,
     '',
     '-- ',
-    'Enviado desde el formulario de accesibilidadprimero.com/contacto/.',
-    'Ha aceptado la política de privacidad. Para contestar, responde a este correo.',
+    porItza
+      ? 'Enviado con Itza desde accesibilidadprimero.com/contacto/. Para contestar, responde a este correo.'
+      : 'Enviado desde el formulario de accesibilidadprimero.com/contacto/.',
+    ...(porItza ? [] : ['Ha aceptado la política de privacidad. Para contestar, responde a este correo.']),
   ].join('\n');
 
   try {
@@ -196,18 +203,19 @@ export async function contacto(request: Request, env: Env): Promise<Response> {
 
 /* ------------------------------------------------------------------------
    Itza en Contacto (Johnny, 08/11/2026: «algo más inteligente e intuitivo
-   que un formulario aburrido»). Itza NO sustituye al formulario: hace tres o
-   cuatro preguntas, prepara el mensaje y lo deja escrito en el formulario.
-   La persona lo revisa y lo envía por el camino de siempre (/api/contacto,
-   con Turnstile y Brevo). Itza no envía nada por su cuenta (3.3.4).
+   que un formulario aburrido»). Itza hace tres o
+   cuatro preguntas y prepara el mensaje; después la página pide el nombre y
+   el correo (sin pasar por la IA), enseña el mensaje para revisarlo y lo
+   envía por el camino de siempre (/api/contacto, con Turnstile y Brevo).
+   Johnny, 08/11/2026: Itza hace todo el proceso y sustituye al formulario,
+   que queda como respaldo si Itza no está disponible.
 
    GET  /api/itza-contacto  → { disponible }: la página solo enseña a Itza si
                               el Worker tiene la clave. Así no sale un chat
                               roto mientras no esté configurado.
    POST /api/itza-contacto  → { reply, listo, resumen?, organizacion? }
 
-   Nombre y correo NO pasan por aquí: Itza no los pide y van en el
-   formulario. Lo que se escribe a Itza va a la API de Anthropic (dicho en
+   Nombre y correo NO pasan por aquí: los pide la página, no la IA. Lo que se escribe a Itza va a la API de Anthropic (dicho en
    la página y en la política de privacidad) y aquí no se guarda.
    ------------------------------------------------------------------------ */
 const ITZA_TOPE_PREGUNTAS = 8;
@@ -223,13 +231,13 @@ Haz estas preguntas, de una en una y con pocas palabras, saltándote lo que la p
 4. Si quiere añadir algo más.
 Como mucho cuatro preguntas. Si la persona quiere terminar antes, termina.
 
-No pidas nombre, correo, teléfono ni otros datos personales: van en el formulario, debajo. Si los escribe, no los repitas ni los pongas en el resumen.
+No pidas nombre, correo, teléfono ni otros datos personales: la página los pide después, sin pasar por ti. Si los escribe, no los repitas ni los pongas en el resumen.
 Nunca des precios, plazos de entrega ni compromisos: el equipo responde con una propuesta. No inventes nada sobre el estudio. Si te preguntan algo que no sabes, dilo y sigue.
 Lenguaje claro, frases cortas, sin rellenos de cortesía, sin markdown y sin el masculino genérico cuando haya una alternativa natural.
 
 Responde SIEMPRE con un único objeto JSON y nada más:
 Mientras preguntas: {"respuesta": "tu pregunta", "listo": false}
-Cuando tengas lo necesario: {"respuesta": "una frase corta diciendo que has escrito el mensaje en el formulario para que lo revise y lo envíe", "listo": true, "resumen": "el mensaje para el equipo, escrito como si lo escribiera la persona, de 3 a 6 frases, sin datos personales", "organizacion": "el nombre de su organización o proyecto si lo ha dicho; si no, cadena vacía"}`;
+Cuando tengas lo necesario: {"respuesta": "una frase corta de agradecimiento, sin pedir nada (los datos de contacto los pide la página después)", "listo": true, "resumen": "el mensaje para el equipo, escrito como si lo escribiera la persona, de 3 a 6 frases, sin datos personales", "organizacion": "el nombre de su organización o proyecto si lo ha dicho; si no, cadena vacía"}`;
 
 /* La respuesta del modelo, leída con cuidado: si no es el JSON pedido, se
    usa el texto tal cual como una pregunta más. */

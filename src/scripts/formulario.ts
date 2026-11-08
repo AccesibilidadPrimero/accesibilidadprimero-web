@@ -29,30 +29,7 @@
    · Las fichas son de un solo uso: tras cada intento, se pide una nueva.
    --------------------------------------------------------------------------- */
 
-type Turnstile = {
-  render: (el: HTMLElement, opciones: Record<string, unknown>) => string;
-  reset: (id: string) => void;
-};
-declare global {
-  interface Window { turnstile?: Turnstile }
-}
-
-const API_TURNSTILE = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-
-/** Carga el script de Turnstile una sola vez. */
-let cargando: Promise<Turnstile> | null = null;
-function cargarTurnstile(): Promise<Turnstile> {
-  if (window.turnstile) return Promise.resolve(window.turnstile);
-  cargando ??= new Promise((ok, mal) => {
-    const s = document.createElement('script');
-    s.src = API_TURNSTILE;
-    s.async = true;
-    s.addEventListener('load', () => (window.turnstile ? ok(window.turnstile) : mal(new Error('turnstile'))), { once: true });
-    s.addEventListener('error', () => { cargando = null; mal(new Error('turnstile')); }, { once: true });
-    document.head.append(s);
-  });
-  return cargando;
-}
+import { fichero } from './turnstile';
 
 type Campo = HTMLInputElement | HTMLTextAreaElement;
 
@@ -65,37 +42,10 @@ function iniciar(form: HTMLFormElement) {
   const confirmacion = document.querySelector<HTMLElement>('[data-confirmacion]');
   const cajaTurnstile = form.querySelector<HTMLElement>('[data-turnstile]');
 
-  /* La ficha de Turnstile. `pedirFicha()` devuelve una promesa que se cumple
-     cuando Cloudflare la entrega (en invisible, en uno o dos segundos). */
-  let widget: string | undefined;
-  let ficha = '';
-  let esperando: Array<(f: string) => void> = [];
-  const entregar = (f: string) => { ficha = f; esperando.forEach((r) => r(f)); esperando = []; };
-
-  async function prepararTurnstile() {
-    if (widget !== undefined || !cajaTurnstile) return;
-    const ts = await cargarTurnstile();
-    if (widget !== undefined) return;
-    widget = ts.render(cajaTurnstile, {
-      sitekey: form.dataset.sitekey,
-      action: form.dataset.accion,
-      callback: entregar,
-      'expired-callback': () => { ficha = ''; },
-      'error-callback': () => { ficha = ''; entregar(''); },
-    });
-  }
-  // Al primer contacto con el formulario, no antes.
-  form.addEventListener('focusin', () => { prepararTurnstile().catch(() => {}); }, { once: true });
-
-  function pedirFicha(): Promise<string> {
-    if (ficha) return Promise.resolve(ficha);
-    return new Promise((r) => {
-      esperando.push(r);
-      prepararTurnstile().catch(() => entregar(''));
-      // Diez segundos como mucho: si no llega, se trata como fallo de envío.
-      setTimeout(() => entregar(ficha), 10_000);
-    });
-  }
+  /* La ficha de Turnstile (src/scripts/turnstile.ts), pedida al primer
+     contacto con el formulario, no antes. */
+  const turnstile = fichero(cajaTurnstile, form.dataset.sitekey, form.dataset.accion);
+  form.addEventListener('focusin', () => { turnstile.preparar().catch(() => {}); }, { once: true });
 
   const resumen = form.querySelector<HTMLElement>('[data-resumen]');
   const lista = resumen?.querySelector('ul');
@@ -193,7 +143,7 @@ function iniciar(form: HTMLFormElement) {
     if (errorEnvio) errorEnvio.hidden = true;
     let bien = false;
     try {
-      const f = await pedirFicha();
+      const f = await turnstile.pedir();
       if (f) {
         const datos = new FormData(form);
         datos.set('cf-turnstile-response', f);
@@ -207,8 +157,7 @@ function iniciar(form: HTMLFormElement) {
       enviando = false;
       // La ficha ya se ha gastado (o ha fallado): se pide otra para el
       // siguiente intento.
-      ficha = '';
-      if (widget !== undefined) window.turnstile?.reset(widget);
+      turnstile.gastada();
     }
 
     if (bien && confirmacion) {
