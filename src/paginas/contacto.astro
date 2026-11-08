@@ -28,7 +28,6 @@ import { idiomaDe } from '../i18n/idioma';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
 import logoItza from '../assets/productos/itza-logo.png';
 import iconoAP from '../assets/estudio/icono.svg';
-import { mapaItza } from '../data/itza-mapa';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
@@ -79,13 +78,12 @@ const T = {
       enLinea: 'En línea',
       cerrar: 'Cerrar',
       escribe: 'Escribe tu mensaje…',
-      pideDatos: 'Para terminar, déjanos tu nombre y tu correo y te respondemos lo antes posible. Solo los usaremos para eso.',
+      pideDatos: 'Gracias, ya lo tengo. Para terminar, déjanos tu nombre y tu correo y te respondemos lo antes posible. Solo los usaremos para eso.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Hablar',
       escuchando: 'Escuchando. Pulsa para parar',
       opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia', 'Una colaboración'],
       porCorreo: 'Contactar por email',
-      pestanaNueva: 'se abre en una pestaña nueva',
       puedesDecir: 'Puedes decir:',
     },
   },
@@ -131,13 +129,12 @@ const T = {
       enLinea: 'En línia',
       cerrar: 'Tanca',
       escribe: 'Escriu el teu missatge…',
-      pideDatos: 'Per acabar, deixa’ns el teu nom i el teu correu i et responem al més aviat possible. Només els farem servir per a això.',
+      pideDatos: 'Gràcies, ja ho tinc. Per acabar, deixa’ns el teu nom i el teu correu i et responem al més aviat possible. Només els farem servir per a això.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Parla',
       escuchando: 'Escoltant. Prem per aturar',
       opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència', 'Una col·laboració'],
       porCorreo: 'Contactar per correu',
-      pestanaNueva: 's’obre en una pestanya nova',
       puedesDecir: 'Pots dir:',
     },
   },
@@ -183,13 +180,12 @@ const T = {
       enLinea: 'Online',
       cerrar: 'Close',
       escribe: 'Type your message…',
-      pideDatos: 'To finish, leave us your name and email and we’ll reply as soon as we can. We’ll only use them for that.',
+      pideDatos: 'Thank you, that’s everything. To finish, leave us your name and email and we’ll reply as soon as we can. We’ll only use them for that.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Speak',
       escuchando: 'Listening. Press to stop',
       opciones: ['An accessible website', 'An audit', 'Training for my team', 'White label for my agency', 'A collaboration'],
       porCorreo: 'Contact us by email',
-      pestanaNueva: 'opens in a new tab',
       puedesDecir: 'You can say:',
     },
   },
@@ -262,7 +258,7 @@ const CAMPOS = [
       (GET /api/itza-contacto) o la API falla, src/scripts/itza-contacto.ts
       pone html.sin-itza y vuelve la página de siempre, con su formulario:
       es el respaldo. Sin JS, también la de siempre. */}
-  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang, mapa: mapaItza(lang).map(({ ruta, nombre }) => ({ ruta, nombre })) })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
+  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
     {/* Itza con SU interfaz, no la de AP (Johnny, 08/11/2026: «Itza tiene su
         propia interfaz y estilos, hay que mantener su singularidad
         visual»): la barra oscura, la ventana con cabecera, «En línea», las
@@ -793,13 +789,6 @@ const CAMPOS = [
     border-end-start-radius: 12px; border-end-end-radius: 4px;
   }
   .itza-chat__mensajes :global(.logo-itza) { block-size: 0.9em; }
-  /* El enlace al apartado de la web: en su propia línea y con 44 de alto,
-     como todos los enlaces de AP fuera de los artículos. */
-  .itza-chat__mensajes :global(.itza-chat__enlace) {
-    display: flex; align-items: center; gap: 6px; min-block-size: var(--touch-min); margin-block-start: 4px;
-    color: var(--itza-acento-oscuro); text-decoration: underline; text-underline-offset: 3px;
-  }
-  .itza-chat__mensajes :global(.itza-chat__enlace:focus-visible) { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
   /* «Itza está escribiendo»: los tres puntos del plugin; el texto, para el
      lector de pantalla. */
   .itza-chat__mensajes :global(p.escribiendo) { display: flex; gap: 5px; align-items: center; padding: 14px 16px; }
