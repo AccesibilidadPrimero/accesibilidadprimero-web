@@ -26,6 +26,7 @@ import Redes from '../components/Redes.astro';
 import { path } from '../i18n/config';
 import { idiomaDe } from '../i18n/idioma';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
+import logoItza from '../assets/productos/itza-logo.png';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
@@ -57,6 +58,21 @@ const T = {
     enviar: 'Enviar mensaje',
     gracias: 'Gracias, ya tenemos tu mensaje. Te responderemos a',
     redes: 'Redes',
+    itza: {
+      titulo: 'Cuéntaselo a Itza',
+      texto: 'Itza te hace tres o cuatro preguntas y escribe el mensaje por ti en el formulario. Tú lo revisas, añades tu nombre y tu correo y lo envías.',
+      privacidad: 'Lo que escribas a Itza se envía a la API de Claude, de Anthropic, para preparar el mensaje. No lo guardamos. No le escribas tu nombre, tu correo ni otros datos personales: esos van en el formulario.',
+      prefiero: 'Prefiero el formulario',
+      conversacion: 'Conversación con Itza',
+      bienvenida: 'Hola, soy Itza. Te ayudo a contarnos tu proyecto. Para empezar: ¿qué hace tu organización o tu proyecto?',
+      etiqueta: 'Tu respuesta para Itza',
+      enviar: 'Responder',
+      escribiendo: 'Itza está escribiendo…',
+      error: 'No he podido responder. Puedes escribir directamente en el formulario.',
+      limite: 'Con esto basta. Escribe tu mensaje en el formulario, justo debajo.',
+      revisar: 'Revisar el mensaje y enviarlo',
+      tu: 'Tú:', yo: 'Itza:',
+    },
   },
   ca: {
     title: 'Contacte · Accesibilidad Primero',
@@ -81,6 +97,21 @@ const T = {
     enviar: 'Envia el missatge',
     gracias: 'Gràcies, ja tenim el teu missatge. Et respondrem a',
     redes: 'Xarxes',
+    itza: {
+      titulo: 'Explica-ho a Itza',
+      texto: 'Itza et fa tres o quatre preguntes i t’escriu el missatge al formulari. Tu el revises, hi afegeixes el teu nom i el teu correu i l’envies.',
+      privacidad: 'El que escriguis a Itza s’envia a l’API de Claude, d’Anthropic, per preparar el missatge. No ho guardem. No li escriguis el teu nom, el teu correu ni altres dades personals: aquestes van al formulari.',
+      prefiero: 'Prefereixo el formulari',
+      conversacion: 'Conversa amb Itza',
+      bienvenida: 'Hola, soc Itza. T’ajudo a explicar-nos el teu projecte. Per començar: què fa la teva organització o el teu projecte?',
+      etiqueta: 'La teva resposta per a Itza',
+      enviar: 'Respon',
+      escribiendo: 'Itza està escrivint…',
+      error: 'No he pogut respondre. Pots escriure directament al formulari.',
+      limite: 'Amb això n’hi ha prou. Escriu el teu missatge al formulari, just a sota.',
+      revisar: 'Revisa el missatge i envia’l',
+      tu: 'Tu:', yo: 'Itza:',
+    },
   },
   en: {
     title: 'Contact · Accesibilidad Primero',
@@ -105,8 +136,28 @@ const T = {
     enviar: 'Send message',
     gracias: 'Thank you, we have your message. We’ll reply to',
     redes: 'Social media',
+    itza: {
+      titulo: 'Tell Itza about it',
+      texto: 'Itza asks you three or four questions and writes the message for you in the form. You check it, add your name and email, and send it.',
+      privacidad: 'What you write to Itza is sent to Anthropic’s Claude API to prepare the message. We don’t keep it. Don’t give Itza your name, email or other personal details: those go in the form.',
+      prefiero: 'I’d rather use the form',
+      conversacion: 'Conversation with Itza',
+      bienvenida: 'Hi, I’m Itza. I’ll help you tell us about your project. To start: what does your organisation or project do?',
+      etiqueta: 'Your reply to Itza',
+      enviar: 'Reply',
+      escribiendo: 'Itza is typing…',
+      error: 'I couldn’t reply. You can write straight into the form.',
+      limite: 'That’s enough to go on. Write your message in the form, just below.',
+      revisar: 'Check the message and send it',
+      tu: 'You:', yo: 'Itza:',
+    },
   },
 }[lang];
+
+/* «Itza», con su logo cada vez que se nombra (Johnny, 07/11/2026). En Ink
+   sobre el blanco de la página. Un logotipo es la excepción de 1.4.5. */
+const LOGO_ITZA = `<img class="logo-itza" src="${logoItza.src}" alt="Itza" width="968" height="341" />`;
+const conLogo = (s: string) => s.replace(/Itza/g, LOGO_ITZA);
 
 const CAMPOS = [
   {
@@ -177,6 +228,30 @@ const CAMPOS = [
           <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
         </div>
       </div>
+      {/* ITZA EN CONTACTO (Johnny, 08/11/2026). Al lado del formulario, no en
+          su lugar: Itza pregunta y escribe el mensaje EN el formulario, y la
+          persona lo revisa y lo envía (3.3.4). Sale `hidden` y solo la enseña
+          src/scripts/itza-contacto.ts si el Worker dice que está configurada
+          (GET /api/itza-contacto). Sin JS o sin clave, la página es la de
+          siempre. */}
+      <section class="itza" aria-labelledby="itza-titulo" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} hidden>
+        <h2 id="itza-titulo" class="itza__titulo" set:html={conLogo(T.itza.titulo)} />
+        <p set:html={conLogo(T.itza.texto)} />
+        <div class="itza__caja">
+          {/* role="log": lo que entra se anuncia solo sin mover el foco
+              (4.1.3); tabindex="0": se desplaza, y con teclado también se
+              tiene que poder leer hacia atrás (2.1.1). */}
+          <div class="itza__log" role="log" aria-label={T.itza.conversacion} tabindex="0" data-itza-log></div>
+          <form class="itza__form" data-itza-form>
+            <label for="itza-mensaje" set:html={conLogo(T.itza.etiqueta)} />
+            <textarea id="itza-mensaje" rows="2" maxlength="1200" autocomplete="off" class="campo__entrada itza__campo"></textarea>
+            <button type="submit" class="boton">{T.itza.enviar}</button>
+          </form>
+        </div>
+        <p class="itza__nota" set:html={conLogo(T.itza.privacidad)} />
+        <CtaLink href="#formulario">{T.itza.prefiero}</CtaLink>
+      </section>
+
       <h2 class="sr-only">{T.escribenos}</h2>
       <!-- Los obligatorios no llevan marca: el único que no lo es lo dice en
            su etiqueta, «(opcional)». Así no hace falta explicar qué significa
@@ -186,6 +261,7 @@ const CAMPOS = [
         <p>{T.noscript} <a href={`mailto:${CORREO}`}>{CORREO}</a>.</p>
       </noscript>
       <form
+        id="formulario"
         class="formulario"
         action="/api/contacto"
         method="post"
@@ -316,6 +392,7 @@ const CAMPOS = [
 
 <script>
   import '../scripts/formulario';
+  import '../scripts/itza-contacto';
 </script>
 
 <style>
@@ -448,4 +525,37 @@ const CAMPOS = [
   .resumen__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
   .resumen__lista { margin: var(--space-8) 0 0; padding-inline-start: 1.2em; }
   .resumen__lista a { display: inline-block; min-block-size: var(--touch-min); padding-block: var(--aire-control); }
+
+  /* ----- Itza en Contacto (08/11/2026) -----------------------------------
+     El mismo sistema que el formulario: un peso, todo en Ink, el borde de
+     los campos y el botón Ink. Itza se distingue por el menta en sus
+     respuestas, nunca solo por color: cada línea dice quién habla al lector
+     de pantalla y va a un lado distinto. */
+  .itza { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-24); max-width: 560px; }
+  .itza[hidden] { display: none; }
+  .itza p { margin: 0; }
+  .itza__titulo { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .itza :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
+  .itza__caja { inline-size: 100%; box-sizing: border-box; border: 1.5px solid var(--grey); border-radius: 3px; }
+  .itza__log {
+    display: flex; flex-direction: column; gap: var(--space-12);
+    max-block-size: 360px; min-block-size: 120px; overflow-y: auto; padding: var(--space-16);
+  }
+  /* En una columna flex con alto máximo, los hijos encogen: sin esto el
+     último mensaje y el botón se aplastaban en vez de desplazarse. */
+  .itza__log > :global(*) { flex-shrink: 0; }
+  .itza__log :global(p) { margin: 0; max-inline-size: 88%; padding: var(--space-8) var(--space-12); border-radius: 3px; background: var(--mint); }
+  .itza__log :global(p.tu) { align-self: flex-end; background: var(--surface-band); }
+  /* El botón que lleva al formulario lo crea el script: estilos globales,
+     los mismos que .boton. */
+  .itza__log :global(.itza__ir) {
+    align-self: flex-start; min-block-size: var(--touch-min); padding: var(--space-16) var(--space-32);
+    border: 0; border-radius: 3px; background: var(--ink); color: var(--white); font: inherit; cursor: pointer; text-align: start;
+  }
+  .itza__log :global(.itza__ir:hover) { text-decoration: underline; text-decoration-thickness: var(--underline-rest); text-underline-offset: var(--underline-offset); }
+  @media (forced-colors: active) { .itza__log :global(.itza__ir) { border: 1.5px solid ButtonText; } }
+  .itza__form[hidden] { display: none; }
+  .itza__form { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: var(--space-16); border-block-start: 1.5px solid var(--grey); }
+  .itza__campo { min-block-size: 56px; resize: vertical; }
+  .itza__form .boton { margin-block-start: var(--space-8); }
 </style>

@@ -667,6 +667,17 @@ de Turnstile sea la de prueba.
 
 ## 10. Formulario de contacto (10/10/2026)
 
+- **Itza en Contacto (08/11/2026), al lado del formulario, no en su lugar.**
+  Itza hace tres o cuatro preguntas sobre el proyecto y deja el mensaje
+  escrito en «Tu mensaje» (y la organización en su campo); la persona lo
+  revisa, pone su nombre y su correo y lo envía por el camino de siempre.
+  Itza no envía nada (3.3.4), no pide datos personales y no da precios ni
+  plazos. `/api/itza-contacto` en `worker/index.ts` (prompt incluido) y
+  `src/scripts/itza-contacto.ts`. Solo se enseña si el Worker tiene el
+  secreto `ANTHROPIC_API_KEY` (GET `/api/itza-contacto` → `disponible`): sin
+  él, la página es la de siempre. La política de privacidad nombra a
+  Anthropic. `npm run formulario` lo prueba con la API simulada.
+
 - Va a `/api/contacto`, en el Worker: comprueba los campos, canjea la ficha de
   **Turnstile invisible** (acción `contacto`, solo nuestros dominios) y manda
   el correo con **Brevo** a proyectos@, con «Responder a» en quien escribe.

@@ -20,6 +20,7 @@
  * Variable opcional (wrangler.itza.toml, [vars]): ITZA_MODELO.
  */
 import { hostSinIndexar } from '../src/data/sitio.ts';
+import { llamarClaude, validarConversacion, MODELO_ITZA } from './claude.ts';
 
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -27,9 +28,7 @@ export interface Env {
   ITZA_MODELO?: string;
 }
 
-interface Mensaje { role: 'user' | 'assistant'; content: string }
 
-const MODELO = 'claude-haiku-4-5-20251001';
 const TOPE_PREGUNTAS = 12;
 const TOPE_TEXTO = 600;
 const IDIOMA = { es: 'castellano', ca: 'catalán', en: 'inglés' } as const;
@@ -70,56 +69,20 @@ const json = (cuerpo: unknown, status = 200, extra: Record<string, string> = {})
     headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...extra },
   });
 
-function valida(cuerpo: unknown): { mensajes: Mensaje[]; lang: keyof typeof IDIOMA } | null {
-  if (!cuerpo || typeof cuerpo !== 'object') return null;
-  const { messages, lang } = cuerpo as { messages?: unknown; lang?: unknown };
-  if (!Array.isArray(messages) || messages.length === 0 || messages.length > TOPE_PREGUNTAS * 2) return null;
-  const mensajes: Mensaje[] = [];
-  for (const [i, m] of messages.entries()) {
-    const { role, content } = (m ?? {}) as { role?: unknown; content?: unknown };
-    const esperado = i % 2 === 0 ? 'user' : 'assistant';
-    if (role !== esperado || typeof content !== 'string') return null;
-    const texto = content.trim();
-    /* Las respuestas de Itza pueden ser más largas que una pregunta. */
-    if (!texto || texto.length > (role === 'user' ? TOPE_TEXTO : 3000)) return null;
-    mensajes.push({ role: esperado, content: texto });
-  }
-  if (mensajes[mensajes.length - 1].role !== 'user') return null;
-  const idioma = lang === 'ca' || lang === 'en' ? lang : 'es';
-  return { mensajes, lang: idioma };
-}
-
 async function chat(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
   if (request.method !== 'POST') return json({ error: 'metodo' }, 405, { allow: 'POST' });
   if (request.headers.get('origin') !== url.origin) return json({ error: 'origen' }, 403);
   if (!env.ANTHROPIC_API_KEY) return json({ error: 'configuracion' }, 503);
 
-  const datos = valida(await request.json().catch(() => null));
+  const datos = validarConversacion(await request.json().catch(() => null), { topePreguntas: TOPE_PREGUNTAS, topeTexto: TOPE_TEXTO });
   if (!datos) return json({ error: 'conversacion' }, 400);
 
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: env.ITZA_MODELO || MODELO,
-      max_tokens: 400,
-      system: `${SISTEMA}\n\nLa página está en ${IDIOMA[datos.lang]}; si la persona escribe en otro de los tres idiomas, responde en el suyo.`,
-      messages: datos.mensajes,
-    }),
-  }).catch(() => null);
-
-  if (!r || !r.ok) {
-    /* Solo el código: nunca el contenido de la conversación. */
-    console.error('itza: la API respondió', r?.status ?? 'sin conexión');
-    return json({ error: 'api' }, 502);
-  }
-  const respuesta = (await r.json().catch(() => null)) as { content?: { type: string; text?: string }[] } | null;
-  const texto = respuesta?.content?.filter((c) => c.type === 'text').map((c) => c.text ?? '').join('').trim();
+  const texto = await llamarClaude(env.ANTHROPIC_API_KEY, {
+    modelo: env.ITZA_MODELO || MODELO_ITZA,
+    sistema: `${SISTEMA}\n\nLa página está en ${IDIOMA[datos.lang]}; si la persona escribe en otro de los tres idiomas, responde en el suyo.`,
+    mensajes: datos.mensajes,
+  });
   if (!texto) return json({ error: 'api' }, 502);
   return json({ reply: texto });
 }
