@@ -12,7 +12,9 @@
 export interface Mensaje { role: 'user' | 'assistant'; content: string }
 export type Idioma = 'es' | 'ca' | 'en';
 
-export const MODELO_ITZA = 'claude-haiku-4-5-20251001';
+/* Claude Haiku 5.5 desde el 08/11/2026 (Johnny): diez veces más barato que
+   Haiku 4.5 (0,10 $ / 0,50 $ por millón de tokens, prompts de hasta 100.000). */
+export const MODELO_ITZA = 'claude-haiku-5-5';
 
 export function validarConversacion(
   cuerpo: unknown,

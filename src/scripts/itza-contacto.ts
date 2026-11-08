@@ -28,7 +28,7 @@ interface Textos {
   lang: 'es' | 'ca' | 'en';
   escribiendo: string; error: string; pideDatos: string;
   faltaNombre: string; faltaCorreo: string; enviado: string;
-  tu: string; yo: string; conversacion: string; hablar: string; escuchando: string; pestanaNueva: string;
+  tu: string; yo: string; conversacion: string; puedesDecir: string; hablar: string; escuchando: string; pestanaNueva: string;
   mapa: { ruta: string; nombre: string }[];
 }
 interface Mensaje { role: 'user' | 'assistant'; content: string }
@@ -166,6 +166,7 @@ async function iniciar() {
     focoDelPaso().focus();
   }
   function cerrarVentana() {
+    callar();
     panel.hidden = true;
     barra.hidden = false;
     /* Las opciones solo sirven para empezar. */
@@ -207,7 +208,7 @@ async function iniciar() {
     const resumen = (r.resumen ?? '').trim();
     datos.mensaje = (resumen ? `${resumen}\n\n-- ${T.conversacion} --\n${conversacion}` : conversacion).slice(0, 5000);
     datos.organizacion = (r.organizacion ?? '').trim();
-    linea(T.pideDatos, 'itza');
+    decir(linea(T.pideDatos, 'itza'));
     mostrar(pDatos, campoNombre);
   }
 
@@ -228,6 +229,51 @@ async function iniciar() {
     rapidas.hidden = opciones.length === 0;
   }
 
+  /* ---- Voz ----
+     Si la persona habla, Itza le contesta hablando (Johnny, 08/11/2026: «si
+     la conversación es por voz, debe responderte por voz»). Si escribe,
+     contesta solo por escrito. Pulsar una respuesta rápida no cambia el
+     modo. La voz es la del navegador, en el idioma de la página. Se calla
+     al cerrar la ventana, al escribir o al volver a pulsar el micrófono. */
+  let vieneDeVoz = false;
+  /* Tras hablar Itza, vuelve a escuchar sola (lo pone el bloque del
+     micrófono, si el navegador reconoce la voz). */
+  let reabrirMicro: (() => void) | null = null;
+  let modoVoz = false;
+  const VOZ = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[T.lang] ?? 'es-ES';
+  const sintesis = 'speechSynthesis' in window ? window.speechSynthesis : null;
+  function callar() { sintesis?.cancel(); }
+  /* Lo que se lee: el texto de la burbuja, sin la etiqueta «Itza:» para el
+     lector de pantalla ni el enlace; el logo, por su alt. */
+  function decir(p: HTMLElement, opciones: string[] = []) {
+    if (!modoVoz || !sintesis) return;
+    const texto = [...p.childNodes].map((n) => {
+      if (n.nodeType === Node.TEXT_NODE) return n.textContent ?? '';
+      const el = n as HTMLElement;
+      if (el.classList?.contains('sr-only') || el.tagName === 'A') return '';
+      return el.tagName === 'IMG' ? (el as HTMLImageElement).alt : el.textContent ?? '';
+    }).join('').trim();
+    if (!texto) return;
+    callar();
+    /* Las respuestas rápidas también se leen: quien habla no las ve. */
+    const conOpciones = opciones.length ? `${texto} ${T.puedesDecir} ${opciones.join(', ')}.` : texto;
+    const u = new SpeechSynthesisUtterance(conOpciones);
+    u.lang = VOZ;
+    /* Manos libres: al acabar de hablar, si seguimos en la charla y en modo
+       voz, el micrófono de la ventana se abre otra vez. Una sola vez por
+       respuesta: si no se oye nada, se queda cerrado. En los datos no: un
+       correo dictado sale mal casi siempre. */
+    u.onend = () => {
+      if (modoVoz && !panel.hidden && actual === charla && !ocupado) reabrirMicro?.();
+    };
+    sintesis.speak(u);
+  }
+  /* Quien escribe a mano, sale del modo voz. */
+  for (const f of [barra, charla]) {
+    f.addEventListener('submit', () => { modoVoz = vieneDeVoz; vieneDeVoz = false; }, { capture: true });
+  }
+  for (const c of [campoBarra, campoCharla, campoNombre, campoCorreo]) c.addEventListener('keydown', callar);
+
   async function preguntar(bruto: string) {
     const texto = bruto.trim();
     if (!texto || ocupado) return;
@@ -247,7 +293,7 @@ async function iniciar() {
       if (!r.ok || !d.reply) throw new Error(String(r.status));
       espera.remove();
       historia.push({ role: 'assistant', content: d.reply });
-      linea(d.reply, 'itza');
+      decir(linea(d.reply, 'itza'), d.listo ? [] : d.opciones);
       /* Listo, o el tope de preguntas: a por los datos. */
       if (d.listo || historia.filter((m) => m.role === 'user').length >= TOPE) aDatos(d);
       else { ponerRapidas(d.opciones); campoCharla.focus(); }
@@ -297,22 +343,28 @@ async function iniciar() {
       parar();
       if (!m) return;
       m[2].value = e.results[0][0].transcript;
+      vieneDeVoz = true;
       m[1].requestSubmit();
     };
     rec.onend = parar;
     rec.onerror = parar;
     barra.classList.add('con-voz');
+    const escuchar = (m: (typeof micros)[number]) => {
+      activo = m;
+      m[0].classList.add('escuchando');
+      m[0].querySelector('[data-itza-voz-texto]')!.textContent = T.escuchando;
+      try { rec.start(); } catch { parar(); }
+    };
     for (const m of micros) {
       const [voz] = m;
       voz.hidden = false;
       voz.addEventListener('click', () => {
+        callar();
         if (activo) { rec.stop(); parar(); return; }
-        activo = m;
-        voz.classList.add('escuchando');
-        voz.querySelector('[data-itza-voz-texto]')!.textContent = T.escuchando;
-        rec.start();
+        escuchar(m);
       });
     }
+    reabrirMicro = () => { if (!activo) escuchar(micros[1]); };
   }
 
   /* ---- 3. Nombre y correo, sin IA ---- */

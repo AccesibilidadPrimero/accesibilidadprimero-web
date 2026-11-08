@@ -29,7 +29,7 @@ run_worker_first = ["/api/*"]
 
 [vars]
 # El modelo de la demo. El mismo que el proxy de la landing .com.
-ITZA_MODELO = "claude-haiku-4-5-20251001"
+ITZA_MODELO = "claude-haiku-5-5"
 
 [observability]
 enabled = true

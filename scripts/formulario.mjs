@@ -439,6 +439,37 @@ async function conItza(respuestas, ancho = 390) {
   await ctx.close();
 }
 {
+  /* Voz: si habla, Itza contesta hablando y lee las opciones; si escribe,
+     no. Reconocimiento y síntesis, simulados. */
+  const ctx = await nav.newContext({ viewport: { width: 1440, height: 900 } });
+  const p = await ctx.newPage();
+  await p.addInitScript(() => {
+    window.dichas = [];
+    window.escuchas = 0;
+    /* Solo la primera vez «oye» algo; las demás se quedan escuchando. */
+    window.SpeechRecognition = class { start() { if (++window.escuchas === 1) setTimeout(() => this.onresult?.({ results: [[{ transcript: 'Somos una fundación' }]] }), 30); } stop() {} };
+    Object.defineProperty(window, 'speechSynthesis', { value: { speak: (u) => { window.dichas.push({ texto: u.text, lang: u.lang }); setTimeout(() => u.onend?.(), 30); }, cancel() {} } });
+  });
+  await p.route('https://challenges.cloudflare.com/**', (route) => route.fulfill({ contentType: 'text/javascript', body: FALSO_TURNSTILE }));
+  let n = 0;
+  await p.route('**/api/itza-contacto', (route) => route.request().method() === 'GET'
+    ? route.fulfill({ json: { disponible: true } })
+    : route.fulfill({ json: ++n === 1 ? { reply: '¿Quieres añadir algo más? /servicios/', listo: false, opciones: ['Sí', 'No'] } : { reply: '¿Algo más?', listo: false } }));
+  await p.goto(URL_, { waitUntil: 'load' });
+  await p.waitForTimeout(300);
+  await p.click('[data-itza-barra] [data-itza-voz]');
+  await p.waitForFunction(() => window.dichas.length > 0, null, { timeout: 5000 }).catch(() => {});
+  const dichas = await p.evaluate(() => window.dichas);
+  ok(dichas.length === 1 && dichas[0].texto === '¿Quieres añadir algo más? Puedes decir: Sí, No.' && dichas[0].lang === 'es-ES', 'Itza: por voz, contesta hablando y lee las opciones (sin la dirección)', JSON.stringify(dichas));
+  await p.waitForFunction(() => window.escuchas === 2, null, { timeout: 3000 }).catch(() => {});
+  ok(await p.evaluate(() => window.escuchas) === 2 && await p.getAttribute('[data-paso="charla"] [data-itza-voz]', 'class').then((c) => c.includes('escuchando')), 'Itza: al acabar de hablar, vuelve a escuchar sola');
+  await p.fill('#itza-mensaje', 'Escrito a mano');
+  await p.keyboard.press('Enter');
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p.itza:not(.escribiendo)').length === 2);
+  ok((await p.evaluate(() => window.dichas.length)) === 1, 'Itza: si escribe, contesta solo por escrito');
+  await ctx.close();
+}
+{
   /* Si la IA falla, vuelve el formulario con lo que ya se había escrito. */
   const { p, ctx } = await conItza([], 1440);
   await p.fill('#itza-pregunta', 'Somos una fundación cultural.');
