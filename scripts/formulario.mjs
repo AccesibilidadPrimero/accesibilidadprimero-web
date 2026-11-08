@@ -177,6 +177,7 @@ console.log('\n── Worker ──\n');
   ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
   ok(anthropic.llamadas[0]?.system.includes('NOMBRE PROPIO') && anthropic.llamadas[0]?.system.includes('«Perfecto»') && anthropic.llamadas[0]?.system.includes('SOLO lo que la persona ha dicho'), 'Itza: sin rellenos, sin inventar la organización ni añadir al resumen');
   ok(!anthropic.llamadas[0]?.system.includes('/servicios/') && anthropic.llamadas[0]?.system.includes('Sin enlaces'), 'Itza en Contacto: sin enlaces ni direcciones en el prompt');
+  ok(anthropic.llamadas[0]?.system.includes('segunda persona del singular') && anthropic.llamadas[0]?.system.includes('en primera persona'), 'Itza: trata de tú y el resumen va en primera persona');
   anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
   ri = await itza(pregunta);
   ok(ri.cuerpo.listo === true && ri.cuerpo.resumen.startsWith('Somos una fundación') && ri.cuerpo.organizacion === 'Fundación Ejemplo', 'Itza: al terminar, resumen y organización');
