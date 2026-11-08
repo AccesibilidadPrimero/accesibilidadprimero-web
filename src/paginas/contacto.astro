@@ -810,12 +810,13 @@ const CAMPOS = [
 
   .itza-chat__rapidas { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; }
   .itza-chat__rapidas[hidden] { display: none; }
-  .itza-chat__rapidas button {
+  /* Los botones los crea el script: sin :global no les llega el estilo. */
+  .itza-chat__rapidas :global(button) {
     min-block-size: var(--touch-min); padding: 6px 16px; border: 1.5px solid var(--itza-acento); border-radius: 999px;
     background: #fff; color: var(--itza-acento-oscuro); font: inherit; font-size: 16px; cursor: pointer;
   }
-  .itza-chat__rapidas button:hover { background: var(--itza-acento); color: #fff; }
-  .itza-chat__rapidas button:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+  .itza-chat__rapidas :global(button:hover) { background: var(--itza-acento); color: #fff; }
+  .itza-chat__rapidas :global(button:focus-visible) { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
   .itza-chat__fila { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-block-start: 1px solid #eee; }
   .itza-chat__fila[hidden], .itza-chat__datos[hidden], .itza-chat__hecho[hidden],
   .itza-chat__error[hidden], .itza-chat__error-envio[hidden] { display: none; }

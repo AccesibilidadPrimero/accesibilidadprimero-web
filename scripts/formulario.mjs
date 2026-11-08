@@ -369,6 +369,8 @@ async function conItza(respuestas, ancho = 390) {
   ok((await p.locator('[data-itza-log] p.tu').first().textContent()).includes('Somos una fundación cultural.'), 'Itza: la conversación empieza con la pregunta');
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: tras responder, el foco sigue en el campo');
   ok(await p.locator('[data-itza-rapidas] button').allTextContents().then((t) => t.join('|')) === 'Sí|No', 'Itza: a una pregunta de sí o no, los botones «Sí» y «No»');
+  const altoRapida = await p.locator('[data-itza-rapidas] button').first().evaluate((b) => b.getBoundingClientRect().height);
+  ok(altoRapida >= 44, 'Itza: los botones de respuesta rápida, con su estilo y 44 de alto', String(altoRapida));
   await p.click('[data-itza-rapidas] button >> text=No');
   ok(enviadas.at(-1)?.messages.at(-1)?.content === 'No' && !(await p.isVisible('[data-itza-rapidas]')), 'Itza: pulsar «No» lo envía y los botones se van');
   await p.waitForSelector('#itza-nombre:visible', { timeout: 5000 }).catch(() => {});
