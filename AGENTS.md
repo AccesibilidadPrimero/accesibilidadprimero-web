@@ -694,7 +694,11 @@ de Turnstile sea la de prueba.
   (Johnny, 08/11/2026). Cuando la respuesta es corta (sí / no, una lista)
   propone botones (`opciones`, validadas en el Worker: texto, ≤40, ≤5).
   Nombre y correo y «Enviar» en el mismo paso, sin revisión; el correo
-  lleva el resumen de Itza y la conversación entera debajo. Al abrirla: charla con
+  lleva el resumen de Itza y la conversación entera debajo.
+  Si la persona habla (micrófono), Itza contesta hablando y lee las
+  respuestas rápidas («Puedes decir: …»), con la voz del navegador en el
+  idioma de la página; si escribe, solo por escrito. Se calla al cerrar,
+  al escribir y al pulsar el micrófono. Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
   PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
