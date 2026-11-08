@@ -675,9 +675,12 @@ de Turnstile sea la de prueba.
   la barra oscura y la ventana del plugin, con sus colores (#1a1a2e,
   #5b4fcf, #3d33a0), burbujas, «En línea» y firma. Es la excepción
   declarada a «todo en Ink» dentro de la ventana; un peso, 44 px y foco
-  visible sí se cumplen. El h1 es la barra «¿Cómo podemos ayudarte?» (botón
-  de desplegar, `aria-expanded`); la ✕ y Escape la pliegan y el foco vuelve
-  a la barra. Al abrirla: charla con
+  visible sí se cumplen. Hero a pantalla entera con la barra «¿Cómo
+  podemos ayudarte?» abajo, a 24 del borde: es un campo (con micrófono si el
+  navegador reconoce la voz; vacía enseña el micrófono, con texto, enviar).
+  La conversación no sale hasta que se pregunta algo; entonces la ventana
+  se abre encima y la barra se retira. La ✕ y Escape la cierran y el foco
+  vuelve a la barra. En la cabecera de la ventana, el emblema de AP. Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
   PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);

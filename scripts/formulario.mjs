@@ -334,23 +334,25 @@ async function conItza(respuestas, ancho = 390) {
     { reply: '¿Qué necesitáis?', listo: false },
     { reply: 'Gracias, ya lo tengo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
   ]);
-  ok(await p.isVisible('#itza-pildora') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la barra y sin el formulario');
+  ok(await p.isVisible('#itza-pregunta') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la barra y sin el formulario');
   const fondo = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
   ok(fondo === 'rgb(199, 234, 228)', 'Itza: la página en menta', fondo);
-  ok((await p.locator('h1').evaluateAll((hs) => hs.filter((h) => h.offsetParent).map((h) => h.textContent.trim()))).length === 1, 'Itza: un solo h1 a la vista');
-  ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'false' && !(await p.isVisible('#itza-panel')), 'Itza: la pastilla empieza plegada');
-  await p.focus('#itza-pildora');
-  await p.keyboard.press('Enter');
-  ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'true', 'Itza: al pulsarla, se despliega');
-  ok((await p.locator('[data-itza-log] p').count()) === 1, 'Itza: empieza con su saludo');
-  ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: el foco va a la respuesta');
+  ok(await p.locator('h1').count() >= 1 && await p.evaluate(() => [...document.querySelectorAll('h1')].filter((h) => h.closest('[data-itza-contacto]')).length === 1), 'Itza: tiene su h1');
+  const caja = await p.locator('[data-itza-barra]').boundingBox();
+  ok(caja && Math.abs(844 - (caja.y + caja.height) - 24) <= 2, 'Itza: la barra, abajo del hero a 24 del borde', JSON.stringify(caja));
+  ok(!(await p.isVisible('#itza-panel')), 'Itza: sin pregunta, no hay conversación');
   const conVoz = await p.evaluate(() => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-  ok((await p.isVisible('[data-itza-voz]')) === conVoz, 'Itza: el micrófono sale solo si el navegador reconoce la voz', String(conVoz));
+  ok((await p.isVisible('[data-itza-barra] [data-itza-voz]')) === conVoz, 'Itza: el micrófono sale solo si el navegador reconoce la voz', String(conVoz));
+  await p.focus('#itza-pregunta');
+  await p.keyboard.press('Enter');
+  ok(!(await p.isVisible('#itza-panel')), 'Itza: con la barra vacía, nada');
   await p.keyboard.type('Somos una fundación cultural.');
   await p.keyboard.press('Enter');
+  ok(await p.isVisible('#itza-panel') && !(await p.isVisible('[data-itza-barra]')), 'Itza: al preguntar, sale la ventana y la barra se retira');
   /* Los tres puntos de «escribiendo» también son un <p>: hay que esperar a
      que se vayan, no solo a contar burbujas. */
-  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 3 && !document.querySelector('[data-itza-log] .escribiendo'));
+  await p.waitForFunction(() => document.querySelectorAll('[data-itza-log] p:not(.escribiendo)').length === 2 && !document.querySelector('[data-itza-log] .escribiendo'));
+  ok((await p.locator('[data-itza-log] p.tu').first().textContent()).includes('Somos una fundación cultural.'), 'Itza: la conversación empieza con la pregunta');
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-mensaje', 'Itza: tras responder, el foco sigue en el campo');
   await p.keyboard.type('Una web nueva, antes de marzo.');
   await p.keyboard.press('Enter');
@@ -373,7 +375,7 @@ async function conItza(respuestas, ancho = 390) {
   await p.fill('#itza-e-organizacion', 'Fundación Otra');
   ok(await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: lo cambiado se ve en el resumen');
   await p.keyboard.press('Escape');
-  ok(await p.getAttribute('#itza-pildora', 'aria-expanded') === 'false' && await p.evaluate(() => document.activeElement.id) === 'itza-pildora', 'Itza: Escape pliega y el foco vuelve a la barra');
+  ok(!(await p.isVisible('#itza-panel')) && await p.evaluate(() => document.activeElement.id) === 'itza-pregunta', 'Itza: Escape cierra y el foco vuelve a la barra');
   await p.keyboard.press('Enter');
   ok(await p.evaluate(() => document.activeElement.tagName) === 'H3' && await p.textContent('[data-r="organizacion"]') === 'Fundación Otra', 'Itza: al reabrir, sigue donde estaba');
   const axe = (await import('node:fs')).readFileSync(new URL('../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8');
@@ -393,8 +395,7 @@ async function conItza(respuestas, ancho = 390) {
 {
   /* Si la IA falla, vuelve el formulario con lo que ya se había escrito. */
   const { p, ctx } = await conItza([], 1440);
-  await p.click('#itza-pildora');
-  await p.fill('#itza-mensaje', 'Somos una fundación cultural.');
+  await p.fill('#itza-pregunta', 'Somos una fundación cultural.');
   await p.keyboard.press('Enter');
   await p.waitForSelector('form[data-formulario]:visible', { timeout: 6000 }).catch(() => {});
   ok(await p.isVisible('form[data-formulario]') && !(await p.isVisible('[data-itza-contacto]')), 'Itza: si la IA falla, vuelve el formulario');

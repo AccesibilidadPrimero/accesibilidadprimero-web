@@ -3,9 +3,10 @@
    formulario (Johnny: «si no, no tiene sentido Itza»), con SU interfaz: la
    barra y la ventana del plugin.
 
-   1. La barra «¿Cómo podemos ayudarte?» es el h1 y un botón de desplegar.
-      Al abrirla, Itza saluda y el foco va al campo. La ✕ de la ventana y
-      Escape la pliegan y devuelven el foco a la barra.
+   1. La barra «¿Cómo podemos ayudarte?», abajo del hero, es un campo. La
+      conversación no sale hasta que se pregunta algo: entonces se abre la
+      ventana encima, la barra se retira y el foco pasa al campo de la
+      ventana. La ✕ y Escape la cierran y el foco vuelve a la barra.
    2. Charla: Itza pregunta por el proyecto (/api/itza-contacto, la IA).
       Cuando tiene bastante, devuelve listo + un resumen.
    3. Nombre y correo, juntos, como el formulario del plugin. Los pide la
@@ -23,7 +24,7 @@ import { fichero } from './turnstile';
 
 interface Textos {
   lang: 'es' | 'ca' | 'en';
-  bienvenida: string; escribiendo: string; error: string; pideDatos: string;
+  escribiendo: string; error: string; pideDatos: string;
   faltaNombre: string; faltaCorreo: string; pideRevision: string; enviado: string;
   tu: string; yo: string; hablar: string; escuchando: string;
 }
@@ -50,7 +51,8 @@ async function iniciar() {
   if (!disponible) { sinItza(); return; }
 
   const T = JSON.parse(seccion.dataset.itzaContacto ?? '{}') as Textos;
-  const barra = seccion.querySelector<HTMLButtonElement>('#itza-pildora')!;
+  const barra = seccion.querySelector<HTMLFormElement>('[data-itza-barra]')!;
+  const campoBarra = barra.querySelector('input')!;
   const panel = seccion.querySelector<HTMLElement>('#itza-panel')!;
   const cerrar = panel.querySelector<HTMLButtonElement>('[data-itza-cerrar]')!;
   const log = panel.querySelector<HTMLElement>('[data-itza-log]')!;
@@ -70,7 +72,6 @@ async function iniciar() {
   const historia: Mensaje[] = [];
   const datos = { nombre: '', correo: '', organizacion: '', mensaje: '' };
   let actual: HTMLElement = charla;
-  let empezada = false;
   let ocupado = false;
 
   /* Una burbuja. Quién habla va escrito para el lector de pantalla; a la
@@ -127,25 +128,33 @@ async function iniciar() {
 
   /* ---- 1. La barra y la ventana ---- */
   function abrir() {
-    barra.setAttribute('aria-expanded', 'true');
     panel.hidden = false;
+    barra.hidden = true;
     /* Turnstile se carga al abrir, no con la página. */
     turnstile.preparar().catch(() => {});
-    if (!empezada) {
-      empezada = true;
-      linea(T.bienvenida, 'itza');
-    }
     focoDelPaso().focus();
   }
-  function plegar() {
-    barra.setAttribute('aria-expanded', 'false');
+  function cerrarVentana() {
     panel.hidden = true;
-    barra.focus();
+    barra.hidden = false;
+    campoBarra.focus();
   }
-  barra.addEventListener('click', () => (panel.hidden ? abrir() : plegar()));
-  cerrar.addEventListener('click', plegar);
+  barra.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const texto = campoBarra.value.trim();
+    /* Vacía, solo reabre una conversación que ya existe. */
+    if (!texto && !historia.length) { campoBarra.focus(); return; }
+    campoBarra.value = '';
+    alEscribir();
+    abrir();
+    if (texto && actual === charla) preguntar(texto);
+  });
+  /* Vacía, el micrófono; con texto, enviar (el CSS cambia el botón). */
+  const alEscribir = () => barra.classList.toggle('con-texto', campoBarra.value.trim() !== '');
+  campoBarra.addEventListener('input', alEscribir);
+  cerrar.addEventListener('click', cerrarVentana);
   panel.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { e.preventDefault(); plegar(); }
+    if (e.key === 'Escape') { e.preventDefault(); cerrarVentana(); }
   });
 
   /* ---- 2. La charla con la IA ---- */
@@ -157,9 +166,13 @@ async function iniciar() {
     mostrar(pDatos, campoNombre);
   }
 
-  charla.addEventListener('submit', async (e) => {
+  charla.addEventListener('submit', (e) => {
     e.preventDefault();
-    const texto = campoCharla.value.trim();
+    preguntar(campoCharla.value);
+  });
+
+  async function preguntar(bruto: string) {
+    const texto = bruto.trim();
     if (!texto || ocupado) return;
     ocupado = true;
     linea(texto, 'tu');
@@ -195,7 +208,7 @@ async function iniciar() {
     } finally {
       ocupado = false;
     }
-  });
+  }
 
   /* El micrófono, como en el plugin: lo que se dice se escribe en el campo
      y se envía. Usa el reconocimiento de voz del navegador, en el idioma de
@@ -204,29 +217,44 @@ async function iniciar() {
     onresult: ((e: { results: { 0: { 0: { transcript: string } } } }) => void) | null; onend: (() => void) | null; onerror: (() => void) | null };
   const SR = window as unknown as { SpeechRecognition?: new () => Reconocimiento; webkitSpeechRecognition?: new () => Reconocimiento };
   const Constructor = SR.SpeechRecognition ?? SR.webkitSpeechRecognition;
-  const voz = charla.querySelector<HTMLButtonElement>('[data-itza-voz]')!;
+  /* Dos micrófonos: el de la barra y el de la ventana. Cada uno, con lo
+     que oye, hace lo mismo que su campo al enviarse. */
+  const micros: [HTMLButtonElement, HTMLFormElement, HTMLInputElement][] = [
+    [barra.querySelector('[data-itza-voz]')!, barra, campoBarra],
+    [charla.querySelector('[data-itza-voz]')!, charla, campoCharla],
+  ];
   if (Constructor) {
     const rec = new Constructor();
     rec.lang = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[T.lang] ?? 'es-ES';
     rec.interimResults = false;
-    const textoVoz = voz.querySelector<HTMLElement>('[data-itza-voz-texto]')!;
-    let escuchando = false;
-    const parar = () => { escuchando = false; voz.classList.remove('escuchando'); textoVoz.textContent = T.hablar; };
+    let activo: (typeof micros)[number] | null = null;
+    const parar = () => {
+      if (!activo) return;
+      activo[0].classList.remove('escuchando');
+      activo[0].querySelector('[data-itza-voz-texto]')!.textContent = T.hablar;
+      activo = null;
+    };
     rec.onresult = (e) => {
+      const m = activo;
       parar();
-      campoCharla.value = e.results[0][0].transcript;
-      charla.requestSubmit();
+      if (!m) return;
+      m[2].value = e.results[0][0].transcript;
+      m[1].requestSubmit();
     };
     rec.onend = parar;
     rec.onerror = parar;
-    voz.hidden = false;
-    voz.addEventListener('click', () => {
-      if (escuchando) { rec.stop(); parar(); return; }
-      escuchando = true;
-      voz.classList.add('escuchando');
-      textoVoz.textContent = T.escuchando;
-      rec.start();
-    });
+    barra.classList.add('con-voz');
+    for (const m of micros) {
+      const [voz] = m;
+      voz.hidden = false;
+      voz.addEventListener('click', () => {
+        if (activo) { rec.stop(); parar(); return; }
+        activo = m;
+        voz.classList.add('escuchando');
+        voz.querySelector('[data-itza-voz-texto]')!.textContent = T.escuchando;
+        rec.start();
+      });
+    }
   }
 
   /* ---- 3. Nombre y correo, sin IA ---- */

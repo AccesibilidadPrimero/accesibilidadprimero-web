@@ -28,6 +28,7 @@ import { idiomaDe } from '../i18n/idioma';
 import { TURNSTILE_SITEKEY, TURNSTILE_ACCION, CORREO_ESTUDIO } from '../data/contacto';
 import logoItza from '../assets/productos/itza-logo.png';
 import logoMenta from '../assets/productos/itza-logo-menta.png';
+import iconoAP from '../assets/estudio/icono.svg';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
@@ -62,7 +63,6 @@ const T = {
     itza: {
       pildora: '¿Cómo podemos ayudarte?',
       conversacion: 'Conversación con Itza',
-      bienvenida: 'Hola, soy Itza. Cuéntame, ¿qué hace tu organización o tu proyecto?',
       etiqueta: 'Tu respuesta para Itza',
       responder: 'Responder',
       escribiendo: 'Itza está escribiendo…',
@@ -120,7 +120,6 @@ const T = {
     itza: {
       pildora: 'Com et podem ajudar?',
       conversacion: 'Conversa amb Itza',
-      bienvenida: 'Hola, soc Itza. Explica’m, què fa la teva organització o el teu projecte?',
       etiqueta: 'La teva resposta per a Itza',
       responder: 'Respon',
       escribiendo: 'Itza està escrivint…',
@@ -178,7 +177,6 @@ const T = {
     itza: {
       pildora: 'How can we help?',
       conversacion: 'Conversation with Itza',
-      bienvenida: 'Hi, I’m Itza. Tell me, what does your organisation or project do?',
       etiqueta: 'Your reply to Itza',
       responder: 'Reply',
       escribiendo: 'Itza is typing…',
@@ -279,29 +277,23 @@ const CAMPOS = [
       (GET /api/itza-contacto) o la API falla, src/scripts/itza-contacto.ts
       pone html.sin-itza y vuelve la página de siempre, con su formulario:
       es el respaldo. Sin JS, también la de siempre. */}
-  <section class="itza" aria-labelledby="itza-pildora" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
+  <section class="itza" data-itza-contacto={JSON.stringify({ ...T.itza, lang })} data-sitekey={TURNSTILE_SITEKEY} data-accion={TURNSTILE_ACCION}>
     {/* Itza con SU interfaz, no la de AP (Johnny, 08/11/2026: «Itza tiene su
         propia interfaz y estilos, hay que mantener su singularidad
         visual»): la barra oscura, la ventana con cabecera, «En línea», las
         burbujas en morado y la firma. Los mismos colores que el plugin
         (ap-chat-widget.php): #1a1a2e, #5b4fcf, #3d33a0.
-        El h1 de la página ES la barra: un botón de desplegar dentro del
-        encabezado (el patrón de acordeón). */}
-    <h1 class="itza__h1">
-      <button type="button" id="itza-pildora" class="itza-barra" aria-expanded="false" aria-controls="itza-panel">
-        {/* La carita es decoración, como en el plugin: el nombre del botón
-            es la pregunta. */}
-        <span class="itza-barra__icono" aria-hidden="true">🙂</span>
-        <span class="itza-barra__texto">{T.itza.pildora}</span>
-        <span class="itza-barra__accion">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-        </span>
-      </button>
-    </h1>
+        Hero a pantalla entera en menta con la barra abajo; la ventana, al
+        preguntar. */}
+    {/* El h1, para quien navega por encabezados; a la vista, la barra ya
+        dice dónde está. */}
+    <h1 class="sr-only">{T.titulo}</h1>
 
     <div id="itza-panel" class="itza-chat" hidden>
       <div class="itza-chat__cabeza">
-        <span class="itza-chat__icono" aria-hidden="true">🙂</span>
+        {/* El emblema de AP: es Itza de Accesibilidad Primero. Decorativo, el
+            nombre lo dice el logo de al lado. */}
+        <span class="itza-chat__icono"><img src={iconoAP.src} width={iconoAP.width} height={iconoAP.height} alt="" /></span>
         <div class="itza-chat__info">
           <h2 class="itza-chat__nombre"><img src={logoMenta.src} width={logoMenta.width} height={logoMenta.height} alt="Itza" /></h2>
           <p class="itza-chat__estado"><span class="itza-chat__punto"></span>{T.itza.enLinea}</p>
@@ -324,7 +316,7 @@ const CAMPOS = [
         <input id="itza-mensaje" type="text" maxlength="1200" autocomplete="off" placeholder={T.itza.escribe} class="itza-chat__entrada" />
         {/* El micrófono, como en el plugin. Sale `hidden` y solo lo enseña
             el script si el navegador sabe reconocer la voz (§5). */}
-        <button type="button" class="itza-chat__voz" data-itza-voz hidden>
+        <button type="button" class="itza-voz" data-itza-voz hidden>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
           <span class="sr-only" data-itza-voz-texto>{T.itza.hablar}</span>
         </button>
@@ -377,6 +369,26 @@ const CAMPOS = [
       <p class="itza-chat__hecho" tabindex="-1" data-itza-hecho hidden></p>
       <p class="itza-chat__firma" set:html={conLogo(T.itza.marca)} />
     </div>
+
+    {/* La barra, como la del plugin: es un campo. La conversación no sale
+        hasta que se pregunta algo (Johnny, 08/11/2026). La etiqueta va
+        oculta y repite lo que dice la barra: el texto de la barra es lo
+        que se ve, y desaparece al escribir, así que el nombre del campo no
+        puede depender de él. */}
+    <form class="itza-barra" data-itza-barra novalidate>
+      {/* La carita es decoración, como en el plugin. */}
+      <span class="itza-barra__icono" aria-hidden="true">🙂</span>
+      <label for="itza-pregunta" class="sr-only">{T.itza.pildora}</label>
+      <input id="itza-pregunta" type="text" maxlength="1200" autocomplete="off" placeholder={T.itza.pildora} class="itza-barra__entrada" />
+      <button type="button" class="itza-voz itza-voz--barra" data-itza-voz hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg>
+        <span class="sr-only" data-itza-voz-texto>{T.itza.hablar}</span>
+      </button>
+      <button type="submit" class="itza-barra__enviar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" /></svg>
+        <span class="sr-only">{T.itza.responder}</span>
+      </button>
+    </form>
   </section>
 
   <section class="pagina-contacto" aria-labelledby="contacto-titulo">
@@ -683,54 +695,83 @@ const CAMPOS = [
     --itza-fondo: #1a1a2e; --itza-acento: #5b4fcf; --itza-acento-oscuro: #3d33a0;
     --itza-burbuja: #efedfa; --itza-texto: #222; --itza-suave: #555;
   }
+  /* Un hero a pantalla entera, como los demás (HeroPagina): sube por
+     debajo de la cabecera y deja la barra abajo, a 24 del borde. La
+     ventana, al abrirse, sale encima de la barra, como en el plugin. */
   :global(html.js:not(.sin-itza)) .itza {
-    display: flex; flex-direction: column; align-items: center; gap: var(--space-24);
-    min-block-size: 70svh; justify-content: center; padding-block: var(--space-64);
-    padding-inline: var(--gutter-page); box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: var(--space-16);
+    min-block-size: 100svh; box-sizing: border-box;
+    margin-block-start: calc(var(--header-height) * -1);
+    padding: var(--header-height) var(--gutter-page) var(--space-24);
   }
-  :global(html.js:not(.sin-itza)) .itza:has(.itza-barra[aria-expanded='true']) { justify-content: flex-start; }
+  @supports (height: 100lvh) {
+    :global(html.js:not(.sin-itza)) .itza { min-block-size: 100lvh; padding-block-end: calc(var(--space-24) + 100lvh - 100svh); }
+  }
   :global(html.js:not(.sin-itza)) .pagina-contacto { display: none; }
   :global(html.js:not(.sin-itza) body) { background: var(--mint); }
 
   .itza p { margin: 0; }
   .itza :global(.logo-itza) { display: inline-block; block-size: 0.95em; inline-size: auto; vertical-align: -0.1em; }
-  .itza__h1 { margin: 0; inline-size: 100%; max-inline-size: 880px; font-size: inherit; line-height: inherit; font-weight: 400; }
-
-  /* La barra: la del plugin, en grande. */
+  /* La barra: la del plugin, más corta que la columna. */
   .itza-barra {
-    display: flex; align-items: center; gap: 16px; inline-size: 100%; box-sizing: border-box;
-    min-block-size: 88px; padding: 12px 12px 12px 24px; border: 0; border-radius: 999px;
-    background: var(--itza-fondo); color: #fff; font: inherit; font-size: clamp(18px, 1.2rem + 0.6vw, 26px);
-    text-align: start; cursor: pointer; box-shadow: 0 8px 28px rgba(26, 26, 46, 0.28);
+    display: flex; align-items: center; gap: 10px; inline-size: 100%; max-inline-size: 560px; box-sizing: border-box;
+    padding: 8px 8px 8px 20px; border-radius: 999px; background: var(--itza-fondo);
+    box-shadow: 0 8px 28px rgba(26, 26, 46, 0.28);
   }
-  .itza-barra:focus-visible { outline: 3px solid var(--itza-fondo); outline-offset: 4px; }
-  .itza-barra__icono { flex: none; font-size: 1.4em; line-height: 1; }
-  .itza-barra__texto { flex: 1; color: rgba(255, 255, 255, 0.92); }
-  .itza-barra__accion {
-    flex: none; display: grid; place-items: center; inline-size: 64px; block-size: 64px; border-radius: 50%;
-    background: var(--itza-acento); color: #fff;
+  .itza-barra[hidden] { display: none; }
+  .itza-barra:focus-within { outline: 3px solid var(--itza-fondo); outline-offset: 4px; }
+  .itza-barra__icono { flex: none; font-size: 1.6rem; line-height: 1; }
+  .itza-barra__entrada {
+    flex: 1; min-inline-size: 0; min-block-size: var(--touch-min); padding: 0 4px; border: 0; background: none;
+    color: #fff; font: inherit; font-size: 18px;
   }
-  .itza-barra[aria-expanded='true'] .itza-barra__accion svg { transform: rotate(180deg); }
-  .itza-barra:hover .itza-barra__accion { background: var(--itza-acento-oscuro); }
-  @media (max-width: 767px) {
-    .itza-barra { min-block-size: 64px; padding: 8px 8px 8px 16px; gap: 10px; }
-    .itza-barra__accion { inline-size: 48px; block-size: 48px; }
+  /* El texto de la barra: 9,6:1 sobre #1a1a2e. */
+  .itza-barra__entrada::placeholder { color: rgba(255, 255, 255, 0.72); opacity: 1; }
+  /* El foco lo dibuja la barra entera (:focus-within): un aro dentro de un
+     campo sin borde no se veía. */
+  .itza-barra__entrada:focus { outline: none; }
+  .itza-barra__enviar {
+    flex: none; display: grid; place-items: center; inline-size: 52px; block-size: 52px; padding: 0; border: 0; border-radius: 50%;
+    background: var(--itza-acento); color: #fff; cursor: pointer;
   }
+  .itza-barra__enviar:hover { background: var(--itza-acento-oscuro); }
+  .itza-barra__enviar:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  /* En el móvil, la pregunta tiene que leerse entera: botones de 44, sin
+     huecos de más y la carita más pequeña. 16 px es el mínimo para que el
+     iPhone no amplíe la página al tocar el campo. */
+  @media (max-width: 479px) {
+    .itza-barra { gap: 6px; padding: 6px 6px 6px 12px; }
+    .itza-barra__icono { font-size: 1.25rem; }
+    .itza-barra__entrada { font-size: 16px; padding: 0 2px; }
+    .itza-barra__enviar, .itza-voz--barra { inline-size: var(--touch-min); block-size: var(--touch-min); }
+  }
+  @media (max-width: 359px) {
+    .itza-barra__icono { display: none; }
+    .itza-barra { padding-inline-start: 16px; }
+    /* A 320 no cabe a 16: el texto de la barra baja a 15 (el campo sigue a
+       16, que es lo que mira el iPhone para no ampliar). */
+    .itza-barra__entrada::placeholder { font-size: 15px; }
+  }
+  /* Como en el plugin y en los chats del móvil: con la barra vacía, el
+     micrófono; al escribir, enviar. Así cabe la pregunta entera. Sin
+     micrófono (el navegador no reconoce la voz), enviar siempre. */
+  .itza-barra.con-voz:not(.con-texto) .itza-barra__enviar,
+  .itza-barra.con-texto .itza-voz--barra { display: none; }
   @media (prefers-reduced-motion: no-preference) {
     .itza-barra { transition: transform 0.2s, box-shadow 0.2s; }
     .itza-barra:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(26, 26, 46, 0.32); }
-    .itza-barra__accion svg { transition: transform 0.2s; }
   }
 
   /* La ventana. */
   .itza-chat {
-    display: flex; flex-direction: column; inline-size: 100%; max-inline-size: 520px; box-sizing: border-box;
+    display: flex; flex-direction: column; inline-size: 100%; max-inline-size: 560px; box-sizing: border-box;
     background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
     color: var(--itza-texto); font-size: 16px; line-height: 1.5;
   }
   .itza-chat[hidden] { display: none; }
   .itza-chat__cabeza { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--itza-fondo); color: #fff; }
-  .itza-chat__icono { flex: none; display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 50%; background: var(--itza-acento); font-size: 1.3rem; }
+  .itza-chat__icono { flex: none; display: grid; place-items: center; inline-size: 40px; block-size: 40px; border-radius: 50%; background: #fff; }
+  .itza-chat__icono img { inline-size: 26px; block-size: auto; }
   .itza-chat__info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
   .itza-chat__nombre { margin: 0; line-height: 1; }
   .itza-chat__nombre img { display: block; block-size: 22px; inline-size: auto; }
@@ -787,16 +828,20 @@ const CAMPOS = [
   .itza-chat__enviar:hover { background: var(--itza-acento-oscuro); }
   /* El micrófono: en reposo, aro morado; escuchando, relleno (el cambio se
      ve sin animación) y, con movimiento, además late. */
-  .itza-chat__voz {
+  .itza-voz {
     flex: none; display: grid; place-items: center; inline-size: var(--touch-min); block-size: var(--touch-min);
     padding: 0; border: 2px solid var(--itza-acento); border-radius: 50%; background: #fff; color: var(--itza-acento); cursor: pointer;
   }
-  .itza-chat__voz[hidden] { display: none; }
-  .itza-chat__voz:hover { color: var(--itza-acento-oscuro); border-color: var(--itza-acento-oscuro); }
-  .itza-chat__voz:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
-  .itza-chat__voz.escuchando { background: var(--itza-acento); color: #fff; }
+  .itza-voz[hidden] { display: none; }
+  .itza-voz:hover { color: var(--itza-acento-oscuro); border-color: var(--itza-acento-oscuro); }
+  .itza-voz:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
+  /* En la barra oscura, el aro en blanco: el morado no llega a 3:1. */
+  .itza-voz--barra { inline-size: 52px; block-size: 52px; border-color: rgba(255, 255, 255, 0.72); background: none; color: #fff; }
+  .itza-voz--barra:hover { color: #fff; border-color: #fff; }
+  .itza-voz--barra:focus-visible { outline-color: #fff; }
+  .itza-voz.escuchando { background: var(--itza-acento); border-color: var(--itza-acento); color: #fff; }
   @media (prefers-reduced-motion: no-preference) {
-    .itza-chat__voz.escuchando { animation: itza-late 1s infinite; }
+    .itza-voz.escuchando { animation: itza-late 1s infinite; }
   }
   @keyframes itza-late { 50% { box-shadow: 0 0 0 6px rgba(91, 79, 207, 0.25); } }
   .itza-chat__enviar:focus-visible, .itza-chat__boton:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
