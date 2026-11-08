@@ -239,17 +239,17 @@ Si solo quiere el correo o contactar sin más (por ejemplo «quiero contactar»,
 
 Haz estas preguntas, de una en una y con pocas palabras, saltándote lo que la persona ya haya contado:
 1. Qué hace su organización o su proyecto.
-2. Qué necesita: una web nueva o rediseñar la que tiene, una auditoría de accesibilidad, formación para su equipo, documentos accesibles, trabajo en marca blanca para una agencia u otra cosa.
-3. Si hay un plazo, una licitación, una subvención o una ley que les afecte.
-4. Si quiere añadir algo más.
-Como mucho cuatro preguntas. Si la persona quiere terminar antes, termina.
+2. Qué necesita: una web nueva o rediseñar la que tiene, una auditoría de accesibilidad, formación para su equipo, documentos accesibles, trabajo en marca blanca para una agencia, una colaboración u otra cosa.
+3. Si quiere añadir algo más.
+Como mucho tres preguntas. No preguntes por plazos, subvenciones, licitaciones ni normativa: casi nadie lo sabe y no hace falta para contactar. Si la persona quiere terminar antes, termina.
 
 No pidas nombre, correo, teléfono ni otros datos personales: la página los pide después, sin pasar por ti. Si los escribe, no los repitas ni los pongas en el resumen.
 Nunca des precios, plazos de entrega ni compromisos: el equipo responde con una propuesta. No inventes nada sobre el estudio. Si te preguntan algo que no sabes, dilo y sigue.
 Lenguaje claro, frases cortas, sin rellenos de cortesía, sin markdown y sin el masculino genérico cuando haya una alternativa natural.
 
 Responde SIEMPRE con un único objeto JSON y nada más:
-Mientras preguntas: {"respuesta": "tu pregunta", "listo": false}
+Mientras preguntas: {"respuesta": "tu pregunta", "listo": false, "opciones": ["…"]}
+"opciones" son las respuestas cortas que la persona puede pulsar en vez de escribir: ["Sí", "No"] si la pregunta es de sí o no; si es de elegir, de 2 a 5 opciones de pocas palabras (por ejemplo, para qué necesita: ["Una web nueva", "Rediseñar mi web", "Una auditoría", "Formación", "Una colaboración"]). Si la respuesta tiene que escribirla (qué hace su organización, por ejemplo), no pongas "opciones". En el idioma de la persona.
 Cuando tengas lo necesario: {"respuesta": "una frase corta de agradecimiento, sin pedir nada (los datos de contacto los pide la página después)", "listo": true, "resumen": "el mensaje para el equipo, escrito como si lo escribiera la persona, de 3 a 6 frases, sin datos personales", "organizacion": "el nombre de su organización o proyecto si lo ha dicho; si no, cadena vacía"}`;
 
 /* La respuesta del modelo, leída con cuidado: si no es el JSON pedido, se
@@ -260,9 +260,15 @@ function leerItza(texto: string, lang: 'es' | 'ca' | 'en') {
     const d = JSON.parse(texto.slice(a, b + 1)) as { respuesta?: unknown; listo?: unknown; resumen?: unknown; organizacion?: unknown };
     if (typeof d.respuesta !== 'string' || !d.respuesta.trim()) throw new Error('sin respuesta');
     const listo = d.listo === true && typeof d.resumen === 'string' && d.resumen.trim().length > 0;
+    /* Las respuestas rápidas: solo texto corto, como mucho cinco. */
+    const opciones = !listo && Array.isArray((d as { opciones?: unknown }).opciones)
+      ? ((d as { opciones: unknown[] }).opciones).filter((o): o is string => typeof o === 'string')
+          .map((o) => o.trim()).filter((o) => o && o.length <= 40).slice(0, 5)
+      : [];
     return {
       reply: d.respuesta.trim(),
       listo,
+      ...(opciones.length ? { opciones } : {}),
       ...(listo ? {
         resumen: String(d.resumen).trim().slice(0, MAX.mensaje),
         organizacion: typeof d.organizacion === 'string' ? d.organizacion.trim().slice(0, MAX.organizacion) : '',

@@ -688,11 +688,17 @@ de Turnstile sea la de prueba.
   prompt y la página, y solo una dirección de ese mapa se pinta como
   enlace (en su línea, 44 px, en otra pestaña y avisado). Una sección nueva
   de la web que Itza deba conocer, se añade ahí. Si solo quieren el correo,
-  lo da y ofrece seguir. Al abrirla: charla con
+  lo da y ofrece seguir.
+  Itza hace como mucho tres preguntas (qué hace la organización, qué
+  necesita y si quiere añadir algo); no pregunta por plazos ni normativa
+  (Johnny, 08/11/2026). Cuando la respuesta es corta (sí / no, una lista)
+  propone botones (`opciones`, validadas en el Worker: texto, ≤40, ≤5).
+  Nombre y correo y «Enviar» en el mismo paso, sin revisión; el correo
+  lleva el resumen de Itza y la conversación entera debajo. Al abrirla: charla con
   la IA sobre el proyecto (`/api/itza-contacto`, prompt en
   `worker/index.ts`; no pide datos personales ni da precios); después la
   PÁGINA, no la IA, pide nombre y correo juntos, como el plugin (no salen hacia Anthropic);
-  revisión con «Cambiar algo»; envío por `/api/contacto` con `via=itza`,
+  envío por `/api/contacto` con `via=itza`,
   sin casilla de consentimiento (el Worker solo la exige al formulario).
   `src/scripts/itza-contacto.ts`. Solo con JS y si el Worker tiene
   `ANTHROPIC_API_KEY` (GET → `disponible`); si no, o si la IA falla,

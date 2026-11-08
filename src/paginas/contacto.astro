@@ -71,28 +71,19 @@ const T = {
       faltaNombre: 'Escribe tu nombre.',
       correo: 'Tu correo electrónico',
       faltaCorreo: 'Revisa el correo: tiene que llevar @ y un dominio, como nombre@correo.com.',
-      siguiente: 'Continuar',
-      pideRevision: 'Así nos llegará tu mensaje. ¿Lo envío?',
-      revision: 'Tu mensaje',
-      etNombre: 'Nombre',
-      etCorreo: 'Correo',
-      etOrganizacion: 'Organización',
-      etMensaje: 'Mensaje',
-      cambiar: 'Cambiar algo',
-      organizacion: 'Organización o proyecto (opcional)',
       enviar: 'Enviar',
       errorEnvio: 'No he podido enviarlo. Inténtalo otra vez o escríbenos a',
-      enviado: 'Enviado, {nombre}. Te responderemos a {correo}.',
+      enviado: 'Enviado, {nombre}. Te responderemos a {correo} lo antes posible.',
       tu: 'Tú:',
       yo: 'Itza:',
       enLinea: 'En línea',
       cerrar: 'Cerrar',
       escribe: 'Escribe tu mensaje…',
-      pideDatos: 'Para terminar, déjanos tu nombre y tu correo y te respondemos. Solo los usaremos para eso.',
+      pideDatos: 'Para terminar, déjanos tu nombre y tu correo y te respondemos lo antes posible. Solo los usaremos para eso.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Hablar',
       escuchando: 'Escuchando. Pulsa para parar',
-      opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia'],
+      opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia', 'Una colaboración'],
       porCorreo: 'Contactar por email',
       pestanaNueva: 'se abre en una pestaña nueva',
     },
@@ -131,28 +122,19 @@ const T = {
       faltaNombre: 'Escriu el teu nom.',
       correo: 'El teu correu electrònic',
       faltaCorreo: 'Revisa el correu: ha de portar @ i un domini, com nom@correu.cat.',
-      siguiente: 'Continua',
-      pideRevision: 'Així ens arribarà el teu missatge. L’envio?',
-      revision: 'El teu missatge',
-      etNombre: 'Nom',
-      etCorreo: 'Correu',
-      etOrganizacion: 'Organització',
-      etMensaje: 'Missatge',
-      cambiar: 'Canvia alguna cosa',
-      organizacion: 'Organització o projecte (opcional)',
       enviar: 'Envia',
       errorEnvio: 'No l’he pogut enviar. Torna-ho a provar o escriu-nos a',
-      enviado: 'Enviat, {nombre}. Et respondrem a {correo}.',
+      enviado: 'Enviat, {nombre}. Et respondrem a {correo} al més aviat possible.',
       tu: 'Tu:',
       yo: 'Itza:',
       enLinea: 'En línia',
       cerrar: 'Tanca',
       escribe: 'Escriu el teu missatge…',
-      pideDatos: 'Per acabar, deixa’ns el teu nom i el teu correu i et responem. Només els farem servir per a això.',
+      pideDatos: 'Per acabar, deixa’ns el teu nom i el teu correu i et responem al més aviat possible. Només els farem servir per a això.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Parla',
       escuchando: 'Escoltant. Prem per aturar',
-      opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència'],
+      opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència', 'Una col·laboració'],
       porCorreo: 'Contactar per correu',
       pestanaNueva: 's’obre en una pestanya nova',
     },
@@ -191,28 +173,19 @@ const T = {
       faltaNombre: 'Enter your name.',
       correo: 'Your email address',
       faltaCorreo: 'Check your email address: it needs an @ and a domain, like name@example.com.',
-      siguiente: 'Continue',
-      pideRevision: 'This is how your message will reach us. Shall I send it?',
-      revision: 'Your message',
-      etNombre: 'Name',
-      etCorreo: 'Email',
-      etOrganizacion: 'Organisation',
-      etMensaje: 'Message',
-      cambiar: 'Change something',
-      organizacion: 'Organisation or project (optional)',
       enviar: 'Send',
       errorEnvio: 'I couldn’t send it. Try again or email us at',
-      enviado: 'Sent, {nombre}. We’ll reply to {correo}.',
+      enviado: 'Sent, {nombre}. We’ll reply to {correo} as soon as we can.',
       tu: 'You:',
       yo: 'Itza:',
       enLinea: 'Online',
       cerrar: 'Close',
       escribe: 'Type your message…',
-      pideDatos: 'To finish, leave us your name and email and we’ll reply. We’ll only use them for that.',
+      pideDatos: 'To finish, leave us your name and email and we’ll reply as soon as we can. We’ll only use them for that.',
       marca: 'Itza · Accesibilidad Primero',
       hablar: 'Speak',
       escuchando: 'Listening. Press to stop',
-      opciones: ['An accessible website', 'An audit', 'Training for my team', 'White label for my agency'],
+      opciones: ['An accessible website', 'An audit', 'Training for my team', 'White label for my agency', 'A collaboration'],
       porCorreo: 'Contact us by email',
       pestanaNueva: 'opens in a new tab',
     },
@@ -317,6 +290,12 @@ const CAMPOS = [
           poder leer hacia atrás (2.1.1). */}
       <div class="itza-chat__mensajes" role="log" aria-label={T.itza.conversacion} tabindex="0" data-itza-log></div>
 
+      {/* Las respuestas rápidas que propone Itza (sí / no, o una lista
+          corta): se pulsan en vez de escribir (Johnny, 08/11/2026: «que las
+          personas tengan que escribir lo mínimo»). Fuera del role="log": son
+          controles, no mensajes. Se vacían al responder. */}
+      <div class="itza-chat__rapidas" data-itza-rapidas hidden></div>
+
       {/* 1. La charla. La etiqueta, oculta como en el plugin: la pregunta de
           Itza, justo encima, ya dice qué escribir. */}
       <form class="itza-chat__fila" data-paso="charla" novalidate>
@@ -334,9 +313,10 @@ const CAMPOS = [
         </button>
       </form>
 
-      {/* 2. Los datos, como el formulario de contacto del plugin: nombre y
-          correo juntos. Los pide la página, no la IA. Aquí las etiquetas sí
-          se ven: son datos. */}
+      {/* 2. Los datos y enviar, en un paso (Johnny, 08/11/2026: «cuando da el
+          mail, que aparezca enviar, no hace falta el resumen»). Nombre y
+          correo los pide la página, no la IA. Aquí las etiquetas sí se
+          ven: son datos. */}
       <form class="itza-chat__datos" data-paso="datos" novalidate hidden>
         <label for="itza-nombre">{T.itza.nombre}</label>
         <p id="itza-nombre-error" class="itza-chat__error" hidden />
@@ -344,29 +324,6 @@ const CAMPOS = [
         <label for="itza-correo">{T.itza.correo}</label>
         <p id="itza-correo-error" class="itza-chat__error" hidden />
         <input id="itza-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="itza-correo-error" />
-        <button type="submit" class="itza-chat__boton">{T.itza.siguiente}</button>
-      </form>
-
-      {/* 3. La revisión: lo que va a llegar, a la vista y se puede cambiar. */}
-      <form class="itza-chat__datos itza-chat__revision" data-paso="revision" novalidate hidden>
-        <h2 class="itza-chat__subtitulo" tabindex="-1">{T.itza.revision}</h2>
-        <dl class="itza-chat__resumen">
-          <div><dt>{T.itza.etNombre}</dt><dd data-r="nombre"></dd></div>
-          <div><dt>{T.itza.etCorreo}</dt><dd data-r="correo"></dd></div>
-          <div data-r-org><dt>{T.itza.etOrganizacion}</dt><dd data-r="organizacion"></dd></div>
-          <div><dt>{T.itza.etMensaje}</dt><dd data-r="mensaje" class="itza-chat__texto"></dd></div>
-        </dl>
-        <button type="button" class="itza-chat__cambiar" aria-expanded="false" aria-controls="itza-editar">{T.itza.cambiar}</button>
-        <div id="itza-editar" class="itza-chat__editar" hidden>
-          <label for="itza-e-nombre">{T.itza.nombre}</label>
-          <input id="itza-e-nombre" type="text" autocomplete="name" maxlength="200" />
-          <label for="itza-e-correo">{T.itza.correo}</label>
-          <input id="itza-e-correo" type="email" autocomplete="email" maxlength="254" />
-          <label for="itza-e-organizacion">{T.itza.organizacion}</label>
-          <input id="itza-e-organizacion" type="text" autocomplete="organization" maxlength="200" />
-          <label for="itza-e-mensaje">{T.itza.etMensaje}</label>
-          <textarea id="itza-e-mensaje" rows="5" maxlength="5000"></textarea>
-        </div>
         <div data-itza-turnstile></div>
         <p class="itza-chat__error-envio" tabindex="-1" data-itza-error-envio hidden>
           {T.itza.errorEnvio} <a href={`mailto:${CORREO}`}>{CORREO}</a>.
@@ -851,8 +808,16 @@ const CAMPOS = [
   }
   @keyframes itza-salto { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
 
+  .itza-chat__rapidas { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; }
+  .itza-chat__rapidas[hidden] { display: none; }
+  .itza-chat__rapidas button {
+    min-block-size: var(--touch-min); padding: 6px 16px; border: 1.5px solid var(--itza-acento); border-radius: 999px;
+    background: #fff; color: var(--itza-acento-oscuro); font: inherit; font-size: 16px; cursor: pointer;
+  }
+  .itza-chat__rapidas button:hover { background: var(--itza-acento); color: #fff; }
+  .itza-chat__rapidas button:focus-visible { outline: 2px solid var(--itza-acento-oscuro); outline-offset: 2px; }
   .itza-chat__fila { display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-block-start: 1px solid #eee; }
-  .itza-chat__fila[hidden], .itza-chat__datos[hidden], .itza-chat__editar[hidden], .itza-chat__hecho[hidden],
+  .itza-chat__fila[hidden], .itza-chat__datos[hidden], .itza-chat__hecho[hidden],
   .itza-chat__error[hidden], .itza-chat__error-envio[hidden] { display: none; }
   .itza-chat__entrada {
     flex: 1; min-inline-size: 0; min-block-size: var(--touch-min); box-sizing: border-box;
@@ -902,19 +867,6 @@ const CAMPOS = [
   }
   .itza-chat__boton:hover { background: var(--itza-acento-oscuro); }
   .itza-chat__boton:disabled { opacity: 0.6; cursor: progress; }
-  .itza-chat__revision { gap: 12px; }
-  .itza-chat__subtitulo { margin: 0; font-size: 14px; font-weight: 400; color: var(--itza-suave); }
-  .itza-chat__resumen { margin: 0; display: flex; flex-direction: column; gap: 10px; }
-  .itza-chat__resumen div { display: flex; flex-direction: column; }
-  .itza-chat__resumen [hidden] { display: none; }
-  .itza-chat__resumen dt { font-size: 14px; color: var(--itza-suave); }
-  .itza-chat__resumen dd { margin: 0; overflow-wrap: anywhere; }
-  .itza-chat__texto { white-space: pre-line; }
-  .itza-chat__cambiar {
-    align-self: flex-start; min-block-size: var(--touch-min); padding: 0; border: 0; background: none;
-    color: var(--itza-acento-oscuro); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
-  }
-  .itza-chat__editar { display: flex; flex-direction: column; gap: 6px; }
   .itza-chat__error-envio a { color: var(--itza-acento-oscuro); }
   .itza-chat__hecho { padding: 14px 16px; border-block-start: 1px solid #eee; background: #fafafa; }
   .itza-chat__firma { padding: 8px; border-block-start: 1px solid #f0f0f0; text-align: center; font-size: 13px; color: #6b6b6b; }
