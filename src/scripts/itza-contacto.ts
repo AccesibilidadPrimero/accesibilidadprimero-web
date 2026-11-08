@@ -92,7 +92,7 @@ async function iniciar() {
        Una dirección que no esté en el mapa se queda como texto. */
     const enlaces: { ruta: string; nombre: string }[] = [];
     if (quien === 'itza') {
-      texto = texto.replace(/(^|\s)(\/[a-z0-9\-\/]+\/)(?=[\s.,;:)]|$)/g, (todo, antes: string, ruta: string) => {
+      texto = texto.replace(/(^|\s)(\/[a-z0-9\-\/]+\/(?:#[a-z0-9\-]+)?)(?=[\s.,;:)]|$)/g, (todo, antes: string, ruta: string) => {
         const a = T.mapa.find((m) => m.ruta === ruta);
         if (!a) return todo;
         if (!enlaces.includes(a)) enlaces.push(a);

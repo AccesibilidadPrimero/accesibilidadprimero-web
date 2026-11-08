@@ -28,14 +28,29 @@ const SECCIONES: { clave: RouteKey; contenido: string }[] = [
   { clave: 'privacidad', contenido: 'la política de privacidad: qué datos se recogen y para qué' },
 ];
 
+/* Las secciones de dentro de una página, con su ancla (Johnny, 08/11/2026:
+   «el link tiene que dirigir a la sección que corresponda»). Las anclas son
+   los `id` de los Bloque de src/paginas/servicios.astro: si cambian allí,
+   cambian aquí. Al llegar con el ancla, el desplegable se abre solo
+   (src/scripts/plegable.ts). */
+const SUBSECCIONES: { clave: RouteKey; ancla: string; nombre: Record<Lang, string>; contenido: string }[] = [
+  { clave: 'servicios', ancla: 'diseno', nombre: { es: 'Diseño y desarrollo', ca: 'Disseny i desenvolupament', en: 'Design and development' }, contenido: 'diseño y desarrollo de webs accesibles' },
+  { clave: 'servicios', ancla: 'auditoria', nombre: { es: 'Auditoría de accesibilidad', ca: 'Auditoria d’accessibilitat', en: 'Accessibility audit' }, contenido: 'auditorías de accesibilidad y sus tarifas' },
+  { clave: 'servicios', ancla: 'formacion', nombre: { es: 'Formación', ca: 'Formació', en: 'Training' }, contenido: 'formación en accesibilidad para equipos' },
+];
+
 export interface Apartado { ruta: string; nombre: string; contenido: string }
 
 export function mapaItza(lang: Lang): Apartado[] {
   const nav = t(lang).nav as Partial<Record<RouteKey, string>>;
-  return SECCIONES.map(({ clave, contenido }) => ({ ruta: path(clave, lang), nombre: nav[clave] ?? clave, contenido }));
+  return [
+    ...SUBSECCIONES.map(({ clave, ancla, nombre, contenido }) => ({ ruta: `${path(clave, lang)}#${ancla}`, nombre: nombre[lang], contenido })),
+    ...SECCIONES.map(({ clave, contenido }) => ({ ruta: path(clave, lang), nombre: nav[clave] ?? clave, contenido })),
+  ];
 }
 
-/* Para el prompt: una línea por apartado. */
+/* Para el prompt: una línea por apartado. Las secciones van primero: si la
+   respuesta está en una, se enlaza la sección y no la página entera. */
 export function mapaEnTexto(lang: Lang): string {
   return mapaItza(lang).map((a) => `${a.ruta} (${a.nombre}): ${a.contenido}.`).join('\n');
 }
