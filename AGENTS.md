@@ -683,11 +683,14 @@ de Turnstile sea la de prueba.
   vuelve a la barra. En la cabecera de la ventana, el emblema de AP.
   Encima de la barra, las opciones (píldoras del plugin): cada una empieza
   la conversación con su texto, y «Contactar por email» es un `mailto:` a
-  proyectos@. Si preguntan algo que está en la web, Itza responde corto y
-  da el apartado: el mapa vive en `src/data/itza-mapa.ts`, lo leen el
-  prompt y la página, y solo una dirección de ese mapa se pinta como
-  enlace (en su línea, 44 px, en otra pestaña y avisado). Una sección nueva
-  de la web que Itza deba conocer, se añade ahí. Si solo quieren el correo,
+  proyectos@. Sin enlaces en la conversación de Contacto (Johnny, 08/11/2026:
+  «despistan; si contactan, ya saben lo que quieren»): el prompt no los
+  pide y la página quita cualquier dirección que escriba el modelo. El mapa
+  de `src/data/itza-mapa.ts` queda para la versión de Itza en toda la web.
+  Al elegir un servicio, Itza invita: «Si quieres recibir más información
+  sobre nuestras formaciones, cuéntanos un poco más y te escribimos». El
+  cierre lo dice la página («Gracias, ya lo tengo. Para terminar…»); el
+  último turno del modelo no se enseña. Si solo quieren el correo,
   lo da y ofrece seguir.
   Itza hace como mucho tres preguntas (qué hace la organización, qué
   necesita y si quiere añadir algo); no pregunta por plazos ni normativa

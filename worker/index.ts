@@ -31,7 +31,6 @@
  * Variables (wrangler.toml, [vars]):
  *   CORREO_DESTINO, CORREO_REMITENTE, TURNSTILE_HOSTNAMES
  */
-import { mapaEnTexto, mapaItza } from '../src/data/itza-mapa.ts';
 import { hostSinIndexar } from '../src/data/sitio.ts';
 import { llamarClaude, validarConversacion } from '../itza-worker/claude.ts';
 export interface Env {
@@ -223,19 +222,16 @@ const ITZA_TOPE_PREGUNTAS = 8;
 const ITZA_TOPE_TEXTO = 1200;
 const ITZA_IDIOMA = { es: 'castellano', ca: 'catalán', en: 'inglés' } as const;
 
-/* Los apartados de la web, en el idioma de la página (src/data/itza-mapa.ts,
-   el mismo que usa la página para saber qué puede convertir en enlace). */
-const itzaMapa = (lang: 'es' | 'ca' | 'en') => `Los apartados de la web y lo que hay en cada uno:
-${mapaEnTexto(lang)}
-
-Cuando la respuesta esté en uno de ellos, escribe su dirección tal cual (si hay una sección con # que encaje, esa y no la página), sola, en la última línea del texto de "respuesta", DENTRO de esa cadena, nunca como un campo aparte del JSON. Ejemplo: {"respuesta": "Las tarifas de las auditorías están en su sección. ¿Para qué web sería?\\n/servicios/#auditoria", "listo": false}
-Solo direcciones de esta lista, exactamente como están: ni inventadas ni con el dominio. No la anuncies con «aquí» ni «en este enlace»: la página la convierte en un enlace debajo de tu mensaje. Si no sabes dónde está, no pongas ninguna.`;
+/* Sin enlaces en Contacto (Johnny, 08/11/2026: «quizás sea mejor no poner
+   links en la conversación de contacto, despistan; si contactan, ya saben lo
+   que quieren»). El mapa de src/data/itza-mapa.ts queda para la versión de
+   Itza en toda la web. */
 
 const ITZA_SISTEMA = `Eres Itza, la asistente de Accesibilidad Primero, un estudio de diseño y accesibilidad digital de Valencia. Estás en su página de Contacto. Tu trabajo es ayudar a la persona a contar su proyecto para que el equipo le responda bien. No vendes ni das presupuestos.
 
-La persona empieza escribiendo en una barra que dice «¿Cómo podemos ayudarte?», así que su primer mensaje responde a eso. Si pregunta algo sobre el estudio o duda de algo que está en la web, contéstalo en una o dos frases si lo sabes, enlaza el apartado donde lo encontrará (más abajo te digo cómo) y sigue.
+La persona empieza escribiendo en una barra que dice «¿Cómo podemos ayudarte?», así que su primer mensaje responde a eso. Si pregunta algo sobre el estudio, contéstalo en una frase si lo sabes y sigue. Sin enlaces ni direcciones web: quien llega aquí ya sabe lo que quiere y un enlace le saca de la conversación (Johnny, 08/11/2026).
 
-Cuando la persona dice qué necesita y es uno de los servicios (una web, una auditoría, formación), responde con una sola frase que la invite a seguir, en esta forma: «Si quieres recibir más información sobre nuestras formaciones, cuéntanos un poco más y te escribimos.» (cambia «nuestras formaciones» por «nuestras auditorías» o «el diseño y desarrollo de webs» según el caso), enlaza la SECCIÓN de ese servicio (la dirección con #, no la página entera) y sigue con tu siguiente pregunta. No repitas lo que ha dicho ni resumas el servicio.
+Cuando la persona dice qué necesita y es uno de los servicios (una web, una auditoría, formación), responde con una sola frase que la invite a seguir, en esta forma: «Si quieres recibir más información sobre nuestras formaciones, cuéntanos un poco más y te escribimos.» (cambia «nuestras formaciones» por «nuestras auditorías» o «el diseño y desarrollo de webs» según el caso) y sigue con tu siguiente pregunta. No repitas lo que ha dicho ni resumas el servicio.
 
 Si solo quiere el correo o contactar sin más (por ejemplo «quiero contactar», «¿cuál es vuestro email?», «¿me podéis llamar?»): dale el correo, proyectos@accesibilidadprimero.com, y dile en la misma frase que, si quiere, también puede dejar aquí su mensaje y su contacto en un momento. Si dice que sí, sigue con las preguntas. Si dice que no, o que solo quiere que le escriban, termina ya (listo) con un resumen corto de lo que haya dicho, aunque sea una frase. No hay teléfono que dar: si pide que le llamen, dile que puede pedirlo en el mensaje.
 
@@ -287,9 +283,8 @@ function leerItza(texto: string, lang: 'es' | 'ca' | 'en') {
     let respuesta = '';
     try { respuesta = m ? (JSON.parse(`"${m[1]}"`) as string).trim() : ''; } catch { respuesta = ''; }
     if (!respuesta && !texto.trim().startsWith('{')) return { reply: texto.trim(), listo: false };
-    const rutas = new Set(mapaItza(lang).map((a) => a.ruta));
-    const sueltas = [...new Set(texto.match(/\/[a-z0-9\-\/]+\/(?:#[a-z0-9\-]+)?/g) ?? [])].filter((r) => rutas.has(r) && !respuesta.includes(r));
-    const reply = [respuesta || ITZA_SIN_RESPUESTA[lang], ...sueltas].join('\n');
+    /* Sin enlaces en Contacto: las direcciones sueltas no se recuperan. */
+    const reply = respuesta || ITZA_SIN_RESPUESTA[lang];
     return { reply, listo: false };
   }
 }
@@ -313,7 +308,7 @@ export async function itzaContacto(request: Request, env: Env): Promise<Response
 
   const texto = await llamarClaude(env.ANTHROPIC_API_KEY, {
     modelo: env.ITZA_MODELO,
-    sistema: `${ITZA_SISTEMA}\n\n${itzaMapa(datos.lang)}\n\nLa página está en ${ITZA_IDIOMA[datos.lang]}; responde en el idioma en que te escriba la persona.`,
+    sistema: `${ITZA_SISTEMA}\n\nLa página está en ${ITZA_IDIOMA[datos.lang]}; responde en el idioma en que te escriba la persona.`,
     mensajes: datos.mensajes,
     maxTokens: 700,
     registro: 'itza-contacto',
