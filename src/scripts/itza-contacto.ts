@@ -293,10 +293,17 @@ async function iniciar() {
       if (!r.ok || !d.reply) throw new Error(String(r.status));
       espera.remove();
       historia.push({ role: 'assistant', content: d.reply });
-      decir(linea(d.reply, 'itza'), d.listo ? [] : d.opciones);
-      /* Listo, o el tope de preguntas: a por los datos. */
+      /* Listo, o el tope de preguntas: a por los datos. Lo que diga el modelo
+         en ese turno NO se enseña: a veces cierra con otra pregunta («¿Algo
+         más…?») y, justo debajo, la página pedía ya el nombre y el correo, sin
+         dejar contestar (Johnny, 08/11/2026: «aquí hay una incongruencia»).
+         El cierre lo dice siempre la página (pideDatos, que da las gracias). */
       if (d.listo || historia.filter((m) => m.role === 'user').length >= TOPE) aDatos(d);
-      else { ponerRapidas(d.opciones); campoCharla.focus(); }
+      else {
+        decir(linea(d.reply, 'itza'), d.opciones);
+        ponerRapidas(d.opciones);
+        campoCharla.focus();
+      }
     } catch {
       /* La IA no responde: lo dice y deja el formulario de siempre, con lo
          que ya había escrito la persona en el mensaje. */

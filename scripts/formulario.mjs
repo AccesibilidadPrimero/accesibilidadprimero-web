@@ -348,7 +348,7 @@ async function conItza(respuestas, ancho = 390) {
 {
   const { p, ctx, enviadas } = await conItza([
     { reply: '¿Quieres añadir algo más?', listo: false, opciones: ['Sí', 'No'] },
-    { reply: 'Gracias, ya lo tengo.', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
+    { reply: '¿Algo más que debamos saber antes de escribiros?', listo: true, resumen: 'Somos una fundación cultural y queremos una web accesible antes de marzo.', organizacion: 'Fundación Ejemplo' },
   ]);
   ok(await p.isVisible('#itza-pregunta') && !(await p.isVisible('form[data-formulario]')), 'Itza: con el Worker, la barra y sin el formulario');
   const fondo = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
@@ -377,6 +377,7 @@ async function conItza(respuestas, ancho = 390) {
   ok(enviadas.at(-1)?.messages.at(-1)?.content === 'No' && !(await p.isVisible('[data-itza-rapidas]')), 'Itza: pulsar «No» lo envía y los botones se van');
   await p.waitForSelector('#itza-nombre:visible', { timeout: 5000 }).catch(() => {});
   ok(await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: al tenerlo, pide nombre y correo, y el foco va al nombre');
+  ok(!(await p.textContent('[data-itza-log]')).includes('¿Algo más que debamos saber') && (await p.locator('[data-itza-log] p.itza').last().textContent()).includes('Gracias, ya lo tengo. Para terminar'), 'Itza: al cerrar no enseña la última pregunta del modelo; da las gracias y pide los datos');
   ok(!(await p.isVisible('#itza-mensaje')) && await p.textContent('[data-paso="datos"] .itza-chat__boton') === 'Enviar', 'Itza: la charla se retira y el botón es «Enviar»');
   await p.click('[data-paso="datos"] .itza-chat__boton');
   ok(await p.isVisible('#itza-nombre-error') && await p.isVisible('#itza-correo-error') && await p.evaluate(() => document.activeElement.id) === 'itza-nombre', 'Itza: vacíos, los dos errores y el foco al primero');
