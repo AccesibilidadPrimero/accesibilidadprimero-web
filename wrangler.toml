@@ -33,6 +33,14 @@ CORREO_REMITENTE = "proyectos@accesibilidadprimero.com"
 # no debe valer una ficha conseguida en local.
 TURNSTILE_HOSTNAMES = "accesibilidadprimero.com,www.accesibilidadprimero.com,accesibilidadprimero.eu,www.accesibilidadprimero.eu,accesibilidadprimero.proyectos-44e.workers.dev"
 
+# Contador de visitas propio (Johnny, 11/11/2026): ciudad y origen de cada
+# página vista, sin IP ni cookies a quien visita. Ver worker/visitas.ts.
+# La tabla `visitas` ya está creada en la base.
+[[d1_databases]]
+binding = "VISITAS"
+database_name = "ap-visitas"
+database_id = "ace2f3ac-3464-4242-bddd-464e867bb896"
+
 [observability]
 enabled = true
 

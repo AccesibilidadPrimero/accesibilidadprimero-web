@@ -47,7 +47,7 @@ export const PRIVACIDAD: PaginaLegal = {
   entrada: [
     'Qué datos recogemos, para qué los usamos y cómo puedes pedirnos que los borremos. Explicado para que se entienda a la primera.',
   ],
-  fecha: 'Última actualización: 8 de noviembre de 2026.',
+  fecha: 'Última actualización: 11 de noviembre de 2026.',
   descripcion: `Qué datos recogemos en ${DOMINIO}, para qué los usamos y cómo ejercer tus derechos.`,
   bloques: [
     {
@@ -71,7 +71,8 @@ export const PRIVACIDAD: PaginaLegal = {
         { p: 'Solo los que nos das. Si usas el formulario: tu nombre, tu correo, tu organización si la indicas y lo que nos cuentes. Si nos escribes por correo, lo que haya en tu mensaje.' },
         { p: 'Si usas a Itza en la página de Contacto, lo que le escribes para preparar tu mensaje. Itza te pide que no le des datos personales: esos van en el formulario.' },
         { p: 'Para proteger el formulario de los envíos automáticos, Cloudflare Turnstile analiza datos técnicos de tu conexión, como la dirección IP y el navegador, sin pedirte nada. No los usamos para identificarte.' },
-        { p: 'Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics, que cuenta páginas vistas sin cookies y sin seguir a nadie.' },
+        { p: 'Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics y un contador propio. Los dos cuentan páginas vistas sin cookies y sin seguir a nadie.' },
+        { p: 'El contador propio guarda, de cada página vista, la fecha, la página, la ciudad y el país aproximados y la web o la red social desde la que llegas. La ciudad la calcula Cloudflare con tu dirección IP en ese momento; la IP no se guarda. Con estos datos no se puede saber quién eres ni unir unas visitas con otras. Se borran a los 13 meses.' },
       ],
     },
     {
@@ -138,7 +139,7 @@ export const PRIVACIDAD: PaginaLegal = {
 export const COOKIES: PaginaLegal = {
   titulo: 'Política de cookies',
   entrada: ['Qué se guarda en tu navegador cuando visitas esta web y para qué sirve. Es casi nada.'],
-  fecha: 'Última actualización: 11 de octubre de 2026.',
+  fecha: 'Última actualización: 11 de noviembre de 2026.',
   descripcion: `${DOMINIO} no usa cookies. Qué se guarda en tu navegador al usar el formulario y por qué.`,
   bloques: [
     {
@@ -153,7 +154,8 @@ export const COOKIES: PaginaLegal = {
       titulo: 'Cuáles usamos',
       piezas: [
         { p: 'Ninguna. Ni propias ni de terceros, ni de análisis ni de publicidad. Por eso no te enseñamos un aviso para aceptarlas: no hay nada que aceptar.' },
-        { p: 'Las visitas las contamos con Cloudflare Web Analytics, que no guarda nada en tu navegador.' },
+        { p: 'Las visitas las contamos con Cloudflare Web Analytics y con un contador propio. Ninguno de los dos guarda nada en tu navegador.' },
+        { p: 'En los navegadores del propio estudio hay una cookie, ap_no_contar, para que nuestras visitas no sumen. Solo existe donde alguien del estudio la activa: a ti no te llega.' },
         { p: 'Solo se guarda una cosa, y solo si empiezas a rellenar el formulario de contacto:' },
         {
           datos: [
@@ -291,7 +293,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
   entrada: [
     'Quines dades recollim, per a què les fem servir i com ens pots demanar que les esborrem. Explicat perquè s’entengui a la primera.',
   ],
-  fecha: 'Darrera actualització: 8 de novembre de 2026.',
+  fecha: 'Darrera actualització: 11 de novembre de 2026.',
   descripcion: `Quines dades recollim a ${DOMINIO}, per a què les fem servir i com pots exercir els teus drets.`,
   bloques: [
     {
@@ -315,7 +317,8 @@ const PRIVACIDAD_CA: PaginaLegal = {
         { p: 'Només les que ens dones. Si fas servir el formulari: el teu nom, el teu correu, la teva organització si la indiques i el que ens expliquis. Si ens escrius per correu, el que hi hagi al teu missatge.' },
         { p: 'Si fas servir Itza a la pàgina de Contacte, el que li escrius per preparar el teu missatge. Itza et demana que no li donis dades personals: aquestes van al formulari.' },
         { p: 'Per protegir el formulari dels enviaments automàtics, Cloudflare Turnstile analitza dades tècniques de la teva connexió, com l’adreça IP i el navegador, sense demanar-te res. No les fem servir per identificar-te.' },
-        { p: 'Per saber quantes visites rep el web fem servir Cloudflare Web Analytics, que compta les pàgines vistes sense galetes i sense seguir ningú.' },
+        { p: 'Per saber quantes visites rep el web fem servir Cloudflare Web Analytics i un comptador propi. Tots dos compten les pàgines vistes sense galetes i sense seguir ningú.' },
+        { p: 'El comptador propi guarda, de cada pàgina vista, la data, la pàgina, la ciutat i el país aproximats i el web o la xarxa social des d’on arribes. La ciutat la calcula Cloudflare amb la teva adreça IP en aquell moment; la IP no es guarda. Amb aquestes dades no es pot saber qui ets ni unir unes visites amb altres. S’esborren al cap de 13 mesos.' },
       ],
     },
     {
@@ -384,7 +387,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
   entrada: [
     'What data we collect, what we use it for and how you can ask us to delete it. Written so it makes sense the first time you read it.',
   ],
-  fecha: 'Last updated: 8 November 2026.',
+  fecha: 'Last updated: 11 November 2026.',
   descripcion: `What data we collect on ${DOMINIO}, what we use it for and how to exercise your rights.`,
   bloques: [
     {
@@ -408,7 +411,8 @@ const PRIVACIDAD_EN: PaginaLegal = {
         { p: 'Only what you give us. If you use the form: your name, your email address, your organisation if you include it and whatever you tell us. If you email us, whatever is in your message.' },
         { p: 'If you use Itza on the Contact page, what you write to it to prepare your message. Itza asks you not to give it personal details: those go in the form.' },
         { p: 'To protect the form from automated submissions, Cloudflare Turnstile analyses technical data about your connection, such as your IP address and browser, without asking you to do anything. We do not use it to identify you.' },
-        { p: 'To find out how many visits the website gets, we use Cloudflare Web Analytics, which counts page views without cookies and without tracking anyone.' },
+        { p: 'To find out how many visits the website gets, we use Cloudflare Web Analytics and our own counter. Both count page views without cookies and without tracking anyone.' },
+        { p: 'Our own counter keeps, for each page view, the date, the page, the approximate city and country, and the website or social network you came from. Cloudflare works out the city from your IP address at that moment; the IP address is not stored. This data cannot tell us who you are or link one visit to another. It is deleted after 13 months.' },
       ],
     },
     {
@@ -475,7 +479,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
 const COOKIES_CA: PaginaLegal = {
   titulo: 'Política de galetes',
   entrada: ['Què es guarda al teu navegador quan visites aquest web i per a què serveix. Gairebé res.'],
-  fecha: 'Darrera actualització: 11 d’octubre de 2026.',
+  fecha: 'Darrera actualització: 11 de novembre de 2026.',
   descripcion: `${DOMINIO} no fa servir galetes. Què es guarda al teu navegador quan fas servir el formulari i per què.`,
   bloques: [
     {
@@ -490,7 +494,8 @@ const COOKIES_CA: PaginaLegal = {
       titulo: 'Quines fem servir',
       piezas: [
         { p: 'Cap. Ni pròpies ni de tercers, ni d’anàlisi ni de publicitat. Per això no et mostrem cap avís per acceptar-les: no hi ha res a acceptar.' },
-        { p: 'Les visites les comptem amb Cloudflare Web Analytics, que no guarda res al teu navegador.' },
+        { p: 'Les visites les comptem amb Cloudflare Web Analytics i amb un comptador propi. Cap dels dos no guarda res al teu navegador.' },
+        { p: 'Als navegadors del mateix estudi hi ha una galeta, ap_no_contar, perquè les nostres visites no sumin. Només existeix on algú de l’estudi l’activa: a tu no t’arriba.' },
         { p: 'Només es guarda una cosa, i només si comences a omplir el formulari de contacte:' },
         {
           datos: [
@@ -527,7 +532,7 @@ const COOKIES_CA: PaginaLegal = {
 const COOKIES_EN: PaginaLegal = {
   titulo: 'Cookie policy',
   entrada: ['What is stored in your browser when you visit this website, and what it is for. Next to nothing.'],
-  fecha: 'Last updated: 11 October 2026.',
+  fecha: 'Last updated: 11 November 2026.',
   descripcion: `${DOMINIO} does not use cookies. What is stored in your browser when you use the form, and why.`,
   bloques: [
     {
@@ -542,7 +547,8 @@ const COOKIES_EN: PaginaLegal = {
       titulo: 'Which ones we use',
       piezas: [
         { p: 'None. No first-party or third-party cookies, no analytics cookies and no advertising cookies. That is why we do not show you a banner asking you to accept them: there is nothing to accept.' },
-        { p: 'We count visits with Cloudflare Web Analytics, which stores nothing in your browser.' },
+        { p: 'We count visits with Cloudflare Web Analytics and our own counter. Neither stores anything in your browser.' },
+        { p: 'The studio’s own browsers carry one cookie, ap_no_contar, so that our visits are not counted. It only exists where someone at the studio turns it on: it never reaches you.' },
         { p: 'Only one thing is stored, and only if you start filling in the contact form:' },
         {
           datos: [
