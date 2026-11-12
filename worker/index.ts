@@ -33,6 +33,7 @@
  */
 import { hostSinIndexar } from '../src/data/sitio.ts';
 import { llamarClaude, validarConversacion } from '../itza-worker/claude.ts';
+import { registrarVisita, cambiarConteo, type BaseD1 } from './visitas.ts';
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
   BREVO_API_KEY?: string;
@@ -44,6 +45,8 @@ export interface Env {
   /** Itza en Contacto (08/11/2026). Sin la clave, Itza no se enseña. */
   ANTHROPIC_API_KEY?: string;
   ITZA_MODELO?: string;
+  /** Contador de visitas propio (11/11/2026, worker/visitas.ts). */
+  VISITAS?: BaseD1;
 }
 
 const ACCION = 'contacto';
@@ -319,8 +322,16 @@ export async function itzaContacto(request: Request, env: Env): Promise<Response
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx?: { waitUntil(p: Promise<unknown>): void }): Promise<Response> {
     const url = new URL(request.url);
+
+    /* Contador de visitas (11/11/2026). Ver worker/visitas.ts. */
+    if (url.pathname === '/api/v') {
+      return registrarVisita(request, env.VISITAS, (p) => (ctx ? ctx.waitUntil(p) : void p));
+    }
+    if (url.pathname === '/api/no-contar' || url.pathname === '/api/contar') {
+      return cambiarConteo(request, url.pathname === '/api/contar');
+    }
 
     if (url.pathname === '/api/contacto') {
       if (request.method !== 'POST') {

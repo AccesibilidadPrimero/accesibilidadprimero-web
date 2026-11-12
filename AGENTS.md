@@ -660,6 +660,19 @@ URL final. **Cualquier herramienta que guarde algo en el navegador o
 identifique a quien visita obliga a reescribir Privacidad y Cookies y a
 poner un banner. No se añade sin hablarlo.**
 
+**Contador de visitas propio (Johnny, 11/11/2026).** Hablado y aceptado:
+Cloudflare Web Analytics no da la ciudad ni deja excluir los navegadores del
+estudio. `src/scripts/visita.ts` manda una petición por página a `/api/v`
+(solo en el .eu y el .com) con la página, la referencia y `utm_source`/`ref`;
+`worker/visitas.ts` guarda en la D1 `ap-visitas` fecha, página, ciudad,
+región, país y origen (directo, interna, buscador, redes, ia, enlace). **Sin
+IP, sin identificador y sin nada en el navegador de quien visita**; se borra a
+los 13 meses. La única cookie, `ap_no_contar`, solo existe en los navegadores
+del estudio que abren `/api/no-contar` (`/api/contar` la quita). Privacidad y
+Cookies lo dicen en los tres idiomas: si cambia lo que se guarda, cambian
+ellas en el mismo PR. Lo lee el panel de analítica de Johnny (artefacto con el
+conector de Cloudflare).
+
 `npm run formulario` prueba el Worker (`worker/index.ts`) y el formulario de
 Contacto con Brevo y Turnstile SIMULADOS: no envía correos. Necesita Node 22.6
 o posterior (importa el Worker en TypeScript). Avisa mientras la clave de sitio
