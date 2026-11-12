@@ -1,0 +1,73 @@
+Licencia del repositorio de accesibilidadprimero.eu
+==================================================
+
+Este repositorio tiene dos partes con licencias distintas.
+
+1. El código: licencia MIT
+--------------------------
+
+El código fuente es libre: los componentes, las plantillas, los estilos, los
+scripts de comprobación, los Workers y la configuración. Lo puedes usar,
+copiar y modificar, también en proyectos comerciales, con las condiciones de
+la licencia MIT que va al final de este archivo.
+
+2. Los contenidos: todos los derechos reservados
+------------------------------------------------
+
+Los contenidos no son libres. No se pueden copiar, reutilizar ni adaptar sin
+permiso por escrito. Son contenidos:
+
+- Los textos de la web, en todos sus idiomas: páginas, artículos del blog,
+  casos de estudio, textos legales y las instrucciones de Itza.
+- La marca Accesibilidad Primero y la marca Itza: nombres, logotipos,
+  emblema, símbolo animado y personaje.
+- Las imágenes, ilustraciones, fotografías y vídeos, sobre todo los de
+  `arte/`, `src/assets/` y `public/video/`.
+- Los trabajos, nombres, imágenes y testimonios de clientes que aparecen en
+  los casos de estudio. Son de sus autores o de los clientes, y se muestran
+  con su permiso solo en esta web.
+
+Para pedir permiso: proyectos@accesibilidadprimero.com
+
+3. Material de terceros
+-----------------------
+
+La tipografía Instrument Sans (`public/fonts/`) tiene la licencia SIL Open
+Font License 1.1. El texto está en `public/fonts/OFL.txt`.
+
+Las dependencias de npm tienen cada una su propia licencia.
+
+
+English summary
+---------------
+
+The source code is released under the MIT License below. Texts, brand assets
+(Accesibilidad Primero, Itza), images, illustrations, photos, videos and
+client work are © Johnny Vale Vigas / Accesibilidad Primero or their
+respective owners, all rights reserved, and are not covered by the MIT
+License. Instrument Sans is under the SIL Open Font License 1.1.
+
+
+--------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2026 Johnny Vale Vigas (Accesibilidad Primero)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
