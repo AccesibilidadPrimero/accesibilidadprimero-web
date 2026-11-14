@@ -86,6 +86,10 @@ await page.setViewportSize({ width: 1440, height: 900 });
 await page.waitForTimeout(400);
 const titularInicial = (await page.textContent('h1'))?.trim();
 await page.evaluate(() => document.querySelector('[data-carrusel-control]')?.scrollIntoView());
+/* Desde el 14/11/2026 la margarita está sola 3 s y el carrusel arranca
+   después (y la margarita no lleva frase): se espera a que rote. */
+await page.mouse.move(0, 0);
+await page.waitForFunction(() => document.querySelector('.hero__lamina[data-activa]')?.getAttribute('data-indice') !== '0', null, { timeout: 15000 });
 await page.waitForTimeout(400);
 await page.click('[data-carrusel-control]');
 const etiqueta = (await page.textContent('[data-carrusel-control-label]'))?.trim();

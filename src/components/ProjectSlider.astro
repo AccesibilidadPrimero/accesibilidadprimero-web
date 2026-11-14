@@ -44,6 +44,7 @@
       siguiente. Reducir no es eliminar (AGENTS.md §2.3).
    --------------------------------------------------------------------------- */
 import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
 import { t } from '../i18n/ui';
 import type { Lang } from '../i18n/config';
 
@@ -79,6 +80,21 @@ if (faltan.length) {
     'Déjalas en arte/proyectos/ y ejecuta `npm run arte`.',
   );
 }
+
+/* Peso (14/11/2026): se servían los PNG originales, hasta 2,3 MB cada uno
+   (casi 5 MB en la Home). Ahora AVIF/WebP a los anchos en que se ven, con
+   `sizes` medido sobre --ancho-captura: escritorio, tableta (≤ 1023) y móvil.
+   Todas `lazy`: en la Home están debajo del hero y el script las pide en
+   cuanto el carrusel se acerca a la pantalla (precargar). */
+const ANCHO: Record<typeof variante, { escritorio: number; tableta: number }> = {
+  eci: { escritorio: 904, tableta: 540 },
+  foc: { escritorio: 400, tableta: 400 },
+  izaskun: { escritorio: 656, tableta: 656 },
+};
+const { escritorio, tableta } = ANCHO[variante];
+const sizes = `(min-width: 1024px) ${escritorio}px, (min-width: 768px) min(${tableta}px, 100vw), calc(100vw - 96px)`;
+const anchos = (original: number) =>
+  [320, 480, 656, 904, 1312, 1808].filter((w) => w <= original).concat(original > 1808 ? [] : [original]);
 ---
 
 <div class:list={['slider', `slider--${variante}`, conMovil && 'slider--con-movil']} data-slider>
@@ -92,19 +108,16 @@ if (faltan.length) {
             {/* width/height REALES: son los que le dan al navegador la
                 proporción antes de descargar. La <source> lleva los suyos,
                 que son otros: la vertical tiene otra proporción. */}
+            {movil ? (
             <picture>
               {movil && (
                 <source media="(max-width: 767px)" srcset={movil.src} width={movil.width} height={movil.height} />
               )}
-              <img
-                src={meta.src}
-                alt={im.alt}
-                width={meta.width}
-                height={meta.height}
-                loading={i === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-              />
+              <img src={meta.src} alt={im.alt} width={meta.width} height={meta.height} loading="lazy" decoding="async" />
             </picture>
+            ) : (
+              <Picture src={meta} alt={im.alt} formats={['avif', 'webp']} widths={[...new Set(anchos(meta.width))]} sizes={sizes} quality="high" loading="lazy" decoding="async" />
+            )}
           </li>
         );
       })
@@ -173,8 +186,8 @@ if (faltan.length) {
   }
   .slider__lamina[data-activa] { transform: none; }
   .slider__lamina[data-saliente] { transform: translateX(-100%); }
-  .slider__lamina picture { display: contents; }
-  .slider__lamina img {
+  .slider__lamina :global(picture) { display: contents; }
+  .slider__lamina :global(img) {
     width: 100%;
     height: 100%;
     object-fit: contain;

@@ -16,6 +16,7 @@ import { PRODUCTOS } from '../data/productos';
    sirve con caché larga, y si el archivo desaparece el build se para. */
 import iconoEstudio from '../assets/estudio/icono.svg';
 import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
 /* Las compila `npm run arte`. El glob tiene que ser literal para Vite. */
 const mediosProducto = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/productos/*.{png,jpg,jpeg,webp,svg}',
@@ -23,6 +24,14 @@ const mediosProducto = import.meta.glob<{ default: ImageMetadata }>(
 );
 const medio = (nombre: string) =>
   Object.entries(mediosProducto).find(([r]) => r.includes(`/${nombre}.`))?.[1]?.default;
+/* Los dos fotogramas del vídeo de Itza en WebP (14/11/2026): en PNG eran
+   330 KB cada uno solo para el póster. 800 px = el doble de lo que ocupa. */
+const poster = async (nombre: string) => {
+  const m = medio(nombre);
+  return m ? (await getImage({ src: m, format: 'webp', width: Math.min(800, m.width), quality: 80 })).src : undefined;
+};
+const posterInicio = await poster('itza-inicio');
+const posterFinal = await poster('itza-fotograma');
 
 const lang = idiomaDe(Astro.url);
 
@@ -177,9 +186,9 @@ const conCuerpo = await Promise.all(
                 <video
                   class="producto__video"
                   data-video-producto
-                  data-poster-inicio={medio('itza-inicio')?.src}
+                  data-poster-inicio={posterInicio}
                   aria-label={p.video.descripcion}
-                  poster={medio('itza-fotograma')?.src}
+                  poster={posterFinal}
                   muted
                   playsinline
                   preload="metadata"
