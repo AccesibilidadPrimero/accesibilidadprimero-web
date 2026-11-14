@@ -20,6 +20,7 @@
 import { getCollection } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import TarjetaProyecto from './TarjetaProyecto.astro';
 import { path } from '../i18n/config';
 import { idiomaDe, localizar } from '../i18n/idioma';
@@ -123,6 +124,7 @@ const nombre = tipo ? TIPOS[tipo] : null;
       ))}
     </ul>
   </div>
+  <SiguientePagina destino="contacto" />
 </Base>
 
 <script>

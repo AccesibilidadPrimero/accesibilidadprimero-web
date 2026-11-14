@@ -17,6 +17,7 @@
    --------------------------------------------------------------------------- */
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
@@ -318,6 +319,7 @@ const PRODUCTOS_ESTUDIO = [
       <Redes />
     </div>
   </Bloque>
+  <SiguientePagina destino="servicios" />
 </Base>
 
 <style>

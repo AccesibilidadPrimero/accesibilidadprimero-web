@@ -45,6 +45,7 @@
 import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import CtaLink from '../components/CtaLink.astro';
 import Disclosure from '../components/Disclosure.astro';
 import VideoPausable from '../components/VideoPausable.astro';
@@ -420,6 +421,7 @@ const altDe = (p: (typeof PUNTOS)[number]) => T.alt(p.titulo, p.frase);
   </section>
 
   <script type="application/ld+json" set:html={datosPreguntas} />
+  <SiguientePagina destino="servicios" />
 </Base>
 
 <script>

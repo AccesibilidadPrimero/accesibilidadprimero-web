@@ -67,7 +67,6 @@ type Dict = {
   verTodosCasos: string;
   /** «Declaración de accesibilidad» (y «de {cliente}» con `de()`). */
   declaracion: string;
-  mesaMas: string;
   /** El título de la página de Casos de estudio y su prefijo en los filtros. */
   casosTitulo: string;
   filtrosLabel: string;
@@ -137,7 +136,6 @@ export const UI: Record<Lang, Dict> = {
     ver: 'Ver',
     verTodosCasos: 'Ver todos los casos de estudio',
     declaracion: 'Declaración de accesibilidad',
-    mesaMas: 'Ver más en Mastodon',
     casosTitulo: 'Casos de estudio',
     filtrosLabel: 'Tipos de proyecto',
     todos: 'Todos',
@@ -200,7 +198,6 @@ export const UI: Record<Lang, Dict> = {
     ver: 'Veure',
     verTodosCasos: 'Veure tots els casos d’estudi',
     declaracion: 'Declaració d’accessibilitat',
-    mesaMas: 'Veure’n més a Mastodon',
     casosTitulo: 'Casos d’estudi',
     filtrosLabel: 'Tipus de projecte',
     todos: 'Tots',
@@ -263,7 +260,6 @@ export const UI: Record<Lang, Dict> = {
     ver: 'See',
     verTodosCasos: 'See all case studies',
     declaracion: 'Accessibility statement',
-    mesaMas: 'More on Mastodon',
     casosTitulo: 'Case studies',
     filtrosLabel: 'Project types',
     todos: 'All',
