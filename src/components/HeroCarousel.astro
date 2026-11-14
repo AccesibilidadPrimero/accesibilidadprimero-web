@@ -343,6 +343,10 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     width: auto;
     height: var(--ilustracion);
     max-width: 100%;
+    /* Una caja con aspect-ratio tiene de mínimo su ancho «natural» (alto ×
+       proporción) y `max-width` no la achica sin esto: la trompeta se salía
+       27 px a 768. */
+    min-width: 0;
     object-fit: contain;
   }
 
