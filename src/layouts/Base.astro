@@ -73,14 +73,18 @@ const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
     {porDefecto && <link rel="alternate" hreflang="x-default" href={porDefecto.href} />}
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <meta name="color-scheme" content="light" />
+    {/* Título, descripción y dirección en todas (revisión del 14/11/2026):
+        sin ellas, LinkedIn o WhatsApp sacan lo primero que encuentran. La
+        imagen, solo donde hay una pensada para compartir. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={{ es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[lang]} />
+    <meta property="og:site_name" content="Accesibilidad Primero" />
     {imagen && (
       <>
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={canonical} />
         <meta property="og:image" content={new URL(imagen, Astro.site)} />
-        <meta property="og:locale" content={{ es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[lang]} />
         <meta name="twitter:card" content="summary_large_image" />
       </>
     )}

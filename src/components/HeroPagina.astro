@@ -79,6 +79,14 @@ interface Props {
 const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo', fondosUnaVez = false, ilustracionComoHome = false } = Astro.props;
 const ui = t(idiomaDe(Astro.url));
 /* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
+/* Una captura (no un dibujo) en el sitio de la ilustración, como la de A11y
+   Primero (revisión del 14/11/2026): antes salía el JPG original de 1600 en
+   todos los anchos. Mide 240 · 320 · 400 de alto, así que el ancho sale de
+   su proporción. */
+const prop = ilustracion ? ilustracion.width / ilustracion.height : 1;
+const anchosIlustracion = ilustracion && ilustracion.format !== 'svg'
+  ? [480, 720, 960, 1280].filter((w) => w < ilustracion.width).concat(ilustracion.width) : [];
+const sizesIlustracion = `(min-width: 1024px) ${Math.round(400 * prop)}px, (min-width: 768px) ${Math.round(320 * prop)}px, min(${Math.round(240 * prop)}px, calc(100vw - 48px))`;
 const anchosFoto = foto ? [640, 1024, 1440, 2048, 2880].filter((w) => w < foto.width).concat(foto.width) : [];
 if (golpes && golpes.join(' ') !== titulo) {
   throw new Error(`HeroPagina: los golpes “${golpes.join(' ')}” no son el titular “${titulo}”.`);
@@ -129,13 +137,26 @@ import { idiomaDe } from '../i18n/idioma';
     <slot name="ilustracion" />
     {
       ilustracion && (
-        <img
-          class="apertura__ilustracion"
-          src={ilustracion.src}
-          width={ilustracion.width}
-          height={ilustracion.height}
-          alt={alt}
-        />
+        ilustracion.format === 'svg' ? (
+          <img
+            class="apertura__ilustracion"
+            src={ilustracion.src}
+            width={ilustracion.width}
+            height={ilustracion.height}
+            alt={alt}
+          />
+        ) : (
+          <Picture
+            src={ilustracion}
+            alt={alt}
+            formats={['avif', 'webp']}
+            widths={anchosIlustracion}
+            sizes={sizesIlustracion}
+            class="apertura__ilustracion"
+            loading="eager"
+            fetchpriority="high"
+          />
+        )
       )
     }
   </div>
@@ -294,6 +315,10 @@ import { idiomaDe } from '../i18n/idioma';
   }
 
   .apertura__escena { flex: 1 0 auto; display: grid; place-items: center; }
+  /* El <picture>, a todo el ancho y centrando lo suyo como la escena. Si no,
+     el 100 % de la imagen se medía contra un <picture> sin ancho y la
+     captura de Accesible Abstracts saltaba al cargar (CLS 0,17, 14/11/2026). */
+  .apertura__escena > :global(picture) { display: grid; place-items: center; inline-size: 100%; }
 
   /* ---- Con foto ---- */
   .apertura--foto {
