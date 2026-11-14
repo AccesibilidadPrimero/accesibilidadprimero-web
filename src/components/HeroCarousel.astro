@@ -185,9 +185,20 @@ const meta = (nombre: string) => buscar(nombre)!.default;
                 fijos: son los que le dan al navegador la proporción antes de
                 descargarla, y con unos inventados reserva el hueco
                 equivocado. Cada mesa de trabajo tiene su ancho. */}
-            <img src={meta(il.archivo).src} alt={il.alt}
-                 width={meta(il.archivo).width} height={meta(il.archivo).height}
-                 loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+            {/* Solo la primera (la margarita) se descarga al cargar la página.
+                Las demás llevan la dirección en data-src y el script la pone
+                a los 3 s, cuando arranca el carrusel (Johnny, 14/11/2026):
+                la página pinta antes y Google mide la margarita. Sin JS se
+                ve la primera, como siempre. */}
+            {i === 0 ? (
+              <img src={meta(il.archivo).src} alt={il.alt}
+                   width={meta(il.archivo).width} height={meta(il.archivo).height}
+                   fetchpriority="high" decoding="async" />
+            ) : (
+              <img data-src={meta(il.archivo).src} alt={il.alt}
+                   width={meta(il.archivo).width} height={meta(il.archivo).height}
+                   decoding="async" />
+            )}
           </li>
         ))
       }
@@ -516,6 +527,16 @@ const meta = (nombre: string) => buscar(nombre)!.default;
   const PAUSA_REMATE = 1000;
 
   const PAUSA_POR = { usuario: 'usuario', puntero: 'puntero', fuera: 'fuera' } as const;
+  /* La margarita sola durante 3 s; después se descargan las demás y arranca
+     el carrusel (Johnny, 14/11/2026). */
+  const ESPERA_INICIAL = 3000;
+
+  /* Pone la dirección real a una ilustración que aún no la tiene. */
+  const cargar = (l: HTMLElement | undefined) => {
+    const img = l?.querySelector<HTMLImageElement>('img[data-src]');
+    if (img) { img.src = img.dataset.src!; img.removeAttribute('data-src'); }
+    return img ?? l?.querySelector<HTMLImageElement>('img') ?? null;
+  };
 
   document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((raiz) => {
     const laminas = Array.from(raiz.querySelectorAll<HTMLElement>('.hero__lamina'));
@@ -575,6 +596,8 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     function mostrar(i: number) {
       laminas[indice]?.removeAttribute('data-activa');
       indice = (i + laminas.length) % laminas.length;
+      // Por si se pasa con el control antes de los 3 s: la que entra y la siguiente.
+      cargar(laminas[indice]); cargar(laminas[(indice + 1) % laminas.length]);
       laminas[indice].setAttribute('data-activa', '');
       /* El control se redimensiona con la lámina: su zona sensible es el
          dibujo, y cada dibujo tiene su ancho. */
@@ -582,8 +605,9 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       if (ratio) raiz.style.setProperty('--ratio-activa', ratio);
     }
 
+    let listo = false;
     function arrancar() {
-      if (temporizador !== null || reduce.matches || movil.matches) return;
+      if (!listo || temporizador !== null || reduce.matches || movil.matches) return;
       temporizador = window.setInterval(() => mostrar(indice + 1), INTERVALO);
     }
 
@@ -616,7 +640,9 @@ const meta = (nombre: string) => buscar(nombre)!.default;
       /* Al soltar, se pasa a la siguiente: es lo que hace el HTML de
          referencia y evita que la ilustración que acabas de mirar se quede
          otro ciclo entero delante. */
-      if (!parado() && !reduce.matches) mostrar(indice + 1);
+      /* Antes de los 3 s no se avanza: la margarita se queda y las demás
+         todavía no se han pedido. */
+      if (listo && !parado() && !reduce.matches) mostrar(indice + 1);
       sincronizar();
     }
 
@@ -651,6 +677,20 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     };
     reduce.addEventListener('change', aplicarReduce);
     aplicarReduce();
+
+    /* A los 3 s: se piden las demás y, en cuanto la segunda está lista, entra
+       y arranca el carrusel. En móvil no rota: no se pide nada más. */
+    window.setTimeout(() => {
+      if (movil.matches) { listo = true; return; }
+      const segunda = laminas.slice(1).map(cargar)[0];
+      const seguir = () => {
+        listo = true;
+        if (!parado() && !reduce.matches) mostrar(indice + 1);
+        sincronizar();
+      };
+      if (segunda && !segunda.complete) segunda.decode().then(seguir, seguir);
+      else seguir();
+    }, ESPERA_INICIAL);
   });
 
   /* ---- Móvil: una ilustración al azar en cada carga (03/11/2026) ---------
@@ -659,7 +699,9 @@ const meta = (nombre: string) => buscar(nombre)!.default;
   document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((raiz) => {
     const laminas = Array.from(raiz.querySelectorAll<HTMLElement>('.hero__lamina'));
     if (laminas.length < 2) return;
+    if (!window.matchMedia('(max-width: 767px)').matches) return;
     const elegida = laminas[Math.floor(Math.random() * laminas.length)];
+    cargar(elegida);
     laminas.forEach((l) => l.toggleAttribute('data-movil', l === elegida));
   });
 </script>
