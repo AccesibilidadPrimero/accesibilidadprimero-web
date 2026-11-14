@@ -58,6 +58,9 @@ interface Props {
   /** Foto de ambiente debajo del texto (casos). Va con alt="": el titular
       está encima y la foto no añade información. */
   foto?: ImageMetadata;
+  /** Calidad de la foto: 'high' (80) por defecto. ECI va a 65 (14/11/2026):
+      la foto nocturna pesaba 357 KB a 1440 y así ronda los 209. */
+  calidadFoto?: 'high' | number;
   /** Cada golpe en su línea, en todos los anchos (Estudio, 30/10/2026). */
   enLineas?: boolean;
   /** Cada línea del texto en su propio párrafo, con aire entre ellos
@@ -76,7 +79,7 @@ interface Props {
       grande que las de la Home. Servicios, 03/11/2026. */
   ilustracionComoHome?: boolean;
 }
-const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo', fondosUnaVez = false, ilustracionComoHome = false } = Astro.props;
+const { ilustracion, alt = '', titulo, texto, nota, volver, superficie, golpes, foto, calidadFoto = 'high', enLineas = false, enParrafos = false, fondos, fondosNombre = 'el color del fondo', fondosUnaVez = false, ilustracionComoHome = false } = Astro.props;
 const ui = t(idiomaDe(Astro.url));
 /* Los anchos que se generan, sin pasar del original: ampliar no añade detalle. */
 /* Una captura (no un dibujo) en el sitio de la ilustración, como la de A11y
@@ -124,7 +127,7 @@ import { idiomaDe } from '../i18n/idioma';
         formats={['avif', 'webp']}
         widths={anchosFoto}
         sizes="100vw"
-        quality="high"
+        quality={calidadFoto}
         class="apertura__foto"
         loading="eager"
         fetchpriority="high"

@@ -81,10 +81,10 @@ traducciones:
     cuerpo:
       - Un congrés amb molt per compartir. Un web que ajuda cada persona a trobar el que necessita.
       - >-
-        Un congrés europeu mou molta informació: programa, ponents, inscripció
+        Un congrés europeu genera molta informació: programa, ponents, inscripció
         i enviament d’abstracts. Sovint acaba repartida en PDF i formularis
         difícils de fer servir.
-      - A ECI, el programa es recorre i es filtra al mateix web, sense descarregar res.
+      - A ECI, el programa es pot consultar i filtrar al mateix web, sense descarregar res.
       - >-
         I per a la gestió d’abstracts vam crear la nostra pròpia plataforma.
         Accesible Abstracts.
@@ -95,9 +95,9 @@ traducciones:
       professionals from across Europe together
       to work towards more inclusive early intervention.
     aporte: |-
-      We designed the conference’s information:
-      what to say, in what order, and how
-      everyone gets to what they’re looking for.
+      We organised the conference website’s content:
+      what to say, in what order,
+      and how people find what they need.
     imagenes:
       - alt: >-
           The eciconference2027.com home page: a night-time photo of Gran Vía in
