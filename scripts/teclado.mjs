@@ -140,7 +140,8 @@ check('El h1 no se reescribe al pausar', h1 === titularInicial, h1?.slice(0, 40)
 //     la frase dice lo que el estudio PIENSA. Un lector de pantalla necesita
 //     las dos cosas, y repetir una en la otra no informa de nada.
 const laminas = await page.$$eval('.hero__lamina', (n) => n.map((l) => ({
-  alt: l.querySelector('img')?.getAttribute('alt') ?? '',
+  /* La margarita es un <img>; las demás, un hueco role="img" con aria-label (14/11/2026). */
+  alt: l.querySelector('img')?.getAttribute('alt') ?? l.querySelector('[role="img"]')?.getAttribute('aria-label') ?? '',
   frase: l.getAttribute('data-frase') ?? '',
 })));
 const utiles = laminas.filter((l) => l.alt.trim().length > 20);

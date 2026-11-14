@@ -185,19 +185,26 @@ const meta = (nombre: string) => buscar(nombre)!.default;
                 fijos: son los que le dan al navegador la proporción antes de
                 descargarla, y con unos inventados reserva el hueco
                 equivocado. Cada mesa de trabajo tiene su ancho. */}
-            {/* Solo la primera (la margarita) se descarga al cargar la página.
-                Las demás llevan la dirección en data-src y el script la pone
-                a los 3 s, cuando arranca el carrusel (Johnny, 14/11/2026):
-                la página pinta antes y Google mide la margarita. Sin JS se
-                ve la primera, como siempre. */}
+            {/* Solo la primera (la margarita) es un <img> y se descarga al
+                cargar la página. Las demás son un hueco con su nombre
+                accesible (role="img" + aria-label, el mismo texto que era su
+                alt) y el script mete dentro el SVG a los 3 s, cuando arranca
+                el carrusel (Johnny, 14/11/2026).
+
+                Por qué SVG en línea y no <img>: Google mide la carga por el
+                elemento visible más grande (LCP), y cada ilustración que
+                entraba con el carrusel pasaba a ser «la más grande» y la
+                medida se iba a 8 s. Un SVG en línea no cuenta para esa
+                medida: la que cuenta es la margarita, a 1,5 s.
+                Sin JS se ve la primera, como siempre. */}
             {i === 0 ? (
               <img src={meta(il.archivo).src} alt={il.alt}
                    width={meta(il.archivo).width} height={meta(il.archivo).height}
                    fetchpriority="high" decoding="async" />
             ) : (
-              <img data-src={meta(il.archivo).src} alt={il.alt}
-                   width={meta(il.archivo).width} height={meta(il.archivo).height}
-                   decoding="async" />
+              <span class="hero__dibujo" role="img" aria-label={il.alt}
+                    data-svg={meta(il.archivo).src}
+                    style={`aspect-ratio:${meta(il.archivo).width} / ${meta(il.archivo).height}`}></span>
             )}
           </li>
         ))
@@ -331,13 +338,15 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      Un porcentaje necesita que el padre tenga altura definida, y aquí el padre
      es un ítem de rejilla en posición absoluta: el navegador lo resolvía como
      `auto` y la ilustración se iba a 1344 × 1553 px, desbordando el hero. */
-  .hero__lamina img {
+  .hero__lamina :is(img, .hero__dibujo) {
     display: block;
     width: auto;
     height: var(--ilustracion);
     max-width: 100%;
     object-fit: contain;
   }
+
+  .hero__dibujo :global(svg) { display: block; width: 100%; height: 100%; }
 
   /* Transparente y del tamaño EXACTO de la ilustración que esté delante.
 
@@ -485,8 +494,8 @@ const meta = (nombre: string) => buscar(nombre)!.default;
     /* Un 10 % más grandes en móvil (Johnny, 03/11/2026): 225 → 247,5. La
        trompeta no: es la más ancha y a ese alto se saldría de la columna. */
     .hero__pila { height: calc(var(--ilustracion) * 1.1); }
-    .hero__pila .hero__lamina img { height: calc(var(--ilustracion) * 1.1); }
-    .hero__pila .hero__lamina[data-archivo='02-comunicamos'] img { height: var(--ilustracion); }
+    .hero__pila .hero__lamina :is(img, .hero__dibujo) { height: calc(var(--ilustracion) * 1.1); }
+    .hero__pila .hero__lamina[data-archivo='02-comunicamos'] :is(img, .hero__dibujo) { height: var(--ilustracion); }
     /* El control transparente del escritorio no tiene sentido aquí: en móvil
        no hay carrusel que parar. */
     .hero__control { display: none; }
@@ -531,11 +540,32 @@ const meta = (nombre: string) => buscar(nombre)!.default;
      el carrusel (Johnny, 14/11/2026). */
   const ESPERA_INICIAL = 3000;
 
-  /* Pone la dirección real a una ilustración que aún no la tiene. */
-  const cargar = (l: HTMLElement | undefined) => {
-    const img = l?.querySelector<HTMLImageElement>('img[data-src]');
-    if (img) { img.src = img.dataset.src!; img.removeAttribute('data-src'); }
-    return img ?? l?.querySelector<HTMLImageElement>('img') ?? null;
+  /* Mete el SVG de una ilustración en su hueco (ver el marcado). Devuelve una
+     promesa que se cumple cuando ya está dentro. Las clases e ids de cada
+     archivo (Illustrator los llama igual: .cls-1, #Capa_1) se prefijan para
+     que el <style> de un dibujo no pinte los demás. */
+  const pedidos = new Map<HTMLElement, Promise<void>>();
+  const cargar = (l: HTMLElement | undefined): Promise<void> => {
+    const hueco = l?.querySelector<HTMLElement>('.hero__dibujo[data-svg]');
+    if (!l || !hueco) return Promise.resolve();
+    if (!pedidos.has(l)) {
+      const pre = `h${l.dataset.indice}-`;
+      pedidos.set(l, fetch(hueco.dataset.svg!).then((r) => r.text()).then((svg) => {
+        hueco.innerHTML = svg
+          .replace(/<\?xml[^>]*>/, '')
+          .replace(/\bcls-/g, `${pre}cls-`)
+          .replace(/id="([^"]+)"/g, `id="${pre}$1"`)
+          .replace(/url\(#/g, `url(#${pre}`)
+          .replace(/href="#/g, `href="#${pre}`);
+        const dibujo = hueco.querySelector('svg');
+        dibujo?.setAttribute('aria-hidden', 'true');
+        dibujo?.setAttribute('focusable', 'false');
+        dibujo?.removeAttribute('width');
+        dibujo?.removeAttribute('height');
+        hueco.removeAttribute('data-svg');
+      }).catch(() => { pedidos.delete(l); }));
+    }
+    return pedidos.get(l)!;
   };
 
   document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((raiz) => {
@@ -682,14 +712,12 @@ const meta = (nombre: string) => buscar(nombre)!.default;
        y arranca el carrusel. En móvil no rota: no se pide nada más. */
     window.setTimeout(() => {
       if (movil.matches) { listo = true; return; }
-      const segunda = laminas.slice(1).map(cargar)[0];
-      const seguir = () => {
+      const segunda = laminas.slice(1).map(cargar)[0] ?? Promise.resolve();
+      segunda.finally(() => {
         listo = true;
         if (!parado() && !reduce.matches) mostrar(indice + 1);
         sincronizar();
-      };
-      if (segunda && !segunda.complete) segunda.decode().then(seguir, seguir);
-      else seguir();
+      });
     }, ESPERA_INICIAL);
   });
 
