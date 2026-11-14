@@ -312,7 +312,7 @@ console.log('\n── El hero a 390 ──\n');
     return {
       'Láminas a la vista': [1, vista.length],
       /* Un 10 % más que el 225 del Figma, salvo la trompeta (03/11/2026). */
-      'Ilustración · alto': [vista[0]?.dataset.archivo === '02-comunicamos' ? 225 : 247.5, vista[0]?.querySelector('img').getBoundingClientRect().height ?? 0],
+      'Ilustración · alto': [vista[0]?.dataset.archivo === '02-comunicamos' ? 225 : 247.5, vista[0]?.querySelector(':is(img, .hero__dibujo)').getBoundingClientRect().height ?? 0],
       'Página sin scroll horizontal': [390, document.documentElement.scrollWidth],
     };
   });
@@ -373,12 +373,12 @@ for (const ancho of [768, 1440]) {
       raiz.style.setProperty('--ratio-activa', l.dataset.ratio);
       await new Promise((r) => setTimeout(r, fade));
       const c = document.querySelector('.hero__control').getBoundingClientRect();
-      const caja = l.querySelector('img').getBoundingClientRect();
+      const caja = l.querySelector(':is(img, .hero__dibujo)').getBoundingClientRect();
       const ratio = Number(l.dataset.ratio);
       /* La caja pintada: el dibujo encajado por `contain` dentro del <img>. */
       const esc = Math.min(caja.width / ratio, caja.height);
       out.push({
-        nombre: l.querySelector('img').src.split('/').pop().split('.')[0],
+        nombre: l.dataset.archivo,
         cw: c.width, ch: c.height, dw: esc * ratio, dh: esc,
       });
     }
