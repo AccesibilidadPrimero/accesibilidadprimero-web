@@ -52,7 +52,6 @@ const T = {
     verCasos: 'Ver casos de estudio',
     tarifas: 'Tarifas',
     verGuia: 'Qué hace que una web sea accesible',
-    mas: { diseno: 'Más sobre diseño y desarrollo', auditoria: 'Más sobre la auditoría', formacion: 'Más sobre la formación' },
   },
   ca: {
     title: 'Serveis · Accesibilidad Primero',
@@ -67,7 +66,6 @@ const T = {
     verCasos: 'Veure casos d’estudi',
     tarifas: 'Tarifes',
     verGuia: 'Què fa que un web sigui accessible',
-    mas: { diseno: 'Més sobre disseny i desenvolupament', auditoria: 'Més sobre l’auditoria', formacion: 'Més sobre la formació' },
   },
   en: {
     title: 'Services · Accesibilidad Primero',
@@ -82,7 +80,6 @@ const T = {
     verCasos: 'See case studies',
     tarifas: 'Pricing',
     verGuia: 'What makes a website accessible',
-    mas: { diseno: 'More on design and development', auditoria: 'More on the audit', formacion: 'More on training' },
   },
 }[lang];
 ---
@@ -117,9 +114,6 @@ const T = {
           </li>
         ))}
       </ul>
-      {/* La página propia de cada servicio (SEO, 14/11/2026): fuera del menú,
-          enlazada desde aquí para que los buscadores la encuentren. */}
-      <CtaLink href={path('servicioDiseno', lang)}>{T.mas.diseno}</CtaLink>
       <CtaLink href={path('proyectos', lang)}>{T.verCasos}</CtaLink>
     </div>
   </Bloque>
@@ -158,7 +152,6 @@ const T = {
           ))}
         </div>
       </div>
-      <CtaLink href={path('servicioAuditoria', lang)}>{T.mas.auditoria}</CtaLink>
     </div>
   </Bloque>
 
@@ -174,7 +167,6 @@ const T = {
           </li>
         ))}
       </ul>
-      <CtaLink href={path('servicioFormacion', lang)}>{T.mas.formacion}</CtaLink>
     </div>
   </Bloque>
   </div>
