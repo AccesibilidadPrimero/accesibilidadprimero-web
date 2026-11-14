@@ -289,31 +289,31 @@ traducciones:
         al·lèrgens estan a la vista, no en una nota a peu de pàgina. La
         reserva es completa sense demanar ajuda: des del mòbil, amb teclat o
         amb lector de pantalla. I el projecte de Cesal s’explica al mateix
-        web. Qui reserva taula sap què està donant suport.
+        web. Qui reserva taula sap a quin projecte dona suport.
   en:
     cliente: Cesal NGO
     resumen: >-
       Foc i Cor is the training restaurant run by the NGO Cesal in Catarroja.
-      There, the kitchen becomes a chance at a future.
+      There, learning to cook opens up new opportunities.
     aporte: >-
-      We designed a website that balances restaurant and social project, with
-      a menu the chef updates straight from the kitchen.
+      We designed a website that brings together the restaurant and its social
+      mission, with a menu the chef can update straight from the kitchen.
     linea: Cesal’s training restaurant in Catarroja.
     decisiones:
       - titulo: People before plates.
         cuerpo: >-
           Foc i Cor doesn’t just serve food: it teaches a trade. The website
-          presents its three pillars: market cooking, commitment to l’Horta
+          presents its three pillars: market-led cooking, commitment to l’Horta
           Sud and training in a real working environment.
       - titulo: An accessible identity.
         cuerpo: >-
-          The brand arrived with its own palette. We didn’t change it: we
+          The brand already had a colour palette. We didn’t change it: we
           extended it with higher contrast variants for text and interactive
           elements. The identity stays; legibility improves.
       - titulo: A menu that updates itself.
         cuerpo: >-
-          The team changes dishes and prices in a spreadsheet and the website
-          reflects it instantly. No PDFs, from any device.
+          The team updates dishes and prices in a spreadsheet, and the changes
+          appear on the website straight away. No PDFs, from any device.
     caso:
       titular: Foc i Cor. Social inclusion through cooking.
       golpes: ['Foc i Cor.', 'Social inclusion', 'through cooking.']
@@ -340,8 +340,9 @@ traducciones:
           - titulo: Leaving no one out, online too.
             cuerpo: >-
               If Foc i Cor exists so that no one is left out, its website had
-              to follow the same principle. The conversation with Cesal
-              didn’t start with regulations, but with consistency.
+              to follow the same principle. Our conversation with Cesal
+              didn’t start with regulations, but with making the website
+              consistent with the project’s values.
       fotos:
         portada:
           alt: >-
@@ -395,13 +396,13 @@ traducciones:
           category with the price of each dish and its allergens labelled in
           plain sight.
     cuerpo:
-      - Nobody left out at the table.
+      - A place at the table for everyone.
       - >-
         The menu can be read without downloading a PDF. Ingredients and
-        allergens are in plain sight, not in a footnote. Booking is done
-        without asking for help: on a phone, with a keyboard or with a screen
-        reader. And Cesal’s project is told on the website itself. Whoever
-        books a table knows what they are supporting.
+        allergens are in plain sight, not in a footnote. People can book a
+        table independently, using a phone, a keyboard or a screen reader.
+        The website also tells the story behind Cesal’s project, so people
+        know what they’re supporting when they book.
 ---
 
 Que nadie se quede fuera de la mesa.

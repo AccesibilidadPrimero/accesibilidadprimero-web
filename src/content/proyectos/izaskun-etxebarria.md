@@ -55,7 +55,8 @@ traducciones:
     aporte: |-
       Hem dissenyat un web que s’aparta
       perquè l’obra tingui el seu espai,
-      amb les sèries navegables com a conjunts.
+      amb les obres agrupades per sèries
+      que es poden explorar.
     imagenes:
       - alt: >-
           La portada d’izaskunetxebarria.com: una peça circular de metall
@@ -78,12 +79,13 @@ traducciones:
     linea: The website of an artist and curator.
     resumen: |-
       Izaskun Etxebarria is an artist and curator.
-      Her work moves between installation,
-      the artist’s book and drawing.
+      Her work spans installation,
+      artists’ books and drawing.
     aporte: |-
       We designed a website that steps aside
       so the work has room to breathe,
-      with each series navigable as a whole.
+      with each series available
+      to explore as a whole.
     imagenes:
       - alt: >-
           The izaskunetxebarria.com home page: a circular metal piece on the
@@ -97,7 +99,7 @@ traducciones:
           The curating page: two men look closely at some old books displayed
           in a lit glass case.
     cuerpo:
-      - Her own work and her curating, each in its place.
+      - Her artwork and curatorial projects, each with its own space.
       - >-
         Works, exhibitions and writing can be explored without losing the
         character of the project. In “Agujeros de tiempo”, the panoramas move

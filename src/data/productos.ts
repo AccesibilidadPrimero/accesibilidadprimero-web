@@ -133,14 +133,14 @@ export const PRODUCTOS: Producto[] = [
         tarjeta: { linea: 'Una extensió de Chrome per veure, entendre i corregir barreres d’accessibilitat.' },
       },
       en: {
-        descripcion: 'A Chrome extension to see, understand and fix accessibility barriers.',
+        descripcion: 'A Chrome extension to identify, understand and fix accessibility barriers.',
         cta: 'See A11y Primero',
         href: '/en/projects/a11y-primero/',
         alt:
           'The A11y Primero extension panel over a sample website: 92, few automated ' +
           'failures, and the four bars by section: images 100 and forms 94 in green, ' +
           'structure 86 and contrast 74 in orange.',
-        tarjeta: { linea: 'A Chrome extension to see, understand and fix accessibility barriers.' },
+        tarjeta: { linea: 'A Chrome extension to identify, understand and fix accessibility barriers.' },
       },
     },
   },

@@ -5,7 +5,7 @@ Para traducir la web de Accesibilidad Primero® (05/11/2026). No es una traducci
 ## La voz, en los tres idiomas
 
 - Frases cortas, una idea cada una.
-- Negación y afirmación: “No es cumplir. Es poder usar.” → “It’s not about compliance. It’s about use.” → “No és complir. És poder fer-la servir.”
+- Negación y afirmación: “No es cumplir. Es poder usar.” → “It’s about more than compliance. It’s about people being able to use your website.” → “No es tracta només de complir. Es tracta de poder fer-la servir.” (revisión de traducciones, 14/11/2026: la versión literal sonaba a descartar el cumplimiento)
 - Humana, directa y honesta. Sin clichés de agencia ni jerga técnica.
 - Lenguaje inclusivo. En inglés, “they” singular cuando haga falta. En catalán, formas neutras (“les persones que…”, “qui…”) antes que el masculino genérico.
 - Nada de “prometer/promesa”, “promise”, “prometre”: compromiso, “commitment”, “compromís”.

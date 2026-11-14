@@ -128,7 +128,10 @@ export function alternates(current: RouteKey, slug?: Slug): Alternate[] {
      artículo del blog sin traducir trae solo `es`). Si queda uno, no hay
      selector: un selector con un único idioma no lleva a ninguna parte. */
   const conPagina = ACTIVE.filter((lang) => !(lang === 'en' && SIN_EN.includes(current)))
-    .filter((lang) => typeof slug !== 'object' || Boolean(slug[lang]));
+    .filter((lang) => typeof slug !== 'object' || typeof slug[lang] === 'string');
+  /* `typeof`, no `Boolean`: el tramo vacío ('') es la portada de una sección
+     (la de lectura fácil, 14/11/2026). Con Boolean se quedaba sin hreflang
+     y sin selector de idioma. */
   if (conPagina.length < 2) return [];
   return conPagina.map((lang) => ({
     lang,

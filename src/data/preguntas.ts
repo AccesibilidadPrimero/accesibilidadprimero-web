@@ -302,7 +302,7 @@ export const PREGUNTAS: Record<Lang, Pregunta[]> = {
       corta: 'Depèn de la mida i de l’estat de la web: el primer és una auditoria, que per a una web de fins a deu pàgines costa de 590 a 790 euros més IVA.',
       detalle: [
         'L’auditoria diu què falla, per què importa i com s’arregla, ordenat per prioritat. Amb ella es pot calcular el que costa corregir-ho, que de vegades ho fa el mateix equip de la web.',
-        'Fer-lo accessible des del principi costa molt menys que arreglar-lo després: per això en els nostres projectes de disseny i desenvolupament l’accessibilitat és el punt de partida.',
+        'Fer-la accessible des del principi costa molt menys que arreglar-la després: per això en els nostres projectes de disseny i desenvolupament l’accessibilitat és el punt de partida.',
       ],
       enlace: { ruta: 'servicios', ancla: 'auditoria', texto: 'Veure les tarifes d’auditoria' },
     },

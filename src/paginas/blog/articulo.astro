@@ -55,7 +55,10 @@ const datos = [
   lang={lang}
   current="blog"
   slug={versiones}
-  title={`${d.tituloSeo ?? d.titulo} · Accesibilidad Primero`}
+  /* Sin « · Accesibilidad Primero» (revisión del 14/11/2026): con él, 18
+     títulos pasaban de 70 caracteres y Google los cortaba. La marca va en
+     og:site_name. */
+  title={d.tituloSeo ?? d.titulo}
   description={d.descripcion}
   imagen={social}
   datos={datos}

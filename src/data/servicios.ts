@@ -40,21 +40,21 @@ export const DISENO = {
         { nombre: 'Disseny a mida.', texto: 'Cada web parteix de qui hi ha al darrere: la seva identitat, el seu públic i el que vol explicar. Sense plantilles.' },
         { nombre: 'Un stack propi i accessible.', texto: 'Desenvolupem sobre una base tècnica pròpia, pensada per complir WCAG 2.2 AA. Cada component està provat amb teclat i lector de pantalla, i cada canvi passa comprovacions automàtiques de contrast, reflow i navegació abans de publicar-se.' },
         { nombre: 'Un gestor de continguts propi.', texto: 'El teu equip actualitza textos, imatges i articles sense tocar codi.' },
-        { nombre: 'Ràpides i sense plugins per mantenir.', texto: 'Webs lleugeres, servides des de la xarxa de Cloudflare i sense plugins per actualitzar cada setmana. Menys manteniment per al teu equip.' },
+        { nombre: 'Webs ràpides i sense connectors que calgui actualitzar.', texto: 'Webs lleugeres, servides des de la xarxa de Cloudflare i sense plugins per actualitzar cada setmana. Menys manteniment per al teu equip.' },
         { nombre: 'Declaració i formació en el lliurament.', texto: 'Cada web surt amb la seva declaració d’accessibilitat i formem el teu equip perquè en mantingui l’accessibilitat.' },
         { nombre: 'Provem cada web abans de publicar-la.', texto: 'La revisem amb teclat i lector de pantalla i documentem el que compleix. Si després algú hi troba una barrera, la corregim.' },
       ],
     },
     en: {
       intro:
-        'We design and build websites from concept to code. Accessibility is part of every decision from the first line of code, not added at the end. We also make documents and presentations accessible, PDFs included. And we work white-label for agencies and consultancies.',
+        'We design and build websites from concept to code. Accessibility is part of every decision from the first line of code, not added at the end. We also make documents and presentations accessible, PDFs included. We also provide white-label services for agencies and consultancies.',
       puntos: [
-        { nombre: 'Bespoke design.', texto: 'Every website starts from the people behind it: their identity, their audience and what they want to say. No templates.' },
+        { nombre: 'Bespoke design.', texto: 'Every website starts with the people behind it: their identity, their audience and what they want to say. No templates.' },
         { nombre: 'Our own accessible stack.', texto: 'We build on our own technical foundation, designed to meet WCAG 2.2 AA. Every component is tested with a keyboard and a screen reader, and every change goes through automated checks for contrast, reflow and navigation before it goes live.' },
         { nombre: 'Our own content management system.', texto: 'Your team updates text, images and articles without touching any code.' },
         { nombre: 'Fast, with no plugins to maintain.', texto: 'Lightweight websites, served from Cloudflare’s network, with no plugins to update every week. Less maintenance for your team.' },
         { nombre: 'An accessibility statement and training at handover.', texto: 'Every website launches with its accessibility statement, and we train your team to keep it accessible.' },
-        { nombre: 'We test every website before it goes live.', texto: 'We check it with a keyboard and a screen reader and document what it meets. If someone later finds a barrier, we fix it.' },
+        { nombre: 'We test every website before it goes live.', texto: 'We test it with a keyboard and a screen reader and document which accessibility requirements it meets. If someone later finds a barrier, we fix it.' },
       ],
     },
   },
@@ -105,7 +105,7 @@ export const AUDITORIA = {
       comun:
         'Les tres són la mateixa auditoria: revisió automàtica i manual, lectors de pantalla, anàlisi del llenguatge, recorreguts crítics, arquitectura de la informació i pla d’acció. El que canvia és el nombre de pàgines.',
       intro:
-        'No és complir. És poder fer-la servir. Auditem la teva web amb WCAG 2.2 i la normativa vigent, t’expliquem cada barrera i et donem un pla per eliminar-les. En acabar, preparem la declaració d’accessibilitat de la teva web.',
+        'No es tracta només de complir. Es tracta de poder fer-la servir. Auditem la teva web amb WCAG 2.2 i la normativa vigent, t’expliquem cada barrera i et donem un pla per eliminar-les. En acabar, preparem la declaració d’accessibilitat de la teva web.',
       revisamos: [
         { nombre: 'Disseny i informació.', texto: 'Jerarquia visual, navegació amb teclat, color, contrast i tipografia.' },
         { nombre: 'Interacció i codi.', texto: 'Formularis, elements interactius, marcatge semàntic i lectors de pantalla.' },
@@ -123,7 +123,7 @@ export const AUDITORIA = {
       comun:
         'All three are the same audit: automated and manual testing, screen readers, language review, critical user journeys, information architecture and an action plan. What changes is the number of pages.',
       intro:
-        'It’s not about compliance. It’s about use. We audit your website against WCAG 2.2 and current legislation, explain every barrier and give you a plan to remove them. When we finish, we prepare your website’s accessibility statement.',
+        'It’s about more than compliance. It’s about people being able to use your website. We audit your website against WCAG 2.2 and current legislation, explain every barrier and give you a plan to remove them. When we finish, we prepare your website’s accessibility statement.',
       revisamos: [
         { nombre: 'Design and information.', texto: 'Visual hierarchy, keyboard navigation, colour, contrast and typography.' },
         { nombre: 'Interaction and code.', texto: 'Forms, interactive elements, semantic markup and screen readers.' },
@@ -216,7 +216,7 @@ export const FORMACION = {
         'Accessibility doesn’t end at handover. We train the teams who manage and update the website so they can keep it accessible day to day.',
       puntos: [
         { nombre: 'At project handover.', texto: 'After every build or adaptation, the team in charge learns to update content and components without losing accessibility.' },
-        { nombre: 'Sessions by role.', texto: 'For design, development, communications or content editing, with the real product in front of you.' },
+        { nombre: 'Training tailored to each role.', texto: 'For designers, developers, communications teams and content editors, using the website or app they work with.' },
         { nombre: 'Focused short sessions.', texto: 'Hands-on training on a single topic: accessible PDFs, semantic HTML, WCAG good practice and using the content management system properly.' },
       ],
     },
