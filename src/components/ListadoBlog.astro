@@ -9,6 +9,7 @@
    página actual lleva aria-current y subrayado, como el menú.
    --------------------------------------------------------------------------- */
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import HeroPagina from './HeroPagina.astro';
 import TarjetaArticulo from './TarjetaArticulo.astro';
 /* La ilustración del hero (Johnny, 30/10/2026). La compila `npm run arte`
@@ -80,6 +81,7 @@ const nombre = categoria ? NOMBRE_CATEGORIA[lang][categoria] : null;
       ))}
     </ul>
   </div>
+  <SiguientePagina destino="guia" />
 </Base>
 
 <script>

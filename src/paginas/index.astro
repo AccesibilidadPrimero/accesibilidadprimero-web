@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import { estudio } from '../data/datos-estructurados';
 import HeroCarousel from '../components/HeroCarousel.astro';
 import ProjectSection from '../components/ProjectSection.astro';
@@ -240,6 +241,7 @@ const conCuerpo = await Promise.all(
       escritas en castellano y no se traducen, así que en /ca/ y /en/ serían
       un bloque en otro idioma en mitad de la página. */}
   {lang === 'es' && <Mesa lang={lang} />}
+  <SiguientePagina destino="estudio" />
 </Base>
 
 <style>

@@ -1,0 +1,48 @@
+---
+/* ---------------------------------------------------------------------------
+   Siguiente página (Johnny, 14/11/2026): «al final de cada página, un mensaje
+   con un enlace a la siguiente, como en los proyectos». Mismo aspecto que el
+   cierre de los casos (CierreProyecto): un CtaLink grande, centrado, en un
+   <nav> con nombre propio para poder saltar a él como región.
+
+   El recorrido sigue el menú y acaba en Contacto:
+     Inicio → Sobre AP → Qué hacemos → Casos de estudio → Contacto
+     Blog → Guía → Qué hacemos
+   Contacto, los legales y lectura fácil no llevan siguiente página.
+
+   El texto dice adónde lleva, no «Siguiente» (2.4.4).
+   --------------------------------------------------------------------------- */
+import CtaLink from './CtaLink.astro';
+import { path, type Lang, type RouteKey } from '../i18n/config';
+import { idiomaDe } from '../i18n/idioma';
+
+type Destino = 'estudio' | 'servicios' | 'proyectos' | 'contacto' | 'guia';
+interface Props { destino: Destino }
+const { destino } = Astro.props;
+const lang: Lang = idiomaDe(Astro.url);
+
+const TEXTO: Record<Destino, Record<Lang, string>> = {
+  estudio:   { es: 'Ver quiénes somos', ca: 'Veure qui som', en: 'See who we are' },
+  servicios: { es: 'Ver qué hacemos', ca: 'Veure què fem', en: 'See what we do' },
+  proyectos: { es: 'Ver los casos de estudio', ca: 'Veure els casos d’estudi', en: 'See the case studies' },
+  contacto:  { es: 'Ver cómo contactar', ca: 'Veure com contactar', en: 'See how to get in touch' },
+  guia:      { es: 'Ver qué hace que una web sea accesible', ca: 'Veure què fa que un web sigui accessible', en: 'See what makes a website accessible' },
+};
+const NOMBRE_REGION: Record<Lang, string> = { es: 'Página siguiente', ca: 'Pàgina següent', en: 'Next page' };
+---
+
+<nav class="siguiente-pagina" aria-label={NOMBRE_REGION[lang]}>
+  <CtaLink href={path(destino as RouteKey, lang)} size="large">{TEXTO[destino][lang]}</CtaLink>
+</nav>
+
+<style>
+  .siguiente-pagina {
+    display: flex;
+    justify-content: center;
+    /* Hueco de sección, como en la Home: el ritmo de 128 entre bloques
+       (scripts/geometria.mjs lo mide de caja a caja, así que va en margen). */
+    margin-block-start: var(--ritmo-seccion);
+    padding-inline: var(--gutter-page);
+    text-align: center;
+  }
+</style>

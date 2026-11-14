@@ -21,6 +21,7 @@
    contenido está en src/data/servicios.ts.
    --------------------------------------------------------------------------- */
 import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
 import HeroPagina from '../components/HeroPagina.astro';
 import Bloque from '../components/Bloque.astro';
 import CtaLink from '../components/CtaLink.astro';
@@ -169,6 +170,7 @@ const T = {
     </div>
   </Bloque>
   </div>
+  <SiguientePagina destino="proyectos" />
 </Base>
 
 <style>

@@ -1,5 +1,4 @@
 ---
-import CtaLink from './CtaLink.astro';
 /* ---------------------------------------------------------------------------
    «Sobre la mesa» · lo que el estudio tiene entre manos ahora mismo.
 
@@ -36,7 +35,6 @@ const fecha = (iso: string) => new Intl.DateTimeFormat(ui.locale, { day: 'numeri
 /* Las TRES últimas, en una rejilla quieta (Johnny, 05/11/2026): con cuatro, la
    tira se desplazaba y aparecía la barra del navegador. Lo demás, en Mastodon. */
 const notas = datos.visible ? datos.notas.filter((n) => medio(n.imagen.archivo)).slice(0, 3) : [];
-const MASTODON = 'https://mastodon.social/@accesibilidadprimero';
 ---
 
 {notas.length > 0 && (
@@ -80,7 +78,6 @@ const MASTODON = 'https://mastodon.social/@accesibilidadprimero';
         );
       })}
     </ul>
-    <div class="mesa__mas"><CtaLink href={MASTODON}>{ui.mesaMas}</CtaLink></div>
   </section>
 )}
 
@@ -95,7 +92,6 @@ const MASTODON = 'https://mastodon.social/@accesibilidadprimero';
      tableta, como los productos de encima. */
   .mesa__lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-48) var(--space-24); align-items: start; min-width: 0; margin: 0; padding: 0; list-style: none; }
   @media (min-width: 768px) { .mesa__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-  .mesa__mas { padding-block-start: var(--space-48); }
   /* `position: relative`: el `.sr-only` de la alternativa se coloca respecto a
      la tarjeta y no a la página. */
   .mesa__nota { position: relative; }
