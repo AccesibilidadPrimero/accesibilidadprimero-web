@@ -62,6 +62,10 @@ const RUTAS = [
       await p.waitForTimeout(1000);
     },
   })),
+  /* Una página por servicio (14/11/2026), cada una con su banda. */
+  { nombre: 'Servicio · diseño', url: '/diseno-desarrollo-web-accesible/', minimo: 20 },
+  { nombre: 'Servicio · auditoría', url: '/auditoria-accesibilidad-wcag/', minimo: 20 },
+  { nombre: 'Servicio · formación', url: '/formacion-accesibilidad-web/', minimo: 10 },
   { nombre: 'Privacidad', url: '/privacidad/', minimo: 30 },
   { nombre: 'Cookies', url: '/cookies/', minimo: 15 },
   { nombre: 'Accesibilidad', url: '/declaracion-de-accesibilidad/', minimo: 25 },

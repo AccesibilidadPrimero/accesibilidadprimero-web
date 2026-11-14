@@ -47,7 +47,12 @@ export type RouteKey =
   | 'cookies'
   | 'accesibilidad'
   /* La web en lectura fácil (Johnny, 07/11/2026): castellano y catalán. */
-  | 'lecturaFacil';
+  | 'lecturaFacil'
+  /* Una página por servicio, fuera del menú: solo para buscadores (Johnny,
+     14/11/2026). Las direcciones son las «para compartir» del 07/11/2026. */
+  | 'servicioDiseno'
+  | 'servicioAuditoria'
+  | 'servicioFormacion';
 
 /** Los destinos del menú principal, en orden. Productos salió el 14/10/2026:
     los productos propios viven dentro de Proyectos, con su filtro. Servicios
@@ -77,6 +82,9 @@ const SEGMENT: Record<RouteKey, Record<Lang, string>> = {
   cookies:       { es: 'cookies',                   ca: 'galetes',                   en: 'cookies' },
   accesibilidad: { es: 'declaracion-de-accesibilidad', ca: 'declaracio-accessibilitat', en: 'accessibility-statement' },
   lecturaFacil:  { es: 'lectura-facil',             ca: 'lectura-facil',             en: 'easy-read' },
+  servicioDiseno:    { es: 'diseno-desarrollo-web-accesible', ca: 'disseny-desenvolupament-web-accessible', en: 'accessible-web-design-development' },
+  servicioAuditoria: { es: 'auditoria-accesibilidad-wcag',    ca: 'auditoria-accessibilitat-wcag',          en: 'wcag-accessibility-audit' },
+  servicioFormacion: { es: 'formacion-accesibilidad-web',     ca: 'formacio-accessibilitat-web',            en: 'web-accessibility-training' },
 };
 
 /** El tramo final de una dirección: el mismo en todos los idiomas (los
