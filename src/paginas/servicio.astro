@@ -1,0 +1,337 @@
+---
+/* ---------------------------------------------------------------------------
+   Página de un servicio · SEO (Johnny, 14/11/2026): «landings de cada uno de
+   los servicios, no lo vamos a publicar en el menú, solo es para el SEO,
+   cada una con sus URL para posicionar».
+
+   Tres páginas por idioma, una por servicio, en las direcciones para
+   compartir que ya existían desde el 07/11/2026 (hasta hoy eran 302 a
+   /servicios/#ancla). Fuera del menú; las enlaza su servicio en Qué hacemos
+   y las recoge el sitemap.
+
+   El contenido es el de src/data/servicios.ts, entero y desplegado: la misma
+   fuente que Qué hacemos, para que las dos no digan cosas distintas. Lo
+   único propio de esta página es el titular, el título y la descripción
+   para buscadores, los nombres de bloque y los enlaces de lectura.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import SiguientePagina from '../components/SiguientePagina.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import CtaLink from '../components/CtaLink.astro';
+import Microanimacion from '../components/Microanimacion.astro';
+import { path, type Lang, type RouteKey } from '../i18n/config';
+import { idiomaDe, localizar } from '../i18n/idioma';
+import { DISENO as DISENO_ES, AUDITORIA as AUDITORIA_ES, FORMACION as FORMACION_ES } from '../data/servicios';
+import { servicio as datosServicio } from '../data/datos-estructurados';
+import planeta from '../assets/servicios/planeta.svg';
+
+export type Servicio = 'diseno' | 'auditoria' | 'formacion';
+interface Props { servicio: Servicio }
+const { servicio } = Astro.props;
+const lang: Lang = idiomaDe(Astro.url);
+
+const DISENO = localizar(DISENO_ES, lang);
+const AUDITORIA = localizar(AUDITORIA_ES, lang);
+const FORMACION = localizar(FORMACION_ES, lang);
+
+const RUTA: Record<Servicio, RouteKey> = {
+  diseno: 'servicioDiseno',
+  auditoria: 'servicioAuditoria',
+  formacion: 'servicioFormacion',
+};
+
+/* Lo que se lee sobre cada servicio en el blog. Solo artículos que existen
+   en ese idioma (los seis de normativa están en los tres). */
+type Lectura = { slug: string; titulo: string };
+const LECTURAS: Record<Servicio, Record<Lang, Lectura[]>> = {
+  diseno: {
+    es: [
+      { slug: 'no-un-plugin-de-accesibilidad', titulo: 'No, un plugin de accesibilidad no hace que tu web sea accesible' },
+      { slug: 'tipografia-accesible-lo-que-dice-la-wcag', titulo: 'Tipografía accesible: tamaños, espaciado y contraste. Lo que dice la WCAG y lo que aplicamos nosotros' },
+      { slug: 'autopsia-web-no-accesible-5-errores-de-codigo', titulo: 'Autopsia de una web no accesible: 5 errores de código que suspenden una auditoría' },
+    ],
+    ca: [
+      { slug: 'widgets-accessibilitat-llei-11-2023', titulo: 'Per què un widget d’accessibilitat no t’eximeix de la Llei 11/2023' },
+      { slug: 'autopsia-web-no-accessible-5-errors-de-codi', titulo: 'Autòpsia d’un web no accessible: 5 errors de codi que suspenen una auditoria' },
+    ],
+    en: [
+      { slug: 'accessibility-widgets-overlays-spanish-law-11-2023', titulo: 'Why an accessibility widget doesn’t get you off the hook under Law 11/2023' },
+      { slug: 'inaccessible-website-autopsy-5-code-errors', titulo: 'Autopsy of an inaccessible website: 5 code errors that fail an audit' },
+    ],
+  },
+  auditoria: {
+    es: [
+      { slug: 'ley-11-2023-accesibilidad-plazos-obligados-multas', titulo: 'Ley 11/2023 de accesibilidad: plazos, quién está obligado y multas' },
+      { slug: 'requisitos-accesibilidad-web-licitaciones-publicas-une-en-301549', titulo: 'Accesibilidad web en licitaciones públicas: cómo cumplir la UNE-EN 301549' },
+      { slug: 'plugins-widgets-accesibilidad-ley-11-2023', titulo: 'Por qué un widget de accesibilidad no te libra de la Ley 11/2023' },
+      { slug: 'autopsia-web-no-accesible-5-errores-de-codigo', titulo: 'Autopsia de una web no accesible: 5 errores de código que suspenden una auditoría' },
+    ],
+    ca: [
+      { slug: 'llei-11-2023-accessibilitat-terminis-obligats-multes', titulo: 'Llei 11/2023 d’accessibilitat: terminis, qui hi està obligat i multes' },
+      { slug: 'requisits-accessibilitat-web-licitacions-publiques-une-en-301549', titulo: 'Accessibilitat web en licitacions públiques: com complir la UNE-EN 301549' },
+      { slug: 'widgets-accessibilitat-llei-11-2023', titulo: 'Per què un widget d’accessibilitat no t’eximeix de la Llei 11/2023' },
+      { slug: 'autopsia-web-no-accessible-5-errors-de-codi', titulo: 'Autòpsia d’un web no accessible: 5 errors de codi que suspenen una auditoria' },
+    ],
+    en: [
+      { slug: 'spain-law-11-2023-accessibility-deadlines-fines', titulo: 'Spain’s accessibility Law 11/2023: deadlines, who it applies to and fines' },
+      { slug: 'web-accessibility-public-tenders-en-301-549-spain', titulo: 'Web accessibility in public tenders in Spain: how to meet UNE-EN 301549' },
+      { slug: 'accessibility-widgets-overlays-spanish-law-11-2023', titulo: 'Why an accessibility widget doesn’t get you off the hook under Law 11/2023' },
+      { slug: 'inaccessible-website-autopsy-5-code-errors', titulo: 'Autopsy of an inaccessible website: 5 code errors that fail an audit' },
+    ],
+  },
+  formacion: {
+    es: [
+      { slug: 'pero-que-es-la-wcag', titulo: 'Pero, ¿qué es la WCAG? ¿Y por qué sus recomendaciones son la referencia en accesibilidad digital?' },
+      { slug: 'tipografia-accesible-lo-que-dice-la-wcag', titulo: 'Tipografía accesible: tamaños, espaciado y contraste. Lo que dice la WCAG y lo que aplicamos nosotros' },
+      { slug: 'ley-11-2023-accesibilidad-plazos-obligados-multas', titulo: 'Ley 11/2023 de accesibilidad: plazos, quién está obligado y multas' },
+    ],
+    ca: [
+      { slug: 'llei-11-2023-accessibilitat-terminis-obligats-multes', titulo: 'Llei 11/2023 d’accessibilitat: terminis, qui hi està obligat i multes' },
+      { slug: 'autopsia-web-no-accessible-5-errors-de-codi', titulo: 'Autòpsia d’un web no accessible: 5 errors de codi que suspenen una auditoria' },
+    ],
+    en: [
+      { slug: 'spain-law-11-2023-accessibility-deadlines-fines', titulo: 'Spain’s accessibility Law 11/2023: deadlines, who it applies to and fines' },
+      { slug: 'inaccessible-website-autopsy-5-code-errors', titulo: 'Autopsy of an inaccessible website: 5 code errors that fail an audit' },
+    ],
+  },
+};
+
+const TEXTOS = {
+  es: {
+    alt: 'Dos personas diminutas sobre el anillo de un planeta: una salta con los brazos en alto, la otra está sentada en el borde.',
+    nombres: { diseno: 'Diseño y desarrollo web accesible', auditoria: 'Auditoría de accesibilidad web', formacion: 'Formación en accesibilidad web' },
+    title: {
+      diseno: 'Diseño y desarrollo web accesible · Accesibilidad Primero',
+      auditoria: 'Auditoría de accesibilidad web WCAG 2.2 · Accesibilidad Primero',
+      formacion: 'Formación en accesibilidad web · Accesibilidad Primero',
+    },
+    description: {
+      diseno: 'Diseñamos y desarrollamos webs accesibles a medida, del concepto al código, pensadas para cumplir WCAG 2.2 AA. También en marca blanca para agencias.',
+      auditoria: 'Auditoría de accesibilidad web con WCAG 2.2 y EN 301 549: revisión automática y manual, lectores de pantalla, plan de acción y declaración de accesibilidad.',
+      formacion: 'Formación en accesibilidad web para equipos de diseño, desarrollo, comunicación y edición de contenidos: sesiones por perfil y píldoras prácticas.',
+    },
+    titulo: { diseno: 'Diseño y desarrollo web accesible.', auditoria: 'Auditoría de accesibilidad web.', formacion: 'Formación en accesibilidad web.' },
+    golpes: {
+      diseno: ['Diseño y desarrollo', 'web accesible.'],
+      auditoria: ['Auditoría de', 'accesibilidad web.'],
+      formacion: ['Formación en', 'accesibilidad web.'],
+    },
+    comoTrabajamos: 'Cómo trabajamos',
+    queRevisamos: 'Qué revisamos',
+    queEntregamos: 'Qué entregamos',
+    tarifas: 'Tarifas',
+    comoFormamos: 'Cómo formamos',
+    leer: 'Para leer',
+    otros: 'Otros servicios',
+    verCasos: 'Ver casos de estudio',
+    verGuia: 'Qué hace que una web sea accesible',
+  },
+  ca: {
+    alt: 'Dues persones diminutes sobre l’anell d’un planeta: una salta amb els braços enlaire, l’altra seu a la vora.',
+    nombres: { diseno: 'Disseny i desenvolupament web accessible', auditoria: 'Auditoria d’accessibilitat web', formacion: 'Formació en accessibilitat web' },
+    title: {
+      diseno: 'Disseny i desenvolupament web accessible · Accesibilidad Primero',
+      auditoria: 'Auditoria d’accessibilitat web WCAG 2.2 · Accesibilidad Primero',
+      formacion: 'Formació en accessibilitat web · Accesibilidad Primero',
+    },
+    description: {
+      diseno: 'Dissenyem i desenvolupem webs accessibles a mida, del concepte al codi, pensades per complir WCAG 2.2 AA. També en marca blanca per a agències.',
+      auditoria: 'Auditoria d’accessibilitat web amb WCAG 2.2 i EN 301 549: revisió automàtica i manual, lectors de pantalla, pla d’acció i declaració d’accessibilitat.',
+      formacion: 'Formació en accessibilitat web per a equips de disseny, desenvolupament, comunicació i edició de continguts: sessions per perfil i píndoles pràctiques.',
+    },
+    titulo: { diseno: 'Disseny i desenvolupament web accessible.', auditoria: 'Auditoria d’accessibilitat web.', formacion: 'Formació en accessibilitat web.' },
+    golpes: {
+      diseno: ['Disseny i desenvolupament', 'web accessible.'],
+      auditoria: ['Auditoria', 'd’accessibilitat web.'],
+      formacion: ['Formació en', 'accessibilitat web.'],
+    },
+    comoTrabajamos: 'Com treballem',
+    queRevisamos: 'Què revisem',
+    queEntregamos: 'Què lliurem',
+    tarifas: 'Tarifes',
+    comoFormamos: 'Com formem',
+    leer: 'Per llegir',
+    otros: 'Altres serveis',
+    verCasos: 'Veure casos d’estudi',
+    verGuia: 'Què fa que un web sigui accessible',
+  },
+  en: {
+    alt: 'Two tiny people on the ring of a planet: one jumps with their arms in the air, the other sits on the edge.',
+    nombres: { diseno: 'Accessible web design and development', auditoria: 'Web accessibility audit', formacion: 'Web accessibility training' },
+    title: {
+      diseno: 'Accessible web design and development · Accesibilidad Primero',
+      auditoria: 'WCAG 2.2 web accessibility audit · Accesibilidad Primero',
+      formacion: 'Web accessibility training · Accesibilidad Primero',
+    },
+    description: {
+      diseno: 'We design and build bespoke accessible websites, from concept to code, designed to meet WCAG 2.2 AA. White-label for agencies too.',
+      auditoria: 'Web accessibility audit against WCAG 2.2 and EN 301 549: automated and manual testing, screen readers, an action plan and an accessibility statement.',
+      formacion: 'Web accessibility training for design, development, communications and content teams: sessions by role and short hands-on sessions.',
+    },
+    titulo: { diseno: 'Accessible web design and development.', auditoria: 'Web accessibility audit.', formacion: 'Web accessibility training.' },
+    golpes: {
+      diseno: ['Accessible web design', 'and development.'],
+      auditoria: ['Web accessibility', 'audit.'],
+      formacion: ['Web accessibility', 'training.'],
+    },
+    comoTrabajamos: 'How we work',
+    queRevisamos: 'What we review',
+    queEntregamos: 'What we deliver',
+    tarifas: 'Pricing',
+    comoFormamos: 'How we train',
+    leer: 'Further reading',
+    otros: 'Other services',
+    verCasos: 'See case studies',
+    verGuia: 'What makes a website accessible',
+  },
+} as const;
+const T = TEXTOS[lang];
+
+/* El color de la banda: el de las microanimaciones de cada servicio en Qué
+   hacemos (diseño en rosa, auditoría en amarillo, formación en menta). */
+const FONDO: Record<Servicio, string> = { diseno: 'var(--rose-ap)', auditoria: 'var(--yellow-ap)', formacion: 'var(--mint)' };
+const MIC: Record<Servicio, 'rosa' | 'amarillo' | 'verde'> = { diseno: 'rosa', auditoria: 'amarillo', formacion: 'verde' };
+
+const INTRO: Record<Servicio, string> = { diseno: DISENO.intro, auditoria: AUDITORIA.intro, formacion: FORMACION.intro };
+const otros = (['diseno', 'auditoria', 'formacion'] as Servicio[]).filter((s) => s !== servicio);
+const lecturas = LECTURAS[servicio][lang];
+
+const datos = datosServicio({
+  nombre: T.nombres[servicio],
+  descripcion: T.description[servicio],
+  url: path(RUTA[servicio], lang),
+  lang,
+  ...(servicio === 'auditoria' ? { desde: 590 } : {}),
+});
+---
+<Base
+  lang={lang}
+  current={RUTA[servicio]}
+  title={T.title[servicio]}
+  description={T.description[servicio]}
+  datos={datos}
+>
+  <HeroPagina
+    ilustracion={planeta}
+    alt={T.alt}
+    titulo={T.titulo[servicio]}
+    golpes={[...T.golpes[servicio]]}
+    texto={[INTRO[servicio]]}
+    superficie={{ fondo: FONDO[servicio], foco: 'var(--blue-ap)' }}
+    ilustracionComoHome
+  />
+
+  <div class="servicio">
+    {servicio === 'diseno' && (
+      <Bloque id="como-trabajamos" titulo={T.comoTrabajamos}>
+        <div class="pila">
+          <ul class="puntos">
+            {DISENO.puntos.map((p) => (
+              <li>
+                {p.mic && <Microanimacion tipo={p.mic} color={MIC.diseno} />}
+                <h3 class="punto__nombre">{p.nombre}</h3>
+                <p>{p.texto}</p>
+              </li>
+            ))}
+          </ul>
+          <CtaLink href={path('proyectos', lang)}>{T.verCasos}</CtaLink>
+        </div>
+      </Bloque>
+    )}
+
+    {servicio === 'auditoria' && (
+      <>
+        <Bloque id="que-revisamos" titulo={T.queRevisamos}>
+          <div class="pila">
+            <ul class="puntos">
+              {AUDITORIA.revisamos.map((p) => (
+                <li>
+                  {p.mic && <Microanimacion tipo={p.mic} color={MIC.auditoria} />}
+                  <h3 class="punto__nombre">{p.nombre}</h3>
+                  <p>{p.texto}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Bloque>
+        <Bloque id="que-entregamos" titulo={T.queEntregamos}>
+          <div class="pila">
+            <p>{AUDITORIA.entregamos}</p>
+            <CtaLink href={path('guia', lang)}>{T.verGuia}</CtaLink>
+          </div>
+        </Bloque>
+        <Bloque id="tarifas" titulo={T.tarifas}>
+          <div class="pila">
+            <p>{AUDITORIA.comun}</p>
+            <ul class="puntos">
+              {AUDITORIA.tarifas.map((t) => (
+                <li>
+                  <h3 class="punto__nombre">{t.titulo}</h3>
+                  <p>{t.precio}</p>
+                  {t.para && <p>{t.para}</p>}
+                  <ul class="tarifa__incluye">
+                    {t.incluye.map((x) => <li>{x}</li>)}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Bloque>
+      </>
+    )}
+
+    {servicio === 'formacion' && (
+      <Bloque id="como-formamos" titulo={T.comoFormamos}>
+        <div class="pila">
+          <Microanimacion tipo="dia" color={MIC.formacion} />
+          <ul class="puntos">
+            {FORMACION.puntos.map((p) => (
+              <li>
+                {p.mic && <Microanimacion tipo={p.mic} color={MIC.formacion} />}
+                <h3 class="punto__nombre">{p.nombre}</h3>
+                <p>{p.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Bloque>
+    )}
+
+    <Bloque id="para-leer" titulo={T.leer}>
+      <ul class="enlaces">
+        {lecturas.map((l) => (
+          <li><a href={path('blog', lang, l.slug)}>{l.titulo}</a></li>
+        ))}
+      </ul>
+    </Bloque>
+
+    <Bloque id="otros-servicios" titulo={T.otros}>
+      <ul class="enlaces">
+        {otros.map((s) => (
+          <li><a href={path(RUTA[s], lang)}>{T.nombres[s]}</a></li>
+        ))}
+      </ul>
+    </Bloque>
+  </div>
+  <SiguientePagina destino="servicios" />
+</Base>
+
+<style>
+  p { margin: 0; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  /* El mismo sistema que Qué hacemos (src/paginas/servicios.astro). */
+  .pila { display: flex; flex-direction: column; gap: var(--space-24); max-width: 888px; align-items: flex-start; }
+  .pila > :not(a) { align-self: stretch; }
+  .puntos { display: flex; flex-direction: column; gap: calc(var(--space-24) * 3); padding-block: var(--space-24); }
+  .puntos > li { display: flex; flex-direction: column; gap: var(--space-24); }
+  .punto__nombre { margin: 0; font-size: inherit; line-height: inherit; font-weight: 400; }
+  .puntos li > :global(.mic) { margin-block-end: 0; }
+  .tarifa__incluye { display: flex; flex-direction: column; gap: var(--space-4); }
+
+  /* Enlaces en lista, subrayados como todos los del texto (1.4.1). */
+  .enlaces { display: flex; flex-direction: column; gap: var(--space-8); max-width: 888px; }
+  /* 44 px de objetivo, como todo lo que se toca en la web (scripts/a11y.mjs). */
+  .enlaces a { display: inline-flex; align-items: center; min-block-size: 44px; }
+</style>

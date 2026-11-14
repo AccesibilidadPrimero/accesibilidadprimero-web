@@ -118,3 +118,22 @@ export function preguntasFrecuentes(lang: Lang, preguntas: { pregunta: string; r
     })),
   };
 }
+
+/** Un servicio, en su página (SEO, 14/11/2026). `desde` es el precio más
+    bajo que la página publica, sin IVA: solo la auditoría lo tiene. */
+export function servicio(s: { nombre: string; descripcion: string; url: string; lang: Lang; desde?: number }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.nombre,
+    serviceType: s.nombre,
+    description: s.descripcion,
+    url: absoluta(s.url),
+    inLanguage: s.lang,
+    areaServed: { '@type': 'Country', name: 'España' },
+    provider: { '@id': ID_ESTUDIO, '@type': 'ProfessionalService', name: 'Accesibilidad Primero', url: absoluta(path('home', s.lang)) },
+    ...(s.desde
+      ? { offers: { '@type': 'Offer', priceSpecification: { '@type': 'PriceSpecification', minPrice: s.desde, priceCurrency: 'EUR', valueAddedTaxIncluded: false } } }
+      : {}),
+  };
+}

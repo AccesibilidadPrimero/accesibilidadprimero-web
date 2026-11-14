@@ -99,6 +99,8 @@ export const EQUIVALENTE: Record<IdLF, RouteKey> = {
 /** Desde la web completa, a qué página en lectura fácil lleva el enlace
     «Lectura fácil»: la que cuenta lo mismo, o la portada. */
 export function lfDesde(current: RouteKey): IdLF {
+  /* Las páginas de cada servicio cuentan parte de «Qué hacemos». */
+  if (current.startsWith('servicio')) return 'hacemos';
   const id = (Object.keys(EQUIVALENTE) as IdLF[]).find((k) => EQUIVALENTE[k] === current);
   return id ?? 'inicio';
 }

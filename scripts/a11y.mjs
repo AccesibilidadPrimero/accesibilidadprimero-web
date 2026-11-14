@@ -26,7 +26,10 @@ const axeSource = readFileSync(axePath, 'utf8');
 /* Contacto y Estudio entran el 10/10/2026 y las tres legales el 11/10. Cada
    página nueva se añade aquí. */
 const RUTAS = [
-  '/', '/contacto/', '/estudio/', '/servicios/', '/que-hace-una-web-accesible/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
+  '/', '/contacto/', '/estudio/', '/servicios/',
+  /* Una página por servicio (14/11/2026). */
+  '/diseno-desarrollo-web-accesible/', '/auditoria-accesibilidad-wcag/', '/formacion-accesibilidad-web/',
+  '/que-hace-una-web-accesible/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
   /* Lectura fácil (07/11/2026). */
   '/lectura-facil/', '/lectura-facil/quienes-somos/', '/lectura-facil/que-hacemos/', '/lectura-facil/contacto/', '/lectura-facil/accesibilidad/',
   /* Blog (11/10/2026): el listado, una categoría y tres artículos que juntan
