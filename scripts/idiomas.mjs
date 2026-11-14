@@ -25,8 +25,16 @@ const BLOG = {
   '/blog/european-accessibility-act-licitaciones-europeas/': ['/ca/blog/european-accessibility-act-licitacions-europees/', '/en/blog/european-accessibility-act-eu-tenders-web-requirements/'],
 };
 
+/* Las páginas de cada servicio (14/11/2026): un tramo propio por idioma. */
+const SERVICIO = {
+  '/diseno-desarrollo-web-accesible/': ['/ca/disseny-desenvolupament-web-accessible/', '/en/accessible-web-design-development/'],
+  '/auditoria-accesibilidad-wcag/': ['/ca/auditoria-accessibilitat-wcag/', '/en/wcag-accessibility-audit/'],
+  '/formacion-accesibilidad-web/': ['/ca/formacio-accessibilitat-web/', '/en/web-accessibility-training/'],
+};
+
 export function enIdioma(url, lang) {
   if (lang === 'es') return url;
+  if (SERVICIO[url]) return SERVICIO[url][lang === 'ca' ? 0 : 1];
   if (url.startsWith('/blog')) return BLOG[url]?.[lang === 'ca' ? 0 : 1] ?? null;
   if (url.startsWith('/lectura-facil/')) {
     const sub = url.split('/')[2];

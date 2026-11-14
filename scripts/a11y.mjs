@@ -28,7 +28,7 @@ const axeSource = readFileSync(axePath, 'utf8');
 const RUTAS = [
   '/', '/contacto/', '/estudio/', '/servicios/',
   /* Una página por servicio (14/11/2026). */
-  '/diseno-desarrollo-web-accesible/', '/auditoria-accesibilidad-wcag/', '/formacion-accesibilidad-web/', '/ca/auditoria-accessibilitat-wcag/', '/en/wcag-accessibility-audit/',
+  '/diseno-desarrollo-web-accesible/', '/auditoria-accesibilidad-wcag/', '/formacion-accesibilidad-web/',
   '/que-hace-una-web-accesible/', '/privacidad/', '/cookies/', '/declaracion-de-accesibilidad/',
   /* Lectura fácil (07/11/2026). */
   '/lectura-facil/', '/lectura-facil/quienes-somos/', '/lectura-facil/que-hacemos/', '/lectura-facil/contacto/', '/lectura-facil/accesibilidad/',
