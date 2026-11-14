@@ -5,7 +5,8 @@
    accesibilidadprimero.eu SIN indexar, mientras accesibilidadprimero.com
    sigue siendo el WordPress que justifica el Kit Digital (Johnny, 12/10/2026).
 
-   El 20/01/2027 se cambia MODO a 'final' y nada más en el código:
+   El 14/11/2026 (adelantado, Johnny: el Kit Digital no lo impide) pasa a
+   MODO 'final', y nada más en el código:
      · la URL base pasa a www.accesibilidadprimero.com;
      · vuelve el <link rel="canonical"> y se quita el <meta robots>;
      · los textos legales nombran el .com.
@@ -17,7 +18,7 @@
    algo, el .eu y la web de pruebas no se indexan nunca.
    --------------------------------------------------------------------------- */
 export type Modo = 'provisional' | 'final';
-export const MODO = 'provisional' as Modo;
+export const MODO = 'final' as Modo;
 
 export const DOMINIO_FINAL = 'accesibilidadprimero.com';
 export const DOMINIO_PROVISIONAL = 'accesibilidadprimero.eu';
