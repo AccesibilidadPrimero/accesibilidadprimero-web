@@ -663,7 +663,9 @@ poner un banner. No se añade sin hablarlo.**
 **Contador de visitas propio (Johnny, 11/11/2026).** Hablado y aceptado:
 Cloudflare Web Analytics no da la ciudad ni deja excluir los navegadores del
 estudio. `src/scripts/visita.ts` manda una petición por página a `/api/v`
-(solo en el .eu y el .com) con la página, la referencia y `utm_source`/`ref`;
+(solo en el .eu y el .com) **cuando hay señal humana**: 5 s visible o un
+gesto real (scroll, pulsar, tocar, teclado), nunca al cargar ni en
+segundo plano ni en `prerendering` (15/11/2026) con la página, la referencia y `utm_source`/`ref`;
 `worker/visitas.ts` guarda en la D1 `ap-visitas` fecha, página, ciudad,
 región, país y origen (directo, interna, buscador, redes, ia, enlace). No cuenta las conexiones
 desde redes de centros de datos (Amazon, Google, Meta, OVH…), por su ASN:
