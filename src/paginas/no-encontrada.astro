@@ -1,0 +1,71 @@
+---
+/* ---------------------------------------------------------------------------
+   Página de error 404 (15/11/2026). Hasta hoy Cloudflare tenía
+   `not_found_handling = "404-page"` pero no había 404.html: una dirección
+   que no existía devolvía el 404 con la pantalla en blanco, sin cabecera ni
+   forma de volver.
+
+   Una por idioma: Cloudflare sirve el 404.html más cercano, así que
+   /ca/lo-que-sea/ recibe /ca/404.html y /en/…, /en/404.html.
+
+   Sin canonical, sin hreflang y con noindex (`indexable={false}`). El
+   «404» del <title> lo saca también del sitemap (scripts/sitemap.mjs).
+   Sin cierre de contacto: aquí sería un anuncio.
+   --------------------------------------------------------------------------- */
+import Base from '../layouts/Base.astro';
+import HeroPagina from '../components/HeroPagina.astro';
+import Bloque from '../components/Bloque.astro';
+import { path, type Lang, type RouteKey } from '../i18n/config';
+import { t } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const nav = t(lang).nav;
+
+const TEXTOS = {
+  es: {
+    titulo: 'Esta página no existe.',
+    texto: ['Puede que la dirección esté mal escrita', 'o que la página se haya movido.'],
+    seguir: 'Desde aquí puedes seguir',
+  },
+  ca: {
+    titulo: 'Aquesta pàgina no existeix.',
+    texto: ['Pot ser que l’adreça estigui mal escrita', 'o que la pàgina s’hagi mogut.'],
+    seguir: 'Des d’aquí pots continuar',
+  },
+  en: {
+    titulo: 'This page doesn’t exist.',
+    texto: ['The address may be mistyped,', 'or the page may have moved.'],
+    seguir: 'You can carry on from here',
+  },
+} as const;
+const T = TEXTOS[lang];
+const destinos: RouteKey[] = ['home', 'servicios', 'proyectos', 'contacto'];
+---
+
+<Base
+  lang={lang}
+  current="home"
+  conCta={false}
+  indexable={false}
+  title={`404 · ${T.titulo.replace(/\.$/, '')} · Accesibilidad Primero`}
+  description={T.texto.join(' ')}
+>
+  <HeroPagina titulo={T.titulo} texto={[...T.texto]} />
+  <Bloque id="seguir" titulo={T.seguir}>
+    <ul class="enlaces">
+      {destinos.map((d) => (
+        <li><a href={path(d, lang)}>{nav[d]}</a></li>
+      ))}
+    </ul>
+  </Bloque>
+</Base>
+
+<style>
+  ul { margin: 0; padding: 0; list-style: none; }
+  /* Como las listas de enlaces de las páginas de servicio. */
+  .enlaces { display: flex; flex-direction: column; gap: var(--space-8); max-width: 888px; }
+  .enlaces a { display: inline-flex; align-items: center; min-block-size: 44px; }
+</style>
