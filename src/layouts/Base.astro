@@ -33,6 +33,9 @@ interface Props {
   /** Datos estructurados (schema.org) de la página, en JSON-LD. No se ven:
       dicen a los buscadores qué es cada cosa (SEO, 07/11/2026). */
   datos?: object | object[];
+  /** false: la página de error (15/11/2026). Sin canonical, sin hreflang y
+      con noindex: no es una página que deba estar en un buscador. */
+  indexable?: boolean;
 }
 const {
   title,
@@ -44,6 +47,7 @@ const {
   ctaTitulo,
   imagen,
   datos,
+  indexable = true,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -51,7 +55,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
    07/11/2026): las mismas que enlaza el selector de idioma, en absoluto y en
    el <head>, más «x-default» en castellano. El blog solo existe en
    castellano, así que no lleva ninguna. */
-const versiones = alternates(current, slug).map((a) => ({ hreflang: a.hreflang, href: new URL(a.href, Astro.site).href }));
+const versiones = !indexable ? [] : alternates(current, slug).map((a) => ({ hreflang: a.hreflang, href: new URL(a.href, Astro.site).href }));
 const porDefecto = versiones.find((v) => v.hreflang === 'es');
 /* `<` escapado: un texto con «</script>» no puede cerrar el bloque. */
 const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
@@ -68,7 +72,7 @@ const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
     {/* Mientras la web viva en el .eu provisional (src/data/sitio.ts): noindex
         y SIN canonical. Juntos mandan señales contrarias a Google, y el
         canonical apuntaría a páginas del .com que hoy son el WordPress. */}
-    {INDEXABLE ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
+    {INDEXABLE && indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
     {versiones.map((v) => <link rel="alternate" hreflang={v.hreflang} href={v.href} />)}
     {porDefecto && <link rel="alternate" hreflang="x-default" href={porDefecto.href} />}
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
@@ -79,7 +83,7 @@ const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {indexable && <meta property="og:url" content={canonical} />}
     <meta property="og:locale" content={{ es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[lang]} />
     <meta property="og:site_name" content="Accesibilidad Primero" />
     {imagen && (
