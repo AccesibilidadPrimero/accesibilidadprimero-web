@@ -42,6 +42,32 @@ const CONSERVAR_MS = 395 * 24 * 60 * 60 * 1000;
    script que envía la visita. */
 const AUTOMATICO = /bot|crawl|spider|slurp|headless|lighthouse|playwright|puppeteer|preview|monitor|curl|wget|python|httpclient/i;
 
+/* Redes de centros de datos (Johnny, 15/11/2026). Robots que abren la web
+   con un navegador normal, ejecutan el script y no se anuncian: en el panel
+   salían como visitas desde Boardman y Ashburn (Amazon), Council Bluffs
+   (Google), Prineville (Meta, vistas previas de enlaces) o Beauharnois
+   (OVH). Una persona casi nunca navega desde estas redes. Se mira el número
+   de sistema autónomo (ASN) que Cloudflare pone en `request.cf.asn`: dice de
+   qué red viene la conexión, no quién es, y no se guarda. */
+const CENTROS_DE_DATOS = new Set([
+  16509, 14618, 8987, // Amazon (AWS)
+  15169, 396982, 19527, 36040, // Google y Google Cloud
+  8075, 8068, // Microsoft (Azure)
+  32934, 63293, // Meta
+  16276, // OVH
+  24940, 213230, // Hetzner
+  14061, // DigitalOcean
+  63949, // Akamai (Linode)
+  20473, // Vultr
+  31898, // Oracle Cloud
+  45102, // Alibaba Cloud
+  132203, // Tencent Cloud
+  12876, // Scaleway
+  51167, // Contabo
+  9009, // M247
+  212238, // Datacamp
+]);
+
 /* Hosts que son nuestra propia web: una visita que viene de aquí es un paso
    dentro de la misma visita, no una entrada. */
 const PROPIOS = /(^|\.)accesibilidadprimero\.(eu|com)$|\.workers\.dev$/;
@@ -136,6 +162,8 @@ export async function registrarVisita(
 
   const vacio = new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
   if (!base || noContar(request) || AUTOMATICO.test(request.headers.get('user-agent') ?? '')) return vacio;
+  const red = (request as Request & { cf?: { asn?: number } }).cf?.asn;
+  if (red && CENTROS_DE_DATOS.has(red)) return vacio;
 
   let datos: Record<string, unknown>;
   try { datos = JSON.parse(await request.text()); } catch { return new Response(null, { status: 400 }); }
