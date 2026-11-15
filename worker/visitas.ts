@@ -178,7 +178,7 @@ export async function registrarVisita(
   if (request.method !== 'POST') return new Response(null, { status: 405, headers: { allow: 'POST' } });
 
   const filtro = filtrar(request, base);
-  if (filtro) return filtro;
+  if (filtro || !base) return filtro ?? sinContenido();
   const vacio = sinContenido();
 
   let datos: Record<string, unknown>;
@@ -232,7 +232,7 @@ export async function registrarInteraccion(
   esperar: (p: Promise<unknown>) => void,
 ): Promise<Response> {
   const filtro = filtrar(request, base);
-  if (filtro) return filtro;
+  if (filtro || !base) return filtro ?? sinContenido();
 
   let d: Record<string, unknown>;
   try { d = JSON.parse(await request.text()); } catch { return new Response(null, { status: 400 }); }
@@ -254,14 +254,14 @@ export async function registrarInteraccion(
   }
 
   esperar(
-    base!
+    base
       .prepare('INSERT INTO interacciones (ts, ruta, tipo, control, destino, modo, ancho, profundidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
       .bind(Date.now(), ruta, tipo, control, destino, modo, ancho, profundidad)
       .run()
       .catch((e) => console.error('interacciones: no se pudo guardar', e)),
   );
   if (Math.random() < 0.02) {
-    esperar(base!.prepare('DELETE FROM interacciones WHERE ts < ?').bind(Date.now() - CONSERVAR_MS).run().catch(() => {}));
+    esperar(base.prepare('DELETE FROM interacciones WHERE ts < ?').bind(Date.now() - CONSERVAR_MS).run().catch(() => {}));
   }
   return sinContenido();
 }
