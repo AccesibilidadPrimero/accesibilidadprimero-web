@@ -140,6 +140,29 @@ export const noContar = (request: Request) =>
 
 const recortar = (v: unknown, tope: number) => (typeof v === 'string' ? v.slice(0, tope) : '');
 
+const sinContenido = () => new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
+
+/**
+ * Lo que comparten /api/v y /api/i antes de leer nada: solo POST, solo desde
+ * nuestras páginas y nada de robots, centros de datos ni navegadores del
+ * estudio. Devuelve la respuesta si la petición se queda aquí, o null si
+ * sigue.
+ */
+function filtrar(request: Request, base: BaseD1 | undefined): Response | null {
+  if (request.method !== 'POST') return new Response(null, { status: 405, headers: { allow: 'POST' } });
+
+  /* Solo desde nuestras páginas. `sec-fetch-site` cubre los navegadores que
+     no mandan `Origin` en un sendBeacon del mismo sitio. */
+  const url = new URL(request.url);
+  const mismoSitio = request.headers.get('origin') === url.origin || request.headers.get('sec-fetch-site') === 'same-origin';
+  if (!mismoSitio) return new Response(null, { status: 403 });
+
+  if (!base || noContar(request) || AUTOMATICO.test(request.headers.get('user-agent') ?? '')) return sinContenido();
+  const red = (request as Request & { cf?: { asn?: number } }).cf?.asn;
+  if (red && CENTROS_DE_DATOS.has(red)) return sinContenido();
+  return null;
+}
+
 /**
  * POST /api/v · una página vista.
  *
@@ -154,16 +177,9 @@ export async function registrarVisita(
 ): Promise<Response> {
   if (request.method !== 'POST') return new Response(null, { status: 405, headers: { allow: 'POST' } });
 
-  /* Solo desde nuestras páginas. `sec-fetch-site` cubre los navegadores que
-     no mandan `Origin` en un sendBeacon del mismo sitio. */
-  const url = new URL(request.url);
-  const mismoSitio = request.headers.get('origin') === url.origin || request.headers.get('sec-fetch-site') === 'same-origin';
-  if (!mismoSitio) return new Response(null, { status: 403 });
-
-  const vacio = new Response(null, { status: 204, headers: { 'cache-control': 'no-store' } });
-  if (!base || noContar(request) || AUTOMATICO.test(request.headers.get('user-agent') ?? '')) return vacio;
-  const red = (request as Request & { cf?: { asn?: number } }).cf?.asn;
-  if (red && CENTROS_DE_DATOS.has(red)) return vacio;
+  const filtro = filtrar(request, base);
+  if (filtro) return filtro;
+  const vacio = sinContenido();
 
   let datos: Record<string, unknown>;
   try { datos = JSON.parse(await request.text()); } catch { return new Response(null, { status: 400 }); }
@@ -189,6 +205,65 @@ export async function registrarVisita(
     esperar(base.prepare('DELETE FROM visitas WHERE ts < ?').bind(ahora - CONSERVAR_MS).run().catch(() => {}));
   }
   return vacio;
+}
+
+/* ---------------------------------------------------------------------------
+   Mapa de interacción (Johnny, 15/11/2026). Qué se pulsa y hasta dónde se
+   lee, por página. Sustituye a un mapa de calor de terceros: sin
+   identificador, sin nada en el navegador y sin guardar lo que se escribe.
+
+   tipo         pulsar · lectura
+   control      nombre visible del enlace o botón («Cuéntanoslo»), hasta 80
+   destino      a dónde lleva un enlace: la ruta si es nuestra, el dominio si
+                es de fuera, «correo» o «teléfono». Sin parámetros.
+   modo         raton · tactil · teclado
+   ancho        movil (< 768) · tableta (< 1024) · escritorio
+   profundidad  25 · 50 · 75 · 100: hasta dónde llegó la página (lectura)
+   --------------------------------------------------------------------------- */
+const TIPOS = new Set(['pulsar', 'lectura']);
+const MODOS = new Set(['raton', 'tactil', 'teclado']);
+const ANCHOS = new Set(['movil', 'tableta', 'escritorio']);
+const PROFUNDIDADES = new Set([25, 50, 75, 100]);
+
+/** POST /api/i · una pulsación o la lectura de una página. */
+export async function registrarInteraccion(
+  request: Request,
+  base: BaseD1 | undefined,
+  esperar: (p: Promise<unknown>) => void,
+): Promise<Response> {
+  const filtro = filtrar(request, base);
+  if (filtro) return filtro;
+
+  let d: Record<string, unknown>;
+  try { d = JSON.parse(await request.text()); } catch { return new Response(null, { status: 400 }); }
+
+  const ruta = recortar(d.p, 200);
+  const tipo = recortar(d.t, 10);
+  const ancho = recortar(d.a, 12);
+  if (!ruta.startsWith('/') || !TIPOS.has(tipo) || !ANCHOS.has(ancho)) return new Response(null, { status: 400 });
+
+  let control: string | null = null, destino: string | null = null, modo: string | null = null, profundidad: number | null = null;
+  if (tipo === 'pulsar') {
+    control = recortar(d.c, 80).replace(/\s+/g, ' ').trim() || null;
+    destino = recortar(d.d, 120) || null;
+    modo = recortar(d.m, 10);
+    if (!control || !MODOS.has(modo)) return new Response(null, { status: 400 });
+  } else {
+    profundidad = Number(d.h);
+    if (!PROFUNDIDADES.has(profundidad)) return new Response(null, { status: 400 });
+  }
+
+  esperar(
+    base!
+      .prepare('INSERT INTO interacciones (ts, ruta, tipo, control, destino, modo, ancho, profundidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
+      .bind(Date.now(), ruta, tipo, control, destino, modo, ancho, profundidad)
+      .run()
+      .catch((e) => console.error('interacciones: no se pudo guardar', e)),
+  );
+  if (Math.random() < 0.02) {
+    esperar(base!.prepare('DELETE FROM interacciones WHERE ts < ?').bind(Date.now() - CONSERVAR_MS).run().catch(() => {}));
+  }
+  return sinContenido();
 }
 
 /* Página de confirmación de /api/no-contar y /api/contar. Es una utilidad

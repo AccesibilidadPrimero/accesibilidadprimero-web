@@ -47,7 +47,7 @@ export const PRIVACIDAD: PaginaLegal = {
   entrada: [
     'Qué datos recogemos, para qué los usamos y cómo puedes pedirnos que los borremos. Explicado para que se entienda a la primera.',
   ],
-  fecha: 'Última actualización: 11 de noviembre de 2026.',
+  fecha: 'Última actualización: 15 de noviembre de 2026.',
   descripcion: `Qué datos recogemos en ${DOMINIO}, para qué los usamos y cómo ejercer tus derechos.`,
   bloques: [
     {
@@ -73,6 +73,7 @@ export const PRIVACIDAD: PaginaLegal = {
         { p: 'Para proteger el formulario de los envíos automáticos, Cloudflare Turnstile analiza datos técnicos de tu conexión, como la dirección IP y el navegador, sin pedirte nada. No los usamos para identificarte.' },
         { p: 'Para saber cuántas visitas recibe la web usamos Cloudflare Web Analytics y un contador propio. Los dos cuentan páginas vistas sin cookies y sin seguir a nadie.' },
         { p: 'El contador propio guarda, de cada página vista, la fecha, la página, la ciudad y el país aproximados y la web o la red social desde la que llegas. La ciudad la calcula Cloudflare con tu dirección IP en ese momento; la IP no se guarda. Con estos datos no se puede saber quién eres ni unir unas visitas con otras. Se borran a los 13 meses.' },
+        { p: 'También anotamos qué enlaces y botones se pulsan (su nombre, a dónde llevan y si fue con ratón, con el dedo o con el teclado) y hasta dónde se baja en cada página, para saber qué se entiende y qué no. Nunca guardamos lo que escribes, ni en los formularios ni en la conversación con Itza. Tampoco esto permite saber quién eres, y se borra a los 13 meses.' },
       ],
     },
     {
@@ -293,7 +294,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
   entrada: [
     'Quines dades recollim, per a què les fem servir i com ens pots demanar que les esborrem. Explicat perquè s’entengui a la primera.',
   ],
-  fecha: 'Darrera actualització: 11 de novembre de 2026.',
+  fecha: 'Darrera actualització: 15 de novembre de 2026.',
   descripcion: `Quines dades recollim a ${DOMINIO}, per a què les fem servir i com pots exercir els teus drets.`,
   bloques: [
     {
@@ -319,6 +320,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
         { p: 'Per protegir el formulari dels enviaments automàtics, Cloudflare Turnstile analitza dades tècniques de la teva connexió, com l’adreça IP i el navegador, sense demanar-te res. No les fem servir per identificar-te.' },
         { p: 'Per saber quantes visites rep el web fem servir Cloudflare Web Analytics i un comptador propi. Tots dos compten les pàgines vistes sense galetes i sense seguir ningú.' },
         { p: 'El comptador propi guarda, de cada pàgina vista, la data, la pàgina, la ciutat i el país aproximats i el web o la xarxa social des d’on arribes. La ciutat la calcula Cloudflare amb la teva adreça IP en aquell moment; la IP no es guarda. Amb aquestes dades no es pot saber qui ets ni unir unes visites amb altres. S’esborren al cap de 13 mesos.' },
+        { p: 'També anotem quins enllaços i botons es premen (el nom, on porten i si ha estat amb el ratolí, amb el dit o amb el teclat) i fins on es baixa a cada pàgina, per saber què s’entén i què no. Mai no guardem el que escrius, ni als formularis ni a la conversa amb Itza. Tampoc això permet saber qui ets, i s’esborra al cap de 13 mesos.' },
       ],
     },
     {
@@ -387,7 +389,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
   entrada: [
     'What data we collect, what we use it for and how you can ask us to delete it. Written so it makes sense the first time you read it.',
   ],
-  fecha: 'Last updated: 11 November 2026.',
+  fecha: 'Last updated: 15 November 2026.',
   descripcion: `What data we collect on ${DOMINIO}, what we use it for and how to exercise your rights.`,
   bloques: [
     {
@@ -413,6 +415,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
         { p: 'To protect the form from automated submissions, Cloudflare Turnstile analyses technical data about your connection, such as your IP address and browser, without asking you to do anything. We do not use it to identify you.' },
         { p: 'To find out how many visits the website gets, we use Cloudflare Web Analytics and our own counter. Both count page views without cookies and without tracking anyone.' },
         { p: 'Our own counter keeps, for each page view, the date, the page, the approximate city and country, and the website or social network you came from. Cloudflare works out the city from your IP address at that moment; the IP address is not stored. This data cannot tell us who you are or link one visit to another. It is deleted after 13 months.' },
+        { p: 'We also note which links and buttons are used (their name, where they lead and whether a mouse, a finger or a keyboard was used) and how far down each page people get, so we can see what is clear and what is not. We never store what you type, in forms or in the conversation with Itza. This cannot tell us who you are either, and it is deleted after 13 months.' },
       ],
     },
     {

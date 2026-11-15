@@ -33,7 +33,7 @@
  */
 import { hostSinIndexar } from '../src/data/sitio.ts';
 import { llamarClaude, validarConversacion } from '../itza-worker/claude.ts';
-import { registrarVisita, cambiarConteo, type BaseD1 } from './visitas.ts';
+import { registrarVisita, registrarInteraccion, cambiarConteo, type BaseD1 } from './visitas.ts';
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
   BREVO_API_KEY?: string;
@@ -328,6 +328,9 @@ export default {
     /* Contador de visitas (11/11/2026). Ver worker/visitas.ts. */
     if (url.pathname === '/api/v') {
       return registrarVisita(request, env.VISITAS, (p) => (ctx ? ctx.waitUntil(p) : void p));
+    }
+    if (url.pathname === '/api/i') {
+      return registrarInteraccion(request, env.VISITAS, (p) => (ctx ? ctx.waitUntil(p) : void p));
     }
     if (url.pathname === '/api/no-contar' || url.pathname === '/api/contar') {
       return cambiarConteo(request, url.pathname === '/api/contar');
