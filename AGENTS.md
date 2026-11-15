@@ -677,6 +677,17 @@ Cookies lo dicen en los tres idiomas: si cambia lo que se guarda, cambian
 ellas en el mismo PR. Lo lee el panel de analítica de Johnny (artefacto con el
 conector de Cloudflare).
 
+**Mapa de interacción (Johnny, 15/11/2026).** En lugar de un mapa de calor
+de terceros (descartado el 11/10 por cookies y banner, y porque no ve el
+teclado). `src/scripts/interaccion.ts` manda a `/api/i`: cada enlace o botón
+pulsado (nombre visible, destino sin parámetros, ratón, tacto o teclado,
+ancho de pantalla) y, al salir de la página y solo si la visita contó, hasta
+dónde se leyó (25, 50, 75 o 100 %). Va a la tabla `interacciones` de la
+misma D1, con los mismos filtros del Worker. **Nunca se mide lo que se
+escribe**: ni campos de texto ni la conversación ni las respuestas rápidas
+de Itza; cualquier zona con `data-sin-medir` queda fuera. Privacidad lo
+nombra en los tres idiomas.
+
 `npm run formulario` prueba el Worker (`worker/index.ts`) y el formulario de
 Contacto con Brevo y Turnstile SIMULADOS: no envía correos. Necesita Node 22.6
 o posterior (importa el Worker en TypeScript). Avisa mientras la clave de sitio

@@ -29,7 +29,15 @@ const GESTOS = ['scroll', 'pointerdown', 'keydown', 'touchstart'] as const;
 
 const host = location.hostname.replace(/^www\./, '');
 
-if ((host === DOMINIO_FINAL || host === DOMINIO_PROVISIONAL) && 'sendBeacon' in navigator) {
+/** ¿Estamos en la web de verdad? Fuera (local, workers.dev, tests) no se mide nada. */
+export const midiendo = (host === DOMINIO_FINAL || host === DOMINIO_PROVISIONAL) && 'sendBeacon' in navigator;
+
+/* Se cumple cuando la visita cuenta (hay señal humana). El mapa de
+   interacción (interaccion.ts) espera a esto antes de mandar la lectura. */
+let marcarHumano: () => void = () => {};
+export const humano = new Promise<void>((r) => { marcarHumano = r; });
+
+if (midiendo) {
   /* Se leen al cargar: la URL y la referencia son las de la llegada. */
   const params = new URLSearchParams(location.search);
   const datos = JSON.stringify({
@@ -52,6 +60,7 @@ if ((host === DOMINIO_FINAL || host === DOMINIO_PROVISIONAL) && 'sendBeacon' in 
     document.removeEventListener('prerenderingchange', medirTiempo);
     /* text/plain: así el envío no necesita una petición previa de permiso. */
     navigator.sendBeacon('/api/v', new Blob([datos], { type: 'text/plain' }));
+    marcarHumano();
   };
 
   function alGesto(e: Event) {
