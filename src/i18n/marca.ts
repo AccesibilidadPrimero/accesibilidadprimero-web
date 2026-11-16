@@ -12,7 +12,15 @@
    «Accesibilidad primero. Siempre.», que es el lema escrito con minúscula y se
    teclea letra a letra.
    --------------------------------------------------------------------------- */
-export const REGISTRADA = '<sup class="registrada" aria-hidden="true">®</sup>';
+/* TEMPORAL (Johnny, 16/11/2026): la ® se quita de todo hasta que la OEPM
+   conceda la marca (solicitud presentada el 16/11/2026). Para volver a
+   ponerla, cambiar a `true`: el logo de la cabecera y todos los textos que
+   pasan por REGISTRADA / conMarca() la recuperan solos. */
+export const MARCA_REGISTRADA = false;
+
+export const REGISTRADA = MARCA_REGISTRADA
+  ? '<sup class="registrada" aria-hidden="true">®</sup>'
+  : '';
 
 const escapar = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

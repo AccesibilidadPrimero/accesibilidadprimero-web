@@ -1,4 +1,5 @@
 ---
+import { REGISTRADA } from '../i18n/marca';
 /* ---------------------------------------------------------------------------
    Cabecera · logotipo + navegación
 
@@ -34,7 +35,7 @@ const lf = {
 
 <header class="header">
   <a href={path('home', lang)} class="header__logo" aria-label={ui.logoLabel}>
-    <span aria-hidden="true">Accesibilidad Primero<sup>®</sup></span>
+    <span aria-hidden="true">Accesibilidad Primero<Fragment set:html={REGISTRADA} /></span>
   </a>
 
   <div class="header__right">

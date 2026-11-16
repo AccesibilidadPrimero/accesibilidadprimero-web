@@ -1,6 +1,6 @@
 # Glosario · castellano, catalán e inglés británico
 
-Para traducir la web de Accesibilidad Primero® (05/11/2026). No es una traducción palabra a palabra: cada idioma se escribe como lo escribiría alguien nativo del estudio, con la misma voz.
+Para traducir la web de Accesibilidad Primero (05/11/2026). No es una traducción palabra a palabra: cada idioma se escribe como lo escribiría alguien nativo del estudio, con la misma voz.
 
 ## La voz, en los tres idiomas
 
@@ -18,7 +18,7 @@ Para traducir la web de Accesibilidad Primero® (05/11/2026). No es una traducci
 
 ## Nombres que no se traducen
 
-Accesibilidad Primero® (siempre con ®) · AP · Itza® · A11y Primero® · Accesible Abstracts® · ECI Conference Mad 2027 · Foc i Cor · Elogio de la línea · Izaskun Etxebarria · Pau Jordà · CESAL · AEIPI · Eurlyaid · WKND · GUS · dicaTIC · Universitat Politècnica de València · WCAG 2.2 · axe-core · Bide-zabalak.
+Accesibilidad Primero (sin ® de momento: se quita hasta que la OEPM conceda la marca; ver `MARCA_REGISTRADA` en marca.ts) · AP · Itza® · A11y Primero® · Accesible Abstracts® · ECI Conference Mad 2027 · Foc i Cor · Elogio de la línea · Izaskun Etxebarria · Pau Jordà · CESAL · AEIPI · Eurlyaid · WKND · GUS · dicaTIC · Universitat Politècnica de València · WCAG 2.2 · axe-core · Bide-zabalak.
 
 “Estimem les diferències” (carrusel de la Home) no se traduce en ningún idioma.
 
