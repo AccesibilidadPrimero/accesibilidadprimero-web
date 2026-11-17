@@ -40,7 +40,13 @@
 /accesibilidad/  /declaracion-de-accesibilidad/  301
 /accesibilidas/  /declaracion-de-accesibilidad/  301
 /privacida/  /privacidad/  301
+/politica-de-privacidad  /privacidad/  301
+/politica-de-privacidad/  /privacidad/  301
 /formulario/  /contacto/  301
+
+# ── Páginas de autor de WordPress (Search Console, 16/11/2026: seguían dando 404) ──
+/author/johnny-vigas/  /estudio/  301
+/author/vigasestiudio/  /estudio/  301
 
 # ── Restos de pruebas (con noindex desde el 11/10/2026) ──
 /home-2-0/  /  301
