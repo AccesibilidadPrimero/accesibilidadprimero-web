@@ -47,7 +47,7 @@ export const PRIVACIDAD: PaginaLegal = {
   entrada: [
     'Qué datos recogemos, para qué los usamos y cómo puedes pedirnos que los borremos. Explicado para que se entienda a la primera.',
   ],
-  fecha: 'Última actualización: 15 de noviembre de 2026.',
+  fecha: 'Última actualización: 18 de noviembre de 2026.',
   descripcion: `Qué datos recogemos en ${DOMINIO}, para qué los usamos y cómo ejercer tus derechos.`,
   bloques: [
     {
@@ -111,7 +111,7 @@ export const PRIVACIDAD: PaginaLegal = {
             'Cloudflare: aloja la web, recibe el formulario, lo protege de los envíos automáticos y cuenta las visitas.',
             'Brevo: nos hace llegar el mensaje del formulario por correo.',
             'Anthropic: si usas a Itza en Contacto, genera sus respuestas a partir de lo que le escribes. No guardamos esa conversación.',
-            'Google Workspace: nuestro correo, donde llegan y se guardan los mensajes.',
+            'Google Workspace: nuestro correo, donde llegan y se guardan los mensajes, y nuestra agenda: si reservas una llamada, Google Calendar guarda los datos que pones en la reserva.',
           ],
         },
         { p: 'Cloudflare y Google pueden tratar datos fuera de la Unión Europea. Lo hacen con las garantías del Marco de Privacidad de Datos UE-EE. UU. y las cláusulas contractuales tipo de la Comisión Europea. Brevo los trata en la Unión Europea. Anthropic trata lo que escribes a Itza en Estados Unidos, con las cláusulas contractuales tipo de la Comisión Europea.' },
@@ -294,7 +294,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
   entrada: [
     'Quines dades recollim, per a què les fem servir i com ens pots demanar que les esborrem. Explicat perquè s’entengui a la primera.',
   ],
-  fecha: 'Darrera actualització: 15 de novembre de 2026.',
+  fecha: 'Darrera actualització: 18 de novembre de 2026.',
   descripcion: `Quines dades recollim a ${DOMINIO}, per a què les fem servir i com pots exercir els teus drets.`,
   bloques: [
     {
@@ -358,7 +358,7 @@ const PRIVACIDAD_CA: PaginaLegal = {
             'Cloudflare: allotja el web, rep el formulari, el protegeix dels enviaments automàtics i compta les visites.',
             'Brevo: ens fa arribar el missatge del formulari per correu.',
             'Anthropic: si fas servir Itza a Contacte, genera les seves respostes a partir del que li escrius. No guardem aquesta conversa.',
-            'Google Workspace: el nostre correu, on arriben i es guarden els missatges.',
+            'Google Workspace: el nostre correu, on arriben i es guarden els missatges, i la nostra agenda: si reserves una trucada, Google Calendar guarda les dades que poses a la reserva.',
           ],
         },
         { p: 'Cloudflare i Google poden tractar dades fora de la Unió Europea. Ho fan amb les garanties del Marc de Privacitat de Dades UE-EUA i les clàusules contractuals tipus de la Comissió Europea. Brevo les tracta a la Unió Europea. Anthropic tracta el que escrius a Itza als Estats Units, amb les clàusules contractuals tipus de la Comissió Europea.' },
@@ -389,7 +389,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
   entrada: [
     'What data we collect, what we use it for and how you can ask us to delete it. Written so it makes sense the first time you read it.',
   ],
-  fecha: 'Last updated: 15 November 2026.',
+  fecha: 'Last updated: 18 November 2026.',
   descripcion: `What data we collect on ${DOMINIO}, what we use it for and how to exercise your rights.`,
   bloques: [
     {
@@ -453,7 +453,7 @@ const PRIVACIDAD_EN: PaginaLegal = {
             'Cloudflare: hosts the website, receives the form, protects it from automated submissions and counts visits.',
             'Brevo: delivers the form message to us by email.',
             'Anthropic: if you use Itza on the Contact page, it generates Itza’s replies from what you write. We do not keep that conversation.',
-            'Google Workspace: our email, where messages arrive and are stored.',
+            'Google Workspace: our email, where messages arrive and are stored, and our calendar: if you book a call, Google Calendar stores the details you enter in the booking.',
           ],
         },
         { p: 'Cloudflare and Google may process data outside the European Union. They do so under the safeguards of the EU-US Data Privacy Framework and the European Commission’s standard contractual clauses. Brevo processes it within the European Union. Anthropic processes what you write to Itza in the United States, under the European Commission’s standard contractual clauses.' },

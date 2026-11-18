@@ -31,6 +31,10 @@ import iconoAP from '../assets/estudio/icono.svg';
 
 const lang = idiomaDe(Astro.url);
 const CORREO = CORREO_ESTUDIO;
+/* La agenda de citas de Google Calendar, «Hablemos de tu proyecto»
+   (Johnny, 18/11/2026). Se abre en la misma pestaña: al principio aún no hay
+   conversación que perder. Los datos de la reserva los pide Google, no Itza. */
+const AGENDA = 'https://calendar.app.google/dQSj4D7tNMUHkrLn7';
 
 /* Los textos de la página en los tres idiomas (05/11/2026). Los mensajes
    de error no están en el Figma: los pide 3.3.1 y 3.3.3. Van en el mismo
@@ -43,6 +47,8 @@ const T = {
     intro1: 'No hace falta que traigas el proyecto resuelto: con saber qué hacéis y qué os gustaría conseguir, podemos empezar.',
     intro2: 'Respondemos siempre, aunque sea para decirte que no somos el estudio adecuado.',
     porCorreo: 'Si lo prefieres, escríbenos por correo:',
+    porLlamada: 'O, si prefieres hablarlo, concierta una llamada:',
+    llamada: 'Concertar una llamada',
     escribenos: 'Escríbenos',
     noscript: 'Para usar el formulario hace falta JavaScript. Puedes escribirnos directamente a',
     errorEnvio: 'No hemos podido enviarlo. Vuelve a intentarlo o escríbenos a',
@@ -84,6 +90,7 @@ const T = {
       escuchando: 'Escuchando. Pulsa para parar',
       opciones: ['Una web accesible', 'Una auditoría', 'Formación para mi equipo', 'Marca blanca para mi agencia', 'Una colaboración'],
       porCorreo: 'Contactar por email',
+      llamada: 'Concertar una llamada',
       puedesDecir: 'Puedes decir:',
     },
   },
@@ -94,6 +101,8 @@ const T = {
     intro1: 'No cal que portis el projecte resolt: si sabem què feu i què us agradaria aconseguir, podem començar.',
     intro2: 'Sempre responem, encara que sigui per dir-te que no som l’estudi adequat.',
     porCorreo: 'Si ho prefereixes, escriu-nos per correu:',
+    porLlamada: 'O, si prefereixes parlar-ne, concerta una trucada:',
+    llamada: 'Concertar una trucada',
     escribenos: 'Escriu-nos',
     noscript: 'Per fer servir el formulari cal JavaScript. Pots escriure’ns directament a',
     errorEnvio: 'No l’hem pogut enviar. Torna-ho a provar o escriu-nos a',
@@ -135,6 +144,7 @@ const T = {
       escuchando: 'Escoltant. Prem per aturar',
       opciones: ['Una web accessible', 'Una auditoria', 'Formació per al meu equip', 'Marca blanca per a la meva agència', 'Una col·laboració'],
       porCorreo: 'Contactar per correu',
+      llamada: 'Concertar una trucada',
       puedesDecir: 'Pots dir:',
     },
   },
@@ -145,6 +155,8 @@ const T = {
     intro1: 'You don’t need to have your project figured out: if we know what you do and what you’d like to achieve, we can start.',
     intro2: 'We always reply, even if it’s to tell you we’re not the right studio.',
     porCorreo: 'If you prefer, email us:',
+    porLlamada: 'Or, if you’d rather talk it through, book a call:',
+    llamada: 'Book a call',
     escribenos: 'Get in touch',
     noscript: 'The form needs JavaScript. You can email us directly at',
     errorEnvio: 'We couldn’t send it. Please try again or email us at',
@@ -186,6 +198,7 @@ const T = {
       escuchando: 'Listening. Press to stop',
       opciones: ['An accessible website', 'An audit', 'Training for my team', 'White-label services for my agency', 'A collaboration'],
       porCorreo: 'Contact us by email',
+      llamada: 'Book a call',
       puedesDecir: 'You can say:',
     },
   },
@@ -343,6 +356,7 @@ const CAMPOS = [
         <li><button type="button" class="itza-opcion" data-texto={o}>{o}</button></li>
       ))}
       <li><a class="itza-opcion" href={`mailto:${CORREO}`}>{T.itza.porCorreo}</a></li>
+      <li><a class="itza-opcion" href={AGENDA}>{T.itza.llamada}</a></li>
     </ul>
 
     {/* La barra, como la del plugin: es un campo. La conversación no sale
@@ -381,6 +395,10 @@ const CAMPOS = [
         <div class="directo__correo">
           <p>{T.porCorreo}</p>
           <CtaLink href={`mailto:${CORREO}`}>proyectos@<wbr>accesibilidadprimero.com</CtaLink>
+        </div>
+        <div class="directo__correo">
+          <p>{T.porLlamada}</p>
+          <CtaLink href={AGENDA}>{T.llamada}</CtaLink>
         </div>
       </div>
 
