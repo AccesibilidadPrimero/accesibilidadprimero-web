@@ -175,7 +175,7 @@ console.log('\n── Worker ──\n');
   ok(ri.status === 200 && ri.cuerpo.reply === '¿Qué necesitáis?' && ri.cuerpo.listo === false && !('resumen' in ri.cuerpo), 'Itza: una pregunta, sin resumen');
   ok(anthropic.llamadas[0]?.system.includes('No pidas nombre, correo'), 'Itza: el prompt le prohíbe pedir datos personales');
   ok(anthropic.llamadas[0]?.system.includes('proyectos@accesibilidadprimero.com'), 'Itza: si solo quieren el correo, lo sabe');
-  ok(anthropic.llamadas[0]?.system.includes('NOMBRE PROPIO') && anthropic.llamadas[0]?.system.includes('«Perfecto»') && anthropic.llamadas[0]?.system.includes('SOLO lo que la persona ha dicho'), 'Itza: sin rellenos, sin inventar la organización ni añadir al resumen');
+  ok(anthropic.llamadas[0]?.system.includes('NOMBRE PROPIO') && anthropic.llamadas[0]?.system.includes('«Perfecto»') && anthropic.llamadas[0]?.system.includes('SOLO lo que la persona ha dicho') && anthropic.llamadas[0]?.system.includes('Administración pública') && anthropic.llamadas[0]?.system.includes('Cada pregunta lleva SIEMPRE sus opciones'), 'Itza: sin rellenos, sin inventar la organización ni añadir al resumen');
   ok(!anthropic.llamadas[0]?.system.includes('/servicios/') && anthropic.llamadas[0]?.system.includes('Sin enlaces'), 'Itza en Contacto: sin enlaces ni direcciones en el prompt');
   ok(anthropic.llamadas[0]?.system.includes('segunda persona del singular') && anthropic.llamadas[0]?.system.includes('en primera persona'), 'Itza: trata de tú y el resumen va en primera persona');
   anthropic.texto = 'Vale. {"respuesta": "Listo, revísalo.", "listo": true, "resumen": "Somos una fundación y queremos rehacer la web.", "organizacion": "Fundación Ejemplo"}';
@@ -184,10 +184,10 @@ console.log('\n── Worker ──\n');
   anthropic.texto = 'Esto no es JSON';
   ri = await itza(pregunta);
   ok(ri.status === 200 && ri.cuerpo.reply === 'Esto no es JSON' && ri.cuerpo.listo === false, 'Itza: si no responde en JSON, el texto vale como pregunta');
-  /* Respuestas rápidas: texto corto y como mucho cinco. */
-  anthropic.texto = JSON.stringify({ respuesta: '¿Hay fecha límite?', listo: false, opciones: ['Sí', 'No', 7, 'x'.repeat(60), 'a', 'b', 'c', 'd'] });
+  /* Respuestas rápidas: texto corto y como mucho siete (18/11/2026). */
+  anthropic.texto = JSON.stringify({ respuesta: '¿Hay fecha límite?', listo: false, opciones: ['Sí', 'No', 7, 'x'.repeat(60), 'a', 'b', 'c', 'd', 'e', 'f'] });
   ri = await itza(pregunta);
-  ok(JSON.stringify(ri.cuerpo.opciones) === JSON.stringify(['Sí', 'No', 'a', 'b', 'c']), 'Itza: las opciones, solo texto corto y cinco como mucho', JSON.stringify(ri.cuerpo.opciones));
+  ok(JSON.stringify(ri.cuerpo.opciones) === JSON.stringify(['Sí', 'No', 'a', 'b', 'c', 'd', 'e']), 'Itza: las opciones, solo texto corto y siete como mucho', JSON.stringify(ri.cuerpo.opciones));
   /* JSON roto, tal como salió en producción el 08/11/2026: la dirección
      suelta dentro del objeto. No se enseña el JSON. */
   anthropic.texto = '{"respuesta": "Las tarifas están en el apartado de servicios. ¿Qué tipo de auditoría buscas?", "listo": false, "/servicios/"}';
