@@ -246,7 +246,7 @@ Como mucho tres preguntas. No preguntes por plazos, subvenciones, licitaciones n
 
 OPCIONES (Johnny, 18/11/2026: «que siempre dé opciones de respuesta para guiar la conversación y que la persona escriba lo menos posible»). Cada pregunta lleva SIEMPRE sus opciones, para que la persona pueda contestar pulsando en vez de escribir. Usa estas listas tal cual, en el idioma de la persona; no las cambies ni las mezcles:
 - necesidad · es: ["Una web nueva", "Rediseñar mi web", "Una auditoría", "Formación", "Documentos accesibles", "Marca blanca", "Una colaboración"] · ca: ["Una web nova", "Redissenyar la meva web", "Una auditoria", "Formació", "Documents accessibles", "Marca blanca", "Una col·laboració"] · en: ["A new website", "Redesign my website", "An audit", "Training", "Accessible documents", "White-label services", "A collaboration"]
-- organización · es: ["Empresa", "Administración pública", "Universidad o educación", "Tercer sector (ONG, fundación…)", "Agencia de comunicación", "Estudio de diseño", "Consultoría", "Productora", "Otro"] · ca: ["Empresa", "Administració pública", "Universitat o educació", "Tercer sector (ONG, fundació…)", "Agència de comunicació", "Estudi de disseny", "Consultoria", "Productora", "Un altre"] · en: ["Company", "Public sector", "University or education", "Third sector (NGO, charity…)", "Communications agency", "Design studio", "Consultancy", "Production company", "Other"]
+- organización · es: ["Empresa", "Administración pública", "Universidad o educación", "Tercer sector (ONG, fundación…)", "Agencia o estudio de diseño", "Consultoría", "Otro"] · ca: ["Empresa", "Administració pública", "Universitat o educació", "Tercer sector (ONG, fundació…)", "Agència o estudi de disseny", "Consultoria", "Un altre"] · en: ["Company", "Public sector", "University or education", "Third sector (NGO, charity…)", "Agency or design studio", "Consultancy", "Other"]
 - agencia · es: ["Publicidad", "Diseño gráfico", "Diseño digital", "Desarrollo web", "Consultoría"] · ca: ["Publicitat", "Disseny gràfic", "Disseny digital", "Desenvolupament web", "Consultoria"] · en: ["Advertising", "Graphic design", "Digital design", "Web development", "Consultancy"]
 - añadir · es: ["No, ya está", "Sí, quiero añadir algo"] · ca: ["No, ja està", "Sí, vull afegir alguna cosa"] · en: ["No, that’s all", "Yes, I want to add something"]
 - dejar mensaje · es: ["Sí, lo dejo aquí", "No, solo el correo"] · ca: ["Sí, el deixo aquí", "No, només el correu"] · en: ["Yes, I’ll leave it here", "No, just the email"]
@@ -271,11 +271,11 @@ function leerItza(texto: string, lang: 'es' | 'ca' | 'en') {
     const d = JSON.parse(texto.slice(a, b + 1)) as { respuesta?: unknown; listo?: unknown; resumen?: unknown; organizacion?: unknown };
     if (typeof d.respuesta !== 'string' || !d.respuesta.trim()) throw new Error('sin respuesta');
     const listo = d.listo === true && typeof d.resumen === 'string' && d.resumen.trim().length > 0;
-    /* Las respuestas rápidas: solo texto corto, como mucho nueve (la lista de
-       organizaciones tiene nueve, 18/11/2026). */
+    /* Las respuestas rápidas: solo texto corto, como mucho siete (Johnny, 18/11/2026:
+       con nueve, en el móvil la pregunta quedaba enterrada). */
     const opciones = !listo && Array.isArray((d as { opciones?: unknown }).opciones)
       ? ((d as { opciones: unknown[] }).opciones).filter((o): o is string => typeof o === 'string')
-          .map((o) => o.trim()).filter((o) => o && o.length <= 40).slice(0, 9)
+          .map((o) => o.trim()).filter((o) => o && o.length <= 40).slice(0, 7)
       : [];
     return {
       reply: d.respuesta.trim(),
