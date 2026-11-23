@@ -68,6 +68,57 @@ const CENTROS_DE_DATOS = new Set([
   212238, // Datacamp
 ]);
 
+/* Señales del navegador (Johnny, 19/11/2026). La lista de redes se queda
+   corta: el 19/11 entraron 13 páginas desde Ashburn, Nueva York y Washington
+   en dos minutos, todas directas, con un Chrome completo que esperaba los 5 s
+   y desde redes que no están arriba. El script manda tres señales (ver
+   src/scripts/visita.ts) y aquí se mira si son de robot. No se guardan.
+
+   La zona horaria es la más útil: un navegador en un servidor suele ir en
+   UTC, y si se hace pasar por otra, casi nunca cuadra con la de la ciudad de
+   la conexión, que Cloudflare da en `request.cf.timezone`. Se comparan las
+   horas, no los nombres, con margen de 2 h: así Canarias contra Madrid o un
+   móvil que sale por otra central siguen contando. Quien navega con VPN a
+   otro continente o con un navegador que se declara en UTC para no dejar
+   huella (Tor, Mullvad) no cuenta: preferimos contar de menos. */
+const ZONA_UTC = /^(utc|gmt|etc\/|universal|zulu)/i;
+const MARGEN_MIN = 120;
+
+/** Minutos de diferencia con UTC de una zona horaria ahora mismo, o null si no existe. */
+export function desfase(zona: string, ahora = new Date()): number | null {
+  try {
+    const t = new Intl.DateTimeFormat('en-US', { timeZone: zona, timeZoneName: 'longOffset' })
+      .formatToParts(ahora).find((p) => p.type === 'timeZoneName')?.value ?? '';
+    const m = /GMT(?:([+-])(\d{1,2})(?::(\d{2}))?)?$/.exec(t);
+    if (!m) return null;
+    return m[1] ? (m[1] === '-' ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3] ?? 0)) : 0;
+  } catch {
+    return null;
+  }
+}
+
+/** Por qué parece un robot, o null si parece una persona. */
+export function robot(d: Record<string, unknown>, zonaConexion: string | undefined, ahora = new Date()): string | null {
+  if (d.w === 1 || d.w === true) return 'webdriver';
+  if (typeof d.l !== 'number' || d.l < 1) return 'sin idiomas';
+  const z = typeof d.z === 'string' ? d.z.slice(0, 60) : '';
+  if (!z || ZONA_UTC.test(z)) return 'zona UTC';
+  const delNavegador = desfase(z, ahora);
+  if (delNavegador == null) return 'zona desconocida';
+  const deLaConexion = zonaConexion ? desfase(zonaConexion, ahora) : null;
+  if (deLaConexion != null && Math.abs(delNavegador - deLaConexion) > MARGEN_MIN) return 'zona no cuadra';
+  return null;
+}
+
+type Cf = { city?: string; region?: string; country?: string; timezone?: string; asn?: number; asOrganization?: string };
+
+/* Lo que se descarta queda en los registros del Worker (Cloudflare,
+   Observabilidad), con la red, para afinar la lista. No va a la base. */
+function descartar(motivo: string, cf: Cf) {
+  console.log('visitas: fuera', motivo, cf.asn ?? '', cf.asOrganization ?? '', cf.city ?? '');
+  return sinContenido();
+}
+
 /* Hosts que son nuestra propia web: una visita que viene de aquí es un paso
    dentro de la misma visita, no una entrada. */
 const PROPIOS = /(^|\.)accesibilidadprimero\.(eu|com)$|\.workers\.dev$/;
@@ -189,7 +240,9 @@ export async function registrarVisita(
   const { fuente, origen, entrada } = clasificar(recortar(datos.r, 500), recortar(datos.u, 60));
 
   /* `request.cf` lo rellena Cloudflare; en local no existe. */
-  const cf = (request as Request & { cf?: { city?: string; region?: string; country?: string } }).cf ?? {};
+  const cf = (request as Request & { cf?: Cf }).cf ?? {};
+  const motivo = robot(datos, cf.timezone);
+  if (motivo) return descartar(motivo, cf);
   const ahora = Date.now();
 
   esperar(
@@ -241,6 +294,9 @@ export async function registrarInteraccion(
   const tipo = recortar(d.t, 10);
   const ancho = recortar(d.a, 12);
   if (!ruta.startsWith('/') || !TIPOS.has(tipo) || !ANCHOS.has(ancho)) return new Response(null, { status: 400 });
+  const cf = (request as Request & { cf?: Cf }).cf ?? {};
+  const motivo = robot(d, cf.timezone);
+  if (motivo) return descartar(motivo, cf);
 
   let control: string | null = null, destino: string | null = null, modo: string | null = null, profundidad: number | null = null;
   if (tipo === 'pulsar') {

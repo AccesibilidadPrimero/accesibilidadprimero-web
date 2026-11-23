@@ -676,6 +676,13 @@ del estudio que abren `/api/no-contar` (`/api/contar` la quita). Privacidad y
 Cookies lo dicen en los tres idiomas: si cambia lo que se guarda, cambian
 ellas en el mismo PR. Lo lee el panel de analítica de Johnny (artefacto con el
 conector de Cloudflare).
+**Robots con navegador completo (19/11/2026).** La lista de redes de centros
+de datos no basta: entraban robots desde Ashburn y Nueva York que esperaban
+los 5 s. Cada envío lleva tres señales que el Worker mira y no guarda: zona
+horaria del navegador, `navigator.webdriver` y número de idiomas. Fuera si
+hay webdriver, ningún idioma, zona UTC o una zona que no cuadra (más de 2 h)
+con la de la conexión (`request.cf.timezone`). Lo descartado sale en los
+registros del Worker con la red (ASN) para afinar; no va a la base.
 
 **Mapa de interacción (Johnny, 15/11/2026).** En lugar de un mapa de calor
 de terceros (descartado el 11/10 por cookies y banner, y porque no ve el
