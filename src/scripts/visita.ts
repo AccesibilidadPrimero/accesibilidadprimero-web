@@ -32,6 +32,21 @@ const host = location.hostname.replace(/^www\./, '');
 /** ¿Estamos en la web de verdad? Fuera (local, workers.dev, tests) no se mide nada. */
 export const midiendo = (host === DOMINIO_FINAL || host === DOMINIO_PROVISIONAL) && 'sendBeacon' in navigator;
 
+/* Señales de navegador automático (Johnny, 19/11/2026). Robots con un Chrome
+   completo desde servidores de Ashburn y Nueva York esperaban los 5 s y
+   contaban. Se mandan con cada envío y el Worker las mira y las tira; no se
+   guardan:
+   - z: la zona horaria del navegador. En un servidor suele ser UTC, o no
+     cuadra con la de la ciudad de la conexión.
+   - w: `navigator.webdriver`, que encienden Playwright, Puppeteer y Selenium.
+   - l: cuántos idiomas declara el navegador. Un navegador sin interfaz puede
+     no declarar ninguno; una persona siempre tiene al menos uno. */
+export const senales = () => {
+  let z = '';
+  try { z = Intl.DateTimeFormat().resolvedOptions().timeZone ?? ''; } catch { z = ''; }
+  return { z, w: navigator.webdriver === true ? 1 : 0, l: navigator.languages?.length ?? 0 };
+};
+
 /* Se cumple cuando la visita cuenta (hay señal humana). El mapa de
    interacción (interaccion.ts) espera a esto antes de mandar la lectura. */
 let marcarHumano: () => void = () => {};
@@ -44,6 +59,7 @@ if (midiendo) {
     p: location.pathname,
     r: document.referrer,
     u: params.get('utm_source') ?? params.get('ref') ?? '',
+    ...senales(),
   });
 
   let enviado = false;

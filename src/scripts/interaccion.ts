@@ -18,7 +18,7 @@
 
    Sin identificador y sin nada en el navegador, como el contador.
    --------------------------------------------------------------------------- */
-import { midiendo, humano } from './visita';
+import { midiendo, humano, senales } from './visita';
 
 const CONTROLES = 'a[href], button, summary, [role="button"], input[type="checkbox"], input[type="radio"], input[type="submit"]';
 const FUERA = '[data-sin-medir], [data-itza-log], [data-itza-rapidas]';
@@ -26,7 +26,7 @@ const FUERA = '[data-sin-medir], [data-itza-log], [data-itza-rapidas]';
 const ancho = () => (innerWidth < 768 ? 'movil' : innerWidth < 1024 ? 'tableta' : 'escritorio');
 
 const mandar = (datos: object) =>
-  navigator.sendBeacon('/api/i', new Blob([JSON.stringify(datos)], { type: 'text/plain' }));
+  navigator.sendBeacon('/api/i', new Blob([JSON.stringify({ ...datos, ...senales() })], { type: 'text/plain' }));
 
 const limpio = (t: string | null | undefined) => (t ?? '').replace(/\s+/g, ' ').trim();
 
