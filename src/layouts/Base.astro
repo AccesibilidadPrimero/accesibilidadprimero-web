@@ -111,6 +111,42 @@ const jsonLd = datos ? JSON.stringify(datos).replace(/</g, '\\u003c') : '';
         (src/styles/listados.css). Tiene que estar aquí, antes de pintar:
         `pagereveal` salta con el primer fotograma. */}
     <script is:inline>addEventListener('pagereveal', (e) => { if (e.viewTransition) document.documentElement.dataset.llegada = 'transicion'; });</script>
+    {/* Idioma según el navegador (Johnny, 25/11/2026). Solo en la portada
+        castellana y solo al llegar a ella desde fuera de la web: catalán (ca,
+        también valencià) → /ca/, castellano (es-*) → aquí, cualquier otro →
+        /en/. Manda el primer idioma del navegador, nunca la IP: quien habla
+        castellano en Barcelona ve castellano.
+        · No guarda NADA en el navegador (Johnny, 25/11/2026): Cookies dice
+          que solo se guarda Turnstile y así sigue. En vez de recordar la
+          elección, no redirige si se llega desde otra página de la web: el
+          selector («Español») y el logo son navegación interna y se
+          respetan. Quien vuelve otro día desde fuera vuelve a ir a su idioma.
+        · Nunca un enlace profundo, ni uno compartido a otra página, ni un
+          resultado de Google que no sea la portada: solo `/`.
+        · Ni atrás/adelante ni recargar: solo una navegación nueva.
+        · Ni robots ni las comprobaciones del repo (navigator.webdriver): ven
+          la portada tal cual y llegan al resto por hreflang.
+        · `replace`, no `assign`: la portada castellana no queda en el
+          historial, así que «Atrás» no devuelve a una página que rebota.
+          Los parámetros (utm_source, ref) viajan con la redirección para que
+          el contador de visitas siga sabiendo de dónde vino.
+        `npm run idioma` lo comprueba. */}
+    {current === 'home' && lang === 'es' && (
+      <script is:inline>
+        (function () {
+          try {
+            if (location.pathname !== '/' || navigator.webdriver || document.prerendering) return;
+            var nav = performance.getEntriesByType('navigation')[0];
+            if (nav && nav.type !== 'navigate') return;
+            if (document.referrer && new URL(document.referrer).host === location.host) return;
+            var primero = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+            if (!primero || primero === 'es' || primero.indexOf('es-') === 0) return;
+            var destino = primero === 'ca' || primero.indexOf('ca-') === 0 ? '/ca/' : '/en/';
+            location.replace(destino + location.search + location.hash);
+          } catch (e) {}
+        })();
+      </script>
+    )}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

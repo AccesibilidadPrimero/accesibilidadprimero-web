@@ -384,6 +384,23 @@ disciplina personal a las once de la noche.
     (`src/lib/particulas.ts`), y a11y, tipografía, contraste y renglones
     miden también `/ca/` y `/en/` (`scripts/idiomas.mjs`).
 
+- **Idioma según el navegador (Johnny, 25/11/2026).** Al entrar por la
+  portada (`/`) desde fuera de la web, el primer idioma del navegador decide:
+  catalán (ca, también valencià) → `/ca/`, castellano (es-*) → se queda,
+  cualquier otro → `/en/`. Nunca la IP ni la ubicación. Script en línea en
+  el `<head>` de `Base.astro`, solo en la portada castellana.
+  · Solo `/`: un enlace profundo, uno compartido o un resultado de Google
+    que no sea la portada no se redirige nunca.
+  · **No guarda nada en el navegador** (Johnny, 25/11/2026), para que
+    Cookies siga siendo cierta. En vez de recordar la elección, no redirige
+    si se llega desde otra página de la web (el selector, el logo), ni al
+    recargar ni con atrás/adelante. Límite asumido: quien eligió otro idioma
+    y vuelve otro día desde fuera vuelve a ir al de su navegador. Si algún
+    día se guarda la elección, cambian Cookies y Privacidad en el mismo PR.
+  · Con `navigator.webdriver` no hace nada: ni robots ni las comprobaciones
+    del repo, que abren `/` con Chromium en inglés.
+  · Los parámetros (`utm_source`, `ref`) viajan con la redirección.
+  `npm run idioma` lo comprueba.
 - **«Sobre la mesa» solo sale en la Home en castellano** (Johnny,
   06/11/2026): las notas de Mastodon no se traducen. En `/ca/` y `/en/` no
   se pinta.
@@ -494,6 +511,8 @@ npm run arte         # compila arte/ en src/assets/: limpia los SVG, copia el
 npm run geometria    # mide los ANCHOS del render contra los del Figma
 npm run capturas     # capturas de los tres breakpoints para revisar a ojo
 npm run redirecciones # public/_redirects: destinos que existen y una 301 por artículo
+npm run idioma       # la portada lleva a /ca/ o /en/ según el navegador, solo
+                     # desde fuera, sin guardar nada en el navegador
 ```
 
 `a11y`, `tipografia` y `contraste` recorren la Home, **Contacto** (en reposo
